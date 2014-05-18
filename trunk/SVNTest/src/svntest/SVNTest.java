@@ -9,6 +9,8 @@ public class SVNTest {
         System.out.println("Test");
         //This is a new test
         System.out.println("New SOUT");
+        //Test from web
+        System.out.println("WHAT?");
     }
     
 }
