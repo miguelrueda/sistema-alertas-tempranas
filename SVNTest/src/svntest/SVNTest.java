@@ -7,6 +7,8 @@ public class SVNTest {
      */
     public static void main(String[] args) {
         System.out.println("Test");
+        //This is a new test
+        System.out.println("New SOUT");
     }
     
 }
