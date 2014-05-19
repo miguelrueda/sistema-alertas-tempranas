@@ -10,7 +10,7 @@ public class CVE {
     private Date published;
     private Date modified;
     //Common Vulnerability Scoring System (CVSS) provides a universal open and standardized method for rating IT vulnerabilities.
-    private double CVSS_score;
+    private String CVSS_score;
     private String description;
     private List<CVEReference> references;
     private List<VulnSoftware> vuln_soft;
@@ -19,7 +19,7 @@ public class CVE {
         this.name = name;
     }
 
-    public CVE(String name, String severity, Date published, Date modified, double CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
+    public CVE(String name, String severity, Date published, Date modified, String CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
         this.name = name;
         this.severity = severity;
         this.published = published;
@@ -62,11 +62,11 @@ public class CVE {
         this.modified = modified;
     }
 
-    public double getCVSS_score() {
+    public String getCVSS_score() {
         return CVSS_score;
     }
 
-    public void setCVSS_score(double CVSS_score) {
+    public void setCVSS_score(String CVSS_score) {
         this.CVSS_score = CVSS_score;
     }
 
@@ -96,7 +96,17 @@ public class CVE {
 
     @Override
     public String toString() {
-        return "CVE{" + "name=" + name + ", severity=" + severity + ", published=" + published + ", modified=" + modified + ", CVSS_score=" + CVSS_score + ", description=" + description + ", references=" + references + ", vuln_soft=" + vuln_soft + '}';
+        StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + ", severity=" + severity + ", published=" + published + ", modified=" + modified + ", CVSS_score=" + CVSS_score + "}");
+        /*
+        sb.append("description=").append(description);
+        sb.append("\n");
+        String refs = "";
+        for (CVEReference ref : references) {
+            refs += ref.toString() + "\n";
+        }
+        sb.append(refs);
+        sb.append(vuln_soft).append("\n");*/
+        return sb.toString();
     }
 
 }
