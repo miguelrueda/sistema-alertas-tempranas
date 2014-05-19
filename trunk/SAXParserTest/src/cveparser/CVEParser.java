@@ -47,7 +47,7 @@ public class CVEParser {
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
             CVEHandler cveHandler = new CVEHandler();
-            saxParser.parse(CVEParser.class.getResourceAsStream("cvetest.xml"), cveHandler);
+            saxParser.parse(CVEParser.class.getResourceAsStream("nvdcve-2014.xml"), cveHandler);
             List<CVE> cveList = cveHandler.getCveList();
             System.out.println("Se encontraron: " + cveList.size() + " entradas.");
             for (CVE cve : cveList) {

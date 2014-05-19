@@ -5,9 +5,9 @@ public class CVEReference {
     private String source;
     private String url;
 
-    public CVEReference(String source, String url) {
-        this.source = source;
+    public CVEReference(String url, String source) {
         this.url = url;
+        this.source = source;
     }
 
     public String getSource() {

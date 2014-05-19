@@ -1,2 +1,3 @@
 http://www.journaldev.com/1198/java-sax-parser-example-tutorial-to-parse-xml-to-list-of-objects
+http://www.mkyong.com/java/how-to-read-xml-file-in-java-sax-parser/
 http://lefunes.wordpress.com/2008/03/01/parseando-xml-en-java-mediante-sax/
