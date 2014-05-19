@@ -10,7 +10,7 @@ public class CVE {
     private Date published;
     private Date modified;
     //Common Vulnerability Scoring System (CVSS) provides a universal open and standardized method for rating IT vulnerabilities.
-    private String CVSS_score;
+    private double CVSS_score;
     private String description;
     private List<CVEReference> references;
     private List<VulnSoftware> vuln_soft;
@@ -19,7 +19,7 @@ public class CVE {
         this.name = name;
     }
 
-    public CVE(String name, String severity, Date published, Date modified, String CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
+    public CVE(String name, String severity, Date published, Date modified, double CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
         this.name = name;
         this.severity = severity;
         this.published = published;
@@ -62,11 +62,11 @@ public class CVE {
         this.modified = modified;
     }
 
-    public String getCVSS_score() {
+    public double getCVSS_score() {
         return CVSS_score;
     }
 
-    public void setCVSS_score(String CVSS_score) {
+    public void setCVSS_score(double CVSS_score) {
         this.CVSS_score = CVSS_score;
     }
 
