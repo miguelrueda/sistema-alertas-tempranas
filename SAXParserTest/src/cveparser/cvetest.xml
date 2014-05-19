@@ -1,0 +1,440 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<nvd xmlns="http://nvd.nist.gov/feeds/cve/1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" nvd_xml_version="1.2" pub_date="2014-05-19" xsi:schemaLocation="http://nvd.nist.gov/feeds/cve/1.2 http://nvd.nist.gov/schema/nvdcve.xsd">
+  <entry type="CVE" severity="High" seq="2014-0001" published="2014-01-31" name="CVE-2014-0001" modified="2014-05-05" CVSS_version="2.0" CVSS_vector="(AV:N/AC:L/Au:N/C:P/I:P/A:P)" CVSS_score="7.5" CVSS_impact_subscore="6.4" CVSS_exploit_subscore="10.0" CVSS_base_score="7.5">
+    <desc>
+      <descript source="cve">Buffer overflow in client/mysql.cc in Oracle MySQL and MariaDB before 5.5.35 allows remote database servers to cause a denial of service (crash) and possibly execute arbitrary code via a long server version string.</descript>
+    </desc>
+    <loss_types>
+      <avail/>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="http://bazaar.launchpad.net/~maria-captains/maria/5.5/revision/2502.565.64" source="CONFIRM" patch="1">http://bazaar.launchpad.net/~maria-captains/maria/5.5/revision/2502.565.64</ref>
+      <ref url="https://mariadb.com/kb/en/mariadb-5535-changelog/" source="CONFIRM">https://mariadb.com/kb/en/mariadb-5535-changelog/</ref>
+      <ref url="https://bugzilla.redhat.com/show_bug.cgi?id=1054592" source="CONFIRM">https://bugzilla.redhat.com/show_bug.cgi?id=1054592</ref>
+      <ref url="http://www.osvdb.org/102714" source="OSVDB">102714</ref>
+      <ref url="http://www.mandriva.com/security/advisories?name=MDVSA-2014:029" source="MANDRIVA">MDVSA-2014:029</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0189.html" source="REDHAT">RHSA-2014:0189</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0186.html" source="REDHAT">RHSA-2014:0186</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0173.html" source="REDHAT">RHSA-2014:0173</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0164.html" source="REDHAT">RHSA-2014:0164</ref>
+      <ref url="http://osvdb.org/102713" source="OSVDB">102713</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="mariadb" name="mariadb">
+        <vers prev="1" num="5.5.34"/>
+      </prod>
+      <prod vendor="oracle" name="mysql">
+        <vers num="-"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="High" seq="2014-0002" published="2014-03-21" name="CVE-2014-0002" modified="2014-04-19" CVSS_version="2.0" CVSS_vector="(AV:N/AC:L/Au:N/C:P/I:P/A:P)" CVSS_score="7.5" CVSS_impact_subscore="6.4" CVSS_exploit_subscore="10.0" CVSS_base_score="7.5">
+    <desc>
+      <descript source="cve">The XSLT component in Apache Camel before 2.11.4 and 2.12.x before 2.12.3 allows remote attackers to read arbitrary files and possibly have other unspecified impact via an XML document containing an external entity declaration in conjunction with an entity reference, related to an XML External Entity (XXE) issue.</descript>
+    </desc>
+    <loss_types>
+      <avail/>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="http://www.securityfocus.com/bid/65901" source="BID">65901</ref>
+      <ref url="http://secunia.com/advisories/57719" source="SECUNIA">57719</ref>
+      <ref url="http://secunia.com/advisories/57716" source="SECUNIA">57716</ref>
+      <ref url="http://secunia.com/advisories/57125" source="SECUNIA" adv="1">57125</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0372.html" source="REDHAT">RHSA-2014:0372</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0371.html" source="REDHAT">RHSA-2014:0371</ref>
+      <ref url="http://camel.apache.org/security-advisories.data/CVE-2014-0002.txt.asc" source="CONFIRM" adv="1">http://camel.apache.org/security-advisories.data/CVE-2014-0002.txt.asc</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="apache" name="camel">
+        <vers num="1.0.0"/>
+        <vers num="1.1.0"/>
+        <vers num="1.2.0"/>
+        <vers num="1.3.0"/>
+        <vers num="1.4.0"/>
+        <vers num="1.5.0"/>
+        <vers num="1.6.0"/>
+        <vers num="1.6.1"/>
+        <vers num="1.6.2"/>
+        <vers num="1.6.3"/>
+        <vers num="1.6.4"/>
+        <vers num="2.0.0" edition="m1"/>
+        <vers num="2.0.0" edition="m2"/>
+        <vers num="2.0.0" edition="m3"/>
+        <vers num="2.1.0"/>
+        <vers num="2.10.0"/>
+        <vers num="2.10.1"/>
+        <vers num="2.10.2"/>
+        <vers num="2.10.3"/>
+        <vers num="2.10.4"/>
+        <vers num="2.10.5"/>
+        <vers num="2.10.6"/>
+        <vers num="2.10.7"/>
+        <vers num="2.11.0"/>
+        <vers num="2.11.1"/>
+        <vers num="2.11.2"/>
+        <vers prev="1" num="2.11.3"/>
+        <vers num="2.12.0"/>
+        <vers num="2.12.1"/>
+        <vers num="2.12.2"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="High" seq="2014-0003" published="2014-03-21" name="CVE-2014-0003" modified="2014-04-19" CVSS_version="2.0" CVSS_vector="(AV:N/AC:L/Au:N/C:P/I:P/A:P)" CVSS_score="7.5" CVSS_impact_subscore="6.4" CVSS_exploit_subscore="10.0" CVSS_base_score="7.5">
+    <desc>
+      <descript source="cve">The XSLT component in Apache Camel 2.11.x before 2.11.4, 2.12.x before 2.12.3, and possibly earlier versions allows remote attackers to execute arbitrary Java methods via a crafted message.</descript>
+    </desc>
+    <loss_types>
+      <avail/>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="http://www.securityfocus.com/bid/65902" source="BID">65902</ref>
+      <ref url="http://secunia.com/advisories/57719" source="SECUNIA">57719</ref>
+      <ref url="http://secunia.com/advisories/57716" source="SECUNIA">57716</ref>
+      <ref url="http://secunia.com/advisories/57125" source="SECUNIA" adv="1">57125</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0372.html" source="REDHAT">RHSA-2014:0372</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0371.html" source="REDHAT">RHSA-2014:0371</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0254.html" source="REDHAT">RHSA-2014:0254</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0245.html" source="REDHAT">RHSA-2014:0245</ref>
+      <ref url="http://camel.apache.org/security-advisories.data/CVE-2014-0003.txt.asc" source="CONFIRM" adv="1">http://camel.apache.org/security-advisories.data/CVE-2014-0003.txt.asc</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="apache" name="camel">
+        <vers num="1.0.0"/>
+        <vers num="1.1.0"/>
+        <vers num="1.2.0"/>
+        <vers num="1.3.0"/>
+        <vers num="1.4.0"/>
+        <vers num="1.5.0"/>
+        <vers num="1.6.0"/>
+        <vers num="1.6.1"/>
+        <vers num="1.6.2"/>
+        <vers num="1.6.3"/>
+        <vers num="1.6.4"/>
+        <vers num="2.0.0" edition="m1"/>
+        <vers num="2.0.0" edition="m2"/>
+        <vers num="2.0.0" edition="m3"/>
+        <vers num="2.1.0"/>
+        <vers num="2.10.0"/>
+        <vers num="2.10.1"/>
+        <vers num="2.10.2"/>
+        <vers num="2.10.3"/>
+        <vers num="2.10.4"/>
+        <vers num="2.10.5"/>
+        <vers num="2.10.6"/>
+        <vers num="2.10.7"/>
+        <vers num="2.11.0"/>
+        <vers num="2.11.1"/>
+        <vers num="2.11.2"/>
+        <vers prev="1" num="2.11.3"/>
+        <vers num="2.12.0"/>
+        <vers num="2.12.1"/>
+        <vers num="2.12.2"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="Medium" seq="2014-0004" published="2014-03-11" name="CVE-2014-0004" modified="2014-03-26" CVSS_version="2.0" CVSS_vector="(AV:L/AC:M/Au:N/C:C/I:C/A:C)" CVSS_score="6.9" CVSS_impact_subscore="10.0" CVSS_exploit_subscore="3.4" CVSS_base_score="6.9">
+    <desc>
+      <descript source="cve">Stack-based buffer overflow in udisks before 1.0.5 and 2.x before 2.1.3 allows local users to cause a denial of service (crash) and possibly execute arbitrary code via a long mount point.</descript>
+    </desc>
+    <loss_types>
+      <avail/>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <local/>
+    </range>
+    <refs>
+      <ref url="http://lists.freedesktop.org/archives/devkit-devel/2014-March/001568.html" source="MLIST" patch="1">[devkit-devel] 20140310 udisks 2.1.3 / 1.0.5 security updates</ref>
+      <ref url="http://www.ubuntu.com/usn/USN-2142-1" source="UBUNTU">USN-2142-1</ref>
+      <ref url="http://www.debian.org/security/2014/dsa-2872" source="DEBIAN">DSA-2872</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0293.html" source="REDHAT">RHSA-2014:0293</ref>
+      <ref url="http://lists.opensuse.org/opensuse-updates/2014-03/msg00053.html" source="SUSE">openSUSE-SU-2014:0390</ref>
+      <ref url="http://lists.opensuse.org/opensuse-updates/2014-03/msg00052.html" source="SUSE">openSUSE-SU-2014:0389</ref>
+      <ref url="http://lists.opensuse.org/opensuse-updates/2014-03/msg00051.html" source="SUSE">openSUSE-SU-2014:0388</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="freedesktop" name="udisks">
+        <vers num="1.0"/>
+        <vers num="1.0.1"/>
+        <vers prev="1" num="1.0.4"/>
+        <vers num="2.0.0"/>
+        <vers num="2.0.1"/>
+        <vers num="2.0.90"/>
+        <vers num="2.0.91"/>
+        <vers num="2.0.92"/>
+        <vers num="2.1.0"/>
+        <vers num="2.1.1"/>
+        <vers num="2.1.2"/>
+      </prod>
+      <prod vendor="canonical" name="ubuntu_linux">
+        <vers num="12.04" edition="-:lts"/>
+        <vers num="12.10"/>
+        <vers num="13.10"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="Medium" seq="2014-0006" published="2014-01-22" name="CVE-2014-0006" modified="2014-03-08" CVSS_version="2.0" CVSS_vector="(AV:N/AC:M/Au:N/C:P/I:N/A:N)" CVSS_score="4.3" CVSS_impact_subscore="2.9" CVSS_exploit_subscore="8.6" CVSS_base_score="4.3">
+    <desc>
+      <descript source="cve">The TempURL middleware in OpenStack Object Storage (Swift) 1.4.6 through 1.8.0, 1.9.0 through 1.10.0, and 1.11.0 allows remote attackers to obtain secret URLs by leveraging an object name and a timing side-channel attack.</descript>
+    </desc>
+    <loss_types>
+      <conf/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="http://www.openwall.com/lists/oss-security/2014/01/17/5" source="MLIST" patch="1">[oss-security] 20140117 [OSSA 2014-002] Swift TempURL timing attack (CVE-2014-0006)</ref>
+      <ref url="https://bugs.launchpad.net/swift/+bug/1265665" source="CONFIRM" adv="1">https://bugs.launchpad.net/swift/+bug/1265665</ref>
+      <ref url="http://rhn.redhat.com/errata/RHSA-2014-0232.html" source="REDHAT">RHSA-2014:0232</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="openstack" name="swift">
+        <vers num="1.10.0"/>
+        <vers num="1.11.0"/>
+        <vers num="1.4.6"/>
+        <vers num="1.4.7"/>
+        <vers num="1.4.8"/>
+        <vers num="1.5.0"/>
+        <vers num="1.6.0"/>
+        <vers num="1.7.0"/>
+        <vers num="1.7.2"/>
+        <vers num="1.7.4"/>
+        <vers num="1.7.5"/>
+        <vers num="1.7.6"/>
+        <vers num="1.8.0"/>
+        <vers num="1.9.0"/>
+        <vers num="1.9.1"/>
+        <vers num="1.9.2"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="Medium" seq="2014-0008" published="2014-01-20" name="CVE-2014-0008" modified="2014-02-21" CVSS_version="2.0" CVSS_vector="(AV:N/AC:L/Au:S/C:P/I:N/A:N)" CVSS_score="4.0" CVSS_impact_subscore="2.9" CVSS_exploit_subscore="8.0" CVSS_base_score="4.0">
+    <desc>
+      <descript source="cve">lib/adminlib.php in Moodle through 2.3.11, 2.4.x before 2.4.8, 2.5.x before 2.5.4, and 2.6.x before 2.6.1 logs cleartext passwords, which allows remote authenticated administrators to obtain sensitive information by reading the Config Changes Report.</descript>
+    </desc>
+    <loss_types>
+      <conf/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="https://moodle.org/mod/forum/discuss.php?d=252414" source="CONFIRM" patch="1" adv="1">https://moodle.org/mod/forum/discuss.php?d=252414</ref>
+      <ref url="http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-36721" source="CONFIRM" patch="1">http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-36721</ref>
+      <ref url="http://www.securitytracker.com/id/1029647" source="SECTRACK">1029647</ref>
+      <ref url="http://openwall.com/lists/oss-security/2014/01/20/1" source="MLIST">[oss-security] 20140120 Moodle security notifications public</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127533.html" source="FEDORA">FEDORA-2014-1396</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127510.html" source="FEDORA">FEDORA-2014-1377</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="moodle" name="moodle">
+        <vers num="2.3"/>
+        <vers num="2.3.1"/>
+        <vers num="2.3.10"/>
+        <vers prev="1" num="2.3.11"/>
+        <vers num="2.3.2"/>
+        <vers num="2.3.3"/>
+        <vers num="2.3.4"/>
+        <vers num="2.3.5"/>
+        <vers num="2.3.6"/>
+        <vers num="2.3.7"/>
+        <vers num="2.3.8"/>
+        <vers num="2.3.9"/>
+        <vers num="2.4"/>
+        <vers num="2.4.1"/>
+        <vers num="2.4.2"/>
+        <vers num="2.4.3"/>
+        <vers num="2.4.4"/>
+        <vers num="2.4.5"/>
+        <vers num="2.4.6"/>
+        <vers num="2.4.7"/>
+        <vers num="2.5"/>
+        <vers num="2.5.1"/>
+        <vers num="2.5.2"/>
+        <vers num="2.5.3"/>
+        <vers num="2.6"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="Medium" seq="2014-0009" published="2014-01-20" name="CVE-2014-0009" modified="2014-02-21" CVSS_version="2.0" CVSS_vector="(AV:N/AC:L/Au:S/C:P/I:P/A:N)" CVSS_score="5.5" CVSS_impact_subscore="4.9" CVSS_exploit_subscore="8.0" CVSS_base_score="5.5">
+    <desc>
+      <descript source="cve">course/loginas.php in Moodle through 2.2.11, 2.3.x before 2.3.11, 2.4.x before 2.4.8, 2.5.x before 2.5.4, and 2.6.x before 2.6.1 does not enforce the moodle/site:accessallgroups capability requirement for outside-group users in a SEPARATEGROUPS configuration, which allows remote authenticated users to perform "login as" actions via a direct request.</descript>
+    </desc>
+    <loss_types>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <network/>
+    </range>
+    <refs>
+      <ref url="https://moodle.org/mod/forum/discuss.php?d=252415" source="CONFIRM" patch="1" adv="1">https://moodle.org/mod/forum/discuss.php?d=252415</ref>
+      <ref url="http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-42643" source="CONFIRM" patch="1">http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-42643</ref>
+      <ref url="http://www.securitytracker.com/id/1029648" source="SECTRACK">1029648</ref>
+      <ref url="http://openwall.com/lists/oss-security/2014/01/20/1" source="MLIST">[oss-security] 20140120 Moodle security notifications public</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127533.html" source="FEDORA">FEDORA-2014-1396</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127510.html" source="FEDORA">FEDORA-2014-1377</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="moodle" name="moodle">
+        <vers num="2.0"/>
+        <vers num="2.0.1"/>
+        <vers num="2.0.2"/>
+        <vers num="2.0.3"/>
+        <vers num="2.0.4"/>
+        <vers num="2.0.5"/>
+        <vers num="2.0.6"/>
+        <vers num="2.0.7"/>
+        <vers num="2.0.8"/>
+        <vers num="2.0.9"/>
+        <vers num="2.1"/>
+        <vers num="2.1.1"/>
+        <vers num="2.1.10"/>
+        <vers num="2.1.2"/>
+        <vers num="2.1.3"/>
+        <vers num="2.1.4"/>
+        <vers num="2.1.5"/>
+        <vers num="2.1.6"/>
+        <vers num="2.1.7"/>
+        <vers num="2.1.8"/>
+        <vers num="2.1.9"/>
+        <vers num="2.2"/>
+        <vers num="2.2.1"/>
+        <vers num="2.2.10"/>
+        <vers prev="1" num="2.2.11"/>
+        <vers num="2.2.2"/>
+        <vers num="2.2.3"/>
+        <vers num="2.2.4"/>
+        <vers num="2.2.5"/>
+        <vers num="2.2.6"/>
+        <vers num="2.2.7"/>
+        <vers num="2.2.8"/>
+        <vers num="2.2.9"/>
+        <vers num="2.3"/>
+        <vers num="2.3.1"/>
+        <vers num="2.3.10"/>
+        <vers num="2.3.2"/>
+        <vers num="2.3.3"/>
+        <vers num="2.3.4"/>
+        <vers num="2.3.5"/>
+        <vers num="2.3.6"/>
+        <vers num="2.3.7"/>
+        <vers num="2.3.8"/>
+        <vers num="2.3.9"/>
+        <vers num="2.4"/>
+        <vers num="2.4.1"/>
+        <vers num="2.4.2"/>
+        <vers num="2.4.3"/>
+        <vers num="2.4.4"/>
+        <vers num="2.4.5"/>
+        <vers num="2.4.6"/>
+        <vers num="2.4.7"/>
+        <vers num="2.5"/>
+        <vers num="2.5.1"/>
+        <vers num="2.5.2"/>
+        <vers num="2.5.3"/>
+        <vers num="2.6"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+  <entry type="CVE" severity="Medium" seq="2014-0010" published="2014-01-20" name="CVE-2014-0010" modified="2014-02-21" CVSS_version="2.0" CVSS_vector="(AV:N/AC:M/Au:N/C:P/I:P/A:P)" CVSS_score="6.8" CVSS_impact_subscore="6.4" CVSS_exploit_subscore="8.6" CVSS_base_score="6.8">
+    <desc>
+      <descript source="cve">Multiple cross-site request forgery (CSRF) vulnerabilities in user/profile/index.php in Moodle through 2.2.11, 2.3.x before 2.3.11, 2.4.x before 2.4.8, 2.5.x before 2.5.4, and 2.6.x before 2.6.1 allow remote attackers to hijack the authentication of administrators for requests that delete (1) categories or (2) fields.</descript>
+    </desc>
+    <loss_types>
+      <avail/>
+      <conf/>
+      <int/>
+    </loss_types>
+    <range>
+      <network/>
+      <user_init/>
+    </range>
+    <refs>
+      <ref url="https://moodle.org/mod/forum/discuss.php?d=252416" source="CONFIRM" patch="1" adv="1">https://moodle.org/mod/forum/discuss.php?d=252416</ref>
+      <ref url="http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-42883" source="CONFIRM" patch="1">http://git.moodle.org/gw?p=moodle.git&amp;a=search&amp;h=HEAD&amp;st=commit&amp;s=MDL-42883</ref>
+      <ref url="http://www.securitytracker.com/id/1029649" source="SECTRACK">1029649</ref>
+      <ref url="http://openwall.com/lists/oss-security/2014/01/20/1" source="MLIST">[oss-security] 20140120 Moodle security notifications public</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127533.html" source="FEDORA">FEDORA-2014-1396</ref>
+      <ref url="http://lists.fedoraproject.org/pipermail/package-announce/2014-January/127510.html" source="FEDORA">FEDORA-2014-1377</ref>
+    </refs>
+    <vuln_soft>
+      <prod vendor="moodle" name="moodle">
+        <vers num="2.0"/>
+        <vers num="2.0.1"/>
+        <vers num="2.0.2"/>
+        <vers num="2.0.3"/>
+        <vers num="2.0.4"/>
+        <vers num="2.0.5"/>
+        <vers num="2.0.6"/>
+        <vers num="2.0.7"/>
+        <vers num="2.0.8"/>
+        <vers num="2.0.9"/>
+        <vers num="2.1"/>
+        <vers num="2.1.1"/>
+        <vers num="2.1.10"/>
+        <vers num="2.1.2"/>
+        <vers num="2.1.3"/>
+        <vers num="2.1.4"/>
+        <vers num="2.1.5"/>
+        <vers num="2.1.6"/>
+        <vers num="2.1.7"/>
+        <vers num="2.1.8"/>
+        <vers num="2.1.9"/>
+        <vers num="2.2"/>
+        <vers num="2.2.1"/>
+        <vers num="2.2.10"/>
+        <vers prev="1" num="2.2.11"/>
+        <vers num="2.2.2"/>
+        <vers num="2.2.3"/>
+        <vers num="2.2.4"/>
+        <vers num="2.2.5"/>
+        <vers num="2.2.6"/>
+        <vers num="2.2.7"/>
+        <vers num="2.2.8"/>
+        <vers num="2.2.9"/>
+        <vers num="2.3"/>
+        <vers num="2.3.1"/>
+        <vers num="2.3.10"/>
+        <vers num="2.3.2"/>
+        <vers num="2.3.3"/>
+        <vers num="2.3.4"/>
+        <vers num="2.3.5"/>
+        <vers num="2.3.6"/>
+        <vers num="2.3.7"/>
+        <vers num="2.3.8"/>
+        <vers num="2.3.9"/>
+        <vers num="2.4"/>
+        <vers num="2.4.1"/>
+        <vers num="2.4.2"/>
+        <vers num="2.4.3"/>
+        <vers num="2.4.4"/>
+        <vers num="2.4.5"/>
+        <vers num="2.4.6"/>
+        <vers num="2.4.7"/>
+        <vers num="2.5"/>
+        <vers num="2.5.1"/>
+        <vers num="2.5.2"/>
+        <vers num="2.5.3"/>
+        <vers num="2.6"/>
+      </prod>
+    </vuln_soft>
+  </entry>
+</nvd>
