@@ -82,11 +82,11 @@ public class CVEParser {
             saxParser = saxParserFactory.newSAXParser();
             cveHandler20 = new CVEHandler20();
             saxParser.parse(CVEParser.class.getResourceAsStream("test20.xml"), cveHandler20);
-            /*List<CVE> cveList = cveHandler20.getCveList();
+            List<CVE> cveList = cveHandler20.getCveList();
             System.out.println("Se encontraron: " + cveList.size() + " entradas.");
             for (CVE cve : cveList) {
                 System.out.println(cve);
-            }*/
+            }
         } catch (ParserConfigurationException | SAXException | IOException e) {
             LOG.log(Level.SEVERE, null, e);
         }
