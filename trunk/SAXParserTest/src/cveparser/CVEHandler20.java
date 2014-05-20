@@ -112,11 +112,12 @@ public class CVEHandler20 extends DefaultHandler {
             bVSource = false;
         } else if (bVProduct) {
             //cpe:/a:mariadb:mariadb:5.5.34
-            String vulnProduct = new String(ch, start, length);
-            String [] name_vendor = getNameVendor(vulnProduct);
-            nVulnSoft.setName(name_vendor[0]);
-            nVulnSoft.setVendor(name_vendor[1]);
+            //String vulnProduct = new String(ch, start, length);
+            //String [] name_vendor = getNameVendor(vulnProduct);
+            nVulnSoft.setName("");
+            nVulnSoft.setVendor(new String(ch, start, length));
             nVulnSoft.setVersion(new ArrayList<Version>());
+            bVProduct = false;
         }
     }
 
