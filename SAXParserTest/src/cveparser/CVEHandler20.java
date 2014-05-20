@@ -127,7 +127,7 @@ public class CVEHandler20 extends DefaultHandler {
         return spl_datetime[0] + " " + spl_time[0];
     }
 
-    ////cpe:/a:mariadb:mariadb:5.5.34
+    //cpe:/a:mariadb:mariadb:5.5.34
     private String getFName(String vulnProduct) {
         String [] spl_prod = vulnProduct.split(":");
         for (String string : spl_prod) {
