@@ -13,40 +13,30 @@ import org.xml.sax.SAXException;
 /**
  *
  * Clase que lleva a cabo el parseo de la referencia de los CVEs
+ * El parseo puede ser de 3 formas:
+ * 1. Por archivo extensión .xml
+ * 2. Por el flujo de entrada de un archivo
+ * 3. Por lectura de URL
  *
  * @author t41507
  * @version 19.05.2014
  */
 public class CVEParser {
 
-    private InputStream is;
+    private InputStream isEntrada;
     private static final Logger LOG = Logger.getLogger(CVEParser.class.getName());
-    private final int total_entradas = 0;
-
+    private SAXParserFactory saxParserFactory;
+    private SAXParser saxParser;
+    private CVEHandler cveHandler;
+    
     /**
-     * Método que se encarga de ejecutar el parseo del flujo de entrada
-     *
-     * @param is_ref referencia al flujo de entrada del archivo
-     */
-    public void doParse(InputStream is_ref) {
-        is = is_ref;
-        try {
-            if (is.available() != 0) {
-                System.out.println("Available: " + is.available());
-            }
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Método de prueba que lee directamente el archivo
+     * Método que se encarga de ejecutar el parseo mediante la recepción del archivo
      */
     public void doParse() {
-        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        saxParserFactory = SAXParserFactory.newInstance();
         try {
-            SAXParser saxParser = saxParserFactory.newSAXParser();
-            CVEHandler cveHandler = new CVEHandler();
+            saxParser = saxParserFactory.newSAXParser();
+            cveHandler = new CVEHandler();
             saxParser.parse(CVEParser.class.getResourceAsStream("nvdcve-2014.xml"), cveHandler);
             List<CVE> cveList = cveHandler.getCveList();
             System.out.println("Se encontraron: " + cveList.size() + " entradas.");
@@ -57,5 +47,33 @@ public class CVEParser {
             LOG.log(Level.SEVERE, null, e);
         }
     }
+
+    /**
+     * Método que se encarga de ejecutar el parseo del flujo de entrada
+     *
+     * @param is_ref referencia al flujo de entrada del archivo
+     */
+    public void doParse(InputStream is_ref) {
+        isEntrada = is_ref;
+        saxParserFactory = SAXParserFactory.newInstance();
+        try {
+            if (isEntrada.available() != 0) {
+                System.out.println("Available: " + isEntrada.available());
+            }
+            saxParser = saxParserFactory.newSAXParser();
+            cveHandler = new CVEHandler();
+            saxParser.parse(isEntrada, cveHandler);
+            List<CVE> cveList = cveHandler.getCveList();
+            System.out.println("Se encontraron: " + cveList.size() + " entradas.");
+            for (CVE cve : cveList) {
+                System.out.println(cve);
+            }
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException | SAXException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
 
 }

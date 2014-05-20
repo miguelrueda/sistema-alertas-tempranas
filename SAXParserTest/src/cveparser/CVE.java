@@ -96,16 +96,15 @@ public class CVE {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + ", severity=" + severity + ", published=" + published + ", modified=" + modified + ", CVSS_score=" + CVSS_score + "}");
-        /*
-        sb.append("description=").append(description);
-        sb.append("\n");
-        String refs = "";
-        for (CVEReference ref : references) {
-            refs += ref.toString() + "\n";
+        StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + "}").append("\n");
+        sb.append("{CVE severity=").append(severity).append(", published=").append(published).append(", modified=").append(modified).append(", CVSS_score=").append(CVSS_score).append("}").append("\n");
+        sb.append("{CVE description=").append(description).append("}\n");
+        for (CVEReference reference : references) {
+            sb.append(reference.toString()).append("\n");
         }
-        sb.append(refs);
-        sb.append(vuln_soft).append("\n");*/
+        for (VulnSoftware soft : vuln_soft) {
+            sb.append(soft.toString()).append("\n");
+        }
         return sb.toString();
     }
 
