@@ -28,6 +28,7 @@ public class CVEParser {
     private SAXParserFactory saxParserFactory;
     private SAXParser saxParser;
     private CVEHandler cveHandler;
+    private CVEHandler20 cveHandler20;
     
     /**
      * Método que se encarga de ejecutar el parseo mediante la recepción del archivo
@@ -74,6 +75,26 @@ public class CVEParser {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void doParse20() {
+        saxParserFactory = SAXParserFactory.newInstance();
+        try {
+            saxParser = saxParserFactory.newSAXParser();
+            cveHandler20 = new CVEHandler20();
+            saxParser.parse(CVEParser.class.getResourceAsStream("test20.xml"), cveHandler20);
+            /*List<CVE> cveList = cveHandler20.getCveList();
+            System.out.println("Se encontraron: " + cveList.size() + " entradas.");
+            for (CVE cve : cveList) {
+                System.out.println(cve);
+            }*/
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            LOG.log(Level.SEVERE, null, e);
+        }
+    }
+    /*
+    public void doParse20(InputStream is_ref) {
+        
+    }*/
 
 
 }

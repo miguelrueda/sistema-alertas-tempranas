@@ -1,7 +1,8 @@
 package cveparser;
 
-import java.util.logging.FileHandler;
+import java.io.File;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  * Clase que ejecuta una prueba para el parser CVE 1. Por medio del XML obtenido
@@ -15,7 +16,6 @@ import java.util.logging.Logger;
 public class MainTest {
 
     private static final Logger LOG = Logger.getLogger(MainTest.class.getName());
-    private static FileHandler fh = null;
 
     /**
      * Método Main
@@ -30,10 +30,12 @@ public class MainTest {
         System.out.println("PATH -> " + url);
 
         time_start = System.currentTimeMillis();
+        
         //InputStream is = MainTest.class.getResourceAsStream("nvdcve-2014.xml");
 
         CVEParser mCVEParser = new CVEParser();
-        mCVEParser.doParse();
+        //mCVEParser.doParse();
+        mCVEParser.doParse20();
         time_end = System.currentTimeMillis();
         System.out.println("Time elapsed = {" + (time_end - time_start) + "}");
     }
