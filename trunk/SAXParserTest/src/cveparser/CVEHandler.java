@@ -19,14 +19,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class CVEHandler extends DefaultHandler {
 
     private List<CVE> cveList = null;
-    private CVE nuevoCVE = null;
-    private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    private List<CVEReference> refList;
-    private CVEReference nuevaRef;
-    private List<VulnSoftware> vulnSoftList;
-    private VulnSoftware nuevoVulnSoft;
-    private List<Version> verList;
-    private Version nuevaVer;
+    private CVE nuevoCVE;
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private List<CVEReference> listRefs;
+    private CVEReference nRef;
+    private List<VulnSoftware> listVulnSoft;
+    private VulnSoftware nVulnSoft;
+    private List<Version> listVersions;
+    private Version nVersion;
     private static final Logger LOG = Logger.getLogger(CVEHandler.class.getName());
 
     public List<CVE> getCveList() {
@@ -61,26 +61,28 @@ public class CVEHandler extends DefaultHandler {
         } else if (qName.equalsIgnoreCase("REF")) {
             String url = attributes.getValue("url");
             String source = attributes.getValue("source");
-            nuevaRef = new CVEReference(url, source);
-            if (refList == null) {
-                refList = new ArrayList<>();
+            nRef = new CVEReference(url, source);
+            if (listRefs == null) {
+                listRefs = new ArrayList<>();
             }
         } else if (qName.equalsIgnoreCase("PROD")) {
             String vendor = attributes.getValue("vendor");
             String name = attributes.getValue("name");
-            nuevoVulnSoft = new VulnSoftware(vendor, name, null);
-            if (vulnSoftList == null) {
-                vulnSoftList = new ArrayList<>();
+            nVulnSoft = new VulnSoftware(vendor, name);
+            if (listVulnSoft == null) {
+                listVulnSoft = new ArrayList<>();
             }
         } else if (qName.equalsIgnoreCase("VERS")) {
             String num = attributes.getValue("num");
-            nuevaVer = new Version(num);
+            nVersion = new Version(num);
             String edition = attributes.getValue("edition");
             if (edition != null) {
-                nuevaVer.setEdition(edition);
+                nVersion.setEdition(edition);
+            } else {
+                nVersion.setEdition("-1");
             }
-            if (verList == null) {
-                verList = new ArrayList<>();
+            if (listVersions == null) {
+                listVersions = new ArrayList<>();
             }
         }
     }
@@ -96,19 +98,20 @@ public class CVEHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("REF")) {
-            refList.add(nuevaRef);
+            listRefs.add(nRef);
         } else if (qName.equalsIgnoreCase("PROD")) {
-            nuevoVulnSoft.setVersion(verList);
-            vulnSoftList.add(nuevoVulnSoft);
+            nVulnSoft.setVersion(listVersions);
+            listVulnSoft.add(nVulnSoft);
+            listVersions = new ArrayList<>();
         } else if (qName.equalsIgnoreCase("VERS")) {
-            verList.add(nuevaVer);
+            listVersions.add(nVersion);
         }
         if (qName.equalsIgnoreCase("ENTRY")) {
-            nuevoCVE.setReferences(refList);
-            nuevoCVE.setVuln_soft(vulnSoftList);
-            refList = new ArrayList<>();
-            verList = new ArrayList<>();
-            vulnSoftList = new ArrayList<>();
+            nuevoCVE.setReferences(listRefs);
+            nuevoCVE.setVuln_soft(listVulnSoft);
+            listRefs = new ArrayList<>();
+            listVersions = new ArrayList<>();
+            listVulnSoft = new ArrayList<>();
             cveList.add(nuevoCVE);
         }
     }

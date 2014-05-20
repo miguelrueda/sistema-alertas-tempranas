@@ -52,7 +52,7 @@ public class Version {
 
     @Override
     public String toString() {
-        return "Version{" + "number=" + number + ", edition=" + edition + '}';
+        return "\n\t\tVersion{" + "number=" + number + ", edition=" + edition + '}';
     }
 
 }

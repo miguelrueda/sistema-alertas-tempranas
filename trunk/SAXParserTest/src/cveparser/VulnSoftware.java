@@ -8,10 +8,9 @@ public class VulnSoftware {
     private String name;
     private List<Version> version;
 
-    public VulnSoftware(String vendor, String name, List<Version> version) {
+    public VulnSoftware(String vendor, String name) {
         this.vendor = vendor;
         this.name = name;
-        this.version = version;
     }
 
     public String getVendor() {
@@ -40,7 +39,7 @@ public class VulnSoftware {
 
     @Override
     public String toString() {
-        return "VulnSoftware{" + "vendor=" + vendor + ", name=" + name + ", version=" + version + '}';
+        return "\nVulnerable Software {" + "vendor=" + vendor + ", name=" + name + ", \n\tversion(s)=" + version + '}';
     }
 
 }

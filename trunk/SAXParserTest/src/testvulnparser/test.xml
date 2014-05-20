@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vuln_soft>
+    <prod vendor="mariadb" name="mariadb">
+        <vers prev="1" num="5.5.34"/>
+    </prod>
+    <prod vendor="oracle" name="mysql">
+        <vers num="-"/>
+    </prod>
+    <prod vendor="apache" name="camel">
+        <vers num="1.0.0"/>
+        <vers num="2.0.0" edition="m1"/>
+        <vers num="2.0.0" edition="m2"/>
+        <vers num="2.0.0" edition="m3"/>
+        <vers num="2.1.0"/>
+        <vers num="2.10.0"/>
+        <vers num="2.10.1"/>
+        <vers prev="1" num="2.11.3"/>
+        <vers num="2.12.0"/>
+        <vers num="2.12.1"/>
+        <vers num="2.12.2"/>
+      </prod>
+</vuln_soft>
