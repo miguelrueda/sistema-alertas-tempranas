@@ -14,10 +14,13 @@ import org.xml.sax.helpers.DefaultHandler;
  * Clase que crea el manejador para el XML
  *
  * @author t41507
- * @version
+ * @version 20.05.2014
  */
 public class CVEHandler extends DefaultHandler {
 
+    /**
+     * Atributos
+     */
     private List<CVE> cveList = null;
     private CVE nuevoCVE;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -28,13 +31,16 @@ public class CVEHandler extends DefaultHandler {
     private List<Version> listVersions;
     private Version nVersion;
     private static final Logger LOG = Logger.getLogger(CVEHandler.class.getName());
+    boolean bDescript = false;
 
+    /**
+     * GETTER
+     *
+     * @return la lista de todos los CVES parseados
+     */
     public List<CVE> getCveList() {
         return cveList;
     }
-
-    boolean bDescript = false;
-    boolean bRef = false;
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

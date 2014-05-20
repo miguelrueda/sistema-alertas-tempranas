@@ -3,8 +3,20 @@ package cveparser;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *
+ * Clase que representa a la entidad CVE donde se contienen diversos atributos
+ * como nombre, severidad, fechas, el score de cvss, la lista de referencias y
+ * el software vulnerable
+ *
+ * @author t41507
+ * @version 20.05.2014
+ */
 public class CVE {
 
+    /**
+     * Atributos
+     */
     private String name;
     private String severity;
     private Date published;
@@ -15,10 +27,27 @@ public class CVE {
     private List<CVEReference> references;
     private List<VulnSoftware> vuln_soft;
 
+    /**
+     * Constructor que recibe el nombre del CVE
+     *
+     * @param name el identificador de la forma CVE-XXXX-XXXX
+     */
     public CVE(String name) {
         this.name = name;
     }
 
+    /**
+     * Constructor que recibe todos los parametros para el CVE
+     *
+     * @param name identificador de la forma CVE-XXXX-XXXX
+     * @param severity severidad del CVE
+     * @param published fecha de publicación
+     * @param modified fecha de modificación
+     * @param CVSS_score score de CVSS
+     * @param description descripción de la vulnerabilidad
+     * @param references lista de referencias
+     * @param vuln_soft lista de software vulnerable
+     */
     public CVE(String name, String severity, Date published, Date modified, String CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
         this.name = name;
         this.severity = severity;
@@ -30,66 +59,146 @@ public class CVE {
         this.vuln_soft = vuln_soft;
     }
 
+    /**
+     * GETTER
+     *
+     * @return identificador
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * SETTER
+     *
+     * @param name identificador
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * GETTER
+     *
+     * @return severidad
+     */
     public String getSeverity() {
         return severity;
     }
 
+    /**
+     * SETTER
+     *
+     * @param severity severidad
+     */
     public void setSeverity(String severity) {
         this.severity = severity;
     }
 
+    /**
+     * GETTER
+     *
+     * @return fecha de publicación
+     */
     public Date getPublished() {
         return published;
     }
 
+    /**
+     * SETTER
+     *
+     * @param published fecha de publicación
+     */
     public void setPublished(Date published) {
         this.published = published;
     }
 
+    /**
+     * GETTER
+     *
+     * @return fecha de modificación
+     */
     public Date getModified() {
         return modified;
     }
 
+    /**
+     * SETTER
+     *
+     * @param modified fecha de modificación
+     */
     public void setModified(Date modified) {
         this.modified = modified;
     }
 
+    /**
+     * GETTER
+     *
+     * @return score CVSS
+     */
     public String getCVSS_score() {
         return CVSS_score;
     }
 
+    /**
+     * SETTER
+     *
+     * @param CVSS_score score CVSS
+     */
     public void setCVSS_score(String CVSS_score) {
         this.CVSS_score = CVSS_score;
     }
 
+    /**
+     * GETTER
+     *
+     * @return descripción del CVE
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * SETTER
+     *
+     * @param description descripción del CVE
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * GETTER
+     *
+     * @return lista de referencias
+     */
     public List<CVEReference> getReferences() {
         return references;
     }
 
+    /**
+     * SETTER
+     *
+     * @param references lista de referencias
+     */
     public void setReferences(List<CVEReference> references) {
         this.references = references;
     }
 
+    /**
+     * GETTER
+     *
+     * @return lista de software vulnerable
+     */
     public List<VulnSoftware> getVuln_soft() {
         return vuln_soft;
     }
 
+    /**
+     * SETTER
+     *
+     * @param vuln_soft lista de software vulnerable
+     */
     public void setVuln_soft(List<VulnSoftware> vuln_soft) {
         this.vuln_soft = vuln_soft;
     }
