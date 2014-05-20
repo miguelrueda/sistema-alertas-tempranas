@@ -17,6 +17,9 @@ public class VulnSoftware {
     private String name;
     private List<Version> version;
 
+    public VulnSoftware() {
+    }
+
     /**
      * Constructor
      *

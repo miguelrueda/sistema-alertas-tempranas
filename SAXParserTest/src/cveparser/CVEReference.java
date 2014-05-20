@@ -11,6 +11,9 @@ public class CVEReference {
     private String source;
     private String url;
 
+    public CVEReference() {
+    }
+
     /**
      * Constructor
      *
