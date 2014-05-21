@@ -21,8 +21,8 @@ public class CVE {
     private String severity;
     private Date published;
     private Date modified;
-    //Common Vulnerability Scoring System (CVSS) provides a universal open and standardized method for rating IT vulnerabilities.
-    private String CVSS_score;
+    //private String CVSS_score;
+    private CVSS cvss;
     private String description;
     private List<CVEReference> references;
     private List<VulnSoftware> vuln_soft;
@@ -43,17 +43,17 @@ public class CVE {
      * @param severity severidad del CVE
      * @param published fecha de publicación
      * @param modified fecha de modificación
-     * @param CVSS_score score de CVSS
+     * @param cvss CVSS
      * @param description descripción de la vulnerabilidad
      * @param references lista de referencias
      * @param vuln_soft lista de software vulnerable
      */
-    public CVE(String name, String severity, Date published, Date modified, String CVSS_score, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
+    public CVE(String name, String severity, Date published, Date modified, CVSS cvss, String description, List<CVEReference> references, List<VulnSoftware> vuln_soft) {
         this.name = name;
         this.severity = severity;
         this.published = published;
         this.modified = modified;
-        this.CVSS_score = CVSS_score;
+        this.cvss = cvss;
         this.description = description;
         this.references = references;
         this.vuln_soft = vuln_soft;
@@ -134,19 +134,19 @@ public class CVE {
     /**
      * GETTER
      *
-     * @return score CVSS
+     * @return CVSS
      */
-    public String getCVSS_score() {
-        return CVSS_score;
+    public CVSS getCVSS() {
+        return cvss;
     }
 
     /**
      * SETTER
      *
-     * @param CVSS_score score CVSS
+     * @param cvss CVSS
      */
-    public void setCVSS_score(String CVSS_score) {
-        this.CVSS_score = CVSS_score;
+    public void setCVSS(CVSS cvss) {
+        this.cvss = cvss;
     }
 
     /**
@@ -206,7 +206,7 @@ public class CVE {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + "}").append("\n");
-        sb.append("{CVE severity=").append(severity).append(", published=").append(published).append(", modified=").append(modified).append(", CVSS_score=").append(CVSS_score).append("}").append("\n");
+        sb.append("{CVE severity=").append(severity).append(", published=").append(published).append(", modified=").append(modified).append("\n").append(cvss).append("}").append("\n");
         sb.append("{CVE description=").append(description).append("}\n");
         for (CVEReference reference : references) {
             sb.append(reference.toString()).append("\n");

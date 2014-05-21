@@ -30,6 +30,7 @@ public class CVEHandler extends DefaultHandler {
     private VulnSoftware nVulnSoft;
     private List<Version> listVersions;
     private Version nVersion;
+    private CVSS nCVSS;
     private static final Logger LOG = Logger.getLogger(CVEHandler.class.getName());
     boolean bDescript = false;
 
@@ -51,11 +52,13 @@ public class CVEHandler extends DefaultHandler {
             String published = attributes.getValue("published");
             String modified = attributes.getValue("modified");
             String cvss_score = attributes.getValue("CVSS_score");
+            String cvss_vector = attributes.getValue("CVSS_vector");
             try {
                 nuevoCVE.setPublished(formatter.parse(published));
                 nuevoCVE.setModified(formatter.parse(modified));
                 nuevoCVE.setSeverity(severity);
-                nuevoCVE.setCVSS_score(cvss_score);
+                nCVSS = new CVSS(cvss_score, cvss_vector);
+                nuevoCVE.setCVSS(nCVSS);
             } catch (ParseException e) {
                 LOG.log(Level.SEVERE, e.getMessage());
             }
