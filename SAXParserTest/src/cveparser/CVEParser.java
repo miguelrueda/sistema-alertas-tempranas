@@ -2,6 +2,7 @@ package cveparser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,6 +75,25 @@ public class CVEParser {
         } catch (ParserConfigurationException | SAXException ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public List<CVE> getListCVE(InputStream is_ref) {
+        isEntrada = is_ref;
+        saxParserFactory = SAXParserFactory.newInstance();
+        List<CVE> cveList = null;
+        try {
+            if (isEntrada.available() != 0) {
+                System.out.println("Available: " + isEntrada.available());
+            }
+            saxParser = saxParserFactory.newSAXParser();
+            cveHandler = new CVEHandler();
+            saxParser.parse(isEntrada, cveHandler);
+            cveList = cveHandler.getCveList();
+            return cveList;
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            LOG.log(Level.SEVERE, "Excepción en el parser: {0}", e);
+        }
+        return new ArrayList<>();
     }
     
     public void doParse20() {
