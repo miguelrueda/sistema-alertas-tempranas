@@ -20,6 +20,8 @@ public class CVEHandler20 extends DefaultHandler {
     private CVEReference nRef;
     private List<VulnSoftware> listVulnSoft;
     private VulnSoftware nVulnSoft;
+    private List<Version> listVersions;
+    private Version nVersion;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private boolean bPublished = false;
     private boolean bModified = false;
@@ -63,7 +65,10 @@ public class CVEHandler20 extends DefaultHandler {
             if (null == listVulnSoft) {
                 listVulnSoft = new ArrayList<>();
             }
-            bVProduct = false;
+            if (null == listVersions) {
+                listVersions = new ArrayList<>();
+            }
+            bVProduct = true;
         }
     }
 
@@ -81,6 +86,7 @@ public class CVEHandler20 extends DefaultHandler {
             listRefs.add(nRef);
         } else if (qName.equalsIgnoreCase("vuln:product")) {
             listVulnSoft.add(nVulnSoft);
+            listVersions = new ArrayList<>();
         }
     }
 
@@ -112,11 +118,14 @@ public class CVEHandler20 extends DefaultHandler {
             bVSource = false;
         } else if (bVProduct) {
             //cpe:/a:mariadb:mariadb:5.5.34
-            //String vulnProduct = new String(ch, start, length);
-            //String [] name_vendor = getNameVendor(vulnProduct);
-            nVulnSoft.setName("");
-            nVulnSoft.setVendor(new String(ch, start, length));
-            nVulnSoft.setVersion(new ArrayList<Version>());
+            String vulnProduct = new String(ch, start, length);
+            String[] name_vendor = getNameVendor(vulnProduct);
+            nVulnSoft.setVendor(name_vendor[0]);
+            nVulnSoft.setName(name_vendor[1]);
+            nVersion = new Version(name_vendor[2]);
+            nVersion.setEdition(name_vendor[3]);
+            listVersions.add(nVersion);
+            nVulnSoft.setVersion(listVersions);
             bVProduct = false;
         }
     }
@@ -129,21 +138,28 @@ public class CVEHandler20 extends DefaultHandler {
 
     //cpe:/a:mariadb:mariadb:5.5.34
     private String getFName(String vulnProduct) {
-        String [] spl_prod = vulnProduct.split(":");
+        String[] spl_prod = vulnProduct.split(":");
         for (String string : spl_prod) {
             System.out.println(string);
         }
         return "temp";
     }
 
-
-
+    //cpe:/a:mariadb:mariadb:5.5.34
+    //cpe:/a:apache:camel:2.0.0:m1
     private String[] getNameVendor(String vulnProduct) {
-        String [] name_vendor = new String[2];
-        String [] spl_prod = vulnProduct.split(":/a:");
-        String [] spl_name = spl_prod[1].split(":");
+        String[] name_vendor = new String[4];
+        String[] spl_prod = vulnProduct.split(":/a:");
+        String[] spl_name = spl_prod[1].split(":");
         name_vendor[0] = spl_name[0];
         name_vendor[1] = spl_name[1];
+        name_vendor[2] = spl_name[2];
+        if (spl_name.length == 3) {
+            name_vendor[3] = "-1";
+        } else if (spl_name.length == 4) {
+            name_vendor[3] = spl_name[3];
+        }
+
         return name_vendor;
     }
 
