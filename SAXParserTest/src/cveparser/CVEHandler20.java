@@ -22,6 +22,7 @@ public class CVEHandler20 extends DefaultHandler {
     private VulnSoftware nVulnSoft;
     private List<Version> listVersions;
     private Version nVersion;
+    private CVSS nCVSS;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private boolean bPublished = false;
     private boolean bModified = false;
@@ -29,6 +30,14 @@ public class CVEHandler20 extends DefaultHandler {
     private boolean bCVScore = false;
     private boolean bVSource = false;
     private boolean bVProduct = false;
+    private boolean bBaseMetrics = false;
+    private boolean bAV = false;
+    private boolean bAC = false;
+    private boolean bAu = false;
+    private boolean bC = false; //Confidentialy impact
+    private boolean bI = false; //Integrity
+    private boolean bAI = false; //Availability Impact
+    private String stVector;
 
     public List<CVE> getCveList() {
         return cveList;
@@ -69,6 +78,21 @@ public class CVEHandler20 extends DefaultHandler {
                 listVersions = new ArrayList<>();
             }
             bVProduct = true;
+        } else if (qName.equalsIgnoreCase("cvss:base_metrics")) {
+            stVector = "";
+            bBaseMetrics = true;
+        } else if (qName.equalsIgnoreCase("cvss:access-vector")) {
+            bAV = true;
+        } else if (qName.equalsIgnoreCase("cvss:access-complexity")) {
+            bAC = true;
+        } else if (qName.equalsIgnoreCase("cvss:authentication")) {
+            bAu = true;
+        } else if (qName.equalsIgnoreCase("cvss:confidentiality-impact")) {
+            bC = true;
+        } else if (qName.equalsIgnoreCase("cvss:integrity-impact")) {
+            bI = true;
+        } else if (qName.equalsIgnoreCase("cvss:availability-impact")) {
+            bAI = true;
         }
     }
 
@@ -87,6 +111,10 @@ public class CVEHandler20 extends DefaultHandler {
         } else if (qName.equalsIgnoreCase("vuln:product")) {
             listVulnSoft.add(nVulnSoft);
             listVersions = new ArrayList<>();
+        } else if (qName.equalsIgnoreCase("cvss:base_metrics")) {
+            nCVSS.setVector("(" + stVector + ")");
+            stVector = "";
+            nuevoCVE.setCVSS(nCVSS);
         }
     }
 
@@ -111,7 +139,7 @@ public class CVEHandler20 extends DefaultHandler {
             nuevoCVE.setDescription(new String(ch, start, length));
             bSummary = false;
         } else if (bCVScore) {
-            nuevoCVE.setCVSS_score(new String(ch, start, length));
+            nCVSS = new CVSS(new String(ch, start, length), "");
             bCVScore = false;
         } else if (bVSource) {
             nRef.setSource(new String(ch, start, length));
@@ -127,6 +155,24 @@ public class CVEHandler20 extends DefaultHandler {
             listVersions.add(nVersion);
             nVulnSoft.setVersion(listVersions);
             bVProduct = false;
+        } else if (bAV) {
+            stVector += "AV:" + new String(ch, start, length).charAt(0) + "/";
+            bAV = false;
+        } else if (bAC) {
+            stVector += "AC:" + new String(ch, start, length).charAt(0) + "/";
+            bAC = false;
+        } else if (bAu) {
+            stVector += "Au:" + new String(ch, start, length).charAt(0) + "/";
+            bAu = false;
+        } else if (bC) {
+            stVector += "C:" + new String(ch, start, length).charAt(0) + "/";
+            bC = false;
+        } else if (bI) {
+            stVector += "I:" + new String(ch, start, length).charAt(0) + "/";
+            bI = false;
+        } else if (bAI) {
+            stVector += "A:" + new String(ch, start, length).charAt(0) + "/";
+            bAI = false;
         }
     }
 
@@ -148,8 +194,8 @@ public class CVEHandler20 extends DefaultHandler {
     //cpe:/a:mariadb:mariadb:5.5.34
     //cpe:/a:apache:camel:2.0.0:m1
     private String[] getNameVendor(String vulnProduct) {
-        String[] name_vendor = new String[4];
-        String[] spl_prod = vulnProduct.split(":/a:");
+        String[] name_vendor = new String[5];
+        String[] spl_prod = vulnProduct.split(":/a:|:/o:");
         String[] spl_name = spl_prod[1].split(":");
         name_vendor[0] = spl_name[0];
         name_vendor[1] = spl_name[1];
@@ -158,8 +204,9 @@ public class CVEHandler20 extends DefaultHandler {
             name_vendor[3] = "-1";
         } else if (spl_name.length == 4) {
             name_vendor[3] = spl_name[3];
+        } else if (spl_name.length == 5) {
+            name_vendor[3] = spl_name[4];
         }
-
         return name_vendor;
     }
 
