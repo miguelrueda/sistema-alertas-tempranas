@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="styles.css" />
+    </h:head>
+    <h:body>
+        <h2>DataTable Example</h2>
+        <h:form>
+            <h:dataTable value="#{userData.employees}" var="employee"
+                         styleClass="employeeTable"
+                         headerClass="employeeTableHeader"
+                         rowClasses="employeeTableOddRow, employeeTableEvenRow">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:inputText value="#{employee.name}" size="10" rendered="#{employee.canEdit}" />
+                    <h:outputText value="#{employee.name}" rendered="#{not employee.canEdit}" />
+                    #{employee.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Department</f:facet>
+                    <h:inputText value="#{employee.department}" size="20" rendered="#{employee.canEdit}" />
+                    <h:outputText value="#{employee.department}" rendered="#{not employee.canEdit}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Age</f:facet>
+                    <h:inputText value="#{employee.age}" size="5" rendered="#{employee.canEdit}" />
+                    <h:outputText value="#{employee.age}" rendered="#{not employee.canEdit}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Salary</f:facet>
+                    <h:inputText value="#{employee.salary}" size="5" rendered="#{employee.canEdit}" />
+                    <h:outputText value="#{employee.salary}" rendered="#{not employee.canEdit}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Edit</f:facet>
+                    <h:commandButton value="Edit" action="#{userData.editEmployee}" rendered="#{not employee.canEdit}">
+                        <f:setPropertyActionListener target="#{userData.employee}" value="#{employee}" />
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+            <br />
+            <h:commandButton value="Save Employees" action="#{userData.saveEmployees()}" />
+            <h3>Add Employee</h3>
+            <hr />
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><h:inputText size="10" value="#{userData.name}" /></td>
+                </tr>
+                <tr>
+                    <td>Department: </td>
+                    <td><h:inputText size="20" value="#{userData.dept}" /></td>
+                </tr>
+                <tr>
+                    <td>Age: </td>
+                    <td>
+                        <h:inputText size="5" id="ageInput" value="#{userData.age}" label="Age">
+                            <f:validateLongRange minimum="18" maximum="70" />
+                        </h:inputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Salary: </td>
+                    <td><h:inputText size="5" value="#{userData.salary}" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <h:commandButton value="Add Employee" action="#{userData.addEmployee()}" />
+                    </td>
+                </tr>
+            </table>
+        </h:form>
+        <h:message for="ageInput" style="color:red" />
+    </h:body>
+</html>

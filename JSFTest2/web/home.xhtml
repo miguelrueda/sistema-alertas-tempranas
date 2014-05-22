@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:graphicImage value="http://www.tutorialspoint.com/images/jsf-mini-logo.png" alt="#" />
+        <h2>Implicit Navigation</h2>
+        <hr />
+        <h:form>
+            <h3>Using managed bean</h3> 
+            <h:commandButton action="#{navigationController.moveToPage1()}" value="Page1" />
+            <h3>Using JSF Outcome</h3>
+            <h:commandButton action="page2" value="Page2" />
+        </h:form>
+        <br />
+        <h2>Conditional Navigation</h2>
+        <hr />
+        <h:form>
+            <h:commandLink action="#{navigationController.showPage()}" value="Page1" >
+                <f:param name="pageId" value="1" />
+            </h:commandLink>
+            <h:commandLink action="#{navigationController.showPage()}" value="Page2">
+                <f:param name="pageId" value="2" />
+            </h:commandLink>
+            <h:commandLink action="#{navigationController.showPage()}" value="Home" >
+                <f:param name="pageId" value="3" />
+            </h:commandLink>
+        </h:form>
+        <br />
+        <h2>"From Action" Navigation</h2>
+        <hr />
+        <h:form>
+            <h:commandLink action="#{navigationController.processPage1()}" value="Page1" />
+            <h:commandLink action="#{navigationController.processPage2()}" value="Page2" />
+        </h:form>
+        <br />
+        <h2>Forward vs Redirection Navigation</h2>
+        <hr />
+        <h:form>
+            <h3>Forward</h3>
+            <h:commandButton action="page1" value="Page1" />
+            <h3>Redirect</h3>
+            <h:commandButton action="page1?faces-redirect=true" value="Page1" />
+            <br /><br />
+            <h:commandButton action="page3?faces-redirect=true" value="Page3" />
+            <br /><br />
+            <h:commandButton action="page4?faces-redirect=true" value="Page4" />
+            <br />
+            <br />
+            <h:commandButton action="page5?faces-redirect=true" value="Page5" />
+            <br />
+            <br />
+            <h:commandButton action="ajax?faces-redirect=true" value="AJAX" />
+        </h:form>
+    </h:body>
+</html>
