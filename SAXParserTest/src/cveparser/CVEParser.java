@@ -96,6 +96,31 @@ public class CVEParser {
         return new ArrayList<>();
     }
     
+    /**
+     * Método con filtro
+     * @param is_ref
+     * @param filtro
+     * @return 
+     */
+     public List<CVE> getListCVE(InputStream is_ref, String filtro) {
+        isEntrada = is_ref;
+        saxParserFactory = SAXParserFactory.newInstance();
+        List<CVE> cveList = null;
+        try {
+            if (isEntrada.available() != 0) {
+                System.out.println("Available: " + isEntrada.available());
+            }
+            saxParser = saxParserFactory.newSAXParser();
+            cveHandler = new CVEHandler();
+            saxParser.parse(isEntrada, cveHandler);
+            cveList = cveHandler.getCveList();
+            return cveList;
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            LOG.log(Level.SEVERE, "Excepción en el parser: {0}", e);
+        }
+        return new ArrayList<>();
+    }
+    
     public void doParse20() {
         saxParserFactory = SAXParserFactory.newInstance();
         try {

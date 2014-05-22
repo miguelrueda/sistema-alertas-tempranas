@@ -80,7 +80,7 @@ public class GUITest extends javax.swing.JFrame {
                 .addComponent(fileButton)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(urlButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -90,8 +90,11 @@ public class GUITest extends javax.swing.JFrame {
 
     private void urlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlButtonActionPerformed
         String url_entry = JOptionPane.showInputDialog(this, "Ingresar la URL del archivo: ", "URL", JOptionPane.PLAIN_MESSAGE);
+        //String filtro = filterTextField.getText().trim();
         if ((url_entry != null) && (url_entry.length() > 0)) {
+
             analizarURL(url_entry);
+
         }
     }//GEN-LAST:event_urlButtonActionPerformed
 
@@ -164,15 +167,16 @@ public class GUITest extends javax.swing.JFrame {
                 connection = (HttpURLConnection) urlConnection;
             } else {
                 System.out.println("Ingresar una URL valida....");
-                return ;
+                return;
             }
             InputStream is = connection.getInputStream();
             CVEParser cveParser = new CVEParser();
             List<CVE> lista = cveParser.getListCVE(is);
+            JOptionPane.showMessageDialog(null, "Se encontraron: " + lista.size() + " entradas.");
             for (CVE cve : lista) {
                 System.out.println(cve);
             }
-            JOptionPane.showMessageDialog(null, "Se encontraron: " + lista.size() + " entradas.");
+            
         } catch (MalformedURLException e) {
             LOG.log(Level.SEVERE, "La URL ingresada no tiene un formato correcto: {0}", e);
 
@@ -185,5 +189,8 @@ public class GUITest extends javax.swing.JFrame {
         CVEParser cveParser = new CVEParser();
         List<CVE> lista = cveParser.getListCVE(fileInputStream);
         JOptionPane.showMessageDialog(null, "Se encontraron: " + lista.size() + " entradas.");
+        for (CVE cve : lista) {
+            System.out.println(cve);
+        }
     }
 }
