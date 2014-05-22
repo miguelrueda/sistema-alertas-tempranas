@@ -33,6 +33,14 @@ public class CVEHandler extends DefaultHandler {
     private CVSS nCVSS;
     private static final Logger LOG = Logger.getLogger(CVEHandler.class.getName());
     boolean bDescript = false;
+    private String filtro;
+
+    public CVEHandler() {
+    }
+
+    public CVEHandler(String filtro) {
+        this.filtro = filtro;
+    }
 
     /**
      * GETTER
