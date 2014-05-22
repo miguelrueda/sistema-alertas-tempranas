@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,8 @@ public class GUITest extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         urlButton = new javax.swing.JButton();
+        filterTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -58,17 +61,22 @@ public class GUITest extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Filtro");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(urlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(urlButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(filterTextField))
+                    .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -80,7 +88,11 @@ public class GUITest extends javax.swing.JFrame {
                 .addComponent(fileButton)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(urlButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -90,11 +102,11 @@ public class GUITest extends javax.swing.JFrame {
 
     private void urlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlButtonActionPerformed
         String url_entry = JOptionPane.showInputDialog(this, "Ingresar la URL del archivo: ", "URL", JOptionPane.PLAIN_MESSAGE);
-        //String filtro = filterTextField.getText().trim();
+        String filtro = filterTextField.getText().trim();
+        System.out.println("Filtro: " + filtro);
         if ((url_entry != null) && (url_entry.length() > 0)) {
-
-            analizarURL(url_entry);
-
+            System.out.println("***ANALIZANDO URL");
+            analizarURL(url_entry, filtro);
         }
     }//GEN-LAST:event_urlButtonActionPerformed
 
@@ -152,31 +164,40 @@ public class GUITest extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton fileButton;
+    private javax.swing.JTextField filterTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JButton urlButton;
     // End of variables declaration//GEN-END:variables
 
-    private void analizarURL(String url_entry) {
+    private void analizarURL(String url_entry, String filtro) {
         try {
             URL an_url = new URL(url_entry);
             System.out.println("URL ingresada: " + an_url);
             URLConnection urlConnection = an_url.openConnection();
             HttpURLConnection connection = null;
             if (urlConnection instanceof HttpURLConnection) {
+                System.out.println("***Conexión Abierta");
                 connection = (HttpURLConnection) urlConnection;
             } else {
                 System.out.println("Ingresar una URL valida....");
                 return;
             }
             InputStream is = connection.getInputStream();
-            CVEParser cveParser = new CVEParser();
-            List<CVE> lista = cveParser.getListCVE(is);
-            JOptionPane.showMessageDialog(null, "Se encontraron: " + lista.size() + " entradas.");
-            for (CVE cve : lista) {
+            System.out.println("***IS: " + is.available());
+            CVEParser cveParser = new CVEParser();;
+            if (!(filtro.length() == 0)) {
+                System.out.println("Con filtro");
+                cveParser.setFiltro(filtro);
+            } else {
+                System.out.println("Normal");
+            }
+            List<CVE> cves = cveParser.getListCVE(is);
+            for (CVE cve : cves) {
                 System.out.println(cve);
             }
-            
+            JOptionPane.showMessageDialog(null, "Se encontraron: " + cves.size() + " entradas.");
         } catch (MalformedURLException e) {
             LOG.log(Level.SEVERE, "La URL ingresada no tiene un formato correcto: {0}", e);
 
