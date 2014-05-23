@@ -8,6 +8,7 @@ import cve.entidades.VulnSoftware;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,10 +68,30 @@ class CVEHandler extends DefaultHandler {
             String cvss_score = attributes.getValue("CVSS_score");
             String cvss_vector = attributes.getValue("CVSS_vector");
             try {
-                nuevoCVE.setPublished(formatter.parse(published));
-                nuevoCVE.setModified(formatter.parse(modified));
-                nuevoCVE.setSeverity(severity);
-                nCVSS = new CVSS(cvss_score, cvss_vector);
+                if (published == null || published.length() == 0) {
+                    //LOG.log(Level.SEVERE, "No encontre el valor: fecha de publicación o el valor es nulo");
+                    nuevoCVE.setPublished(new Date());
+                } else {
+                    nuevoCVE.setPublished(formatter.parse(published));
+                }
+                if (modified == null || modified.length() == 0) {
+                    //LOG.log(Level.SEVERE, "No encontre el valor: fecha de modificación o el valor es nulo");
+                    nuevoCVE.setModified(new Date());
+                } else {
+                    nuevoCVE.setModified(formatter.parse(modified));
+                }
+                if (!(severity == null)) {
+                    nuevoCVE.setSeverity(severity);
+                } else {
+                    LOG.log(Level.SEVERE, "No encontre el valor: Severidad - Estableceré valor ND");
+                    nuevoCVE.setSeverity("ND");
+                }
+                if ((cvss_score == null) || (cvss_vector == null)) {
+                    LOG.log(Level.SEVERE, "No encontre el valor: CVSS - Estableceré valor ND");
+                    nCVSS = new CVSS("ND", "ND");
+                } else {
+                    nCVSS = new CVSS(cvss_score, cvss_vector);
+                }
                 nuevoCVE.setCVSS(nCVSS);
             } catch (ParseException e) {
                 LOG.log(Level.SEVERE, e.getMessage());
