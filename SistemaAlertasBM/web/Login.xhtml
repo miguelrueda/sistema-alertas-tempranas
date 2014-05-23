@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Login</title>
+        <h:outputStylesheet name="./css/default.css"/>
+    </h:head>
+    <h:body>
+        <!--
+                <p:panel>
+                    <h:form>
+                        <p:growl id="messages" showDetail="true" showSummary="true" />
+                        <h:panelGrid columns="3" cellpadding="5">
+                            <h:outputLabel for="firstname" value="Firstname: *" />
+                            <p:inputText id="firstname" value="# {blockUIView.firstname}" required="true" label="Firstname">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+                            <p:message for="firstname" />
+                            <h:outputLabel for="lastname" value="Lastname: *" />
+                            <p:inputText id="lastname" value="# {blockUIView.lastname}" required="true" label="Lastname" />
+                            <p:message for="lastname" />
+                        </h:panelGrid>
+                        <p:commandButton id="saveBtn" value="Save" icon="ui-icon-check" style="margin:0" actionListener="# {blockUIView.save()}" update="messages" />
+                    </h:form>
+                </p:panel>
+        -->
+        <h:form>
+            <p:growl id="messages" showDetail="true" showSummary="true" />
+            <p:dialog header="Login" widgetVar="dlg" resizable="false">
+
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:outputLabel for="firstname" value="Firstname: *" />
+                    <p:inputText id="firstname" value="#{blockUIView.firstname}" required="true" label="Firstname">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+                    <h:outputLabel for="lastname" value="Lastname: *" />
+                    <p:inputText id="lastname" value="#{blockUIView.lastname}" required="true" label="Lastname" />
+                    <f:facet name="footer">
+                        <p:commandButton value="Login" update="messages" actionListener="#{blockUIView.save()}"
+                                         oncomplete="handleLoginRequest(xhr, status, args)" />
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+        <script type="text/javascript">
+            if (args.validationFailed || !args.loggedIn) {
+                PF('dlg').jq.effect("shake", {times: 5}, 100);
+            } else {
+                PF('dlg').hide();
+                $('#loginLink').fadeOut();
+            }
+        </script>
+    </h:body>
+</html>

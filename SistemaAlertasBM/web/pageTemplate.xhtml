@@ -10,14 +10,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="./css/default.css"/>
         <h:outputStylesheet name="./css/cssLayout.css"/>
-        <title>Facelets Template</title>
+        <title>Index</title>
     </h:head>
 
     <h:body>
         <div id="top" class="top">
             <ui:insert name="top">
                 <h:form>
-                    <p:growl id="messages" showDetail="true" showSummary="true" />
+                    <p:growl id="messages" showDetail="true" showSummary="true" sticky="true" />
                     <p:menubar>
                         <p:submenu label="File" icon="ui-icon-document">
                             <p:submenu label="New" icon="ui-icon-contact">
@@ -28,18 +28,68 @@
                             <p:separator />
                             <p:menuitem value="Quit" url="#" />
                         </p:submenu>
+                        <p:submenu label="Edit" icon="ui-icon-pencil">
+                            <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                        </p:submenu>
+                        <p:submenu label="Help" icon="ui-icon-help">
+                            <p:menuitem  value="Contents" url="#" />
+                            <p:submenu label="Search" icon="ui-icon-search">
+                                <p:submenu label="Text" >
+                                    <p:menuitem value="Workspace" url="#" />
+                                </p:submenu>
+                                <p:menuitem value="File" url="#" />
+                            </p:submenu>
+                        </p:submenu>
+                        <p:submenu label="Actions" icon="ui-icon-gear">
+                            <p:submenu label="Ajax" icon="ui-icon-refresh">
+                                <p:menuitem value="Save" actionListener="#{menuController.save()}" icon="ui-icon-disk" update="messages" />
+                                <p:menuitem value="Update" actionListener="#{menuController.update()}" icon="ui-icon-arrowrefresh-1-w" update="messages" />
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax" icon="ui-icon-newwin">
+                                <p:menuitem value="Delete" actionListener="#{menuController.delete()}" icon="ui-icon-close" update="mesages" ajax="false" />
+                            </p:submenu>
+                        </p:submenu>
+                        <p:menuitem value="Quit" url="www.google.com" icon="ui-icon-close" />
+                        <f:facet name="options">
+                            <p:inputText style="margin-right: 10px" placeholder="Search" />
+                            <p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />
+                        </f:facet>
                     </p:menubar>
                 </h:form>
             </ui:insert>
         </div>
         <div>
             <div id="left">
-                <ui:insert name="left">Left</ui:insert>
-                <p:inputText />
+                <ui:insert name="left">
+                    <h:form>
+                        <p:growl id="leftGrowl" showDetail="true" showSummary="true" />
+                        <p:menu>
+                            <p:submenu label="Ajax MenuItems">
+                                <p:menuitem value="Save" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
+                                <p:menuitem value="Update" actionListener="#{menuController.update()}" update="leftGrowl" icon="ui-icon-arrowrefresh-1-w" />
+                             </p:submenu>
+                            <p:submenu label="Non-Ajax MenuItem">
+                                <p:menuitem value="Delete" actionListener="#{menuController.delete()}" update="leftGrowl" ajax="false" icon="ui-icon-close" />
+                            </p:submenu>
+                            <p:submenu label="Navigations">
+                                <p:menuitem value="External" url="http://www.google.com" icon="ui-icon-home" />
+                            </p:submenu>
+                        </p:menu>
+                    </h:form> 
+                </ui:insert>
             </div>
             <div id="content" class="left_content">
                 <ui:insert name="content">Content</ui:insert>
             </div>
+            <h:form>
+                    <p:dock position="bottom">
+                        <p:menuitem value="Home" icon="/resources/images/home.png" url="/faces/Index.xhtml" />
+                        <p:menuitem value="Vulnerabilities" icon="/resources/images/warning.png" url="/faces/Index.xhtml" /> 
+                        <p:menuitem value="Assets" icon="/resources/images/assets.png" url="/faces/Index.xhtml" />
+                        <p:menuitem value="Log Off" icon="/resources/images/logoff.png" url="/faces/Index.xhtml" />
+                    </p:dock>
+                </h:form>
         </div>
     </h:body>
 </html>
