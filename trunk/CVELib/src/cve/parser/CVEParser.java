@@ -123,12 +123,13 @@ public class CVEParser {
                 saxParser.parse(isEntrada, cveHandler);
                 cveList = cveHandler.getCveList();
                 LOG.log(Level.INFO, "Lista obtenida - Se encontraron {0} entradas", cveList.size());
-                if (filtro == null) {
+                if (filtro.length() == 0) {
                     LOG.log(Level.INFO, "No se encontro filtro!");
                     return cveList;
+                } else {
+                    LOG.log(Level.INFO, "Filtrando la lista con el parámetro: {0}", filtro);
+                    return filtrar(cveList);
                 }
-                LOG.log(Level.INFO, "Filtrando la lista con el parámetro: {0}", filtro);
-                return filtrar(cveList);
             } else {
                 LOG.log(Level.SEVERE, "No se pudo obtener el flujo de entrada");
             }
@@ -169,33 +170,46 @@ public class CVEParser {
      * (int i = 0; i < listaV.size(); i++) { if
      * (!listaV.get(i).getVendor().contains(filtro)) { cveList.remove(cve); } }
      * } return cveList; }
-    *
+     *
      */
-    
     /**
      * Método que se encarga de realizar el filtro a la lista obtenida de CVEs
-     * 
+     *
      * @param cveList una lista de cves obtenida de un flujo de entrada
-     * @return  una lista de CVEs filtrada a partir de un parámetro ingresado por el usuario
+     * @return una lista de CVEs filtrada a partir de un parámetro ingresado por
+     * el usuario
      */
     private List<CVE> filtrar(List<CVE> cveList) {
+        for (CVE cve : cveList) {
+            LOG.log(Level.INFO, cve.getName());
+        }
         LOG.log(Level.INFO, "Filtrando con el parámetro: {0}", filtro);
         //Crear una lista para agregar los elementos que cumplen con los valores del filtro
+        //LOG.log(Level.INFO, "Creando lista filtrada");
         List<CVE> filtrada = new ArrayList<>();
         //Iterar todos los elementos de la lista obtenida por la referencia
+        //LOG.log(Level.INFO, "Iterando la lista de cves");
         for (CVE cve : cveList) {
             //Obtener la lista de SW vulnerable de cada elemento de la lista
+            //LOG.log(Level.INFO, "Obteniendo lista de SW vulnerable");
             List<VulnSoftware> temp = cve.getVuln_soft();
-            //Iterar todos los elementos en la lista de SW vulnerable
-            for (int i = 0; i < temp.size(); i++) {
+            if (!(temp == null || temp.isEmpty())) {
+                //LOG.log(Level.INFO, "Iterando los elementos de la lista de SW vulnerable");
+                for (int i = 0; i < temp.size(); i++) {
                 //Variable temporal para almacenar el software vulnerable que se esta iterando
-                VulnSoftware aux = temp.get(i);
-                //Si el proveedor del SW se parece al filtro ingresado ingresarlo a la lista de resultado
-                if (aux.getVendor().toLowerCase().contains(filtro.toLowerCase())) {
-                    LOG.log(Level.INFO, "Elemento agregado: {0}", cve.getName());
-                    filtrada.add(cve);
+
+                    VulnSoftware aux = temp.get(i);
+                //LOG.log(Level.INFO, "Obteniendo el sw vulnerable {0}", cve.getName());
+                    //Si el proveedor del SW se parece al filtro ingresado ingresarlo a la lista de resultado
+                    if (aux.getVendor().toLowerCase().contains(filtro.toLowerCase())) {
+                        LOG.log(Level.INFO, "Elemento agregado: {0}", cve.getName());
+                        filtrada.add(cve);
+                    }
                 }
+            } else {
+                LOG.log(Level.SEVERE, "No hay SW vulnerable");
             }
+            //Iterar todos los elementos en la lista de SW vulnerable
         }
         LOG.log(Level.INFO, "Retornando la lista filtrada - Se encontraron {0}", filtrada.size());
         return filtrada;

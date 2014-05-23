@@ -208,11 +208,21 @@ public class CVE {
         StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + "}").append("\n");
         sb.append("{CVE severity=").append(severity).append(", published=").append(published).append(", modified=").append(modified).append("\n").append(cvss).append("}").append("\n");
         sb.append("{CVE description=").append(description).append("}\n");
-        for (CVEReference reference : references) {
-            sb.append(reference.toString()).append("\n");
+        if (!(references == null ||  references.isEmpty())) {
+            sb.append("References List").append("\n");
+            for (CVEReference ref : references) {
+                sb.append(ref.toString()).append("\n");
+            }
+        } else {
+            sb.append("No references Available");
         }
-        for (VulnSoftware soft : vuln_soft) {
-            sb.append(soft.toString()).append("\n");
+        if (!(vuln_soft == null || vuln_soft.isEmpty())) {
+            sb.append("Vulnerable Sofware list\n");
+            for (VulnSoftware soft: vuln_soft) {
+                sb.append(soft.toString()).append("\n");
+            }
+        } else {
+            sb.append("No Vulnerable SW Available\n");
         }
         return sb.toString();
     }
