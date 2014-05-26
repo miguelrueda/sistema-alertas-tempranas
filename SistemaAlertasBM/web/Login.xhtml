@@ -9,49 +9,45 @@
         <h:outputStylesheet name="./css/default.css"/>
     </h:head>
     <h:body>
-        <!--
-                <p:panel>
-                    <h:form>
-                        <p:growl id="messages" showDetail="true" showSummary="true" />
-                        <h:panelGrid columns="3" cellpadding="5">
-                            <h:outputLabel for="firstname" value="Firstname: *" />
-                            <p:inputText id="firstname" value="# {blockUIView.firstname}" required="true" label="Firstname">
-                                <f:validateLength minimum="2" />
+            <!--
+            <p:layout fullPage="true">
+                <p:layoutUnit position="north" size="60">
+                    BANNER
+                </p:layoutUnit>
+                <p:layoutUnit position="west" size="160">
+                    <p:graphicImage library="images" name="placeholder.png" style="max-width: 140px;" />
+                </p:layoutUnit>
+                <p:layoutUnit position="center">
+                    <p:panel id="_loginpanel" 
+                             header="Iniciar Sesión"
+                             style="margin-bottom: 20px">
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <h:outputLabel value="Nombre de Usuario: *" for="_username" />
+                            <p:inputText id="_username" value="# {loginBean.username}" required="true" label="username">
+                                <f:validateLength minimum="5" />
                             </p:inputText>
-                            <p:message for="firstname" />
-                            <h:outputLabel for="lastname" value="Lastname: *" />
-                            <p:inputText id="lastname" value="# {blockUIView.lastname}" required="true" label="Lastname" />
-                            <p:message for="lastname" />
+                            <h:outputLabel for="_password" value="Password: *" />
+                            <p:password id="_password" value="# {loginBean.password}" required="true" label="Password" />
                         </h:panelGrid>
-                        <p:commandButton id="saveBtn" value="Save" icon="ui-icon-check" style="margin:0" actionListener="# {blockUIView.save()}" update="messages" />
-                    </h:form>
+                        <f:facet name="footer">
+                            <p:commandButton id="_loginButton" icon="ui-icon-user" style="margin:0" value=" Iniciar Sesión" 
+                                             update="_msgs" actionListener="# {loginBean.doLogin()}" />
+                        </f:facet>
+                    </p:panel>
+                </p:layoutUnit>
+            </p:layout>
+            -->
+            <h:form id="login-form">
+                <p:growl id="_msgs" showDetail="true" />
+                <p:panel id="login-panel" header="Iniciar Sesión" style="margin-bottom: 20px">
+                    <h:panelGrid columns="2" cellpadding="8">
+                        <h:outputLabel value="Nombre de Usuario: *" for="username" />
+                        <p:inputText id="username" value="#{loginBean.username}" required="true" label="USERNAME" />
+                        <h:outputLabel value="Contraseña: *" for="password" />
+                        <p:password value="#{loginBean.password}" id="password" required="true" label="PASSWORD" />
+                        <p:commandButton id="button" update="_msgs" value="Iniciar Sesión" action="#{loginBean.doLogin()}" />
+                    </h:panelGrid>
                 </p:panel>
-        -->
-        <h:form>
-            <p:growl id="messages" showDetail="true" showSummary="true" />
-            <p:dialog header="Login" widgetVar="dlg" resizable="false">
-
-                <h:panelGrid columns="3" cellpadding="5">
-                    <h:outputLabel for="firstname" value="Firstname: *" />
-                    <p:inputText id="firstname" value="#{blockUIView.firstname}" required="true" label="Firstname">
-                        <f:validateLength minimum="2" />
-                    </p:inputText>
-                    <h:outputLabel for="lastname" value="Lastname: *" />
-                    <p:inputText id="lastname" value="#{blockUIView.lastname}" required="true" label="Lastname" />
-                    <f:facet name="footer">
-                        <p:commandButton value="Login" update="messages" actionListener="#{blockUIView.save()}"
-                                         oncomplete="handleLoginRequest(xhr, status, args)" />
-                    </f:facet>
-                </h:panelGrid>
-            </p:dialog>
-        </h:form>
-        <script type="text/javascript">
-            if (args.validationFailed || !args.loggedIn) {
-                PF('dlg').jq.effect("shake", {times: 5}, 100);
-            } else {
-                PF('dlg').hide();
-                $('#loginLink').fadeOut();
-            }
-        </script>
+            </h:form>
     </h:body>
 </html>
