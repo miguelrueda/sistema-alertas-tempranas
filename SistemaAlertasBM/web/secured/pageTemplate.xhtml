@@ -19,40 +19,19 @@
                 <h:form>
                     <p:growl id="messages" showDetail="true" showSummary="true" sticky="true" />
                     <p:menubar>
-                        <p:submenu label="File" icon="ui-icon-document">
-                            <p:submenu label="New" icon="ui-icon-contact">
-                                <p:menuitem value="Project" url="#" />
-                                <p:menuitem value="Other" url="#" />
-                                <p:menuitem value="Upload" url="#" />
-                            </p:submenu>
-                            <p:separator />
-                            <p:menuitem value="Quit" url="#" />
+                        <p:submenu label="Archivo" icon="ui-icon-document">
+                            <p:menuitem value="Nuevo Escaneo" icon="ui-icon-search" url="/secured/scan.xhtml" />
+                            <p:menuitem value="Nuevo Reporte" icon="ui-icon-note" />
                         </p:submenu>
-                        <p:submenu label="Edit" icon="ui-icon-pencil">
-                            <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w" />
-                            <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                        <p:submenu label="Perfil" icon="ui-icon-gear" >
+                            <p:menuitem value="Modificar Perfil" actionListener="#{menuController.save()}" update="messages" icon="ui-icon-person" />
                         </p:submenu>
-                        <p:submenu label="Help" icon="ui-icon-help">
-                            <p:menuitem  value="Contents" url="#" />
-                            <p:submenu label="Search" icon="ui-icon-search">
-                                <p:submenu label="Text" >
-                                    <p:menuitem value="Workspace" url="#" />
-                                </p:submenu>
-                                <p:menuitem value="File" url="#" />
-                            </p:submenu>
+                        <p:submenu label="Ayuda" icon="ui-icon-help">
+                            <p:menuitem  value="How-To?" url="#" icon="ui-icon-comment" />
+                            <p:menuitem value="About" url="#" icon="ui-icon-info" />
                         </p:submenu>
-                        <p:submenu label="Actions" icon="ui-icon-gear">
-                            <p:submenu label="Ajax" icon="ui-icon-refresh">
-                                <p:menuitem value="Save" actionListener="#{menuController.save()}" icon="ui-icon-disk" update="messages" />
-                                <p:menuitem value="Update" actionListener="#{menuController.update()}" icon="ui-icon-arrowrefresh-1-w" update="messages" />
-                            </p:submenu>
-                            <p:submenu label="Non-Ajax" icon="ui-icon-newwin">
-                                <p:menuitem value="Delete" actionListener="#{menuController.delete()}" icon="ui-icon-close" update="mesages" ajax="false" />
-                            </p:submenu>
-                        </p:submenu>
-                        <p:menuitem value="Quit" url="www.google.com" icon="ui-icon-close" />
                         <f:facet name="options">
-                            <p:inputText style="margin-right: 10px" placeholder="Search" />
+                            <!--<p:inputText style="margin-right: 10px" placeholder="Search" />-->
                             <p:commandButton id="logoutbutton" action="#{loginBean.doLogout()}" value="Cerrar Sesión" icon="ui-icon-extlink" />
                         </f:facet>
                     </p:menubar>
@@ -65,15 +44,18 @@
                     <h:form>
                         <p:growl id="leftGrowl" showDetail="true" showSummary="true" />
                         <p:menu>
-                            <p:submenu label="Ajax MenuItems">
-                                <p:menuitem value="Save" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
-                                <p:menuitem value="Update" actionListener="#{menuController.update()}" update="leftGrowl" icon="ui-icon-arrowrefresh-1-w" />
-                             </p:submenu>
-                            <p:submenu label="Non-Ajax MenuItem">
-                                <p:menuitem value="Delete" actionListener="#{menuController.delete()}" update="leftGrowl" ajax="false" icon="ui-icon-close" />
+                            <p:submenu label="Explorar Vulnerabilidades">
+                                <p:menuitem value="Por Año" url="/secured/perYear.xhtml" />
+                                <p:menuitem value="Mas Recientes" />
+                                <p:menuitem value="Actualizadas" />
+                                <p:separator />
+                                <p:menuitem value="Guardar" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
                             </p:submenu>
-                            <p:submenu label="Navigations">
-                                <p:menuitem value="External" url="http://www.google.com" icon="ui-icon-home" />
+                            <p:submenu label="Assets">
+                                <p:menuitem value="Administrar Assets" actionListener="#{menuController.delete()}" update="leftGrowl" ajax="false"  />
+                            </p:submenu>
+                            <p:submenu label="Reportes">
+                                <p:menuitem value="Nuevo Reporte" />
                             </p:submenu>
                         </p:menu>
                     </h:form> 
@@ -83,13 +65,13 @@
                 <ui:insert name="content">Content</ui:insert>
             </div>
             <h:form>
-                    <p:dock position="bottom">
-                        <p:menuitem value="Inicio" icon="/resources/images/home.png" url="/secured/welcome.xhtml" />
-                        <p:menuitem value="Vulnerabilities" icon="/resources/images/warning.png" url="/faces/Index.xhtml" /> 
-                        <p:menuitem value="Assets" icon="/resources/images/assets.png" url="/faces/Index.xhtml" />
-                        <p:menuitem action="#{loginBean.doLogout()}" value="Cerrar Sesión" icon="/resources/images/logoff.png" />
-                    </p:dock>
-                </h:form>
+                <p:dock position="bottom">
+                    <p:menuitem value="Inicio" icon="/resources/images/home.png" url="/secured/welcome.xhtml" />
+                    <p:menuitem value="Vulnerabilities" icon="/resources/images/warning.png" url="/faces/Index.xhtml" /> 
+                    <p:menuitem value="Assets" icon="/resources/images/assets.png" url="/faces/Index.xhtml" />
+                    <p:menuitem action="#{loginBean.doLogout()}" value="Cerrar Sesión" icon="/resources/images/logoff.png" />
+                </p:dock>
+            </h:form>
         </div>
     </h:body>
 </html>
