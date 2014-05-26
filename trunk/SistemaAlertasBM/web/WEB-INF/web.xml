@@ -11,7 +11,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -19,6 +19,20 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/Login.xhtml</welcome-file>
+        <welcome-file>secured/welcome.xhtml</welcome-file>
     </welcome-file-list>
+    <!-- Login filter -->
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>jsf.filters.LoginFilter</filter-class>
+    </filter>
+    <!-- Establecer el filtro para las paginas que se encuentren en /secured -->
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/secured/*</url-pattern>
+    </filter-mapping>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>
 </web-app>
