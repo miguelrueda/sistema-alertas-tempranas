@@ -9,45 +9,19 @@
         <h:outputStylesheet name="./css/default.css"/>
     </h:head>
     <h:body>
-            <!--
-            <p:layout fullPage="true">
-                <p:layoutUnit position="north" size="60">
-                    BANNER
-                </p:layoutUnit>
-                <p:layoutUnit position="west" size="160">
-                    <p:graphicImage library="images" name="placeholder.png" style="max-width: 140px;" />
-                </p:layoutUnit>
-                <p:layoutUnit position="center">
-                    <p:panel id="_loginpanel" 
-                             header="Iniciar Sesión"
-                             style="margin-bottom: 20px">
-                        <h:panelGrid columns="2" cellpadding="10">
-                            <h:outputLabel value="Nombre de Usuario: *" for="_username" />
-                            <p:inputText id="_username" value="# {loginBean.username}" required="true" label="username">
-                                <f:validateLength minimum="5" />
-                            </p:inputText>
-                            <h:outputLabel for="_password" value="Password: *" />
-                            <p:password id="_password" value="# {loginBean.password}" required="true" label="Password" />
-                        </h:panelGrid>
-                        <f:facet name="footer">
-                            <p:commandButton id="_loginButton" icon="ui-icon-user" style="margin:0" value=" Iniciar Sesión" 
-                                             update="_msgs" actionListener="# {loginBean.doLogin()}" />
-                        </f:facet>
-                    </p:panel>
-                </p:layoutUnit>
-            </p:layout>
-            -->
-            <h:form id="login-form">
-                <p:growl id="_msgs" showDetail="true" />
-                <p:panel id="login-panel" header="Iniciar Sesión" style="margin-bottom: 20px">
-                    <h:panelGrid columns="2" cellpadding="8">
-                        <h:outputLabel value="Nombre de Usuario: *" for="username" />
-                        <p:inputText id="username" value="#{loginBean.username}" required="true" label="USERNAME" />
-                        <h:outputLabel value="Contraseña: *" for="password" />
-                        <p:password value="#{loginBean.password}" id="password" required="true" label="PASSWORD" />
-                        <p:commandButton id="button" update="_msgs" value="Iniciar Sesión" action="#{loginBean.doLogin()}" />
-                    </h:panelGrid>
-                </p:panel>
-            </h:form>
+        <h:form id="login-form">
+            <p:growl id="_msgs" showDetail="true" />
+            <p:panel id="login-panel" header="Acceso" style="margin-bottom: 20px">
+                <h:panelGrid columns="2" cellpadding="8">
+                    <h:outputLabel value="Nombre de Usuario: *" for="username" />
+                    <p:inputText id="username" value="#{loginBean.username}" required="true" label="Usuario" >
+                        <f:validateLength minimum="5" />
+                    </p:inputText>
+                    <h:outputLabel value="Contraseña: *" for="password" />
+                    <p:password value="#{loginBean.password}" id="password" required="true" label="Contraseña" />
+                    <p:commandButton id="button" update="_msgs" value="Iniciar Sesión" action="#{loginBean.doLogin()}" />
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
     </h:body>
 </html>

@@ -62,7 +62,7 @@ public class LoginBean implements java.io.Serializable {
                 return navigationBean.redirectToWelcome();
             }
         }
-        FacesMessage msg = new FacesMessage("Login Error!", "Error MSG");
+        FacesMessage msg = new FacesMessage("Error", "El nombre de usuario o contraseña son incorrectos.");
         msg.setSeverity(FacesMessage.SEVERITY_ERROR);
         FacesContext.getCurrentInstance().addMessage(null, msg);
         LOG.log(Level.SEVERE, "Error de Inicio de Sesión - Redireccion a Login");
@@ -72,7 +72,7 @@ public class LoginBean implements java.io.Serializable {
     public String doLogout() {
         loggedIn = false;
         LOG.log(Level.SEVERE, "Cerrando Sesion - Redireccionando a Login");
-        FacesMessage msg = new FacesMessage("Logout Success!", "INFO MSG");
+        FacesMessage msg = new FacesMessage("Exito!", "La sesión fue cerrada exitosamente.");
         msg.setSeverity(FacesMessage.SEVERITY_INFO);
         FacesContext.getCurrentInstance().addMessage(null, msg);
         return navigationBean.redirectToLogin();
