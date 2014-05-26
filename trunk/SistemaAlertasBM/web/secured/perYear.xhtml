@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+
+        <ui:composition template="./pageTemplate.xhtml">
+
+            <ui:define name="content">
+                <h3>Vulnerabilidades de 2014</h3>
+                <p:separator />
+                <div class="tablestyle">
+                    <h:form id="tableform">
+                        <p:contextMenu for="vulnsTable">
+                            <p:menuitem value="Ver Detalle" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                        </p:contextMenu>
+                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" stickyHeader="true"
+                                     rowKey="#{vuln.name}"
+                                     selection="#{vulnerabilityBean.selectedVuln}"
+                                     selectionMode="single"
+                                     rows="10" paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     emptyMessage="No se encontraron vulnerabilidades que cumplan el criterio dado."
+                                     filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     rowsPerPageTemplate="10, 20">
+                            <f:facet name="header">
+                                Lista de Vulnerabilidades
+                            </f:facet>
+                            <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.name}" />
+                            </p:column>
+                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="exact">
+                                <h:outputText value="#{vuln.score}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="Vulnerability" widgetVar="vulnDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                            <p:outputPanel id="vulnDetail" style="text-align: center">
+                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}" columnClasses="label, value">
+                                    <h:outputText value="Name: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                    <h:outputText value="Score" />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.score}" />
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -9,8 +9,8 @@
     <h:body>
         <p:panel id="errorpanel" header="Error">
             <h:panelGrid columns="2" cellpadding="10">
-                <h1>404</h1>
-                <h2>Error! <span>Pagina no encontrada.</span></h2>
+                <h1>500</h1>
+                <h2>Error! <span>Recurso no encontrado dentro del contexto de la aplicación.</span></h2>
                 <br />
                 <h:form>
                     <p:commandButton action="#{navigationBean.redirectToWelcome()}" value="Inicio" icon="ui-icon-home" />
@@ -18,4 +18,5 @@
             </h:panelGrid>
         </p:panel>
     </h:body>
-</html> 
+</html>
+
