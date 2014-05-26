@@ -53,7 +53,7 @@
                         <p:menuitem value="Quit" url="www.google.com" icon="ui-icon-close" />
                         <f:facet name="options">
                             <p:inputText style="margin-right: 10px" placeholder="Search" />
-                            <p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />
+                            <p:commandButton id="logoutbutton" action="#{loginBean.doLogout()}" value="Cerrar Sesión" icon="ui-icon-extlink" />
                         </f:facet>
                     </p:menubar>
                 </h:form>
@@ -84,10 +84,10 @@
             </div>
             <h:form>
                     <p:dock position="bottom">
-                        <p:menuitem value="Home" icon="/resources/images/home.png" url="/faces/Index.xhtml" />
+                        <p:menuitem value="Inicio" icon="/resources/images/home.png" url="/secured/welcome.xhtml" />
                         <p:menuitem value="Vulnerabilities" icon="/resources/images/warning.png" url="/faces/Index.xhtml" /> 
                         <p:menuitem value="Assets" icon="/resources/images/assets.png" url="/faces/Index.xhtml" />
-                        <p:menuitem value="Log Off" icon="/resources/images/logoff.png" url="/faces/Index.xhtml" />
+                        <p:menuitem action="#{loginBean.doLogout()}" value="Cerrar Sesión" icon="/resources/images/logoff.png" />
                     </p:dock>
                 </h:form>
         </div>
