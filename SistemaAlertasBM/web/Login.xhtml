@@ -11,15 +11,15 @@
     <h:body>
         <h:form id="login-form">
             <p:growl id="_msgs" showDetail="true" />
-            <p:panel id="login-panel" header="Acceso" style="margin-bottom: 20px">
+            <p:panel id="login-panel" header="#{jsfmsgs.login_header}" style="margin-bottom: 20px" styleClass="customPanel">
                 <h:panelGrid columns="2" cellpadding="8">
-                    <h:outputLabel value="Nombre de Usuario: *" for="username" />
-                    <p:inputText id="username" value="#{loginBean.username}" required="true" label="Usuario" >
+                    <h:outputLabel value="#{jsfmsgs.login_user_label}" for="username" />
+                    <p:inputText id="username" value="#{loginBean.username}" required="true" label="Usuario" requiredMessage="#{jsfmsgs.login_user_required}" >
                         <f:validateLength minimum="5" />
                     </p:inputText>
-                    <h:outputLabel value="Contraseña: *" for="password" />
-                    <p:password value="#{loginBean.password}" id="password" required="true" label="Contraseña" />
-                    <p:commandButton id="button" update="_msgs" value="Iniciar Sesión" action="#{loginBean.doLogin()}" />
+                    <h:outputLabel value="#{jsfmsgs.login_pass_label}" for="password" />
+                    <p:password value="#{loginBean.password}" id="password" required="true" label="Contraseña" requiredMessage="#{jsfmsgs.login_pass_required}" />
+                    <p:commandButton id="button" update="_msgs" value="#{jsfmsgs.login_button_label}" action="#{loginBean.doLogin()}" />
                 </h:panelGrid>
             </p:panel>
         </h:form>

@@ -52,17 +52,17 @@ a:link:hover, a:visited:hover  {
     
 }
 
-/*
-.customDialog {
-    background: green;
+.customPanel {
+    background-color: #ffffff !important; 
 }
 
-.ui-dialog.customDialog .ui-dialog-content {
-    padding: 0;
-    margin: 20px 10px;
+.customPanel .ui-panel-titlebar {
+    background-color: #008b8b !important;
+    color: #ffffff !important; 
 }
-.ui-dialog-titlebar.ui-widget-header.customDialog {
-    background: green;
-    color: black;
-    box-shadow: none;
-}*/
+
+.customPanel .ui-panel-content .ui-button {
+    background-color: #008b8b !important;
+    color: #ffffff !important; 
+    font-size: 110% !important;
+}

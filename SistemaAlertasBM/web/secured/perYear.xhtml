@@ -10,20 +10,20 @@
         <ui:composition template="./pageTemplate.xhtml">
 
             <ui:define name="content">
-                <h3>Vulnerabilidades de 2014</h3>
+                <h3>#{jsfmsgs.perYear_header}</h3>
                 <p:separator />
                 <div class="tablestyle">
                     <h:form id="tableform">
                         <p:contextMenu for="vulnsTable">
-                            <p:menuitem value="Ver Detalle" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                            <p:menuitem value="#{jsfmsgs.perYear_context_detalle}" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
                         </p:contextMenu>
                         <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" 
                                      rowKey="#{vuln.name}"
                                      selection="#{vulnerabilityBean.selectedVuln}"
                                      selectionMode="single"
                                      rows="20" paginator="true"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     emptyMessage="No se encontraron vulnerabilidades que cumplan el criterio dado."
+                                     paginatorTemplate="#{jsfmsgs.perYear_table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
                                      filteredValue="#{vulnerabilityBean.filteredVulns}"
                                      rowsPerPageTemplate="20, 25, 30">
                             <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
@@ -33,7 +33,7 @@
                                 <h:outputText value="#{vuln.score}" />
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="Detalles de la Vulnerabilidad" position="center" widgetVar="vulnDialog" modal="true" 
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center" widgetVar="vulnDialog" modal="true" 
                                   showEffect="fade" hideEffect="fade" resizable="false"
                                   styleClass="customDialog">
                             <p:outputPanel id="vulnDetail">
@@ -46,7 +46,7 @@
                             </p:outputPanel>
                         </p:dialog>
                         <p:blockUI block="vulnsTable" trigger="vulnsTable" >
-                            Cargando <br />
+                            #{jsfmsgs.perYear_loading_message} <br />
                             <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px" />
                         </p:blockUI>
                      </h:form>
