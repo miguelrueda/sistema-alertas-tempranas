@@ -30,3 +30,39 @@ a:link:hover, a:visited:hover  {
 .ui-widget, .ui-widget .ui-widget {
     font-size: 80% !important;
 }
+
+.ui-dialog-content {
+    color: #000000;
+    font-size: 150%;
+}
+
+.customDialog {
+    background-color: #ffffff !important;
+}
+
+.customDialog > .ui-dialog-titlebar > span {
+    font-size: 120% !important;
+    color: #036fab !important;
+    text-align: center !important;
+}
+
+.customDialog .ui-dialog-content {
+    font-size: 150% !important;
+    color: #ece3a5 !important;
+    
+}
+
+/*
+.customDialog {
+    background: green;
+}
+
+.ui-dialog.customDialog .ui-dialog-content {
+    padding: 0;
+    margin: 20px 10px;
+}
+.ui-dialog-titlebar.ui-widget-header.customDialog {
+    background: green;
+    color: black;
+    box-shadow: none;
+}*/
