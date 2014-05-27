@@ -1,0 +1,13 @@
+<h3>POLL EXAMPLE</h3>
+        <h:form>
+            <h:outputText id="txt_count" value="#{counterBean.temp}" />
+            <p:poll listener="#{counterBean.actualizar}" update="txt_count" interval="3" />
+        </h:form>
+        <p:ajaxStatus style="height: 32px; width: 32px">
+            <f:facet name="start">
+                <p:graphicImage library="images" name="loading.gif" />
+            </f:facet>
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
