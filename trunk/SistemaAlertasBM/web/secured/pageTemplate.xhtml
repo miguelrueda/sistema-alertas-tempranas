@@ -20,15 +20,15 @@
                     <p:growl id="messages" showDetail="true" showSummary="true" sticky="true" />
                     <p:menubar>
                         <p:submenu label="Archivo" icon="ui-icon-document">
-                            <p:menuitem value="Nuevo Escaneo" icon="ui-icon-search" url="/secured/scan.xhtml" />
-                            <p:menuitem value="Nuevo Reporte" icon="ui-icon-note" />
+                            <p:menuitem value="Nuevo Escaneo" icon="ui-icon-search" url="/faces/Index.xhtml" />
+                            <p:menuitem value="Nuevo Reporte" icon="ui-icon-note" url="/faces/Index.xhtml" />
                         </p:submenu>
                         <p:submenu label="Perfil" icon="ui-icon-gear" >
                             <p:menuitem value="Modificar Perfil" actionListener="#{menuController.save()}" update="messages" icon="ui-icon-person" />
                         </p:submenu>
                         <p:submenu label="Ayuda" icon="ui-icon-help">
-                            <p:menuitem  value="How-To?" url="#" icon="ui-icon-comment" />
-                            <p:menuitem value="About" url="#" icon="ui-icon-info" />
+                            <p:menuitem  value="How-To?" url="/faces/Index.xhtml" icon="ui-icon-comment" />
+                            <p:menuitem value="About" url="/faces/Index.xhtml" icon="ui-icon-info" />
                         </p:submenu>
                         <f:facet name="options">
                             <!--<p:inputText style="margin-right: 10px" placeholder="Search" />-->
@@ -46,8 +46,8 @@
                         <p:menu>
                             <p:submenu label="Explorar Vulnerabilidades">
                                 <p:menuitem value="Por Año" url="/secured/perYear.xhtml" />
-                                <p:menuitem value="Mas Recientes" />
-                                <p:menuitem value="Actualizadas" />
+                                <p:menuitem value="Mas Recientes" url="/faces/Index.xhtml" />
+                                <p:menuitem value="Actualizadas" url="/faces/Index.xhtml" />
                                 <p:separator />
                                 <p:menuitem value="Guardar" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
                             </p:submenu>
@@ -55,7 +55,7 @@
                                 <p:menuitem value="Administrar Assets" actionListener="#{menuController.delete()}" update="leftGrowl" ajax="false"  />
                             </p:submenu>
                             <p:submenu label="Reportes">
-                                <p:menuitem value="Nuevo Reporte" />
+                                <p:menuitem value="Nuevo Reporte" url="/faces/Index.xhtml" />
                             </p:submenu>
                         </p:menu>
                     </h:form> 

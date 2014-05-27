@@ -12,7 +12,6 @@ public class NavigationBean implements java.io.Serializable {
     private static final long serialVersionUID = -41507L;
     private static final Logger LOG = Logger.getLogger(NavigationBean.class.getName());
     
-
     public NavigationBean() {
     }
     

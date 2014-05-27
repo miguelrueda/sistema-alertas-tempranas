@@ -13,13 +13,14 @@ import javax.faces.context.FacesContext;
 public class LoginBean implements java.io.Serializable {
 
     private static final long serialVersionUID = -1L;
+    private static final Logger LOG = Logger.getLogger(LoginBean.class.getName());
+    //TEMP
     private static final String[] users = {"t41507:Banxico1", "admin:admin"};
     private String username;
     private String password;
     private boolean loggedIn = false;
     @ManagedProperty(value = "#{navigationBean}")
     private NavigationBean navigationBean;
-    private static final Logger LOG = Logger.getLogger(LoginBean.class.getName());
 
     public LoginBean() {
     }
