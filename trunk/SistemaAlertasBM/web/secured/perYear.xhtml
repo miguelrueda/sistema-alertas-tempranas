@@ -17,28 +17,27 @@
                         <p:contextMenu for="vulnsTable">
                             <p:menuitem value="Ver Detalle" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
                         </p:contextMenu>
-                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" stickyHeader="true"
+                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" 
                                      rowKey="#{vuln.name}"
                                      selection="#{vulnerabilityBean.selectedVuln}"
                                      selectionMode="single"
-                                     rows="10" paginator="true"
+                                     rows="20" paginator="true"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      emptyMessage="No se encontraron vulnerabilidades que cumplan el criterio dado."
                                      filteredValue="#{vulnerabilityBean.filteredVulns}"
-                                     rowsPerPageTemplate="10, 20">
-                            <f:facet name="header">
-                                Lista de Vulnerabilidades
-                            </f:facet>
+                                     rowsPerPageTemplate="20, 25, 30">
                             <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
                                 <h:outputText value="#{vuln.name}" />
                             </p:column>
-                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="exact">
+                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
                                 <h:outputText value="#{vuln.score}" />
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="Vulnerability" widgetVar="vulnDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                            <p:outputPanel id="vulnDetail" style="text-align: center">
-                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}" columnClasses="label, value">
+                        <p:dialog header="Detalles de la Vulnerabilidad" position="center" widgetVar="vulnDialog" modal="true" 
+                                  showEffect="fade" hideEffect="fade" resizable="false"
+                                  styleClass="customDialog">
+                            <p:outputPanel id="vulnDetail">
+                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
                                     <h:outputText value="Name: " />
                                     <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
                                     <h:outputText value="Score" />
@@ -46,10 +45,13 @@
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>
-                    </h:form>
+                        <p:blockUI block="vulnsTable" trigger="vulnsTable" >
+                            Cargando <br />
+                            <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px" />
+                        </p:blockUI>
+                     </h:form>
                 </div>
             </ui:define>
-
         </ui:composition>
 
     </body>
