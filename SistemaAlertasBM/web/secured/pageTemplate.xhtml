@@ -10,7 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="./css/default.css"/>
         <h:outputStylesheet name="./css/cssLayout.css"/>
-        <title>Index</title>
+        <title>Sistema de Alertas</title>
     </h:head>
 
     <h:body>
@@ -19,6 +19,7 @@
                 <h:form>
                     <p:growl id="messages" showDetail="true" showSummary="true" sticky="true" />
                     <p:menubar>
+                        <p:menuitem value="Inicio" icon="ui-icon-home" url="/secured/welcome.xhtml" />
                         <p:submenu label="Archivo" icon="ui-icon-document">
                             <p:menuitem value="Nuevo Escaneo" icon="ui-icon-search" url="/faces/Index.xhtml" />
                             <p:menuitem value="Nuevo Reporte" icon="ui-icon-note" url="/faces/Index.xhtml" />
@@ -46,13 +47,11 @@
                         <p:menu>
                             <p:submenu label="Explorar Vulnerabilidades">
                                 <p:menuitem value="Por Año" url="/secured/perYear.xhtml" />
-                                <p:menuitem value="Mas Recientes" url="/faces/Index.xhtml" />
                                 <p:menuitem value="Actualizadas" url="/faces/Index.xhtml" />
-                                <p:separator />
-                                <p:menuitem value="Guardar" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
                             </p:submenu>
                             <p:submenu label="Assets">
-                                <p:menuitem value="Administrar Assets" actionListener="#{menuController.delete()}" update="leftGrowl" ajax="false"  />
+                                <p:menuitem value="Administrar Assets" url="/secured/manageAssets.xhtml"  />
+                                <p:menuitem value="Guardar" actionListener="#{menuController.save()}" update="leftGrowl" icon="ui-icon-disk" />
                             </p:submenu>
                             <p:submenu label="Reportes">
                                 <p:menuitem value="Nuevo Reporte" url="/faces/Index.xhtml" />

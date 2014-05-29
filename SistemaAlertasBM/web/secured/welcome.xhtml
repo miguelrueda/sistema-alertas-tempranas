@@ -6,15 +6,53 @@
       xmlns:p="http://primefaces.org/ui">
 
     <body>
-
         <ui:composition template="./pageTemplate.xhtml">
-
             <ui:define name="content">
-                <h:form>
-                    <h3>Bienvenido #{loginBean.username.toUpperCase()}!</h3>
-                    <p:separator />
-                    <h:outputText value="This is a secured welcome page!" />
-                    <br />
+                <h3>Bienvenido #{loginBean.username.toUpperCase()}!</h3>
+                <p:separator />
+                <h:outputText value="Vulnerabilidades Más Recientes" />
+                <div class="tablestyle">
+                    <h:form id="recentform">
+                        <p:contextMenu for="vulnsTable">
+                            <p:menuitem value="#{jsfmsgs.perYear_context_detalle}" update=":recentform:details" 
+                                        icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                        </p:contextMenu>
+                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" 
+                                     rowKey="#{vuln.name}"
+                                     selection="#{vulnerabilityBean.selectedVuln}"
+                                     selectionMode="single"
+                                     rows="20" paginator="true"
+                                     paginatorTemplate="#{jsfmsgs.perYear_table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
+                                     filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     rowsPerPageTemplate="20, 25, 30">
+                            <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.name}" />
+                            </p:column>
+                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.score}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center" widgetVar="vulnDialog" modal="true" 
+                                  showEffect="fade" hideEffect="fade" resizable="false"
+                                  styleClass="customDialog">
+                            <p:outputPanel id="details">
+                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
+                                    <h:outputText value="Name: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                    <h:outputText value="Score" />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.score}" />
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:blockUI block="vulnsTable" trigger="vulnsTable" >
+                            #{jsfmsgs.perYear_loading_message} <br />
+                            <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px" />
+                        </p:blockUI>
+                    </h:form>
+                </div>
+                <p:separator />
+                <h:form>                    
                     <h:commandLink action="#{loginBean.doLogout()}" value="Logout" />
                 </h:form>
             </ui:define>
