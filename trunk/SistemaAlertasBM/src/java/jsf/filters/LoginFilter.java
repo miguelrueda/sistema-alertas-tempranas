@@ -32,12 +32,12 @@ public class LoginFilter implements Filter {
          Para otras solicitudes loginBean esta presente pero necesitamos chcar si el usuario se ha logeado
          */
         if (loginBean == null || !loginBean.isLoggedIn()) {
-            LOG.log(Level.SEVERE, "EL usuario no esta logeado");
+            LOG.log(Level.SEVERE, "EL usuario no esta autenticado.");
             String contextPath = ((HttpServletRequest) request).getContextPath();
             LOG.log(Level.SEVERE, "Contexto: {0}", contextPath);
             ((HttpServletResponse) response).sendRedirect(contextPath + "/Login.xhtml");
         }
-        LOG.log(Level.SEVERE, "Chain do Filter");
+        LOG.log(Level.SEVERE, "Usuario Autenticado - OK/Cambiando al recurso solicitado");
         chain.doFilter(request, response);
     }
 

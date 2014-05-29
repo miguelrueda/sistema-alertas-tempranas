@@ -66,3 +66,30 @@ a:link:hover, a:visited:hover  {
     color: #ffffff !important; 
     font-size: 110% !important;
 }
+
+.customErrorPanel {
+    background-color: #ffffff !important;
+}
+
+.customErrorPanel .ui-panel-titlebar {
+    background-color: #ff5a00 !important;
+    color: #ffffff !important;
+    font-size: 150% !important;
+    text-transform: uppercase !important;
+}
+
+.customErrorPanel .ui-panel-content {
+    text-align: center !important;
+    color: #000000 !important;
+    font-size: 110% !important;
+}
+
+.customErrorPanel .ui-panel-content .ui-button {
+    background-color: #ff5a00 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: auto !important;
+    height: auto !important;
+    color: #ffffff !important;
+    font-size: 150% !important;
+}

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./pageTemplate.xhtml" >
+            <ui:define name="content">
+                <h3>#{jsfmsgs.manageAssets_header}</h3>
+                <p:separator />
+                <div class="tablestyle">
+                    <h:form id="tableform">
+                        <p:dataTable id="assetsTable" var="asset" value="#{assetsBean.assets}"
+                                     rowKey="#{asset.id}" selection="#{assetsBean.selectedAsset}"
+                                     selectionMode="single" rows="20"
+                                     paginator="true"
+                                     paginatorTemplate="#{jsfmsgs.manageAssets_table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.manageAssets_table_empty_query}"
+                                     filteredValue="#{assetsBean.filteredAssets}"
+                                     rowsPerPageTemplate="20, 25, 30">
+                            <p:column headerText="Id" sortBy="#{asset.id}" filterBy="#{asset.id}" filterMatchMode="contains">
+                                <h:outputText value="#{asset.id}" />
+                            </p:column>
+                            <p:column headerText="Vendor">
+                                <h:outputText value="#{asset.vendor}" />
+                            </p:column>
+                            <p:column headerText="Software">
+                                <h:outputText value="#{asset.software}" />
+                            </p:column>
+                            <p:column headerText="Version">
+                                <h:outputText value="#{asset.version}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:blockUI block="assetsTable" trigger="assetsTable">
+                            #{jsfmsgs.loadingMessage} <br/>
+                            <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px;" />
+                        </p:blockUI>
+                        <h:panelGrid columns="2">
+                            <p:panel header="Export All Data">
+                                <h:commandLink id="excel">
+                                    <p:graphicImage library="images" name="excel.png" />
+                                    <p:dataExporter type="xls" target="assetsTable" fileName="assets" />
+                                </h:commandLink>
+                                <h:commandLink id="pdf">
+                                    <p:graphicImage  library="images" name="pdf.png" />
+                                    <p:dataExporter type="pdf" target="assetsTable" fileName="assets"/>
+                                </h:commandLink>
+
+                                <h:commandLink id="csv">
+                                    <p:graphicImage library="images" name="csv.png" />
+                                    <p:dataExporter type="csv" target="assetsTable" fileName="assets" />
+                                </h:commandLink>
+
+                                <h:commandLink id="xml">
+                                    <p:graphicImage library="images" name="xml.png"/>
+                                    <p:dataExporter type="xml" target="assetsTable" fileName="assets" />
+                                </h:commandLink>
+                            </p:panel>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
