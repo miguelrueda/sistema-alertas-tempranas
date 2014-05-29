@@ -5,6 +5,9 @@ import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -59,7 +62,7 @@ public class Ejemplo2 {
         System.out.println(emps);
     }
 
-    private static void parseCSVToBeanList() {
+    private static void parseCSVToBeanList() throws FileNotFoundException {
         HeaderColumnNameTranslateMappingStrategy<Employee> beanStrategy = new HeaderColumnNameTranslateMappingStrategy<>();
         beanStrategy.setType(Employee.class);
 
@@ -72,7 +75,8 @@ public class Ejemplo2 {
         beanStrategy.setColumnMapping(columnMapping);
 
         CsvToBean<Employee> csvToBean = new CsvToBean<>();
-        CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(Ejemplo2.class.getResourceAsStream("/resources/employees.csv"))), ',');
+        File file = new File(Ejemplo2.class.getResource("/resources/employees.csv").getFile());
+        CSVReader reader = new CSVReader(new FileReader(file), ',');
         List<Employee> emps = csvToBean.parse(beanStrategy, reader);
         System.out.println(emps);
     }
