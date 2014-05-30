@@ -12,7 +12,7 @@ import javax.faces.bean.ManagedBean;
  */
 @ManagedBean
 @ApplicationScoped
-public class AssetsService {
+public class AssetsService implements java.io.Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetsService.class.getName());
     private final static String[] vendors;
