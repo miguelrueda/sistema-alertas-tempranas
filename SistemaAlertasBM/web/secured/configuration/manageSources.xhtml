@@ -2,13 +2,59 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
         <ui:composition template="./../pageTemplate.xhtml">
             <ui:define name="content">
                 <h3>Administración de Fuentes</h3>
                 <p:separator />
+                <div class="contentStyle">
+                    <h:form id="sourcesForm">
+                        <p:growl id="sourcesGrowl" autoUpdate="true" showDetail="true" showSummary="true" />
+                        <p:dataTable id="sourcesTable" value="#{sourcesBean.sourcesList}" var="fuente" editable="true">
+                            <p:ajax event="rowEdit" listener="#{sourcesBean.onRowEdit}" update=":sourcesForm:sourcesGrowl" />
+                            <p:ajax event="rowEditCancel" listener="#{sourcesBean.onRowCancel}" update=":sourcesForm:sourcesGrowl" />
+                            <p:column headerText="Id">
+                                <h:outputText value="#{fuente.fntId}" />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{fuente.fntName}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="nameInput" value="#{fuente.fntName}" style="width: 95%" label="Nombre"
+                                                     validatorMessage="Debes ingresar un nombre válido.">
+                                            <f:validateLength minimum="5" maximum="60" />
+                                        </p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Url">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{fuente.fntUrl}" />
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText id="urlInput" value="#{fuente.fntUrl}" style="width: 95%" label="URL"
+                                                     validator="urlValidator" ></p:inputText>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Fecha de Modificación">
+                                <h:outputText value="#{fuente.fntFechaModif}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="width: 32px">
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

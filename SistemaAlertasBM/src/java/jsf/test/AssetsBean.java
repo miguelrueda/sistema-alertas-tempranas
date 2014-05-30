@@ -1,10 +1,14 @@
 package jsf.test;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
+import org.primefaces.context.ApplicationContext;
 
 /**
  *
@@ -19,6 +23,7 @@ public class AssetsBean implements java.io.Serializable {
     @ManagedProperty("#{assetsService}")
     private AssetsService service;
     private Asset selectedAsset;
+    private static final Logger LOG = Logger.getLogger(AssetsBean.class.getName());
     
     @PostConstruct
     public void init() {
@@ -51,5 +56,4 @@ public class AssetsBean implements java.io.Serializable {
     public void setFilteredAssets(List<Asset> filteredAssets) {
         this.filteredAssets = filteredAssets;
     }
-    
 }
