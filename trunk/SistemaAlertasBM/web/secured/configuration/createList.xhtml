@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <title>Crear nueva lista</title>
+    </h:head>
+    <h:body>
+        Agregar productos a la lista
+        <h:form id="createListForm">
+            <p:growl id="createListGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
+            <p:tabView>
+                <p:tab title="Producto">
+                    <p:outputLabel value="Ingresar nombre del producto: " for="acProducto" />
+                    <p:autoComplete id="acProducto" value="#{assetsBean1.acProducto}" completeMethod="#{assetsBean1.completeText}" />
+                    <p:commandButton value="Submit" icon="ui-icon-check" update="output" />
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="#{assetsBean1.acProducto}" id="output" />
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="Proveedor">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="Proveedor" />
+                    </h:panelGrid>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </h:body>
+</html>
