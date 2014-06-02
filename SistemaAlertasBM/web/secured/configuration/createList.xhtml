@@ -6,27 +6,53 @@
     <h:head>
         <h:outputStylesheet name="./css/default.css"/>
         <h:outputStylesheet name="./css/cssLayout.css"/>
+        <h:outputScript library="js" name="calendar_es.js" />
         <title>Crear nueva lista</title>
     </h:head>
     <h:body>
-        Agregar productos a la lista
         <h:form id="createListForm">
             <p:growl id="createListGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
-            <p:tabView>
-                <p:tab title="Producto">
-                    <p:outputLabel value="Ingresar nombre del producto: " for="acProducto" />
-                    <p:autoComplete id="acProducto" value="#{assetsBean1.acProducto}" completeMethod="#{assetsBean1.completeText}" />
-                    <p:commandButton value="Submit" icon="ui-icon-check" update="output" />
-                    <h:panelGrid columns="2" cellpadding="10">
-                        <h:outputText value="#{assetsBean1.acProducto}" id="output" />
-                    </h:panelGrid>
+            <p:wizard flowListener="#{assetsBean1.onFlowProcess}">
+                <p:tab id="products" title="Productos">
+                    <p:panel header="Agregar Productos">
+                        <p:messages />
+                        <h:panelGrid columns="3" cellpadding="4">
+                            <p:outputLabel value="Ingresar nombre del producto" for="acproducto" />
+                            <p:autoComplete id="acproducto" value="#{assetsBean1.acProducto}" size="80"
+                                            completeMethod="#{assetsBean1.completarProducto}" />
+                            <p:commandButton value="Agregar" icon="ui-icon-check" update="output" actionListener="#{assetsBean1.agregarProducto}" />
+                        </h:panelGrid>
+                        <p:dataList id="output" value="#{assetsBean1.selectedProductsList}" var="prd"
+                                    emptyMessage="No se seleccionaron productos">
+                            #{prd}
+                        </p:dataList>
+                    </p:panel>
                 </p:tab>
-                <p:tab title="Proveedor">
-                    <h:panelGrid columns="2" cellpadding="10">
-                        <h:outputText value="Proveedor" />
-                    </h:panelGrid>
+                <p:tab id="info" title="Información">
+                    <p:panel header="Información de la Lista">
+                        <p:messages />
+                        <h:panelGrid columns="2" cellpadding="4">
+                            <p:outputLabel value="Nombre de la Lista" for="listname" />
+                            <p:inputText id="listname" value="#{assetsBean1.nombreLista}" size="80" />
+                        </h:panelGrid>
+                    </p:panel>
                 </p:tab>
-            </p:tabView>
+                <p:tab id="confirmation" title="Confirmación">
+                    <p:panel header="Confirmación">
+                        <p:messages />
+                        <h:panelGrid columns="2" cellpadding="4">
+                            <p:outputLabel value="Lista de Productos: " />
+                            <p:dataList value="#{assetsBean1.selectedProductsList}" var="prd">
+                                #{prd}
+                            </p:dataList>
+                            <p:outputLabel value="Nombre de la Lista: " />
+                            <p:outputLabel value="#{assetsBean1.nombreLista}" />
+                        </h:panelGrid>
+                        <p:commandButton value="Crear Lista" actionListener="#{assetsBean1.save}"
+                                         process="@this"/>
+                    </p:panel>
+                </p:tab>
+            </p:wizard>
         </h:form>
     </h:body>
 </html>
