@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -11,12 +12,34 @@
             <ui:define name="content">
                 <h3>Listas de Software</h3>
                 <p:separator />
-                <div class="contentStyle">
-                    <h:form id="assetsForm">
-                        <p:growl id="assetsMsgs" showDetail="true" showSummary="true" autoUpdate="true" />
-                        <p:commandButton value="Crear Lista de Software" actionListener="#{assetsBean1.showForm}" />
-                    </h:form>
-                </div>
+                <h:form id="assetsForm">
+                    <p:growl id="assetsMsgs" showDetail="true" showSummary="true" autoUpdate="true" />
+                    <p:commandButton value="Crear Lista de Software" actionListener="#{assetsBean1.showForm}" >
+                        <p:ajax event="dialogReturn" update="assetsMsgs, listsTable " listener="#{assetsBean1.listCreated}" />
+                    </p:commandButton>
+                    <p:separator />
+                    <div class="contentStyle">
+                        <p:dataTable id="listsTable" var="list" value="#{assetsBean1.prodListList}">
+                            <p:column headerText="Id">
+                                <h:outputText value="#{list.id}" />
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{list.nombre}" />
+                            </p:column>
+                            <p:column headerText="Fecha de Creación">
+                                <h:outputText value="#{list.fechaCreacion}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Lista de Productos">
+                                <ui:repeat var="prod" value="#{list.productos}">
+                                    <h:outputText value="#{prod.product}" />
+                                    <br />
+                                </ui:repeat>
+                            </p:column>
+                        </p:dataTable>
+                    </div> 
+                </h:form>
             </ui:define>
 
         </ui:composition>
