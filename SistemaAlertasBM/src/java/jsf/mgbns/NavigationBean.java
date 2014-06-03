@@ -27,7 +27,8 @@ public class NavigationBean implements java.io.Serializable {
     
     public String redirectToWelcome() {
         LOG.log(Level.SEVERE, "Redireccionando al Inicio");
-        return "/secured/welcome.xhtml?faces-redirect=true";
+        //return "/secured/welcome.xhtml?faces-redirect=true";
+        return "/secured/vulnerabilities/vulnUpdates.xhtml?faces-redirect=true";
     }
     
     public String toWelcome() {

@@ -15,18 +15,49 @@
                 <div class="contentStyle">
                     <h:form id="updtForm">
                         <p:growl id="updatesGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
-                        <p:panel id="updatesPanel" 
-                                 header="Actualizaciones">
-                            Algo
-                            <h:panelGrid columns="3" cellpadding="10">
-                                Algo
-                                <br />
-                                Algo
-                            </h:panelGrid>
-                            <f:facet name="footer">
-                                Ultima Actualización: Hora
+                        <p:contextMenu for="updtTable">
+                            <p:menuitem value="Ver Detalle" update=":updtForm:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                        </p:contextMenu>
+                        <p:dataTable id="updtTable" var="vuln" value="#{vulnerabilityBean.vulns}"
+                                     rowKey="#{vuln.name}"
+                                     selection="#{vulnerabilityBean.selectedVuln}"
+                                     selectionMode="single"
+                                     rows="20"
+                                     paginator="true"
+                                     paginatorTemplate="#{jsfmsgs.perYear_table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
+                                     filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     rowsPerPageTemplate="20,25,30">
+                            <f:facet name="header">
+                                Vulnerabilidades más recientes
                             </f:facet>
-                        </p:panel>
+                            <p:column headerText="Name" sortBy="#{vuln.name}">
+                                <h:outputText value="#{vuln.name}" />
+                            </p:column>
+                            <p:column headerText="Score" sortBy="#{vuln.score}">
+                                <h:outputText value="#{vuln.score}" />
+                            </p:column>
+                            <p:column headerText="Published" sortBy="#{vuln.published}">
+                                <h:outputText value="#{vuln.published}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center" widgetVar="vulnDialog" modal="true"
+                                  showEffect="fade" hideEffect="fade" resizable="true" styleClass="customDialog">
+                            <p:outputPanel id="vulnDetail">
+                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
+                                    <h:outputText value="Name: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                    <h:outputText value="Score: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.score}" />
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:blockUI block="updtTable" trigger="updtTable">
+                            #{jsfmsgs.loadingMessage} <br/>
+                            <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px;" />
+                        </p:blockUI>
                     </h:form>
                 </div>
             </ui:define>
@@ -34,24 +65,3 @@
 
     </body>
 </html>
-<!--
-<p:dataList value="# {vulnerabilityBean.vulns}" var="vuln"
-                                    paginator="true" rows="20" >
-                            <p:commandLink update=":updtForm:vulnDetail" oncomplete="PF('vulnDialog').show()" title="Ver Detalle"
-                                           style=" float: start"
-                                           styleClass="ui-icon ui-icon-search">
-                                <f:setPropertyActionListener value="# {vuln}" target="# {vulnerabilityBean.selectedVuln}" />
-                                <h:outputText value="# {vuln.name}" />
-                            </p:commandLink>
-                            <h:outputText value="# {vuln.name}" style="display: inline-block" />
-                        </p:dataList>
-                        <p:dialog header="Vulnerability" widgetVar="vulnDialog" modal="true" showEffect="blind" hideEffect="explode"
-                                  resizable="false">
-                            <p:outputPanel id="vulnDetail" style="text-align: center">
-                                <p:panelGrid columns="2" rendered="# {not empty vulnerabilityBean.selectedVuln}">
-                                    <h:outputText value="Id: " />
-                                    <h:outputText value="# {vulnerabilityBean.selectedVuln.name}" />
-                                </p:panelGrid>
-                            </p:outputPanel>
-                        </p:dialog>
--->
