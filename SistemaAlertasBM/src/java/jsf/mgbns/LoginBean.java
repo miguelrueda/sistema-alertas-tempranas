@@ -14,7 +14,7 @@ public class LoginBean implements java.io.Serializable {
 
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(LoginBean.class.getName());
-    //TEMP
+    //TEMP Cambiar por Servicio
     private static final String[] users = {"t41507:Banxico1", "admin:admin"};
     private String username;
     private String password;
@@ -73,18 +73,18 @@ public class LoginBean implements java.io.Serializable {
     public String doLogout() {
         loggedIn = false;
         LOG.log(Level.SEVERE, "Cerrando Sesion - Redireccionando a Login");
-        FacesMessage msg = new FacesMessage("Exito!", "La sesión fue cerrada exitosamente.");
-        msg.setSeverity(FacesMessage.SEVERITY_INFO);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+        //FacesMessage msg = new FacesMessage("Exito!", "La sesión fue cerrada exitosamente.");
+        //msg.setSeverity(FacesMessage.SEVERITY_INFO);
+        //FacesContext.getCurrentInstance().addMessage(null, msg);
         return navigationBean.redirectToLogin();
     }
 
 }
 
 /*
-REFERENCIAS
-http://www.itcuties.com/j2ee/jsf-2-login-filter-example/
-http://www.jroller.com/hasant/entry/jsf_logout_and_redirect_user
-http://javaknowledge.info/authentication-based-secure-login-logout-using-jsf-2-0-and-primefaces-3-4-1/
-http://todoenjava.blogspot.mx/2013/12/jsf-login-y-sesiones.html
-*/
+ REFERENCIAS
+ http://www.itcuties.com/j2ee/jsf-2-login-filter-example/
+ http://www.jroller.com/hasant/entry/jsf_logout_and_redirect_user
+ http://javaknowledge.info/authentication-based-secure-login-logout-using-jsf-2-0-and-primefaces-3-4-1/
+ http://todoenjava.blogspot.mx/2013/12/jsf-login-y-sesiones.html
+ */
