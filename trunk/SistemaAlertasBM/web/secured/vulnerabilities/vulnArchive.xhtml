@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -11,6 +13,73 @@
             <ui:define name="content">
                 <h3>Archivo de Vulnerabilidades</h3>
                 <p:separator />
+                <div class="contentStyle">
+                    <h:form id="tableform">
+                        <p:growl autoUpdate="true" showDetail="true" showSummary="true" />
+                        <p:contextMenu for="vulnsTable">
+                            <p:menuitem value="#{jsfmsgs.perYear_context_detalle}" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                        </p:contextMenu>
+                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" 
+                                     rowKey="#{vuln.name}"
+                                     selection="#{vulnerabilityBean.selectedVuln}"
+                                     selectionMode="single"
+                                     rows="20" paginator="true"
+                                     paginatorTemplate="#{jsfmsgs.perYear_table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
+                                     filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     rowsPerPageTemplate="20, 25, 30">
+                            <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.name}" />
+                            </p:column>
+                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.score}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="top" widgetVar="vulnDialog" modal="true" 
+                                  showEffect="fade" hideEffect="fade" resizable="false" 
+                                  styleClass="customDialog">
+                            <p:outputPanel id="vulnDetail">
+                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                            </p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <h:outputText value="Fecha de Creación: " />
+                                    <h:outputText value="Una Fecha Larga" />
+                                    <h:outputText value="Criticidad/Criticalidad: " />
+                                    Muy Alta
+                                    <h:outputText value="Impacto: " />
+                                    Muy Alto
+                                    <h:outputText value="CVSS: " />
+                                    10.0
+                                    <h:outputText value="Referencias:" />
+                                    <ui:repeat value="#{vulnerabilityBean.refsList}" var="ref">
+                                        <h:outputText value="#{ref}" /><br />
+                                    </ui:repeat>
+                                    <h:outputText value="Software Afectado: " />
+                                    <ui:repeat value="#{vulnerabilityBean.affSwlist}" var="swa">
+                                        <h:outputText value="#{swa}" /><br />
+                                    </ui:repeat>
+                                    <h:outputText value="Descripción: " />
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <h:outputText value="Descargar" />
+                                    <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s" >
+                                        <p:fileDownload value="#{vulnerabilityBean.file}" />
+                                    </p:commandButton>
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
+                        <p:blockUI block="vulnsTable" trigger="vulnsTable" >
+                            #{jsfmsgs.loadingMessage} <br />
+                            <p:graphicImage library="images" name="loading.gif" style="width: 32px; height: 32px" />
+                        </p:blockUI>
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

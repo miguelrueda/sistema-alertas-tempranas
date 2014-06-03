@@ -36,9 +36,10 @@ public class LoginFilter implements Filter {
             String contextPath = ((HttpServletRequest) request).getContextPath();
             LOG.log(Level.SEVERE, "Contexto: {0}", contextPath);
             ((HttpServletResponse) response).sendRedirect(contextPath + "/Login.xhtml");
+        } else {
+            LOG.log(Level.SEVERE, "Usuario Autenticado - OK/Cambiando al recurso solicitado");
+            chain.doFilter(request, response);
         }
-        LOG.log(Level.SEVERE, "Usuario Autenticado - OK/Cambiando al recurso solicitado");
-        chain.doFilter(request, response);
     }
 
     @Override
