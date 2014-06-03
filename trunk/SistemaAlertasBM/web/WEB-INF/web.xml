@@ -4,6 +4,11 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>secured/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -27,10 +32,6 @@
         <filter-class>jsf.filters.LoginFilter</filter-class>
     </filter>
     <!-- Establecer el filtro para las paginas que se encuentren en /secured -->
-    <filter-mapping>
-        <filter-name>LoginFilter</filter-name>
-        <url-pattern>/secured/*</url-pattern>
-    </filter-mapping>
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>bootstrap</param-value>
