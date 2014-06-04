@@ -83,13 +83,13 @@ public class ProductsBean implements java.io.Serializable {
         List<Producto> filtered = new ArrayList<>();
         for (int i = 0; i < productsList.size(); i++) {
             Producto prd = productsList.get(i);
-            if (prd.getProduct().toLowerCase().startsWith(qry)) {
+            if (prd.getProduct().toLowerCase().contains(qry.toLowerCase())) {
                 filtered.add(prd);
             }
         }
         return filtered;
     }
-
+    
     public List<Producto> getSelectedProductsList() {
         return selectedProductsList;
     }
@@ -158,7 +158,6 @@ public class ProductsBean implements java.io.Serializable {
     }
 
     public Producto getSelectedProduct() {
-        LOG.log(Level.INFO, "Filtro - Filtro - Filtro");
         return selectedProduct;
     }
 
