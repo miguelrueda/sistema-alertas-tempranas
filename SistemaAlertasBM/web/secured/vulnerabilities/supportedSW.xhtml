@@ -2,15 +2,49 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
 
         <ui:composition template="./../pageTemplate.xhtml">
 
             <ui:define name="content">
-                <h3>Información del SW soportado</h3>
+                <h3>Información de Software</h3>
                 <p:separator />
+                <div class="contentStyle">
+                    <h:form id="form">
+                        <p:growl id="swgrowl" autoUpdate="true" showDetail="true" showSummary="true" />
+                        <p:dataTable id="swTable" var="sw" value="#{productsBean.productsList}"
+                                     rowKey="#{sw.id}" selection="#{productsBean.selectedProduct}"
+                                     selectionMode="single" rows="20" paginator="true" 
+                                     paginatorTemplate="#{jsfmsgs.table_paginator_template}"
+                                     emptyMessage="#{jsfmsgs.manageAssets_table_empty_query}"
+                                     filteredValue="#{productsBean.filteredProducts}"
+                                     rowsPerPageTemplate="1, 20, 25, 30">
+                            <p:column headerText="Id">
+                                <h:outputText value="#{sw.id}" />
+                            </p:column>
+                            <p:column headerText="Vendor" sortBy="#{sw.vendor}" filterBy="#{sw.vendor}" filterMatchMode="contains">
+                                <h:outputText value="#{sw.vendor}" />
+                            </p:column>
+                            <p:column headerText="Product" sortBy="#{sw.product}" filterBy="#{sw.product}" filterMatchMode="contains" >
+                                <h:outputText value="#{sw.product}" />
+                            </p:column>
+                            <p:column headerText="Version">
+                                <h:outputText value="#{sw.version}" />
+                            </p:column>
+                            <p:column headerText="Tipo">
+                                <h:outputLabel value="Software" rendered="#{sw.type == 2}" />
+                                <h:outputLabel value="OS" rendered="#{sw.type == 1}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:blockUI block="swTable" trigger="swTable">
+                            #{jsfmsgs.loadingMessage} <br/> 
+                            <p:graphicImage library="images" name="loading.gif" style=" width: 32px; height: 32px" />
+                        </p:blockUI>
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>

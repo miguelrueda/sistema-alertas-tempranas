@@ -12,17 +12,18 @@
     <h:body>
         <h:form id="createListForm">
             <p:growl id="createListGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
-            <p:wizard flowListener="#{assetsBean1.onFlowProcess}">
+            <p:wizard flowListener="#{productsBean.onFlowProcess}">
                 <p:tab id="products" title="Productos">
                     <p:panel header="Agregar Productos">
                         <p:messages />
                         <h:panelGrid columns="3" cellpadding="4">
                             <p:outputLabel value="Ingresar nombre del producto" for="acproducto" />
-                            <p:autoComplete id="acproducto" value="#{assetsBean1.acProducto}" size="80"
-                                            completeMethod="#{assetsBean1.completarProducto}" />
-                            <p:commandButton value="Agregar" icon="ui-icon-check" update="output" actionListener="#{assetsBean1.agregarProducto}" />
+                            <p:autoComplete id="acproducto" value="#{productsBean.acProducto}" size="80"
+                                            completeMethod="#{productsBean.completarProducto}" />
+                            <p:commandButton value="Agregar" icon="ui-icon-check" update="output" 
+                                             actionListener="#{productsBean.agregarProducto}" />
                         </h:panelGrid>
-                        <p:dataList id="output" value="#{assetsBean1.selectedProductsList}" var="prd"
+                        <p:dataList id="output" value="#{productsBean.selectedProductsList}" var="prd"
                                     emptyMessage="No se seleccionaron productos">
                             #{prd}
                         </p:dataList>
@@ -33,7 +34,7 @@
                         <p:messages />
                         <h:panelGrid columns="2" cellpadding="4">
                             <p:outputLabel value="Nombre de la Lista" for="listname" />
-                            <p:inputText id="listname" value="#{assetsBean1.nombreLista}" size="80" />
+                            <p:inputText id="listname" value="#{productsBean.nombreLista}" size="80" />
                         </h:panelGrid>
                     </p:panel>
                 </p:tab>
@@ -42,13 +43,13 @@
                         <p:messages />
                         <h:panelGrid columns="2" cellpadding="4">
                             <p:outputLabel value="Lista de Productos: " />
-                            <p:dataList value="#{assetsBean1.selectedProductsList}" var="prd">
+                            <p:dataList value="#{productsBean.selectedProductsList}" var="prd">
                                 #{prd}
                             </p:dataList>
                             <p:outputLabel value="Nombre de la Lista: " />
-                            <p:outputLabel value="#{assetsBean1.nombreLista}" />
+                            <p:outputLabel value="#{productsBean.nombreLista}" />
                         </h:panelGrid>
-                        <p:commandButton value="Crear Lista" actionListener="#{assetsBean1.save}"
+                        <p:commandButton value="Crear Lista" actionListener="#{productsBean.save}"
                                          process="@this"/>
                     </p:panel>
                 </p:tab>
