@@ -14,12 +14,12 @@
                 <p:separator />
                 <h:form id="assetsForm">
                     <p:growl id="assetsMsgs" showDetail="true" showSummary="true" autoUpdate="true" />
-                    <p:commandButton value="Crear Lista de Software" actionListener="#{assetsBean1.showForm}" >
-                        <p:ajax event="dialogReturn" update="assetsMsgs, listsTable " listener="#{assetsBean1.listCreated}" />
+                    <p:commandButton value="Crear Lista de Software" actionListener="#{productsBean.showForm}" >
+                        <p:ajax event="dialogReturn" update="assetsMsgs, listsTable " listener="#{productsBean.listCreated}" />
                     </p:commandButton>
                     <p:separator />
                     <div class="contentStyle">
-                        <p:dataTable id="listsTable" var="list" value="#{assetsBean1.prodListList}">
+                        <p:dataTable id="listsTable" var="list" value="#{productsBean.prodListList}">
                             <p:column headerText="Id">
                                 <h:outputText value="#{list.id}" />
                             </p:column>

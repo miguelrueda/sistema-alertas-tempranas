@@ -23,6 +23,14 @@ public class Producto implements java.io.Serializable {
         this.version = version;
     }
 
+    public Producto(Integer id, String vendor, String product, String version, Integer type) {
+        this.id = id;
+        this.vendor = vendor;
+        this.product = product;
+        this.version = version;
+        this.type = type;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -74,7 +82,7 @@ public class Producto implements java.io.Serializable {
     @Override
     public String toString() {
         //return "Producto{" + "id=" + id + ", vendor=" + vendor + ", product=" + product + ", version=" + version + ", type=" + type + ", endOfLife=" + endOfLife + '}';
-        return "" + vendor + ": " + product + " " + version;
+        return "" + product + " " + version;
     }
 
 }

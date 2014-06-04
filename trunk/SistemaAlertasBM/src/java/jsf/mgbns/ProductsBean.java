@@ -20,28 +20,31 @@ import jsf.services.ProductsService;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FlowEvent;
 
-@ManagedBean(name = "assetsBean1")
+//@ManagedBean(name = "assetsBean1")
+@ManagedBean(name = "productsBean")
 @SessionScoped
-public class AssetsBean implements java.io.Serializable {
+public class ProductsBean implements java.io.Serializable {
 
     private String acProducto;
     private String nombreLista;
     private List<Producto> productsList;
+    private List<Producto> filteredProducts;
     private List<ListaProducto> prodListList;
     @ManagedProperty("#{productsService}")
     private ProductsService productsService;
     @ManagedProperty("#{listsService}")
     private ListsService listsService;
     private List<Producto> selectedProductsList;
-    private static final Logger LOG = Logger.getLogger(AssetsBean.class.getName());
+    private static final Logger LOG = Logger.getLogger(ProductsBean.class.getName());
+    private Producto selectedProduct;
 
     @PostConstruct
     public void init() {
-        productsList = productsService.crearListaProductos(10);
+        productsList = productsService.crearListaProductos(50);
         prodListList = listsService.crearListaDeListas();
     }
 
-    public AssetsBean() {
+    public ProductsBean() {
     }
 
     public void showForm() {
@@ -101,7 +104,7 @@ public class AssetsBean implements java.io.Serializable {
         if (selectedProductsList == null) {
             selectedProductsList = new ArrayList<>();
         }
-        selectedProductsList.add(new Producto(i++, "Vendor", this.acProducto, "version"));
+        selectedProductsList.add(new Producto(i++, "[Vendor] ", this.acProducto, " [version]"));
     }
 
     public String getNombreLista() {
@@ -152,6 +155,23 @@ public class AssetsBean implements java.io.Serializable {
 
     public void setListsService(ListsService listsService) {
         this.listsService = listsService;
+    }
+
+    public Producto getSelectedProduct() {
+        LOG.log(Level.INFO, "Filtro - Filtro - Filtro");
+        return selectedProduct;
+    }
+
+    public void setSelectedProduct(Producto selectedProduct) {
+        this.selectedProduct = selectedProduct;
+    }
+
+    public List<Producto> getFilteredProducts() {
+        return filteredProducts;
+    }
+
+    public void setFilteredProducts(List<Producto> filteredProducts) {
+        this.filteredProducts = filteredProducts;
     }
 
 }

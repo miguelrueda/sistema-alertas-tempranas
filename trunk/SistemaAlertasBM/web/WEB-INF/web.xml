@@ -6,7 +6,7 @@
     </context-param>
     <filter-mapping>
         <filter-name>LoginFilter</filter-name>
-        <url-pattern>secured/*</url-pattern>
+        <url-pattern>/secured/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     <servlet>
@@ -24,7 +24,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>secured/welcome.xhtml</welcome-file>
+        <welcome-file>Login.xhtml</welcome-file>
     </welcome-file-list>
     <!-- Login filter -->
     <filter>
