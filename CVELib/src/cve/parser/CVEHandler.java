@@ -83,11 +83,11 @@ class CVEHandler extends DefaultHandler {
                 if (!(severity == null)) {
                     nuevoCVE.setSeverity(severity);
                 } else {
-                    LOG.log(Level.SEVERE, "No encontre el valor: Severidad - Estableceré valor ND");
+                    //LOG.log(Level.SEVERE, "No encontre el valor: Severidad - Estableceré valor ND");
                     nuevoCVE.setSeverity("ND");
                 }
                 if ((cvss_score == null) || (cvss_vector == null)) {
-                    LOG.log(Level.SEVERE, "No encontre el valor: CVSS - Estableceré valor ND");
+                    //LOG.log(Level.SEVERE, "No encontre el valor: CVSS - Estableceré valor ND");
                     nCVSS = new CVSS("ND", "ND");
                 } else {
                     nCVSS = new CVSS(cvss_score, cvss_vector);
