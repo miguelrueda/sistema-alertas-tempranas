@@ -13,10 +13,10 @@
         <h:form id="createListForm">
             <p:growl id="createListGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
             <p:wizard flowListener="#{productsBean.onFlowProcess}">
-                <p:tab id="products" title="Productos">
+                <p:tab id="products" title="Productos" >
                     <p:panel header="Agregar Productos">
                         <p:messages />
-                        <h:panelGrid columns="3" cellpadding="4">
+                        <h:panelGrid columns="3" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Ingresar nombre del producto" for="acproducto" />
                             <p:autoComplete id="acproducto" value="#{productsBean.acProducto}" size="80"
                                             completeMethod="#{productsBean.completarProducto}" />
@@ -32,7 +32,7 @@
                 <p:tab id="info" title="Información">
                     <p:panel header="Información de la Lista">
                         <p:messages />
-                        <h:panelGrid columns="2" cellpadding="4">
+                        <h:panelGrid columns="2" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Nombre de la Lista" for="listname" />
                             <p:inputText id="listname" value="#{productsBean.nombreLista}" size="80" />
                         </h:panelGrid>
@@ -41,9 +41,9 @@
                 <p:tab id="confirmation" title="Confirmación">
                     <p:panel header="Confirmación">
                         <p:messages />
-                        <h:panelGrid columns="2" cellpadding="4">
+                        <h:panelGrid columns="2" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Lista de Productos: " />
-                            <p:dataList value="#{productsBean.selectedProductsList}" var="prd">
+                            <p:dataList value="#{productsBean.selectedProductsList}" var="prd" styleClass="wizardList">
                                 #{prd}
                             </p:dataList>
                             <p:outputLabel value="Nombre de la Lista: " />
