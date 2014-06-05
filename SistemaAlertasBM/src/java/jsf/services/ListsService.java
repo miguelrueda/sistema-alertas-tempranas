@@ -21,7 +21,7 @@ public class ListsService implements java.io.Serializable {
     public List<ListaProducto> crearListaDeListas() {
         listas = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            listas.add(new ListaProducto((i + 1), ("name " + i), new Date(), null));
+            listas.add(new ListaProducto((i + 1), ("Lista " + i), new Date()));
         }
         return listas;
     }

@@ -122,11 +122,32 @@ a:link:hover, a:visited:hover  {
 .ui-wizard .wizardForm {
     font-size: 150% !important;
 }
-
+/*
 .ui-wizard .ui-wizard-content .ui-datalist-item {
     font-size: 140% !important;
 }
 
 .ui-wizard .ui-wizard-content .ui-datalist-data {
     font-size: 80% !important;
+}*/
+
+.ui-wizard .ui-wizard-content .listaProductosSel {
+    font-size: 140% !important;
+}
+
+.ui-wizard .ui-button-text {
+    font-size: 120% !important;
+}
+
+customPanelWizard {
+    background-color: #ffffff !important;
+    width: 90% !important;
+}
+
+.resultsPanel {
+    background-color: #ffffff !important;
+}
+
+.resultsPanel > div {
+    height: 10px !important;
 }

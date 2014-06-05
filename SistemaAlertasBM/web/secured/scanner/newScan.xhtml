@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -12,34 +13,54 @@
             <ui:define name="content">
                 <h3>Nuevo Escaneo</h3>
                 <p:separator />
-
-                <h:form id="scanForm">
-                    <p:growl id="scanGrowl" showDetail="true" showSummary="true" />
-                    <div class="contentStyle">
-                        <p:wizard flowListener="#{scannerBean.onFlowProcess}">
-                            <p:tab id="info" title="Información">
-                                <p:panel header="Detalles del Escaneo">
-                                    <p:messages />
-                                    <h:panelGrid columns="2">
-                                        <h:outputText value="Valor: *" />
-                                        <p:calendar value="#{scannerBean.scan.scanDate}" required="true" label="Fecha" />
-                                    </h:panelGrid>
-                                </p:panel>
-                            </p:tab>
-                            <p:tab id="tab2" title="Tab2">
-                                <p:inputText />
-                            </p:tab>
-                            <p:tab id="confirm" title="Confirmación">
-                                <p:panel header="Confirmación">
-                                    <h:panelGrid columns="2">
-                                        <h:outputText value="Date: " />
-                                        <h:outputText value="#{scannerBean.scan.scanDate}" />
-                                    </h:panelGrid>
-                                </p:panel>
-                            </p:tab>
-                        </p:wizard>
-                    </div>
-                </h:form>
+                <div class="contentStyle">
+                    <h:form id="scanForm">
+                        <p:growl id="scanGrowl" autoUpdate="true" showDetail="true" showSummary="true" />
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="lista" value="Seleccionar Lista: "  />
+                            <p:selectOneMenu id="lista" value="#{scannerBean.productsList}" style="width: 300px"  >
+                                <f:selectItem itemLabel="Listas . . ." itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{productsBean.prodListList}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Escanear todas las listas: " />
+                            <p:selectBooleanCheckbox value="#{scannerBean.todaslasListas}">
+                                <p:ajax update="scanGrowl" listener="#{scannerBean.addMessage}" />
+                            </p:selectBooleanCheckbox>
+                            <p:outputLabel value="Vulnerabilidades: " />
+                            <p:selectOneRadio id="vulns" value="#{scannerBean.tipo}">
+                                <f:selectItem itemLabel="Todas" itemValue="1" />
+                                <f:selectItem itemLabel="Más Recientes" itemValue="2" />
+                            </p:selectOneRadio> 
+                            <br />
+                            <p:commandButton value="Ejecutar Análisis" 
+                                             actionListener="#{scannerBean.ejecutar}" update="resultsPanel"
+                                             onclick="PF('execBtn').disable()"
+                                             oncomplete="PF('execBtn').enable();PF('resultsPanel').hide()"
+                                             widgetVar="execBtn"/>
+                        </h:panelGrid>
+                        <!--
+                        <p:commandButton value="Ejecutar Análisis" type="button" 
+                                             onclick="PF('pbAjax').start();PF('executeButton').disable();" widgetVar="executeButton" />
+                        <p:progressBar widgetVar="pbAjax" ajax="true" 
+                                       value="# {scannerBean.progress}"
+                                       labelTemplate="{value}%" >
+                            <p:ajax event="complete" listener="# {scannerBean.onComplete}" update="scanGrowl, resultsPanel" 
+                                    oncomplete="executeButton.enable();" />
+                        </p:progressBar>
+                        <p:panel id="resultsPanel" visible="# {scannerBean.escaneoTerminado}">
+                            <f:facet name="header">
+                                Resultados
+                            </f:facet>
+                        </p:panel>
+                        -->
+                        <p:panel id="resultsPanel" styleClass="resultsPanel" visible="#{scannerBean.escaneoTerminado}" >
+                            <f:facet name="header">
+                                Resultados
+                            </f:facet>
+                            #{scannerBean.temp}
+                        </p:panel>
+                    </h:form>
+                </div>
             </ui:define>
 
         </ui:composition>
