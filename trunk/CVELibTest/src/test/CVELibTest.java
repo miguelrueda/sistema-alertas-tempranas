@@ -157,6 +157,7 @@ public class CVELibTest extends javax.swing.JFrame {
         cveParser = new CVEParser();
         cveParser.setFiltro(mFilter);
         List<CVE> listCVE = cveParser.getListCVE(manejarURL(mURL));
+        System.out.println(listCVE);
         JOptionPane.showMessageDialog(null, "Lista obtenida - Tamaño: " + listCVE.size());
     }
 
