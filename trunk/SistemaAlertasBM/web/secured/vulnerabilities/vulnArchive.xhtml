@@ -28,10 +28,10 @@
                                      emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
                                      filteredValue="#{vulnerabilityBean.filteredVulns}"
                                      rowsPerPageTemplate="20, 25, 30">
-                            <p:column headerText="Name" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
+                            <p:column headerText="Nombre" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
                                 <h:outputText value="#{vuln.name}" />
                             </p:column>
-                            <p:column headerText="Score" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
+                            <p:column headerText="Calificación" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
                                 <h:outputText value="#{vuln.score}" />
                             </p:column>
                         </p:dataTable>
@@ -48,7 +48,7 @@
                                         </p:row>
                                     </f:facet>
                                     <h:outputText value="Fecha de Creación: " />
-                                    <h:outputText value="Una Fecha Larga" />
+                                    <h:outputText value="01-01-2014" />
                                     <h:outputText value="Criticidad/Criticalidad: " />
                                     Muy Alta
                                     <h:outputText value="Impacto: " />
@@ -65,7 +65,10 @@
                                     </ui:repeat>
                                     <h:outputText value="Descripción: " />
                                     <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore <br />
+                                        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo <br />
+                                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.<br />
+                                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                                     </p>
                                     <h:outputText value="Descargar" />
                                     <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s" >

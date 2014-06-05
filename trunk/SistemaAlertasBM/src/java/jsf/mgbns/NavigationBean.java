@@ -36,4 +36,9 @@ public class NavigationBean implements java.io.Serializable {
         return "/secured/welcome.xhtml";
     }
     
+    public String redirectToResults() {
+        LOG.log(Level.INFO, "Redireccionando a los resultados");
+        return "/secured/scanner/scanResults.xhtml?faces-redirect=true";
+    }
+    
 }

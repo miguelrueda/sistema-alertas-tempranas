@@ -23,10 +23,13 @@
                             <p:commandButton value="Agregar" icon="ui-icon-check" update="output" 
                                              actionListener="#{productsBean.agregarProducto}" />
                         </h:panelGrid>
-                        <p:dataList id="output" value="#{productsBean.selectedProductsList}" var="prd"
-                                    emptyMessage="No se seleccionaron productos">
-                            #{prd}
-                        </p:dataList>
+                        <div class="listaProductosSel">
+                            <p:dataList id="output" value="#{productsBean.selectedProductsList}" var="prd"
+                                        emptyMessage="No se seleccionaron productos">
+                                #{prd}
+                            </p:dataList>
+                        </div>
+
                     </p:panel>
                 </p:tab>
                 <p:tab id="info" title="Información">

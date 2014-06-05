@@ -1,7 +1,9 @@
 package jpa.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class ListaProducto implements java.io.Serializable {
 
@@ -17,6 +19,13 @@ public class ListaProducto implements java.io.Serializable {
     public ListaProducto(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
+    }
+
+    public ListaProducto(Integer id, String nombre, Date fechaCreacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaCreacion = fechaCreacion;
+        this.productos = generarListaAleatoria();
     }
 
     public ListaProducto(Integer id, String nombre, Date fechaCreacion, List<Producto> productos) {
@@ -56,6 +65,21 @@ public class ListaProducto implements java.io.Serializable {
 
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
+    }
+
+    private List<Producto> generarListaAleatoria() {
+        Random rd = new Random();
+        int temp = rd.nextInt(5);
+        List<Producto> tempList = new ArrayList<>();
+        for (int i = 0; i < temp; i++) {
+            tempList.add(new Producto((i + 1), "Fabricante " + (i + 1), "Producto " + (i + 1), "Version " + (i + 1)));
+        }
+        return tempList;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 
 }
