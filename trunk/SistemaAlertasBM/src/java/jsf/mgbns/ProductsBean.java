@@ -53,6 +53,7 @@ public class ProductsBean implements java.io.Serializable {
         options.put("draggable", false);
         options.put("resizable", false);
         options.put("contentHeight", 400);
+        options.put("contentWidth", 800);
         RequestContext.getCurrentInstance().openDialog("/secured/configuration/createList", options, null);
     }
 

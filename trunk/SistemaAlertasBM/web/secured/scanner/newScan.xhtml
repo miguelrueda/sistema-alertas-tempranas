@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
 
@@ -11,6 +12,34 @@
             <ui:define name="content">
                 <h3>Nuevo Escaneo</h3>
                 <p:separator />
+
+                <h:form id="scanForm">
+                    <p:growl id="scanGrowl" showDetail="true" showSummary="true" />
+                    <div class="contentStyle">
+                        <p:wizard flowListener="#{scannerBean.onFlowProcess}">
+                            <p:tab id="info" title="Información">
+                                <p:panel header="Detalles del Escaneo">
+                                    <p:messages />
+                                    <h:panelGrid columns="2">
+                                        <h:outputText value="Valor: *" />
+                                        <p:calendar value="#{scannerBean.scan.scanDate}" required="true" label="Fecha" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="tab2" title="Tab2">
+                                <p:inputText />
+                            </p:tab>
+                            <p:tab id="confirm" title="Confirmación">
+                                <p:panel header="Confirmación">
+                                    <h:panelGrid columns="2">
+                                        <h:outputText value="Date: " />
+                                        <h:outputText value="#{scannerBean.scan.scanDate}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                        </p:wizard>
+                    </div>
+                </h:form>
             </ui:define>
 
         </ui:composition>

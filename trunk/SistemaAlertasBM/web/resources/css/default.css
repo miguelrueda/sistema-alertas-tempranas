@@ -110,3 +110,23 @@ a:link:hover, a:visited:hover  {
 .updatesPanel .ui-panel-titlebar {
     color: #000000 !important;
 }
+
+.ui-wizard  .ui-wizard-step-title {
+    font-size: 100% !important;
+}
+
+.ui-wizard-content .ui-panel-title {
+    font-size: 110% !important;
+}
+
+.ui-wizard .wizardForm {
+    font-size: 150% !important;
+}
+
+.ui-wizard .ui-wizard-content .ui-datalist-item {
+    font-size: 140% !important;
+}
+
+.ui-wizard .ui-wizard-content .ui-datalist-data {
+    font-size: 80% !important;
+}
