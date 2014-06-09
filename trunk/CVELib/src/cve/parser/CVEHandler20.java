@@ -194,7 +194,7 @@ class CVEHandler20 extends DefaultHandler {
     }
 
     /**
-     * Método para retornar la fecha en un arreglo para su conversión a Date
+     * Mét odo para retornar la fecha en un arreglo para su conversión a Date
      * @param datetime cadena obtenida del XML en formato datetime
      * @return  arreglo con fecha y hora
      */
@@ -205,7 +205,7 @@ class CVEHandler20 extends DefaultHandler {
     }
 
     /**
-     * Método para retornar el nombre 
+     * Mét odo para retornar el nombre 
      * 
      * @ par am vu lnProduct
      * @ ret urn 
@@ -221,7 +221,7 @@ class CVEHandler20 extends DefaultHandler {
     //cpe:/a:mariadb:mariadb:5.5.34
     //cpe:/a:apache:camel:2.0.0:m1
     /**
-     * Método que retorna el nombre y proveedor de un producto
+     * Mét odo que retorna el nombre y proveedor de un producto
      * 
      * @param vulnProduct cadena obtenida del XML
      * @return arreglo con el nombre, proveedor y versión o edición
