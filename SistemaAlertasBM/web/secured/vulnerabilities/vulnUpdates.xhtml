@@ -18,7 +18,7 @@
                         <p:contextMenu for="updtTable">
                             <p:menuitem value="Ver Detalle" update=":updtForm:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
                         </p:contextMenu>
-                        <p:dataTable id="updtTable" var="vuln" value="#{vulnerabilityBean.vulns}"
+                        <p:dataTable id="updtTable" var="vuln" value="#{vulnerabilityBean.vulnRecents}"
                                      rowKey="#{vuln.name}"
                                      selection="#{vulnerabilityBean.selectedVuln}"
                                      selectionMode="single"

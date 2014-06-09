@@ -8,16 +8,35 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import jpa.entities.Producto;
 
+/**
+ * Servicio para obtener los productos que soporta el sistema
+ *
+ * @author t41507
+ * @version 09.06.2014
+ */
 @ManagedBean
 @SessionScoped
 public class ProductsService implements java.io.Serializable {
-
-    private List<Producto> productsList;
+    
+    /**
+     * Atributos de serialización y de Logger
+     */
+    private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ProductsService.class.getName());
+    /**
+     * Atributos del servicio
+     */
+    private List<Producto> productsList;
+    /**
+     * TODO: Atributos temporales deben ser removidos
+     */
     private final static String[] vendors;
     private final static String[] products;
     private final static String[] versions;
 
+    /**
+     * Inicialización estatica de los vendedores, productos y versiones
+     */
     static {
         vendors = new String[5];
         vendors[0] = "Microsoft";
@@ -99,9 +118,18 @@ public class ProductsService implements java.io.Serializable {
 
     }
 
+    /**
+     *  Constructor sin parámetros
+     */
     public ProductsService() {
     }
 
+    /**
+     * Mét odo para crear la lista de productos de forma aleatoria
+     *
+     * @param size tamaño de elementos deseados
+     * @return Lista con cantidad de productos deseada
+     */
     public List<Producto> crearListaProductos(int size) {
         productsList = new ArrayList<>();
         if (size == 50) {
@@ -117,18 +145,38 @@ public class ProductsService implements java.io.Serializable {
         return productsList;
     }
 
+    /**
+     * Mét odo para obtener un proveedor de manera aleatoria
+     *
+     * @return String de vendedor aletorio
+     */
     public String getRandomVendor() {
         return vendors[(int) (Math.random() * 5)];
     }
 
+    /**
+     * Mét odo para obtener un producto de forma aleatoria
+     *
+     * @return String con producto aleatorio
+     */
     public String getRandomProduct() {
         return products[(int) (Math.random() * 50)];
     }
 
+    /**}
+     * Mét odo para obtener una versión de forma aleatoria
+     *
+     * @return String con una versión aleatoria
+     */
     public String getRandomVersion() {
         return versions[(int) (Math.random() * 11)];
     }
 
+    /**
+     * Mét odo para obtener un tipo de producto aleatorio
+     *
+     * @return 1 si es SW, 2 si es OS
+     */
     public Integer getRandomType() {
         Random rd = new Random();
         int aux = rd.nextInt(10);

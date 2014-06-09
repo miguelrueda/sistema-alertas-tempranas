@@ -10,11 +10,28 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.ValidatorException;
 
+/**
+ * Validador para la URL de las fuentes ingresadas
+ *
+ * @author t41507
+ * @version 09.06.2014
+ */
 @FacesValidator("urlValidator")
 public class URLValidator implements javax.faces.validator.Validator {
 
+    /**
+     * Atributo Logger
+     */
     private static final Logger LOG = Logger.getLogger(URLValidator.class.getName());
 
+    /**
+     * Mét odo validar sobrecargado para verificar la URL
+     *
+     * @param context de tipo FacesContext
+     * @param component de tipo UIComponent
+     * @param value de tipo Object, es el valor a validar
+     * @throws ValidatorException
+     */
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String sValue = (String) value;
@@ -28,8 +45,15 @@ public class URLValidator implements javax.faces.validator.Validator {
         }
     }
 
+    /**
+     * Mét odo para comprobar la URL mediante una expresion regular
+     * 
+     * @param sValue valor de la URL a validar
+     * @return  boolean con el resultado del match
+     */
     private boolean validateUrl(String sValue) {
-        Pattern urlPattern = Pattern.compile("((https?|ftp|file):((//)|(\\\\\\\\))+[\\\\w\\\\d:#@%/;$()~_?\\\\+-=\\\\\\\\\\\\.&]*)", Pattern.CASE_INSENSITIVE);
+        Pattern urlPattern = Pattern.compile("((https?|ftp|file):((//)|(\\\\\\\\))+[\\\\w\\\\d:#@%/;$()~_?\\\\+-=\\\\\\\\\\\\.&]*)", 
+                Pattern.CASE_INSENSITIVE);
         Matcher matcher = urlPattern.matcher(sValue);
         return matcher.find();
     }

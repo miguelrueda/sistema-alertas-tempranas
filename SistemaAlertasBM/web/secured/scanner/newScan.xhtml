@@ -20,7 +20,7 @@
                             <p:outputLabel for="lista" value="Seleccionar Lista: "  />
                             <p:selectOneMenu id="lista" value="#{scannerBean.productsList}" style="width: 300px"  >
                                 <f:selectItem itemLabel="Listas . . ." itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{productsBean.prodListList}" />
+                                <f:selectItems value="#{productsListsBean.prodListList}" />
                             </p:selectOneMenu>
                             <p:outputLabel value="Escanear todas las listas: " />
                             <p:selectBooleanCheckbox value="#{scannerBean.todaslasListas}">

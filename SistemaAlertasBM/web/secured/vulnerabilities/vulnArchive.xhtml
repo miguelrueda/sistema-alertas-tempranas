@@ -17,9 +17,10 @@
                     <h:form id="tableform">
                         <p:growl autoUpdate="true" showDetail="true" showSummary="true" />
                         <p:contextMenu for="vulnsTable">
-                            <p:menuitem value="#{jsfmsgs.perYear_context_detalle}" update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
+                            <p:menuitem value="#{jsfmsgs.perYear_context_detalle}" 
+                                        update=":tableform:vulnDetail" icon="ui-icon-search" oncomplete="PF('vulnDialog').show()" />
                         </p:contextMenu>
-                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulns}" 
+                        <p:dataTable id="vulnsTable" var="vuln" value="#{vulnerabilityBean.vulnArchive}" 
                                      rowKey="#{vuln.name}"
                                      selection="#{vulnerabilityBean.selectedVuln}"
                                      selectionMode="single"
