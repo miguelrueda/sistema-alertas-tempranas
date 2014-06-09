@@ -53,7 +53,7 @@ public class CVEParser {
     }
 
     /**
-     * Método de prueba que se encarga de ejecutar el parseo mediante la
+     * Mét odo de prueba que se encarga de ejecutar el parseo mediante la
      * recepción del archivo CAMBIOS PENDIENTES 23.05.2014
      */
     public void doParse() {
@@ -73,7 +73,7 @@ public class CVEParser {
     }
 
     /**
-     * Método que se encarga de ejecutar el parseo del flujo de entrada
+     * Mét odo que se encarga de ejecutar el parseo del flujo de entrada
      *
      * @param is_ref referencia al flujo de entrada del archivo
      */
@@ -103,7 +103,7 @@ public class CVEParser {
     }
 
     /**
-     * Método que se encarga de obtener la lista de CVEs a partir de un flujo de
+     * Mét odo que se encarga de obtener la lista de CVEs a partir de un flujo de
      * entrada establecido por un XML o por una URL
      *
      * @param is_ref Referencia al flujo de entrada
@@ -141,7 +141,7 @@ public class CVEParser {
     }
 
     /**
-     * Método que se encarga de realizar el parseo para el xml version 1.1
+     * Mét odo que se encarga de realizar el parseo para el xml version 1.1
      */
     public void doParse20() {
         saxParserFactory = SAXParserFactory.newInstance();
@@ -173,7 +173,7 @@ public class CVEParser {
      *
      */
     /**
-     * Método que se encarga de realizar el filtro a la lista obtenida de CVEs
+     * Mét odo que se encarga de realizar el filtro a la lista obtenida de CVEs
      *
      * @param cveList una lista de cves obtenida de un flujo de entrada
      * @return una lista de CVEs filtrada a partir de un parámetro ingresado por
