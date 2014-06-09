@@ -9,7 +9,19 @@
         <ui:composition template="./../pageTemplate.xhtml">
 
             <ui:define name="content">
-                <h:outputLabel value="#{scannerBean.temp}" />
+                <!--<h:outputLabel value="# {scannerBean.temp}" />-->
+                <p>
+                    <h:outputText id="outputText1" value="1 " style="font-weight: bold; font-size: larger; text-align: center" />
+                </p>
+                <p>
+                    <h:outputText id="outputText2" value="Hello #{param['scanForm:inputText1']}" />
+                </p>
+                <p>
+                    <h:outputText id="outputText3" value="'target' ==> #{param.target}" />
+                </p>
+                <p>
+                    <h:outputText id="outputText4" value="'scanForm:inputText1' (name) ==> #{param['scanForm:inputText1']}" />
+                </p>
             </ui:define>
 
         </ui:composition>
