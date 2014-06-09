@@ -26,7 +26,7 @@ public class MainTest {
     private static final Logger LOG = Logger.getLogger(MainTest.class.getName());
 
     /**
-     * Método Main
+     * Mét odo Main
      *
      * @param args
      */

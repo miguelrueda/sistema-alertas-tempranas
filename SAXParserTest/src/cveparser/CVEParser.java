@@ -39,7 +39,7 @@ public class CVEParser {
     }
 
     /**
-     * Método que se encarga de ejecutar el parseo mediante la recepción del
+     * Mét odo que se encarga de ejecutar el parseo mediante la recepción del
      * archivo
      */
     public void doParse() {
@@ -59,7 +59,7 @@ public class CVEParser {
     }
 
     /**
-     * Método que se encarga de ejecutar el parseo del flujo de entrada
+     * Mét odo que se encarga de ejecutar el parseo del flujo de entrada
      *
      * @param is_ref referencia al flujo de entrada del archivo
      */
