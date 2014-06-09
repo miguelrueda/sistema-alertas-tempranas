@@ -1,5 +1,6 @@
 package jsf.mgbns;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -7,10 +8,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import jpa.entities.ListaProducto;
 import jpa.entities.Producto;
 import jpa.entities.Scan;
-import org.primefaces.event.FlowEvent;
 
 /**
  * Bean para realizar el escaneo dentro de la aplicación
@@ -32,6 +38,7 @@ public class ScannerBean implements java.io.Serializable {
      */
     private Scan scan;
     private List<Producto> productsList;
+    private ListaProducto prodListList;
     private boolean todaslasListas;
     private Integer tipoEscaneo;
     private boolean escaneoTerminado = false;
@@ -83,6 +90,14 @@ public class ScannerBean implements java.io.Serializable {
      */
     public void setProductsList(List<Producto> productsList) {
         this.productsList = productsList;
+    }
+
+    public ListaProducto getProdListList() {
+        return prodListList;
+    }
+
+    public void setProdListList(ListaProducto prodListList) {
+        this.prodListList = prodListList;
     }
 
     /**
@@ -239,6 +254,36 @@ public class ScannerBean implements java.io.Serializable {
      */
     public void setEscaneoTerminado(boolean escaneoTerminado) {
         this.escaneoTerminado = escaneoTerminado;
+    }
+
+    /**
+     * Código de Prueba
+     */
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void forward() {
+        try {
+            FacesContext ctx = FacesContext.getCurrentInstance();
+            ExternalContext ectx = ctx.getExternalContext();
+            HttpServletRequest request = (HttpServletRequest) ectx.getRequest();
+            HttpServletResponse response = (HttpServletResponse) ectx.getResponse();
+            request.setAttribute("nombre", name);
+            request.setAttribute("temp", 10);
+            request.setAttribute("SCAN", scan);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/ScannerServlet");
+            dispatcher.forward(request, response);
+            ctx.responseComplete();
+        } catch (ServletException | IOException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepción: {0}", e.getMessage());
+        }
     }
 
 }

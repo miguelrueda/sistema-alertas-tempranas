@@ -16,9 +16,19 @@
                 <div class="contentStyle">
                     <h:form id="scanForm">
                         <p:growl id="scanGrowl" autoUpdate="true" showDetail="true" showSummary="true" />
-                        <h:panelGrid columns="2" cellpadding="10">
+                        <h:panelGrid id="panelGrid1" columns="2">
+                            <h:outputLabel id="outputLabel1" for="inputText1" value="Please enter your name: " />
+                            <h:inputText id="inputText1" value="#{scannerBean.name}" required="true" />
+                            <h:message id="message1" for="inputText1" />
+                            <h:panelGroup id="panelGroup1">
+                                <h:commandButton id="commandButton1" value="Forward" type="submit" action="#{scannerBean.forward}" />
+                                <h:commandButton id="commandButton2" value="Process" type="submit" action="#{scannerBean.forward}" >
+                                    <f:param id="param1" name="target" value="/secured/scanner/scanResults.xhtml" />
+                                </h:commandButton>
+                            </h:panelGroup>
                             <p:outputLabel for="lista" value="Seleccionar Lista: "  />
-                            <p:selectOneMenu id="lista" value="#{scannerBean.productsList}" style="width: 300px"  >
+                            <p:selectOneMenu id="lista" value="#{scannerBean.prodListList}" style="width: 300px"  >
+                                <f:converter converterId="productListConverter" />
                                 <f:selectItem itemLabel="Listas . . ." itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{productsListsBean.prodListList}" />
                             </p:selectOneMenu>
@@ -31,7 +41,6 @@
                                 <f:selectItem itemLabel="Todas" itemValue="1" />
                                 <f:selectItem itemLabel="Más Recientes" itemValue="2" />
                             </p:selectOneRadio> 
-                            <br />
                             <p:commandButton value="Ejecutar Análisis" 
                                              actionListener="#{scannerBean.ejecutar}" update="resultsPanel"
                                              onclick="PF('execBtn').disable()"
@@ -58,7 +67,7 @@
                                 Resultados
                             </f:facet>
                             #{scannerBean.temp}
-                        </p:panel>
+                        </p:panel>	
                     </h:form>
                 </div>
             </ui:define>

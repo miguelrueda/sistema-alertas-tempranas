@@ -14,9 +14,17 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>ScannerServlet</servlet-name>
+        <servlet-class>jsf.test.ScannerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ScannerServlet</servlet-name>
+        <url-pattern>/ScannerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
