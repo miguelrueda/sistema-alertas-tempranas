@@ -14,51 +14,90 @@ import jpa.entities.SaFuentes;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 
+/**
+ * BEAN que se encarga de administrar las fuentes que alimentan el contenido del
+ * sistema
+ *
+ * @author t41507
+ * @version 09.06.2014
+ */
 @ManagedBean
 @SessionScoped
 public class SourcesBean implements java.io.Serializable {
 
+    /**
+     * Atributos de serialización y Logger
+     */
+    private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SourcesBean.class.getName());
-    private List<SaFuentes> sourcesList; 
-    private String text = "Source1";
+    /**
+     * Atributos principales del BEAN
+     */
+    private List<SaFuentes> sourcesList;
+    /**
+     * Inyección del Servicio de fuentes
+     */
     @ManagedProperty("#{sourcesService}")
     private SourcesService service;
-    
+
+    /**
+     * Mét odo de inicialización del bean
+     */
     @PostConstruct
     public void init() {
         sourcesList = service.obtenerFuentes();
     }
 
+    /**
+     * Constructor sin parámetros
+     */
     public SourcesBean() {
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        LOG.log(Level.INFO, "Nuevo Valor: {0}", text);
-        this.text = text;
-    }
-
+    /**
+     * Mét odo para obtener la lista de fuentes
+     *
+     * @return List con las fuentes almacenadas
+     */
     public List<SaFuentes> getSourcesList() {
         return sourcesList;
     }
 
+    /**
+     * Mét odo setter para el servicio de fuentes
+     *
+     * @param service Servicio del tipo SourcesService
+     */
     public void setService(SourcesService service) {
         this.service = service;
     }
-    
+
+    /**
+     * Mét odo para editar las filas de la tabla en la vista
+     *
+     * @param event de tipo RowEdit
+     */
     public void onRowEdit(RowEditEvent event) {
         FacesMessage msg = new FacesMessage("Fuente editada", ((SaFuentes) event.getObject()).getFntName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
+
+    /**
+     * Mét odo para cancelar la edición de una fila
+     *
+     * @param event de tipo RowEdit
+     */
     public void onRowCancel(RowEditEvent event) {
         FacesMessage msg = new FacesMessage("Edición Cancelada", ((SaFuentes) event.getObject()).getFntName());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
+
+    /**
+     * Mét odo para cambiar los valores de la fila seleccionada
+     *
+     * @param event de tipo CellEdit TODO: Cambiarlo, agregar la parte de
+     * persistencia con EM
+     */
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
@@ -67,5 +106,5 @@ public class SourcesBean implements java.io.Serializable {
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
-   
+
 }

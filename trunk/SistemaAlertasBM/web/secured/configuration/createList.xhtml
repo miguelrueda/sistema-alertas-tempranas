@@ -12,19 +12,19 @@
     <h:body>
         <h:form id="createListForm">
             <p:growl id="createListGrowl" showDetail="true" showSummary="true" autoUpdate="true" />
-            <p:wizard flowListener="#{productsBean.onFlowProcess}">
+            <p:wizard flowListener="#{productsListsBean.onFlowProcess}">
                 <p:tab id="products" title="Productos" >
                     <p:panel header="Agregar Productos">
                         <p:messages />
                         <h:panelGrid columns="3" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Ingresar nombre del producto" for="acproducto" />
-                            <p:autoComplete id="acproducto" value="#{productsBean.acProducto}" size="80"
-                                            completeMethod="#{productsBean.completarProducto}" />
+                            <p:autoComplete id="acproducto" value="#{productsListsBean.acProducto}" size="80"
+                                            completeMethod="#{productsListsBean.completarProducto}" />
                             <p:commandButton value="Agregar" icon="ui-icon-check" update="output" 
-                                             actionListener="#{productsBean.agregarProducto}" />
+                                             actionListener="#{productsListsBean.agregarProducto}" />
                         </h:panelGrid>
                         <div class="listaProductosSel">
-                            <p:dataList id="output" value="#{productsBean.selectedProductsList}" var="prd"
+                            <p:dataList id="output" value="#{productsListsBean.selectedProductsList}" var="prd"
                                         emptyMessage="No se seleccionaron productos">
                                 #{prd}
                             </p:dataList>
@@ -37,7 +37,7 @@
                         <p:messages />
                         <h:panelGrid columns="2" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Nombre de la Lista" for="listname" />
-                            <p:inputText id="listname" value="#{productsBean.nombreLista}" size="80" />
+                            <p:inputText id="listname" value="#{productsListsBean.nombreLista}" size="80" />
                         </h:panelGrid>
                     </p:panel>
                 </p:tab>
@@ -46,13 +46,13 @@
                         <p:messages />
                         <h:panelGrid columns="2" cellpadding="4" styleClass="wizardForm">
                             <p:outputLabel value="Lista de Productos: " />
-                            <p:dataList value="#{productsBean.selectedProductsList}" var="prd" styleClass="wizardList">
+                            <p:dataList value="#{productsListsBean.selectedProductsList}" var="prd" styleClass="wizardList">
                                 #{prd}
                             </p:dataList>
                             <p:outputLabel value="Nombre de la Lista: " />
-                            <p:outputLabel value="#{productsBean.nombreLista}" />
+                            <p:outputLabel value="#{productsListsBean.nombreLista}" />
                         </h:panelGrid>
-                        <p:commandButton value="Crear Lista" actionListener="#{productsBean.save}"
+                        <p:commandButton value="Crear Lista" actionListener="#{productsListsBean.save}"
                                          process="@this"/>
                     </p:panel>
                 </p:tab>

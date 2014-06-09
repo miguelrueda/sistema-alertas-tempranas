@@ -14,16 +14,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jsf.mgbns.LoginBean;
 
+/**
+ * Filtro para verificar la validez de la sesión
+ *
+ * @author t41507
+ * @version 09.06.2014
+ */
 @WebFilter(filterName = "LoginFilter", urlPatterns = {"/secured/*"})
 public class LoginFilter implements Filter {
 
+    /**
+     * Atributo LOGGER
+     */
     private static final Logger LOG = Logger.getLogger(LoginFilter.class.getName());
 
+    /**
+     * Mét odo sobrecargado de inicialización
+     *
+     * @param filterConfig configuración del filtro
+     * @throws ServletException cuando ocurre una excepción
+     */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
+    /**
+     * Mét odo sobrecargado doFilter para llevar a cabo el filtro dentro de la
+     * aplicación
+     *
+     * @param request de tipo Servlet para llevar a cabo la solicitud
+     * @param response de tipo Servlet para llevar a cabo la respuesta
+     * @param chain de tipo FilterChain para volver a ejecutar el filtro con otros recursos
+     * @throws IOException Cuando ocurre excepción de entrada o salida del recurso
+     * @throws ServletException cuando ocurre una excepción con solicitud o respuesta
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         //Obtener el loginBean a partir de la sesion
@@ -58,10 +83,13 @@ public class LoginFilter implements Filter {
 
             }
         } catch (IOException | ServletException e) {
-            LOG.log(Level.INFO, "Problema -->" + e.getMessage());
+            LOG.log(Level.WARNING, "Problema -->{0}", e.getMessage());
         }
     }
 
+    /**
+     *  Mét odo destroy() sobrecargado
+     */
     @Override
     public void destroy() {
     }
