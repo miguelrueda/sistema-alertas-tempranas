@@ -27,10 +27,13 @@
                                 </h:commandButton>
                             </h:panelGroup>
                             <p:outputLabel for="lista" value="Seleccionar Lista: "  />
-                            <p:selectOneMenu id="lista" value="#{scannerBean.prodListList}" style="width: 300px"  >
-                                <f:converter converterId="productListConverter" />
+                            <p:selectOneMenu id="lista" value="#{scannerBean.selectedProdListList}" 
+                                             converter="productListConverter"
+                                             style="width: 300px" >
                                 <f:selectItem itemLabel="Listas . . ." itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{productsListsBean.prodListList}" />
+                                <f:selectItems value="#{productsListsBean.prodListList}" var="aux" 
+                                               itemValue="#{aux.id}"
+                                               itemLabel="#{aux.nombre}"/>
                             </p:selectOneMenu>
                             <p:outputLabel value="Escanear todas las listas: " />
                             <p:selectBooleanCheckbox value="#{scannerBean.todaslasListas}">
