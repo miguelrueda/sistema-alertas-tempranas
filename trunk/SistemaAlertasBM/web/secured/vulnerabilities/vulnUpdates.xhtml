@@ -10,7 +10,7 @@
 
         <ui:composition template="./../pageTemplate.xhtml">
             <ui:define name="content">
-                <h3>Actualizaciones</h3>
+                <h3>Vulnerabilidades Más Recientes</h3>
                 <p:separator />
                 <div class="contentStyle">
                     <h:form id="updtForm">
@@ -34,8 +34,12 @@
                             <p:column headerText="Nombre" sortBy="#{vuln.name}">
                                 <h:outputText value="#{vuln.name}" />
                             </p:column>
-                            <p:column headerText="Calificación/CVSS" sortBy="#{vuln.score}">
-                                <h:outputText value="#{vuln.score}" />
+                            <p:column headerText="Criticidad" sortBy="#{vuln.severity}">
+                                <h:outputText value="#{vuln.severity}" 
+                                              styleClass="#{vuln.severity.equalsIgnoreCase('high') ? 'color:red !important' : 'color:black !important'}" />
+                            </p:column>
+                            <p:column headerText="Calificación/CVSS" sortBy="#{vuln.CVSS.score}">
+                                <h:outputText value="#{vuln.CVSS.score}" />
                             </p:column>
                             <p:column headerText="Fecha de Publicación" sortBy="#{vuln.published}">
                                 <h:outputText value="#{vuln.published}">
@@ -43,14 +47,41 @@
                                 </h:outputText>
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center" widgetVar="vulnDialog" modal="true"
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="top" widgetVar="vulnDialog" modal="true"
                                   showEffect="fade" hideEffect="fade" resizable="true" styleClass="customDialog">
                             <p:outputPanel id="vulnDetail">
                                 <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
-                                    <h:outputText value="Nombre: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
-                                    <h:outputText value="CVSS: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.score}" />
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                            </p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <h:outputText value="Fecha de Publicación: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.published}" />
+                                    <h:outputText value="Criticidad/Criticalidad: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.severity}" />
+                                    <h:outputText value="Calificación CVSS: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.score}" />
+                                    <h:outputText value="Vector CVSS: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.vector}" />
+                                    <h:outputText value="Referencias: " />
+                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.references}" var="ref">
+                                        <h:outputText value="#{ref.url}" /><br />
+                                    </ui:repeat>
+                                    <h:outputText value="Software Afectado: " />
+                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.vuln_soft}" var="swa">
+                                        <h:outputText value="#{swa.vendor} #{swa.name} #{swa.version}" /><br /> 
+                                    </ui:repeat>
+                                    <h:outputText value="Descripción: " />
+                                    <p>
+                                        #{vulnerabilityBean.selectedVuln.description}
+                                    </p>
+                                    <h:outputText value="Descargar" />
+                                    <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s">
+                                        <p:fileDownload value="#{vulnerabilityBean.file}" />
+                                    </p:commandButton>
                                 </p:panelGrid>
                             </p:outputPanel>
                         </p:dialog>

@@ -38,7 +38,7 @@ public class ScannerBean implements java.io.Serializable {
      */
     private Scan scan;
     private List<Producto> productsList;
-    private ListaProducto prodListList;
+    private ListaProducto selectedProdListList;
     private boolean todaslasListas;
     private Integer tipoEscaneo;
     private boolean escaneoTerminado = false;
@@ -92,12 +92,12 @@ public class ScannerBean implements java.io.Serializable {
         this.productsList = productsList;
     }
 
-    public ListaProducto getProdListList() {
-        return prodListList;
+    public ListaProducto getSelectedProdListList() {
+        return selectedProdListList;
     }
 
-    public void setProdListList(ListaProducto prodListList) {
-        this.prodListList = prodListList;
+    public void setSelectedProdListList(ListaProducto selectedProdListList) {
+        this.selectedProdListList = selectedProdListList;
     }
 
     /**

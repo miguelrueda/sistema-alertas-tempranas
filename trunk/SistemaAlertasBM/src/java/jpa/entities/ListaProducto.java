@@ -3,6 +3,7 @@ package jpa.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class ListaProducto implements java.io.Serializable {
@@ -80,6 +81,34 @@ public class ListaProducto implements java.io.Serializable {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + Objects.hashCode(this.id);
+        hash = 61 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        /*
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ListaProducto other = (ListaProducto) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;*/
+        return (obj instanceof ListaProducto) && (id != null) ? id.equals(((ListaProducto)obj).id) : (obj == this);
     }
 
 }
