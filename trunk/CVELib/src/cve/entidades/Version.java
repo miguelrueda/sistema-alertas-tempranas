@@ -5,8 +5,9 @@ package cve.entidades;
  * el número de la versión y/o la edición del mismo
  * @author t41507
  */
-public class Version {
+public class Version implements java.io.Serializable {
 
+    private static final long serialVersionUID = -1L;
     /**
      * Atributos
      */

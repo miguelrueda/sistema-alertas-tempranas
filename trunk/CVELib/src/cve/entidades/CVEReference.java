@@ -6,8 +6,10 @@ package cve.entidades;
  * @author t41507
  * @version 20.05.2014
  */
-public class CVEReference {
+public class CVEReference implements java.io.Serializable {
 
+    private static final long serialVersionUID = -1L;
+    
     /**
      * Atributos
      * 

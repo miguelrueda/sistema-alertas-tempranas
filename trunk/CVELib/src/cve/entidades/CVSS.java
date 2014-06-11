@@ -8,8 +8,10 @@ package cve.entidades;
  * @author t41507
  * @version 23.05.2014
  */
-public class CVSS {
+public class CVSS implements java.io.Serializable {
     
+    
+    private static final long serialVersionUID = -1L;
     /**
      * Atributo calificación de cvss
      */
