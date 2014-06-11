@@ -25,6 +25,7 @@
                                      selection="#{vulnerabilityBean.selectedVuln}"
                                      selectionMode="single"
                                      rows="20" paginator="true"
+                                     lazy="true"
                                      paginatorTemplate="#{jsfmsgs.table_paginator_template}"
                                      emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
                                      filteredValue="#{vulnerabilityBean.filteredVulns}"
@@ -32,13 +33,20 @@
                             <p:column headerText="Nombre" sortBy="#{vuln.name}" filterBy="#{vuln.name}" filterMatchMode="contains">
                                 <h:outputText value="#{vuln.name}" />
                             </p:column>
-                            <p:column headerText="Calificación" sortBy="#{vuln.score}" filterBy="#{vuln.score}" filterMatchMode="contains">
-                                <h:outputText value="#{vuln.score}" />
+                            <p:column headerText="Criticidad" sortBy="#{vuln.severity}" >
+                                <h:outputText value="#{vuln.severity}" />
+                            </p:column>
+                            <p:column headerText="Calificación/CVSS" sortBy="#{vuln.CVSS.score}" filterBy="#{vuln.CVSS.score}" filterMatchMode="contains">
+                                <h:outputText value="#{vuln.CVSS.score}" />
+                            </p:column>
+                            <p:column headerText="Fecha de Publicación" sortBy="#{vuln.published}">
+                                <h:outputText value="#{vuln.published}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="top" widgetVar="vulnDialog" modal="true" 
-                                  showEffect="fade" hideEffect="fade" resizable="false" 
-                                  styleClass="customDialog">
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center top" widgetVar="vulnDialog" modal="true" 
+                                  showEffect="fade" hideEffect="fade" resizable="false" styleClass="customDialog">
                             <p:outputPanel id="vulnDetail">
                                 <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
                                     <f:facet name="header">
@@ -48,28 +56,27 @@
                                             </p:column>
                                         </p:row>
                                     </f:facet>
-                                    <h:outputText value="Fecha de Creación: " />
-                                    <h:outputText value="01-01-2014" />
+                                    <h:outputText value="Fecha de Publicación: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.published}">
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                                    </h:outputText>
                                     <h:outputText value="Criticidad/Criticalidad: " />
-                                    Muy Alta
-                                    <h:outputText value="Impacto: " />
-                                    Muy Alto
-                                    <h:outputText value="CVSS: " />
-                                    10.0
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.severity}" />
+                                    <h:outputText value="Calificación/CVSS: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.score}" />
+                                    <h:outputText value="Vector CVSS: " />
+                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.vector}" />
                                     <h:outputText value="Referencias:" />
-                                    <ui:repeat value="#{vulnerabilityBean.refsList}" var="ref">
-                                        <h:outputText value="#{ref}" /><br />
+                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.references}" var="ref">
+                                        <h:outputText value="#{ref.url}" /><br />
                                     </ui:repeat>
                                     <h:outputText value="Software Afectado: " />
-                                    <ui:repeat value="#{vulnerabilityBean.affSwlist}" var="swa">
-                                        <h:outputText value="#{swa}" /><br />
+                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.vuln_soft}" var="swa">
+                                        <h:outputText value="#{swa.vendor} #{swa.name} #{swa.version}" /><br />
                                     </ui:repeat>
                                     <h:outputText value="Descripción: " />
                                     <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore <br />
-                                        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo <br />
-                                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.<br />
-                                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        #{vulnerabilityBean.selectedVuln.description}
                                     </p>
                                     <h:outputText value="Descargar" />
                                     <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s" >
