@@ -8,8 +8,9 @@ import java.util.List;
  * @author t41507
  * @version 20.05.2014
  */
-public class VulnSoftware {
+public class VulnSoftware implements java.io.Serializable {
 
+    private static final long serialVersionUID = -1L;
     /**
      * Atributos
      */
