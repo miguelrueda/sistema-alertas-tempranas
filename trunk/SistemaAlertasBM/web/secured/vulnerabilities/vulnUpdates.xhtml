@@ -28,9 +28,14 @@
                                      paginatorTemplate="#{jsfmsgs.table_paginator_template}"
                                      emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
                                      filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     widgetVar="vulnsTable"
                                      rowsPerPageTemplate="20,25,30">
                             <f:facet name="header">
                                 Vulnerabilidades más recientes
+                                <p:outputPanel>
+                                    <h:outputText value="Search all Fields: " />
+                                    <p:inputText id="globalFilter" onkeyup="PF('vulnsTable').filteR()" style="width: 150px" placeholder="Enter keyword" />
+                                </p:outputPanel>
                             </f:facet>
                             <p:column headerText="Nombre" sortBy="#{vuln.name}">
                                 <h:outputText value="#{vuln.name}" />
@@ -48,45 +53,53 @@
                                 </h:outputText>
                             </p:column>
                         </p:dataTable>
-                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center top" widgetVar="vulnDialog" modal="true"
+                        <p:dialog header="#{jsfmsgs.perYear_vuln_dialog_header}" position="center" widgetVar="vulnDialog" modal="true"
                                   showEffect="fade" hideEffect="fade" resizable="true" styleClass="customDialog">
-                            <p:outputPanel id="vulnDetail">
-                                <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
-                                    <f:facet name="header">
-                                        <p:row>
-                                            <p:column colspan="2">
-                                                <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
-                                            </p:column>
-                                        </p:row>
-                                    </f:facet>
-                                    <h:outputText value="Fecha de Publicación: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.published}">
-                                        <f:convertDateTime pattern="dd-MM-yyyy" />
-                                    </h:outputText>
-                                    <h:outputText value="Criticidad/Criticalidad: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.severity}" />
-                                    <h:outputText value="Calificación CVSS: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.score}" />
-                                    <h:outputText value="Vector CVSS: " />
-                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.vector}" />
-                                    <h:outputText value="Referencias: " />
-                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.references}" var="ref">
-                                        <h:outputText value="#{ref.url}" /><br />
-                                    </ui:repeat>
-                                    <h:outputText value="Software Afectado: " />
-                                    <ui:repeat value="#{vulnerabilityBean.selectedVuln.vuln_soft}" var="swa">
-                                        <h:outputText value="#{swa.vendor} #{swa.name} #{swa.version}" /><br /> 
-                                    </ui:repeat>
-                                    <h:outputText value="Descripción: " />
-                                    <p>
-                                        #{vulnerabilityBean.selectedVuln.description}
-                                    </p>
-                                    <h:outputText value="Descargar" />
-                                    <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s">
-                                        <p:fileDownload value="#{vulnerabilityBean.file}" />
-                                    </p:commandButton>
-                                </p:panelGrid>
-                            </p:outputPanel>
+                            <p:scrollPanel mode="native" style="height: 600px">
+                                <p:outputPanel id="vulnDetail" style=" max-width: 1000px">
+                                    <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column colspan="2">
+                                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                                </p:column>
+                                            </p:row>
+                                        </f:facet>
+                                        <h:outputText value="Fecha de Publicación: " />
+                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.published}">
+                                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                                        </h:outputText>
+                                        <h:outputText value="Fecha de Modificación: " />
+                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.modified}">
+                                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                                        </h:outputText>
+                                        <h:outputText value="Criticidad/Criticalidad: " />
+                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.severity}" />
+                                        <h:outputText value="Calificación CVSS: " />
+                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.score}" />
+                                        <h:outputText value="Vector CVSS: " />
+                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.vector}" />
+                                        <h:outputText value="Descripción: " />
+                                        <p>
+                                            #{vulnerabilityBean.selectedVuln.description}
+                                        </p>
+                                        <h:outputText value="Referencias: " />
+                                        <ui:repeat value="#{vulnerabilityBean.selectedVuln.references}" var="ref">
+                                            <h:outputText value="#{ref.source}" /><br />
+                                            <h:outputText value="#{ref.url}" style="margin-left:5em" /><br />
+                                        </ui:repeat>
+                                        <h:outputText value="Software Afectado: " />
+                                        <ui:repeat value="#{vulnerabilityBean.selectedVuln.vuln_soft}" var="swa">
+                                            <h:outputText value="#{swa.vendor.toUpperCase()}" /><br />
+                                            <h:outputText style="margin-left: 5em" value="Producto: " />
+                                            <h:outputText value="#{swa.name}" /><br />
+                                            <h:outputText style="margin-left: 5em" value="Versión(es): " /><br />
+                                            <h:outputText value="#{swa.version}" style="margin-left: 7em; font-size: 80%" /><br />
+                                        </ui:repeat>
+                                        
+                                    </p:panelGrid>
+                                </p:outputPanel>
+                            </p:scrollPanel>
                         </p:dialog>
                         <p:blockUI block="updtTable" trigger="updtTable">
                             #{jsfmsgs.loadingMessage} <br/>
@@ -99,3 +112,9 @@
 
     </body>
 </html>
+<!--
+<h:outputText value="Descargar" />
+                                        <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s">
+                                            <p:fileDownload value="# {vulnerabilityBean.file}" />
+                                        </p:commandButton>
+-->
