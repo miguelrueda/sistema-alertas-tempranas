@@ -43,7 +43,7 @@ public class SourcesEJB implements java.io.Serializable {
             File filePath = new File(path);
             LOG.log(Level.INFO, "PATH: {0}", filePath);
             String fileName = path + extraerNombre(fntUrl);
-            File file = new File(fileName);
+            File file = new File(extraerNombre(fntUrl));
             if (!file.exists()) {
                 file.createNewFile();
             }
