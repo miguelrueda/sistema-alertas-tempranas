@@ -1,10 +1,12 @@
 package jsf.mgbns;
 
+import ejb.model.SourcesEJB;
 import jsf.services.SourcesService;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -30,6 +32,7 @@ public class SourcesBean implements java.io.Serializable {
      */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SourcesBean.class.getName());
+    private SaFuentes selectedSource;
     /**
      * Atributos principales del BEAN
      */
@@ -39,6 +42,8 @@ public class SourcesBean implements java.io.Serializable {
      */
     @ManagedProperty("#{sourcesService}")
     private SourcesService service;
+    @EJB
+    private SourcesEJB sourcesEJB;
 
     /**
      * Mét odo de inicialización del bean
@@ -105,6 +110,30 @@ public class SourcesBean implements java.io.Serializable {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New: " + newValue);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+    }
+
+    public SaFuentes getSelectedSource() {
+        return selectedSource;
+    }
+
+    public void setSelectedSource(SaFuentes selectedSource) {
+        this.selectedSource = selectedSource;
+    }
+
+    public void updateFile() {
+        LOG.log(Level.INFO, "* * * * * * * * * ");
+        FacesMessage fmsg = null;
+                
+        boolean flag = sourcesEJB.descargarActualizaciones(sourcesList);
+        if (flag) {
+            fmsg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Descargando actualizaciones", 
+                    "Descargando actualizaciones de las URL");
+            
+        } else {
+            fmsg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en la descarga", "Ocurrio un error al intentar actualizar las fuentes");
+        }
+        FacesContext.getCurrentInstance().addMessage(null, fmsg);
+        LOG.log(Level.INFO, "* * * * * * * * * ");
     }
 
 }

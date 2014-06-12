@@ -49,10 +49,18 @@
                                     <f:convertDateTime pattern="dd-MM-yyyy" />
                                 </h:outputText>
                             </p:column>
-                            <p:column style="width: 32px">
+                            <p:column style="width: 28px; text-align:  center" headerText="Edición">
                                 <p:rowEditor />
                             </p:column>
                         </p:dataTable>
+                        <br />
+                        <h:panelGrid columns="2">
+                            DescargarActualización
+                            <p:commandButton icon="ui-icon-arrowthickstop-1-s" title="Descargar" 
+                                             actionListener="#{sourcesBean.updateFile}" >
+
+                            </p:commandButton>
+                        </h:panelGrid>
                     </h:form>
                 </div>
             </ui:define>
