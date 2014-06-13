@@ -34,24 +34,28 @@ public class SourcesEJB implements java.io.Serializable {
     private void descargarArchivo(String fntUrl) {
         LOG.log(Level.INFO, "Descargando Archivo: {0}", fntUrl);
         URL url;
+        URLConnection conn;
+        BufferedReader br;
+        String inputLine;
+        String path;
+        BufferedWriter bw;
         try {
             url = new URL(fntUrl);
-            URLConnection conn = url.openConnection();
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            String path = SourcesEJB.class.getResource("/resources").getPath();
+            conn = url.openConnection();
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            path = SourcesEJB.class.getResource("/resources/").getPath();
             File filePath = new File(path);
             LOG.log(Level.INFO, "PATH: {0}", filePath);
             String fileName = path + extraerNombre(fntUrl);
-            File file = new File(extraerNombre(fntUrl));
+            File file = new File(fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
             LOG.log(Level.INFO, "Voy a crear un archivo de nombre: {0}", fileName);
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
+            bw = new BufferedWriter(fw);
             while ((inputLine = br.readLine()) != null) {
-                bw.write(inputLine);
+                bw.write(inputLine + "\n");
             }
             bw.close();
             br.close();
@@ -59,6 +63,11 @@ public class SourcesEJB implements java.io.Serializable {
             LOG.log(Level.SEVERE, "Ocurrio una excepción: {0}", e.getMessage());
         }
     }
+    
+    /**
+     * @param fntUrl
+     * @return 
+     */
 
     //http://nvd.nist.gov/download/nvdcve-2014.xml
     private String extraerNombre(String fntUrl) {

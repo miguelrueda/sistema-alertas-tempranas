@@ -21,21 +21,17 @@
                         </p:contextMenu>
                         <p:dataTable id="updtTable" var="vuln" value="#{vulnerabilityBean.vulnRecents}"
                                      rowKey="#{vuln.name}"
-                                     selection="#{vulnerabilityBean.selectedVuln}"
+                                     selection="#{vulnerabilityBean.selectedUpVuln}"
                                      selectionMode="single"
                                      rows="20"
                                      paginator="true"
                                      paginatorTemplate="#{jsfmsgs.table_paginator_template}"
                                      emptyMessage="#{jsfmsgs.perYear_table_empty_query}"
-                                     filteredValue="#{vulnerabilityBean.filteredVulns}"
+                                     filteredValue="#{vulnerabilityBean.filteredUpVulns}"
                                      widgetVar="vulnsTable"
                                      rowsPerPageTemplate="20,25,30">
                             <f:facet name="header">
                                 Vulnerabilidades más recientes
-                                <p:outputPanel>
-                                    <h:outputText value="Search all Fields: " />
-                                    <p:inputText id="globalFilter" onkeyup="PF('vulnsTable').filteR()" style="width: 150px" placeholder="Enter keyword" />
-                                </p:outputPanel>
                             </f:facet>
                             <p:column headerText="Nombre" sortBy="#{vuln.name}">
                                 <h:outputText value="#{vuln.name}" />
@@ -57,39 +53,39 @@
                                   showEffect="fade" hideEffect="fade" resizable="true" styleClass="customDialog">
                             <p:scrollPanel mode="native" style="height: 600px">
                                 <p:outputPanel id="vulnDetail" style=" max-width: 1000px">
-                                    <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedVuln}">
+                                    <p:panelGrid columns="2" rendered="#{not empty vulnerabilityBean.selectedUpVuln}">
                                         <f:facet name="header">
                                             <p:row>
                                                 <p:column colspan="2">
-                                                    <h:outputText value="#{vulnerabilityBean.selectedVuln.name}" />
+                                                    <h:outputText value="#{vulnerabilityBean.selectedUpVuln.name}" />
                                                 </p:column>
                                             </p:row>
                                         </f:facet>
                                         <h:outputText value="Fecha de Publicación: " />
-                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.published}">
+                                        <h:outputText value="#{vulnerabilityBean.selectedUpVuln.published}">
                                             <f:convertDateTime pattern="dd-MM-yyyy" />
                                         </h:outputText>
                                         <h:outputText value="Fecha de Modificación: " />
-                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.modified}">
+                                        <h:outputText value="#{vulnerabilityBean.selectedUpVuln.modified}">
                                             <f:convertDateTime pattern="dd-MM-yyyy" />
                                         </h:outputText>
                                         <h:outputText value="Criticidad/Criticalidad: " />
-                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.severity}" />
+                                        <h:outputText value="#{vulnerabilityBean.selectedUpVuln.severity}" />
                                         <h:outputText value="Calificación CVSS: " />
-                                        <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.score}" />
+                                        <h:outputText value="#{vulnerabilityBean.selectedUpVuln.CVSS.score}" />
                                         <h:outputText value="Vector CVSS: " />
                                         <h:outputText value="#{vulnerabilityBean.selectedVuln.CVSS.vector}" />
                                         <h:outputText value="Descripción: " />
                                         <p>
-                                            #{vulnerabilityBean.selectedVuln.description}
+                                            #{vulnerabilityBean.selectedUpVuln.description}
                                         </p>
                                         <h:outputText value="Referencias: " />
-                                        <ui:repeat value="#{vulnerabilityBean.selectedVuln.references}" var="ref">
+                                        <ui:repeat value="#{vulnerabilityBean.selectedUpVuln.references}" var="ref">
                                             <h:outputText value="#{ref.source}" /><br />
                                             <h:outputText value="#{ref.url}" style="margin-left:5em" /><br />
                                         </ui:repeat>
                                         <h:outputText value="Software Afectado: " />
-                                        <ui:repeat value="#{vulnerabilityBean.selectedVuln.vuln_soft}" var="swa">
+                                        <ui:repeat value="#{vulnerabilityBean.selectedUpVuln.vuln_soft}" var="swa">
                                             <h:outputText value="#{swa.vendor.toUpperCase()}" /><br />
                                             <h:outputText style="margin-left: 5em" value="Producto: " />
                                             <h:outputText value="#{swa.name}" /><br />

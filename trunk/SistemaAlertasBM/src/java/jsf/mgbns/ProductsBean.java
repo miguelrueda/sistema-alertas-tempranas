@@ -1,9 +1,12 @@
 package jsf.mgbns;
 
+import ejb.model.SoftwareEJB;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -38,14 +41,17 @@ public class ProductsBean implements java.io.Serializable {
      */
     @ManagedProperty("#{productsService}")
     private ProductsService productsService;
-
+    @EJB
+    private SoftwareEJB softwareEJB;
     /**
      * Mét odo de inicialización para el bean
      */
     @PostConstruct
     public void init() {
-        productsList = productsService.crearListaProductos(50);
+        //productsList = productsService.crearListaProductos(50);
         //prodListList = listsService.crearListaDeListas();
+        LOG.log(Level.INFO, "Obteniendo Software soportado");
+        productsList = softwareEJB.obtenerProductos();
     }
 
     /**
