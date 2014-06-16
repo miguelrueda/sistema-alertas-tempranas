@@ -91,7 +91,7 @@ public class VulnSoftware implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "\nVulnerable Software {" + "vendor=" + vendor + ", name=" + name + ", \n\tversion(s)=" + version + '}';
+        return "\nVulnerable Software {" + "vendor=" + vendor + ", name=" + name + ", version(s)=" + version + '}';
     }
 
 }
