@@ -1,5 +1,6 @@
 package jsf.mgbns;
 
+import ejb.model.SoftwareEJB;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -44,19 +46,22 @@ public class ProductsListsBean implements java.io.Serializable {
     private String acProducto;
     private String nombreLista;
     private List<Producto> selectedProductsList;
-    private int id = 100;
+    private int idLista = 100;
     int i = 1;
+    @EJB
+    private SoftwareEJB productosService;
     /**
      * Inyección de servicio de listas
      */
     @ManagedProperty("#{listsService}")
     private ListsService listsService;
-    @ManagedProperty("#{productsService}")
-    private ProductsService productsService;
+    //@ManagedProperty("#{productsService}")
+    //private ProductsService productsService;
 
     @PostConstruct
     public void init() {
-        productsList = productsService.crearListaProductos(50);
+        //productsList = productsService.crearListaProductos(50);
+        productsList = productosService.getListaProductos();
         prodListList = listsService.crearListaDeListas();
     }
 
@@ -75,9 +80,10 @@ public class ProductsListsBean implements java.io.Serializable {
         this.listsService = listsService;
     }
 
+    /*
     public void setProductsService(ProductsService productsService) {
         this.productsService = productsService;
-    }
+    }*/
 
     public void showForm() {
         Map<String, Object> options = new HashMap<>();
@@ -98,7 +104,7 @@ public class ProductsListsBean implements java.io.Serializable {
     public void save() {
         LOG.log(Level.INFO, "Tengo como nombre: {0} y tengo: {1} art\u00edculos en mi lista", new Object[]{nombreLista, selectedProductsList.size()});
         LOG.log(Level.INFO, "Creando lista");
-        nuevaLista = new ListaProducto(id++, nombreLista, new Date(), selectedProductsList);
+        nuevaLista = new ListaProducto(idLista++, nombreLista, new Date(), selectedProductsList);
         LOG.log(Level.INFO, "Reseteando valores");
         acProducto = null;
         nombreLista = null;
@@ -136,7 +142,9 @@ public class ProductsListsBean implements java.io.Serializable {
         if (selectedProductsList == null) {
             selectedProductsList = new ArrayList<>();
         }
-        selectedProductsList.add(new Producto(i++, "[Vendor] ", this.acProducto, " [version]"));
+        //selectedProductsList.add(new Producto(i++, "[Vendor] ", this.acProducto, " [version]"));
+        LOG.log(Level.INFO, "Buscando el producto: {0}", this.acProducto);
+        selectedProductsList.add(productosService.getProductoPorNombre(this.acProducto.trim()));
     }
 
     public String onFlowProcess(FlowEvent event) {

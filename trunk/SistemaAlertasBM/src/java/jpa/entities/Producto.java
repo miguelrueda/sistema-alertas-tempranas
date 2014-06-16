@@ -82,7 +82,13 @@ public class Producto implements java.io.Serializable {
     @Override
     public String toString() {
         //return "Producto{" + "id=" + id + ", vendor=" + vendor + ", product=" + product + ", version=" + version + ", type=" + type + ", endOfLife=" + endOfLife + '}';
-        return "" + product + " " + version;
+        //return "" + product + " " + version;
+        StringBuilder sb = new StringBuilder();
+        sb.append(product);
+        if (!version.equals("")) {
+            sb.append(" ").append("/").append(" ").append(version);
+        }
+        return sb.toString();
     }
 
 }
