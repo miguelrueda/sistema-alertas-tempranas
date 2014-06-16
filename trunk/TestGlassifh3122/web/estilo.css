@@ -1,0 +1,42 @@
+body {
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin: 0px 0px 0px 0px;
+    font-family: Arial;
+    font-size: 13px;
+    line-height: 20px;
+    background-color: #e6e7e7;
+}
+
+#wrap {
+    width: 1024px;
+    margin: 0 auto;
+    background-color: #e6e7e7;
+}
+
+
+.module .title {
+    height: 25px;
+    padding: 5px 0 0 0;
+    font-size: 13px;
+    color: #ffffff;
+    text-transform: uppercase;
+    background-color: #a7a8aa;
+}
+
+.module .info {
+    padding: 10px;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.column {
+    padding: 10px 0 0 0;
+    float: left;
+}
+
+.column .workarea {
+    width: 1024px;
+}
