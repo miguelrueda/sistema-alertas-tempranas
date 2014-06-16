@@ -11,6 +11,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 import cve.entidades.*;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import org.xml.sax.InputSource;
 
 /**
  *
@@ -120,7 +123,12 @@ public class CVEParser {
                 LOG.log(Level.INFO, "Creando el manejador!");
                 cveHandler = new CVEHandler();
                 LOG.log(Level.INFO, "Parseando el flujo de entrada");
-                saxParser.parse(isEntrada, cveHandler);
+                //TEST
+                Reader reader = new InputStreamReader(isEntrada, "UTF-8");
+                InputSource issrc = new InputSource(reader);
+                issrc.setEncoding("UTF-8");
+                //saxParser.parse(isEntrada, cveHandler);
+                saxParser.parse(issrc, cveHandler);
                 cveList = cveHandler.getCveList();
                 LOG.log(Level.INFO, "Lista obtenida - Se encontraron {0} entradas", cveList.size());
                 if (filtro.length() == 0) {
@@ -139,6 +147,17 @@ public class CVEParser {
         LOG.log(Level.SEVERE, "Retornando lista vacia!");
         return new ArrayList<>();
     }
+    
+    /**
+     * File file = new File("c:\\file-utf.xml");
+InputStream inputStream= new FileInputStream(file);
+Reader reader = new InputStreamReader(inputStream,"UTF-8");
+ 
+InputSource is = new InputSource(reader);
+is.setEncoding("UTF-8");
+ 
+saxParser.parse(is, handler);
+     */
 
     /**
      * Mét odo que se encarga de realizar el parseo para el xml version 1.1

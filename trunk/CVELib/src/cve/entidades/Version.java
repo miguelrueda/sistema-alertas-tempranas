@@ -56,7 +56,15 @@ public class Version implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "\n\t\tVersion{" + "number=" + number + ", edition=" + edition + '}';
+        StringBuilder sb = new StringBuilder();
+        //return "{" + number + ", edition=" + edition + '}';
+        sb.append("{");
+        sb.append(number);
+        if (!edition.equals("-1")) {
+            sb.append(", edición: ").append(edition);
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
 }
