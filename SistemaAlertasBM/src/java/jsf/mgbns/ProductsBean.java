@@ -51,7 +51,7 @@ public class ProductsBean implements java.io.Serializable {
         //productsList = productsService.crearListaProductos(50);
         //prodListList = listsService.crearListaDeListas();
         LOG.log(Level.INFO, "Obteniendo Software soportado");
-        productsList = softwareEJB.obtenerProductos();
+        productsList = softwareEJB.getListaProductos();
     }
 
     /**

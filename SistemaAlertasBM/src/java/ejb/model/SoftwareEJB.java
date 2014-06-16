@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -14,28 +15,36 @@ import jpa.entities.Producto;
 
 @Stateless
 public class SoftwareEJB implements java.io.Serializable {
-    
+
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SoftwareEJB.class.getName());
     private List<Producto> listaProductos;
     private static final String PRODSFILE = "/resources/softwareproducts.csv";
 
-    public List<Producto> obtenerProductos() {
-        /*
-        parseCVS(listaProductos);
-        if (listaProductos.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return listaProductos;*/
-        return parseCVS();
+    public SoftwareEJB() {
+        listaProductos = parseCSV();
     }
 
-    private List<Producto> parseCVS() {
+    public List<Producto> getListaProductos() {
+        return listaProductos;
+    }
+
+    /*
+     public List<Producto> obtenerProductos() {
+     parseCSV(listaProductos);
+     if (listaProductos.isEmpty()) {
+     return new ArrayList<>();
+     }
+     return listaProductos;
+     return parseCSV();
+     }
+     */
+    private List<Producto> parseCSV() {
         try {
             listaProductos = new ArrayList<>();
             File file = new File(SoftwareEJB.class.getResource(PRODSFILE).getFile());
             CSVReader reader = new CSVReader(new FileReader(file));
-            String [] record = null;
+            String[] record = null;
             reader.readNext();
             while ((record = reader.readNext()) != null) {
                 Producto prod = new Producto(Integer.parseInt(record[0]));
@@ -66,7 +75,33 @@ public class SoftwareEJB implements java.io.Serializable {
         }
         return new ArrayList<>();
     }
-    
+
+    public Producto getProducto(int index) {
+        return listaProductos.get(index);
+    }
+
+    public Producto getProductoPorNombre(String name) {
+        Producto temp = null;
+        LOG.log(Level.INFO, "Parametro recibido: {0}", name);
+        LOG.log(Level.INFO, "La lista tiene: {0} elementos.", listaProductos.size());
+        StringTokenizer tokens = new StringTokenizer(name, "/");
+        String [] datos = new String[tokens.countTokens()];
+        int i = 0;
+        while (tokens.hasMoreTokens()) {
+            String str = tokens.nextToken();
+            datos[i] = str;
+            i++;
+        }
+        for (Producto producto : listaProductos) {
+            //LOG.log(Level.INFO, "Producto {0}: {1}", new Object[]{producto.getId(), producto.getProduct()});
+            if (datos[0].trim().equals(producto.getProduct())) {
+                LOG.log(Level.INFO, "Producto encontrado.");
+                return producto;
+            } 
+        }
+        LOG.log(Level.INFO, "Retornando el producto: {0}", temp.getProduct());
+        return temp;
+    }
 
 }
 /**
