@@ -17,11 +17,13 @@ public class CVETest {
     private static final Logger LOG = Logger.getLogger(CVETest.class.getName());
 
     public static void main(String[] args) {
+        URL file = CVETest.class.getResource("/resources/nvdcve-2014.xml");
+        LOG.log(Level.INFO, file.toString());
         CVEParser cveParser = new CVEParser();
         cveParser.setFiltro("");
-        List<CVE> listaCVES = cveParser.getListCVE(manejarURL("http://nvd.nist.gov/download/nvdcve-recent.xml"));
+        List<CVE> listaCVES = cveParser.getListCVE(CVETest.class.getResourceAsStream("/resources/nvdcve-2014.xml"));
         for (CVE cve : listaCVES) {
-            System.out.println(cve);
+            System.out.println(cve.toString());
         }
     }
 
@@ -44,3 +46,8 @@ public class CVETest {
     }
 
 }
+
+/**
+ * URL defaultImage = ClassA.class.getResource("/packageA/subPackage/image-name.png");
+File imageFile = new File(defaultImage.toURI());
+ */
