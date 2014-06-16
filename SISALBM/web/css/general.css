@@ -1,0 +1,85 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 16/06/2014, 01:55:18 PM
+    Author     : t41507
+*/
+body {
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    margin: 0px 0px 0px 0px;
+    font-family: Arial;
+    font-size: 13px;
+    line-height: 20px;
+    background-color: #e6e7e7;
+}
+
+#page_container {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+#page_header {
+}
+
+#page_content {
+
+}
+
+.title {
+    height: 25px;
+    padding: 5px 0 0 0;
+    font-size: 13px;
+    background-color: #a7a8aa;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.workarea {
+    border: 0;
+    padding: 10px;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.menu {
+    border: 0;
+}
+
+a {
+    background-color: transparent;
+    color: #3b7878;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+a:link {
+    background-color: transparent;
+    color: #3b7878;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+a:visited {
+    background-color: transparent;
+    color: #3b7878;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+    font-weight: normal;
+    color: #fb9340;
+}
+
+a:active {
+    background-color: transparent;
+    color: #3b7878;
+    font-weight: normal;
+}
