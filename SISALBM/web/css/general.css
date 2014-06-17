@@ -20,35 +20,51 @@ body {
 }
 
 #page_container {
+    width: 100%;
+    min-width: 1024px;
     max-width: 1024px;
     margin: 0 auto;
 }
 
 #page_header {
+    width: 100%;
+    float: left;
+    margin: 0 auto;
+}
+
+#header {
 }
 
 #page_content {
-
+    float: left;
+    width: 100%;
 }
 
-.title {
+#title {
     height: 25px;
     padding: 5px 0 0 0;
     font-size: 13px;
     background-color: #a7a8aa;
     color: #ffffff;
     text-transform: uppercase;
+    border-radius: 10px;
 }
 
-.workarea {
-    border: 0;
-    padding: 10px;
+#workarea {
     color: #000000;
     background-color: #ffffff;
+    width: 100%;
+    float: left;
+    border-radius: 10px;
 }
 
-.menu {
-    border: 0;
+#content_wrap {
+    width: 100%;
+    float: left;
+}
+
+#content {
+    margin: 5px;
 }
 
 a {
