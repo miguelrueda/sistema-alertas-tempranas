@@ -55,20 +55,26 @@
                     </div>
                     <div id="content_wrap">
                         <div id="content">
-                            <table border="1" cellpadding="5" cellspacing="5" style="max-width: 1024px; width: 100%">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Severity</th>
-                                </tr>
-                                <c:forEach var="vuln" items="${cveList}">
-                                    <tr>
-                                        <td>${vuln.name}</td>
-                                        <td style="width: 500px;">${vuln.description}</td>
-                                        <td>${vuln.severity}</td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
+                            <div class="datagrid">
+                                <table border="1" cellpadding="5" cellspacing="5" style="max-width: 1024px; width: 100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="vuln" items="${cveList}">
+                                            <tr>
+                                                <td>${vuln.name}</td>
+                                                <td style="width: 500px;">${vuln.description}</td>
+                                                <td>${vuln.severity}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="pagination">
                                 <table style="width: 100%; text-align: center">
                                     <tr>
