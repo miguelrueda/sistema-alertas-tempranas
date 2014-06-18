@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <servlet>
+        <servlet-name>VulnerabilityServlet</servlet-name>
+        <servlet-class>mx.org.banxico.sisal.servlets.VulnerabilityServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TestServlet</servlet-name>
+        <servlet-class>test.pack.TestServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CRUDController</servlet-name>
+        <servlet-class>test.pack.CRUDController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfigurationServlet</servlet-name>
+        <servlet-class>mx.org.banxico.sisal.servlets.ConfigurationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VulnerabilityServlet</servlet-name>
+        <url-pattern>/admin/vulnerability.controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestServlet</servlet-name>
+        <url-pattern>/ActionServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CRUDController</servlet-name>
+        <url-pattern>/CRUDController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfigurationServlet</servlet-name>
+        <url-pattern>/admin/configuration.controller</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>AppIndex.html</welcome-file>
+    </welcome-file-list>
+</web-app>
