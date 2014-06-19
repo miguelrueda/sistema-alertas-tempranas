@@ -1,5 +1,7 @@
+<%@page import="java.text.DateFormat"%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -54,21 +56,24 @@
                         <div id="page_title">Vulnerabilidades Más Recientes</div>
                         <div id="content">
                             <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" style="max-width: 1024px; width: 100%">
+                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Descripción</th>
+                                            <th>Fecha de Publicación</th>
+                                            <th>Calificación</th>
                                             <th>Criticidad</th>
-                                            <th>Detalles</th>
+                                            <th>Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="vuln" items="${cveList}">
+                                            <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
                                             <tr>
-                                                <td style="width: 15%;">${vuln.name}</td>
-                                                <td>${vuln.description}</td>
-                                                <td style="width: 15%;">${vuln.severity}</td>
+                                                <td>${vuln.name}</td>
+                                                <td>${parsedDate}</td>
+                                                <td>${vuln.CVSS.score}</td>
+                                                <td>${vuln.severity}</td>
                                                 <td>
                                                     <a href="vulnerabilities/vulnDetail.jsp?tipo=1&name=${vuln.name}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />

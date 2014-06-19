@@ -1,12 +1,37 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Archivo de Vulnerabilidades</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
+        <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function() {
+                $(".view").click(function() {
+                    $("#thedialog").attr('src', $(this).attr("href"));
+                    $("#dialogdiv").dialog({
+                        width: 800,
+                        height: 800,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $('.ui-widget-overlay').addClass('custom-overlay');
+                        },
+                        close: function() {
+                            $("#thedialog").attr("src", "about:blank");
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
     </head>
     <body>
         <div id="page_container">
@@ -25,20 +50,29 @@
                         <div id="page_title">Archivo de Vulnerabilidades</div>
                         <div id="content">
                             <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" style="max-width: 1024px; width: 100%">
+                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Descripción</th>
+                                            <th>Fecha de Publicación</th>
+                                            <th>Calificación</th>
                                             <th>Criticidad</th>
+                                            <th>Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="vuln" items="${arcveList}">
+                                            <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
                                             <tr>
-                                                <td style="width: 15%">${vuln.name}</td>
-                                                <td>${vuln.description}</td>
-                                                <td style="width: 15%">${vuln.severity}</td>
+                                                <td>${vuln.name}</td>
+                                                <td>${parsedDate}</td>
+                                                <td>${vuln.CVSS.score}</td>
+                                                <td>${vuln.severity}</td>
+                                                <td>
+                                                    <a href="vulnerabilities/vulnDetail.jsp?tipo=2&name=${vuln.name}" class="view">
+                                                        <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -65,6 +99,9 @@
                                         </c:if>
                                     </tr>
                                 </table>
+                            </div>
+                            <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none">
+                                <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
                         </div>
                     </div>
