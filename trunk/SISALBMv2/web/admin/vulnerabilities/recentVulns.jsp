@@ -20,9 +20,14 @@
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
-                        width: 400,
-                        height: 450,
+                        width: 800,
+                        height: 800,
                         modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $('.ui-widget-overlay').addClass('custom-overlay');
+                        },
                         close: function() {
                             $("#thedialog").attr("src", "about:blank");
                         }
@@ -64,7 +69,11 @@
                                                 <td style="width: 15%;">${vuln.name}</td>
                                                 <td>${vuln.description}</td>
                                                 <td style="width: 15%;">${vuln.severity}</td>
-                                                <td><a href="vulnerabilities/vulnDetail.jsp?name=${vuln.name}" class="view">ICON</a></td>
+                                                <td>
+                                                    <a href="vulnerabilities/vulnDetail.jsp?tipo=1&name=${vuln.name}" class="view">
+                                                        <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -92,8 +101,8 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div id="dialogdiv" title="Detalle" style=" display: none">
-                                <iframe id="thedialog" width="350" height="350"></iframe>
+                            <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none">
+                                <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
                         </div>
                     </div>
