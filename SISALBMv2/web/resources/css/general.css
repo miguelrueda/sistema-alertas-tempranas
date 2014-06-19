@@ -47,7 +47,7 @@ body {
     background-color: #a7a8aa;
     color: #ffffff;
     text-transform: uppercase;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
 }
 
 #workarea {
@@ -55,7 +55,7 @@ body {
     background-color: #ffffff;
     width: 100%;
     float: left;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
 }
 
 #content_wrap {
@@ -251,4 +251,11 @@ nav ul ul li a:hover {
 
 ul {
     list-style-type: none;
+}
+
+#tablestyle {
+    max-width: 800px; 
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
