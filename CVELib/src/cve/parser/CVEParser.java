@@ -24,13 +24,14 @@ import org.xml.sax.InputSource;
  * @author t41507
  * @version 19.05.2014
  */
-public class CVEParser {
+public class CVEParser implements java.io.Serializable {
 
     /**
      * Atributos
      */
     private InputStream isEntrada;
     private static final Logger LOG = Logger.getLogger(CVEParser.class.getName());
+    private static final long serialVersionUID = -1L;
     private SAXParserFactory saxParserFactory;
     private SAXParser saxParser;
     private CVEHandler cveHandler;
