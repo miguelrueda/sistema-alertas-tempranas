@@ -82,20 +82,28 @@
                                 <table style="width: 100%; text-align: center">
                                     <tr>
                                         <c:if test="${currentPage != 1}">
+                                            <td><a href="vulnerability.controller?tipo=2&page=1" class="page">Inicio</a></td>
                                             <td><a href="vulnerability.controller?tipo=2&page=${currentPage - 1}" class="page">Anterior</a></td>
                                         </c:if>
-                                        <c:forEach begin="1" end="${arnoOfPages}" var="i">
+                                        <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
                                             <c:choose>
-                                                <c:when test="${currentPage eq i}">
-                                                    <td class="page active">${i}</td>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <td><a href="vulnerability.controller?tipo=2&page=${i}" class="page">${i}</a></td>
-                                                    </c:otherwise>
+                                                <c:when test="${currentPage lt arnoOfPages}">
+                                                    <c:choose>
+                                                        <c:when test="${currentPage eq i}">
+                                                            <td class="page active">${i}</td>
+                                                        </c:when>
+                                                        <c:when test="${currentpage lt arnoOfPages}">
+                                                            <td><a href="vulnerability.controller?tipo=2&page=${i}" class="page">${i}</a></td>
+                                                        </c:when>
+                                                        </c:choose>
+                                                    </c:when>
                                                 </c:choose>
                                             </c:forEach>
                                             <c:if test="${currentPage lt arnoOfPages}">
                                             <td><a href="vulnerability.controller?tipo=2&page=${currentPage + 1}" class="page">Siguiente</a></td>
+                                        </c:if>
+                                        <c:if test="${currentPage ne arnoOfPages}">
+                                            <td><a href="vulnerability.controller?tipo=2&page=${arnoOfPages}" class="page">Fin</a></td>
                                         </c:if>
                                     </tr>
                                 </table>
