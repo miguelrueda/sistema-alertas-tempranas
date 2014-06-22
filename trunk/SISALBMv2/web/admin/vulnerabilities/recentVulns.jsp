@@ -14,8 +14,12 @@
         <script type="text/css" src="../resources/js/jquery-2.1.1.js"></script>
         <script type="text/css" src="../resources/js/jquery-ui-1.10.4.custom.js"></script>
         -->
-        <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <!--
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        
+        -->
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
             $(document).ready(function() {
