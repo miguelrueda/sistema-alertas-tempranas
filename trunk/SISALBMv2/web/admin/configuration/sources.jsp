@@ -7,6 +7,30 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Administración de Fuentes</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
+        <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function(){
+                $(".view").click(function() {
+                    $("#thedialog").attr('src', $(this).attr("href"));
+                    $("#dialogdiv").dialog({
+                        width: 400,
+                        height: 400,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $('.ui-widget-overlay').addClass('custom-overlay');
+                        },
+                        close: function() {
+                            $("#thedialog").attr("src", "about:blank");
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
     </head>
     <body>
         <div id="page_container">
@@ -28,26 +52,36 @@
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
                                             <th>Nombre</th>
                                             <th>URL</th>
                                             <th>Fecha de Actualización</th>
-                                            <th>Opciones</th>
+                                            <th colspan="2">Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach var="src" items="${fuentes}">
-                                        <fmt:formatDate value="${src.fechaActualizacion}"  var="parsedDate" dateStyle="long"/>
-                                        <tr>
-                                            <td>${src.id}</td>
-                                            <td>${src.nombre}</td>
-                                            <td>${src.url}</td>
-                                            <td>${parsedDate}</td>
-                                            <td>${noOfRecords}</td>
-                                        </tr>
-                                    </c:forEach>
+                                        <c:forEach var="src" items="${fuentes}">
+                                            <fmt:formatDate value="${src.fechaActualizacion}"  var="parsedDate" dateStyle="long"/>
+                                            <tr>
+                                                <td>${src.nombre}</td>
+                                                <td>${src.url}</td>
+                                                <td>${parsedDate}</td>
+                                                <td>
+                                                    <a href="configuration/editSource.jsp?id=${src.id}" class="view">
+                                                        <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="#">
+                                                        <img src="../resources/images/download.png" alt="actualizar" id="tableicon" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div id="dialogdiv" title="Editar Fuente" style=" display: none">
+                                <iframe id="thedialog" width="360" height="330"></iframe>
                             </div>
                         </div>
                     </div>

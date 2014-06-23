@@ -23,6 +23,6 @@ public class TestServlet extends HttpServlet implements java.io.Serializable {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(name + " - " + ageS);
-    }
+   }
 
 }

@@ -19,12 +19,11 @@ public class AppSource implements java.io.Serializable {
         this.url = url;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
+    public AppSource(int id, String nombre, String url, Date fechaActualizacion) {
+        this.id = id;
+        this.nombre = nombre;
         this.url = url;
+        this.fechaActualizacion = fechaActualizacion;
     }
 
     public int getId() {
@@ -41,6 +40,14 @@ public class AppSource implements java.io.Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Date getFechaActualizacion() {

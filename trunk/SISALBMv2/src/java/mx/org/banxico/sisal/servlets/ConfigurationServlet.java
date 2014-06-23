@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import mx.org.banxico.sisal.dao.SourcesDAO;
 import mx.org.banxico.sisal.entities.AppSource;
 
@@ -26,8 +27,10 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             String nextJSP = "/admin/Index.html";
             RequestDispatcher view;
             SourcesDAO dao = new SourcesDAO();
+            HttpSession sesion = request.getSession();
+            sesion.setAttribute("sourcesdao", dao);
             switch (tipo) {
-                case "1":
+                case "1":   //Ver Lista Fuentes
                     List<AppSource> fuentes = dao.retrieveAll();
                     int noOfRecords = dao.getNoFuentes();
                     request.setAttribute("fuentes", fuentes);
@@ -35,14 +38,22 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                     LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
                     nextJSP = "/admin/configuration/sources.jsp";
                     break;
-                case "2":
+                case "2":   //Ver Lista SWs
                     LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
                     nextJSP = "/admin/configuration/lists.jsp";
                     break;
             }
             view = getServletContext().getRequestDispatcher(nextJSP);
             view.forward(request, response);
-        } //if request tipo
+        }
+        if (!(request.getParameter("action").equals(""))) {
+            String action = (String) request.getParameter("action");
+            LOG.log(Level.INFO, "Procesando Petición de Edición");
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("Respuesta OK");
+            
+        }
     }
 
     @Override

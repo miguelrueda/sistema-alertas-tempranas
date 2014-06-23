@@ -32,14 +32,22 @@
                                     <th>Proveedor</th>
                                     <th>Software</th>
                                     <th>Version</th>
+                                    <th>Tipo</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
                                             <tr>
-                                                <td>${supSW}</td>
-                                                <!--<td>$ {supSW.vendor}</td>
-                                                <td>$ {supSW.name}</td>
-                                                <td>$ {supSW.version}</td>-->
+                                                <td style="width: 25%">${supSW.proveedor}</td>
+                                                <td style="width: 60%">${supSW.nombre}</td>
+                                                <td>${supSW.version}</td>
+                                                <c:choose>
+                                                    <c:when test="${supSW.tipo eq 1}">
+                                                        <td>OS</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td>SW</td>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

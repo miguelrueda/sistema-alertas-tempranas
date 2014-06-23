@@ -6,15 +6,15 @@
             <li>
                 <a href="Index.html">Configuración</a>
                 <ul>
-                    <li><a href="configuration.controller?tipo=1">Administrar Fuentes</a></li>
-                    <li><a href="configuration.controller?tipo=2">Listas de Software</a></li>
+                    <li><a href="../admin/configuration.controller?tipo=1">Administrar Fuentes</a></li>
+                    <li><a href="../admin/configuration.controller?tipo=2">Listas de Software</a></li>
                 </ul>
             </li>
             <li><a href="#">Vulnerabilidades</a>
                 <ul>
-                    <li><a href="vulnerability.controller?tipo=1">Más Recientes</a></li>
-                    <li><a href="vulnerability.controller?tipo=2">Archivo</a></li>
-                    <li><a href="vulnerability.controller?tipo=3">Software Soportado</a></li>
+                    <li><a href="../admin/vulnerability.controller?tipo=1">Más Recientes</a></li>
+                    <li><a href="../admin/vulnerability.controller?tipo=2">Archivo</a></li>
+                    <li><a href="../admin/vulnerability.controller?tipo=3">Software Soportado</a></li>
                 </ul>
             </li>
             <li>
