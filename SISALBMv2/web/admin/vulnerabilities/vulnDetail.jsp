@@ -131,17 +131,6 @@
                 out.print(((VulnerabilityDAO) session.getAttribute("vulndao")).describirCVE(type, name));
             %>
         </div>
-        <div id="test" style="display: none">
-            <ul>
-                <li>A</li>
-                <li>A</li>
-                <li>A</li>
-                <li>A</li>
-                <li>A</li>
-                <li>A</li>
-                <li>A</li>
-            </ul>
-        </div>
         <div id="res">
 
         </div>

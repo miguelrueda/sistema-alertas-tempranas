@@ -22,7 +22,9 @@ public class SourcesDAO implements java.io.Serializable {
     private int noFuentes;
 
     public SourcesDAO() {
-        iniciarFuentes();
+        //iniciarFuentes();
+        //TODO: Eliminar este método
+        iniciarFuentesTemp();
     }
 
     private void iniciarFuentes() {
@@ -77,6 +79,43 @@ public class SourcesDAO implements java.io.Serializable {
 
     public List<AppSource> retrieveAll() {
         return this.fuentes;
+    }
+    
+    private static List<AppSource> testList;
+    static {
+        testList = new ArrayList<>();
+        testList.add(new AppSource(1, "Vulnerabilidades Recientes", "http://nvd.nist.gov/download/nvdcve-recent.xml", new Date()));
+        testList.add(new AppSource(2, "Archivo de Vulnerabilidades", "http://nvd.nist.gov/download/nvdcve-2014.xml", new Date()));
+    }
+
+    private void iniciarFuentesTemp() {
+        fuentes = new ArrayList<>();
+        AppSource fuente;
+        try {
+            int nr = 0;
+            for (AppSource src : testList) {
+                fuente = new AppSource();
+                fuente.setId(src.getId());
+                fuente.setNombre(src.getNombre());
+                fuente.setUrl(src.getUrl());
+                fuente.setFechaActualizacion(src.getFechaActualizacion());
+                fuentes.add(src);
+                nr++;
+            }
+            this.noFuentes = nr;
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "Error al iniciar la lista temporal: {0}", e.getMessage());
+        }
+    }
+    
+    public AppSource getFuente(int id) {
+        for (AppSource src : fuentes) {
+            if (src.getId() == id) {
+                LOG.log(Level.INFO, "Fuente encontrada: {0}", src.getNombre());
+                return src;
+            }
+        }
+        return new AppSource();
     }
 
 }
