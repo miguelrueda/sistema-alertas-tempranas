@@ -36,16 +36,44 @@
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
                                             <tr>
-                                                <td>${supSW.vendor}</td>
-                                                <td>${supSW.name}</td>
-                                                <td>${supSW.version}</td>
+                                                <td>${supSW}</td>
+                                                <!--<td>$ {supSW.vendor}</td>
+                                                <td>$ {supSW.name}</td>
+                                                <td>$ {supSW.version}</td>-->
                                             </tr>
                                         </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="pagination">
-                                
+                                <table style="width: 100%; text-align: center">
+                                    <tr>
+                                        <c:if test="${currentPage != 1}">
+                                            <td><a href="vulnerability.controller?tipo=3&page=1" class="page">Inicio</a></td>
+                                            <td><a href="vulnerability.controller?tipo=3&page=${currentPage - 1}" class="page">Anterior</a></td>
+                                        </c:if>
+                                        <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
+                                            <c:choose>
+                                                <c:when test="${currentPage lt swnoOfPages}">
+                                                    <c:choose>
+                                                        <c:when test="${currentPage eq i}">
+                                                            <td class="page active">${i}</td>
+                                                        </c:when>
+                                                        <c:when test="${currentpage lt swnoOfPages}">
+                                                            <td><a href="vulnerability.controller?tipo=3&page=${i}" class="page">${i}</a></td>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </c:when>
+                                                </c:choose>
+                                            </c:forEach>
+                                            <c:if test="${currentPage lt swnoOfPages}">
+                                            <td><a href="vulnerability.controller?tipo=3&page=${currentPage + 1}" class="page">Siguiente</a></td>
+                                        </c:if>
+                                        <c:if test="${currentPage ne swnoOfPages}">
+                                            <td><a href="vulnerability.controller?tipo=3&page=${swnoOfPages}" class="page">Fin</a></td>
+                                        </c:if>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
