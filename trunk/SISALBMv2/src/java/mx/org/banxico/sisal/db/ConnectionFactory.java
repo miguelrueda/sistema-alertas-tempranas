@@ -9,10 +9,11 @@ import java.util.logging.Logger;
 public class ConnectionFactory {
     
     private static ConnectionFactory instance = new ConnectionFactory();
-    String url = "jdbc:mysql://localhost/dbName";
+    String url = "jdbc:sqlserver://localhost:1433;"
+            + "databaseName=sisalbmdb;user=sa;password=root;";
     String user = "USER";
     String password = "PASSWORD";
-    String driverClass = "com.sqlserver.XX";
+    String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static final Logger LOG = Logger.getLogger(ConnectionFactory.class.getName());
     
     private ConnectionFactory () {
