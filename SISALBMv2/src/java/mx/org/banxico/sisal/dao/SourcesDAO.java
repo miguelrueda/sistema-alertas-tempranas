@@ -30,7 +30,7 @@ public class SourcesDAO implements java.io.Serializable {
     private void iniciarFuentes() {
         String srcsQuery = "SELECT * FROM appsouces";
         LOG.log(Level.INFO, "Query: {0}", srcsQuery);
-        fuentes = new ArrayList<>();
+        fuentes = new ArrayList<AppSource>();
         AppSource fuente;
         try {
             this.conn = getConn();
@@ -83,13 +83,13 @@ public class SourcesDAO implements java.io.Serializable {
     
     private static List<AppSource> testList;
     static {
-        testList = new ArrayList<>();
+        testList = new ArrayList<AppSource>();
         testList.add(new AppSource(1, "Vulnerabilidades Recientes", "http://nvd.nist.gov/download/nvdcve-recent.xml", new Date()));
         testList.add(new AppSource(2, "Archivo de Vulnerabilidades", "http://nvd.nist.gov/download/nvdcve-2014.xml", new Date()));
     }
 
     private void iniciarFuentesTemp() {
-        fuentes = new ArrayList<>();
+        fuentes = new ArrayList<AppSource>();
         AppSource fuente;
         try {
             int nr = 0;

@@ -10,21 +10,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
-        <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
-        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
-            $(document).ready(function() {
-                $("#actualizar").click(function() {
-                    var id = $("#idf").val();
-                    var nombre = $("#namef").val();
-                    var url = $("#urlf").val();
-                    var fecha = $("#datef").val();
-                    $.get('admin/configuration.controller?action=edit&edit=1', {id: id, nombre: nombre, url: url}, function(responseText) {
-                        $("#resdiv").text(responseText);
-                    });
-                });
-            });
+            /*$.get('admin/EditSource.do?action=edit&tipo=1', {id: id, nombre: nombre, url: url}, function(responseText) {
+             $("#resdiv").text(responseText);
+             alert(responseText);
+             $.get(
+             "admin/configuration.controller?action=edit&tipo=1",
+             {name: "Miguel"},
+             function(data) {
+             alert(data);
+             }
+             );
+             });
+             */
         </script>
     </head>
     <%
@@ -32,7 +33,33 @@
         int id = Integer.parseInt(srcId);
     %>
     <body>
-        <div class="editForm">
+
+
+        <div id="page_container">
+            <div id="page_header">
+                <table id="header">
+                    <tr>
+                        <td><img src="../../resources/images/app_header.png" alt="BMLogo" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="page_content">
+                <div id="title">&nbsp;Versión Adminstrativa</div>
+                <div id="workarea">
+                    <%@include  file="../incfiles/menu.jsp" %>
+                    <div id="content_wrap">
+                        <div id="page_title">Editar</div>
+                        <div id="content">
+                            <% out.print(id); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
+   <div class="editForm">
             <form id="editSrcForm" name="editSrcForm">
                 <%
                     AppSource fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).getFuente(id);
@@ -49,9 +76,3 @@
                 <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
             </form>
         </div>
-        <div id="resdiv">
-
-        </div>
-
-    </body>
-</html>

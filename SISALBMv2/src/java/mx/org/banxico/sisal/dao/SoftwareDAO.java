@@ -45,16 +45,18 @@ public class SoftwareDAO implements java.io.Serializable {
     }
 
     private void iniciarLista() {
-        swList = new ArrayList<>();
+        swList = new ArrayList<Software>();
         Software sw;
         String[] record;
         try {
             File file = new File(SoftwareDAO.class.getResource(PRODSFILE).getFile());
+            LOG.log(Level.INFO, "Archivo Leido Correctamente");
             CSVReader reader = new CSVReader(new FileReader(file));
             reader.readNext();
             int nr = 0;
             while ((record = reader.readNext()) != null) {
                 sw = new Software();
+                LOG.log(Level.INFO, record.toString());
                 sw.setIdProducto(Integer.parseInt(record[0]));
                 if (!(record[1].length() == 0)) {
                     sw.setProveedor(record[1]);
@@ -82,6 +84,8 @@ public class SoftwareDAO implements java.io.Serializable {
             LOG.log(Level.SEVERE, null, e);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
+        } catch(java.lang.NumberFormatException nfe) {
+            LOG.log(Level.INFO, "Error de Conversión: " + nfe.getMessage());
         }
     }
 
@@ -90,7 +94,7 @@ public class SoftwareDAO implements java.io.Serializable {
     }
 
     public List<Software> retrieveFromList(int offset, int noOfRecords) {
-        List<Software> temp = new ArrayList<>();
+        List<Software> temp = new ArrayList<Software>();
         Software sw;
         for (int i = offset; i < offset + noOfRecords; i++) {
             if (i >= this.noOfRecords) {

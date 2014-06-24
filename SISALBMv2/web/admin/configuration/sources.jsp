@@ -66,7 +66,7 @@
                                                 <td>${src.url}</td>
                                                 <td>${parsedDate}</td>
                                                 <td>
-                                                    <a href="configuration/editSource.jsp?id=${src.id}" class="view">
+                                                    <a href="configuration/editSource.jsp?id=${src.id}">
                                                         <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
                                                     </a>
                                                 </td>
