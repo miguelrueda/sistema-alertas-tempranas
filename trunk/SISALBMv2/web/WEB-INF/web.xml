@@ -16,6 +16,10 @@
         <servlet-name>ConfigurationServlet</servlet-name>
         <servlet-class>mx.org.banxico.sisal.servlets.ConfigurationServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Servlet2</servlet-name>
+        <servlet-class>test.pack.Servlet2</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>ConfigurationServlet</servlet-name>
         <url-pattern>/admin/configuration.controller</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Servlet2</servlet-name>
+        <url-pattern>/admin/url/Servlet.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

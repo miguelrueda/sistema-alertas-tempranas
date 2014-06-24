@@ -4,14 +4,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <script src="resources/js/jquery-2.1.1.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script>
             $(document).ready(function() {
                 $("#submit").click(function(event) {
                     var username = $("#user").val();
+                    alert(username);
                     $("#welcometext").html('');
-                    $.get('ActionServlet', {user: username, age: 22}, function(responseText) {
+                    $.get('admin/url/Servlet.do', {user: username, age: 22}, function(responseText) {
                         $("#welcometext").text(responseText);
+                        alert(responseText);
                     });
                 });
             });

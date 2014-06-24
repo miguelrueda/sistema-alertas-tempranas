@@ -21,38 +21,50 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!request.getParameter("tipo").equals("")) {
-            String tipo = (String) request.getParameter("tipo");
-            LOG.log(Level.INFO, "Procesando petici\u00f3n de configuraci\u00f3n de tipo: {0}", tipo);
+        if (!request.getParameter("action").equals("")) {
+            String action = (String) request.getParameter("action");
+            LOG.log(Level.INFO, "Procesando petici\u00f3n de configuraci\u00f3n de tipo: {0}", action);
+            
             String nextJSP = "/admin/Index.html";
             RequestDispatcher view;
             SourcesDAO dao = new SourcesDAO();
             HttpSession sesion = request.getSession();
             sesion.setAttribute("sourcesdao", dao);
-            switch (tipo) {
-                case "1":   //Ver Lista Fuentes
-                    List<AppSource> fuentes = dao.retrieveAll();
-                    int noOfRecords = dao.getNoFuentes();
-                    request.setAttribute("fuentes", fuentes);
-                    request.setAttribute("noOfRecords", noOfRecords);
-                    LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
-                    nextJSP = "/admin/configuration/sources.jsp";
-                    break;
-                case "2":   //Ver Lista SWs
-                    LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
-                    nextJSP = "/admin/configuration/lists.jsp";
-                    break;
-            }
-            view = getServletContext().getRequestDispatcher(nextJSP);
-            view.forward(request, response);
-        }
-        if (!(request.getParameter("action").equals(""))) {
-            String action = (String) request.getParameter("action");
-            LOG.log(Level.INFO, "Procesando Petición de Edición");
-            response.setContentType("text/plain");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("Respuesta OK");
             
+            if (action.equalsIgnoreCase("view")) {
+                //¿Solicitar el siguiente parametro?
+                String tipo = (String) request.getParameter("tipo");
+                int tipoI = Integer.parseInt(tipo);
+                switch (tipoI) {
+                    case 1:
+                        List<AppSource> fuentes = dao.retrieveAll();
+                        int noOfRecords = dao.getNoFuentes();
+                        request.setAttribute("fuentes", fuentes);
+                        request.setAttribute("noOfRecords", noOfRecords);
+                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
+                        nextJSP = "/admin/configuration/sources.jsp";
+                        break;
+                    case 2:
+                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
+                        nextJSP = "/admin/configuration/lists.jsp";
+                        break;
+                }
+                view = getServletContext().getRequestDispatcher(nextJSP);
+                view.forward(request, response);
+            }
+            if (action.equalsIgnoreCase("edit")) {
+                String tipo = (String) request.getParameter("tipo");
+                int tipoI = Integer.parseInt(tipo);
+                LOG.log(Level.INFO, "Petici\u00f3n Edit de Tipo: {0}", tipoI);
+                switch (tipoI) {
+                    case 1: //Editar fuente
+                        LOG.log(Level.INFO, "Procesando Petición de Edición");
+                        response.setContentType("text/plain");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write("Respuesta OK");
+                        break;
+                }
+            }
         }
     }
 

@@ -77,7 +77,7 @@
                                                 <td>${vuln.CVSS.score}</td>
                                                 <td>${vuln.severity}</td>
                                                 <td>
-                                                    <a href="vulnerabilities/vulnDetail.jsp?tipo=1&name=${vuln.name}" class="view">
+                                                    <a href="vulnerabilities/vulnDetail.jsp?action=view&tipo=1&name=${vuln.name}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />
                                                     </a>
                                                 </td>
@@ -90,7 +90,7 @@
                                 <table style="width: 100%; text-align: center">
                                     <tr>
                                         <c:if test="${currentPage != 1}">
-                                            <td><a href="vulnerability.controller?tipo=1&page=${currentPage - 1}" class="page">Anterior</a></td>
+                                            <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a></td>
                                         </c:if>
                                         <c:forEach begin="1" end="${noOfPages}" var="i">
                                             <c:choose>
@@ -98,12 +98,12 @@
                                                     <td class="page active">${i}</td>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <td><a href="vulnerability.controller?tipo=1&page=${i}" class="page">${i}</a></td>
+                                                    <td><a href="vulnerability.controller?action=view&tipo=1&page=${i}" class="page">${i}</a></td>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:forEach>
                                             <c:if test="${currentPage lt noOfPages}">
-                                            <td><a href="vulnerability.controller?tipo=1&page=${currentPage + 1}" class="page">Siguiente</a></td>
+                                            <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a></td>
                                         </c:if>
                                     </tr>
                                 </table>
