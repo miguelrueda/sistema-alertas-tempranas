@@ -4,10 +4,10 @@
         <ul>
             <li><a href="../AppIndex.html">AppIndex</a></li>
             <li>
-                <a href="Index.html">Configuración</a>
+                <a href="#">Configuración</a>
                 <ul>
                     <li><a href="../admin/configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
-                    <li><a href="../admin/configuration.controller?action=view&tipo=2">Listas de Software</a></li>
+                    <!--<li><a href="../admin/configuration.controller?action=view&tipo=2">Listas de Software</a></li>-->
                 </ul>
             </li>
             <li><a href="#">Vulnerabilidades</a>

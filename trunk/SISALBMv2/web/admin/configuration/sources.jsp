@@ -10,6 +10,12 @@
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <!--
+        <script type="text/javascript" src="../resources/js/jquery.growl.js" ></script>
+        <link href="../resources/css/jquery.growl.css" type="text/css" rel="stylesheet" />
+        -->
+        <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
+        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
         <script>
             $(document).ready(function(){
                 $(".view").click(function() {
@@ -28,6 +34,36 @@
                         }
                     });
                     return false;
+                });
+                $(".dwnldBtn").click(function(e){
+                    var url = $(this).attr("alt");
+                    //$.growl.notice({title: "Info", message: "Descargando el archivo: " + url});
+                    jQuery.noticeAdd({
+                        text: "Descargando el archivo: " + url,
+                        stay: false,
+                    });
+                    //alert("/sisalbm/admin/configuration.controller?action=download&url=" + url);
+                    $.ajax({
+                        type: 'get',
+                        url: '/sisalbm/admin/configuration.controller?action=download',
+                        data: 'url=' + url,
+                        success: function(result) {
+                            alert(result);
+                            if (result === 'OK') {
+                                jQuery.noticeAdd({
+                                    text: 'La descarga se realizo exitosamente',
+                                    stay: true,
+                                    type: 'success'
+                                });
+                            } else if(result === 'ERROR') {
+                                jQuery.noticeAdd({
+                                    text: 'Ocurrio un error al realizar la descarga',
+                                    stay: true,
+                                    type: 'error'
+                                });
+                            }
+                        }
+                    });
                 });
             });
         </script>
@@ -63,7 +99,7 @@
                                             <fmt:formatDate value="${src.fechaActualizacion}"  var="parsedDate" dateStyle="long"/>
                                             <tr>
                                                 <td>${src.nombre}</td>
-                                                <td>${src.url}</td>
+                                                <td id="dwnldurl">${src.url}</td>
                                                 <td>${parsedDate}</td>
                                                 <td>
                                                     <a href="configuration/editSource.jsp?id=${src.id}">
@@ -72,7 +108,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="#">
-                                                        <img src="../resources/images/download.png" alt="actualizar" id="tableicon" />
+                                                        <img src="../resources/images/download.png" alt="${src.url}" id="tableicon" class="dwnldBtn" />
                                                     </a>
                                                 </td>
                                             </tr>

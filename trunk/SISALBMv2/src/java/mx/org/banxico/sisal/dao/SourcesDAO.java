@@ -117,5 +117,22 @@ public class SourcesDAO implements java.io.Serializable {
         }
         return new AppSource();
     }
+    
+    public boolean editarFuente(int id, String name, String url) {
+        boolean res = true;
+        AppSource edit = this.getFuente(id);
+        LOG.log(Level.INFO, "Editando la fuente: {0}", edit.getId());
+        edit.setNombre(name);
+        edit.setUrl(url);
+        edit.setFechaActualizacion(new Date());
+        return res;
+    }
+    
+    public boolean descargarFuente(String url) {
+        boolean res = false;
+        LOG.log(Level.INFO, "Descargando Fuente: {0}", url);
+        //doDownload();
+        return res;
+    }
 
 }

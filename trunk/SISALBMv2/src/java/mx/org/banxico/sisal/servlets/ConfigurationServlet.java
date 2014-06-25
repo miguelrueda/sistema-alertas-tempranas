@@ -2,6 +2,7 @@ package mx.org.banxico.sisal.servlets;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -44,10 +45,11 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
                         nextJSP = "/admin/configuration/sources.jsp";
                         break;
+                        /*
                     case 2:
                         LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
                         nextJSP = "/admin/configuration/lists.jsp";
-                        break;
+                        break;*/
                 }
                 view = getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);
@@ -61,8 +63,28 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         LOG.log(Level.INFO, "Procesando Petición de Edición");
                         response.setContentType("text/plain");
                         response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write("Respuesta OK");
+                        String id = (String) request.getParameter("idf");
+                        String name = (String) request.getParameter("namef");
+                        String url = (String) request.getParameter("urlf");
+                        boolean flag = dao.editarFuente(Integer.parseInt(id), name, url);
+                        if (flag) {
+                            response.getWriter().write("true");
+                        } else {
+                            response.getWriter().write("false");
+                        }
                         break;
+                }
+            }
+            if (action.equalsIgnoreCase("download")) {
+                String url = (String) request.getParameter("url");
+                LOG.log(Level.INFO, "Petici\u00f3n Download de URL: {0}", url);
+                response.setContentType("text/plain");
+                response.setCharacterEncoding("UTF-8");
+                boolean flag = dao.descargarFuente(url);
+                if (flag) {
+                    response.getWriter().write("OK");
+                } else {
+                    response.getWriter().write("ERROR");
                 }
             }
         }

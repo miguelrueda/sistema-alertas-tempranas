@@ -8,12 +8,38 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Editar Fuente</title>
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
+            $(document).ready(function() {
+                $("#actualizar").click(function(e) {
+                    /*
+                    var id = $("#idf").val();
+                    var name = $("#namef").val();
+                    var url = $("#urlf").val();
+                    alert(id + "\n" + "¿AJAX?");
+                    */
+                   var a = $("#editSrcForm").serialize();
+                   var idf = $("#idf").val();
+                   alert("idf=" + idf + "&" + a);
+                   $.ajax({
+                       type: 'get',
+                       url: '/sisalbm/admin/configuration.controller?action=edit&tipo=1',
+                       data: "idf=" + idf + "&" + a,
+                       success: function(result) {
+                           if(result === "true") {
+                               alert("Edición Completa");
+                           } else {
+                               alert("Edición Incompleta");
+                           }
+                           location.reload();
+                       }
+                   });
+                });
+            });
             /*$.get('admin/EditSource.do?action=edit&tipo=1', {id: id, nombre: nombre, url: url}, function(responseText) {
              $("#resdiv").text(responseText);
              alert(responseText);
@@ -46,11 +72,56 @@
             <div id="page_content">
                 <div id="title">&nbsp;Versión Adminstrativa</div>
                 <div id="workarea">
-                    <%@include  file="../incfiles/menu.jsp" %>
+                    <nav>
+                        <ul>
+                            <li><a href="../../AppIndex.html">AppIndex</a></li>
+                            <li>
+                                <a href="#">Configuración</a>
+                                <ul>
+                                    <li><a href="../configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
+                                    <li><a href="../configuration.controller?action=view&tipo=2">Listas de Software</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Vulnerabilidades</a>
+                                <ul>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=1">Más Recientes</a></li>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=2">Archivo</a></li>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=3">Software Soportado</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Escaneo</a>
+                                <ul>
+                                    <li><a href="#">Nuevo Escaneo</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Reportes</a>
+                                <ul>
+                                    <li><a href="#">Generar Reporte</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
                     <div id="content_wrap">
-                        <div id="page_title">Editar</div>
                         <div id="content">
-                            <% out.print(id); %>
+                            <div class="editForm">
+                                <form id="editSrcForm" name="editSrcForm" >
+                                    <%
+                                        AppSource fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).getFuente(id);
+                                    %>
+                                    <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
+                                    <label for="idf">Id:</label>
+                                    <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" /><br />
+                                    <label for="namef">Nombre:</label>
+                                    <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" /><br />
+                                    <label for="urlf">Url:</label>
+                                    <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" /><br />
+                                    <label for="datef">Ultima Actualización:</label>
+                                    <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" /><br />
+                                    <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,20 +130,3 @@
 
     </body>
 </html>
-   <div class="editForm">
-            <form id="editSrcForm" name="editSrcForm">
-                <%
-                    AppSource fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).getFuente(id);
-                %>
-                <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
-                <label for="idf">Id:</label>
-                <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" /><br />
-                <label for="namef">Nombre:</label>
-                <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" /><br />
-                <label for="urlf">Url:</label>
-                <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" /><br />
-                <label for="datef">Ultima Actualización:</label>
-                <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" /><br />
-                <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
-            </form>
-        </div>
