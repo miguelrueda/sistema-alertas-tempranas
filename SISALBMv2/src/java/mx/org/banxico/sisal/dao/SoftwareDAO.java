@@ -56,7 +56,6 @@ public class SoftwareDAO implements java.io.Serializable {
             int nr = 0;
             while ((record = reader.readNext()) != null) {
                 sw = new Software();
-                LOG.log(Level.INFO, record.toString());
                 sw.setIdProducto(Integer.parseInt(record[0]));
                 if (!(record[1].length() == 0)) {
                     sw.setProveedor(record[1]);
@@ -85,7 +84,7 @@ public class SoftwareDAO implements java.io.Serializable {
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch(java.lang.NumberFormatException nfe) {
-            LOG.log(Level.INFO, "Error de Conversión: " + nfe.getMessage());
+            LOG.log(Level.INFO, "Error de Conversi\u00f3n: {0}", nfe.getMessage());
         }
     }
 
@@ -101,7 +100,6 @@ public class SoftwareDAO implements java.io.Serializable {
                 break;
             }
             sw = swList.get(i);
-            LOG.log(Level.INFO, "Agregando: {0}", sw.getIdProducto());
             temp.add(sw);
         }
         return temp;
