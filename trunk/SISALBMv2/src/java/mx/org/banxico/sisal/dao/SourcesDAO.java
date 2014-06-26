@@ -126,7 +126,7 @@ public class SourcesDAO implements java.io.Serializable {
             pstmt = conn.prepareStatement(sqlInsert);
             pstmt.setString(1, nombre);
             pstmt.setString(2, url);
-            pstmt.setDate(3, (java.sql.Date) new Date());
+            pstmt.setDate(3, new java.sql.Date(new Date().getTime()));
             
             pstmt.executeUpdate();
             res = true;
@@ -159,7 +159,7 @@ public class SourcesDAO implements java.io.Serializable {
             pstmt = conn.prepareStatement(sqlUpdate);
             pstmt.setString(1, fuente.getNombre());
             pstmt.setString(2, fuente.getUrl());
-            pstmt.setDate(3, (java.sql.Date) fuente.getFechaActualizacion());
+            pstmt.setDate(3, new java.sql.Date(fuente.getFechaActualizacion().getTime()));
             pstmt.setInt(4, fuente.getId());
             pstmt.executeUpdate();
             res = true;
