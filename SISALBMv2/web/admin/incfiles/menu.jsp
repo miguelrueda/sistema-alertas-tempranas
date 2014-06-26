@@ -20,7 +20,7 @@
             <li>
                 <a href="#">Escaneo</a>
                 <ul>
-                    <li><a href="#">Nuevo Escaneo</a></li>
+                    <li><a href="../admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
                 </ul>
             </li>
             <li>

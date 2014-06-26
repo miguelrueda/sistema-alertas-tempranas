@@ -1,5 +1,14 @@
 package mx.org.banxico.sisal.dao;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,38 +16,56 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
-import mx.org.banxico.sisal.entities.AppSource;
+import mx.org.banxico.sisal.entities.FuenteApp;
 
 public class SourcesDAO implements java.io.Serializable {
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * Atributos de serialización y Logger
+     */
+    private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SourcesDAO.class.getName());
+    /**
+     * Atributos del DAO
+     */
     private Connection conn;
     private PreparedStatement pstmt;
-    private List<AppSource> fuentes;
+    private List<FuenteApp> fuentes;
     private int noFuentes;
 
     public SourcesDAO() {
         //iniciarFuentes();
         //TODO: Eliminar este método
         iniciarFuentesTemp();
+        //Iniciar la conexión a BD AQUI
+        //conn = ConnectionFactory.getInstance().getConnection();
+    }
+
+    //TODO: Eliminar esté método
+    public Connection getConn() {
+        Connection nConn = ConnectionFactory.getInstance().getConnection();
+        if (nConn != null) {
+            LOG.log(Level.INFO, "Se estableció la conexi\u00f3n con BD de forma exitosa: {0}", nConn.toString());
+        }
+        return nConn;
     }
 
     private void iniciarFuentes() {
         String srcsQuery = "SELECT * FROM appsouces";
         LOG.log(Level.INFO, "Query: {0}", srcsQuery);
-        fuentes = new ArrayList<AppSource>();
-        AppSource fuente;
+        fuentes = new ArrayList<FuenteApp>();
+        FuenteApp fuente;
         try {
             this.conn = getConn();
             pstmt = conn.prepareStatement(srcsQuery);
             ResultSet rs = pstmt.executeQuery();
             int nr = 0;
             while (rs.next()) {
-                fuente = new AppSource();
+                fuente = new FuenteApp();
                 fuente.setId(rs.getInt(1));
                 fuente.setNombre(rs.getString(2));
                 fuente.setUrl(rs.getString(3));
@@ -65,36 +92,13 @@ public class SourcesDAO implements java.io.Serializable {
         }
     }
 
-    public Connection getConn() {
-        Connection nConn = ConnectionFactory.getInstance().getConnection();
-        if (nConn != null) {
-            LOG.log(Level.INFO, "Conexi\u00f3n con BD Exitosa. {0}", nConn.toString());
-        }
-        return nConn;
-    }
-
-    public int getNoFuentes() {
-        return noFuentes;
-    }
-
-    public List<AppSource> retrieveAll() {
-        return this.fuentes;
-    }
-    
-    private static List<AppSource> testList;
-    static {
-        testList = new ArrayList<AppSource>();
-        testList.add(new AppSource(1, "Vulnerabilidades Recientes", "http://nvd.nist.gov/download/nvdcve-recent.xml", new Date()));
-        testList.add(new AppSource(2, "Archivo de Vulnerabilidades", "http://nvd.nist.gov/download/nvdcve-2014.xml", new Date()));
-    }
-
     private void iniciarFuentesTemp() {
-        fuentes = new ArrayList<AppSource>();
-        AppSource fuente;
+        fuentes = new ArrayList<FuenteApp>();
+        FuenteApp fuente;
         try {
             int nr = 0;
-            for (AppSource src : testList) {
-                fuente = new AppSource();
+            for (FuenteApp src : testList) {
+                fuente = new FuenteApp();
                 fuente.setId(src.getId());
                 fuente.setNombre(src.getNombre());
                 fuente.setUrl(src.getUrl());
@@ -107,32 +111,143 @@ public class SourcesDAO implements java.io.Serializable {
             LOG.log(Level.INFO, "Error al iniciar la lista temporal: {0}", e.getMessage());
         }
     }
+
+    public int getNoFuentes() {
+        return noFuentes;
+    }
     
-    public AppSource getFuente(int id) {
-        for (AppSource src : fuentes) {
+    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion) VALUES (?, ?, ?)";
+    private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=?, fecha_actualizacion=? WHERE idFuenteApp = ?";
+    private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
+
+    public boolean crearFuente(String nombre, String url) {
+        boolean res = false;
+        try {
+            pstmt = conn.prepareStatement(sqlInsert);
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, url);
+            pstmt.setDate(3, (java.sql.Date) new Date());
+            
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+    
+    public List<FuenteApp> obtenerFuentes() {
+        if (!this.fuentes.isEmpty()) {
+            return this.fuentes;
+        }
+        return new ArrayList<FuenteApp>();
+    }
+    
+    public FuenteApp obtenerFuentePorId(int id) {
+        for (FuenteApp src : fuentes) {
             if (src.getId() == id) {
                 LOG.log(Level.INFO, "Fuente encontrada: {0}", src.getNombre());
                 return src;
             }
         }
-        return new AppSource();
+        return new FuenteApp();
     }
     
+    public boolean editarFuente(FuenteApp fuente) {
+        boolean res = false;
+        try {
+            pstmt = conn.prepareStatement(sqlUpdate);
+            pstmt.setString(1, fuente.getNombre());
+            pstmt.setString(2, fuente.getUrl());
+            pstmt.setDate(3, (java.sql.Date) fuente.getFechaActualizacion());
+            pstmt.setInt(4, fuente.getId());
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+    
+    public boolean eliminarFuente(int id) {
+        boolean res = false;
+        try {
+            pstmt = conn.prepareStatement(sqlDelete);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+    
+    //TODO: Eliminar este método y la inicialización estática
+    private static List<FuenteApp> testList;
+    static {
+        testList = new ArrayList<FuenteApp>();
+        testList.add(new FuenteApp(1, "Vulnerabilidades Recientes", "http://nvd.nist.gov/download/nvdcve-recent.xml", new Date()));
+        testList.add(new FuenteApp(2, "Archivo de Vulnerabilidades", "http://nvd.nist.gov/download/nvdcve-2014.xml", new Date()));
+    }
+
+    //TODO: Eliminar esté método
     public boolean editarFuente(int id, String name, String url) {
         boolean res = true;
-        AppSource edit = this.getFuente(id);
+        FuenteApp edit = this.obtenerFuentePorId(id);
         LOG.log(Level.INFO, "Editando la fuente: {0}", edit.getId());
         edit.setNombre(name);
         edit.setUrl(url);
         edit.setFechaActualizacion(new Date());
         return res;
     }
-    
+
     public boolean descargarFuente(String url) {
         boolean res = false;
         LOG.log(Level.INFO, "Descargando Fuente: {0}", url);
-        //doDownload();
+        URL fileurl;
+        URLConnection conn;
+        BufferedReader br;
+        String inputLine;
+        String path;
+        BufferedWriter bw;
+        try {
+            fileurl = new URL(url);
+            conn = fileurl.openConnection();
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            path = SourcesDAO.class.getResource("/resources/").getPath();
+            File filepath = new File(path);
+            LOG.log(Level.INFO, "FilePath: {0}", filepath);
+            String fileName = path + extraerNombre(url);
+            File file = new File(fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            bw = new BufferedWriter(fw);
+            while ((inputLine = br.readLine()) != null) {
+                bw.write(inputLine + "\n");
+            }
+            bw.close();
+            br.close();
+            res = true;
+        } catch (MalformedURLException e) {
+            LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
+        }
         return res;
+    }
+
+    private String extraerNombre(String url) {
+        StringTokenizer tokenizer = new StringTokenizer(url, "/");
+        String[] tokens = new String[tokenizer.countTokens()];
+        int i = 0;
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            tokens[i] = token;
+            i++;
+        }
+        return tokens[3];
     }
 
 }

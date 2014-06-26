@@ -37,7 +37,7 @@
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
                                             <tr>
-                                                <td style="width: 25%">${supSW.proveedor}</td>
+                                                <td style="width: 25%">${supSW.fabricante}</td>
                                                 <td style="width: 60%">${supSW.nombre}</td>
                                                 <td>${supSW.version}</td>
                                                 <c:choose>

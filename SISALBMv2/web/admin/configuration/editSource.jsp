@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.Date"%>
-<%@page import="mx.org.banxico.sisal.entities.AppSource"%>
+<%@page import="mx.org.banxico.sisal.entities.FuenteApp"%>
 <%@page import="mx.org.banxico.sisal.dao.SourcesDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -79,7 +79,6 @@
                                 <a href="#">Configuración</a>
                                 <ul>
                                     <li><a href="../configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
-                                    <li><a href="../configuration.controller?action=view&tipo=2">Listas de Software</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Vulnerabilidades</a>
@@ -108,7 +107,7 @@
                             <div class="editForm">
                                 <form id="editSrcForm" name="editSrcForm" >
                                     <%
-                                        AppSource fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).getFuente(id);
+                                        FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
                                     %>
                                     <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
                                     <label for="idf">Id:</label>

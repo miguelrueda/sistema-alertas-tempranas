@@ -17,7 +17,7 @@
         <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
         <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
         <script>
-            $(document).ready(function(){
+            $(document).ready(function() {
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
@@ -35,33 +35,54 @@
                     });
                     return false;
                 });
-                $(".dwnldBtn").click(function(e){
-                    var url = $(this).attr("alt");
+                $(".dwnldBtn").click(function(e) {
+                    var param = $(this).attr("alt");
                     //$.growl.notice({title: "Info", message: "Descargando el archivo: " + url});
-                    jQuery.noticeAdd({
-                        text: "Descargando el archivo: " + url,
-                        stay: false,
-                    });
-                    //alert("/sisalbm/admin/configuration.controller?action=download&url=" + url);
+                    var tokens = param.split("&");
+                    var tk = tokens[1].split("=");
+                    //alert(tk[1]);
+                    alert("/sisalbm/admin/configuration.controller?action=download&" + param);
+
                     $.ajax({
                         type: 'get',
                         url: '/sisalbm/admin/configuration.controller?action=download',
-                        data: 'url=' + url,
+                        data: param,
+                        beforeSend: function() {
+                            jQuery.noticeAdd({
+                                text: "Descargando el archivo:<br />" + tk[1] +
+                                        "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                stay: true,
+                                type: 'info'
+                            });
+                        },
                         success: function(result) {
-                            alert(result);
+                            //alert(result);
                             if (result === 'OK') {
                                 jQuery.noticeAdd({
                                     text: 'La descarga se realizo exitosamente',
                                     stay: true,
                                     type: 'success'
                                 });
-                            } else if(result === 'ERROR') {
+                            } else if (result === 'ERROR') {
                                 jQuery.noticeAdd({
                                     text: 'Ocurrio un error al realizar la descarga',
                                     stay: true,
                                     type: 'error'
                                 });
                             }
+                        },
+                        error: function() {
+                            jQuery.noticeAdd({
+                                text: 'Ocurrio un error al procesar la petición',
+                                stay: true,
+                                type: 'error'
+                            });
+                        },
+                        complete: function(data) {
+                            setInterval(function() {
+                                jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+                            }, 5000);
+                            
                         }
                     });
                 });
@@ -108,7 +129,8 @@
                                                 </td>
                                                 <td>
                                                     <a href="#">
-                                                        <img src="../resources/images/download.png" alt="${src.url}" id="tableicon" class="dwnldBtn" />
+                                                        <img src="../resources/images/download.png" 
+                                                             alt="id=${src.id}&url=${src.url}" id="tableicon" class="dwnldBtn" />
                                                     </a>
                                                 </td>
                                             </tr>
