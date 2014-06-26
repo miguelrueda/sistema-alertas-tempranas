@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import mx.org.banxico.sisal.dao.SourcesDAO;
-import mx.org.banxico.sisal.entities.AppSource;
+import mx.org.banxico.sisal.entities.FuenteApp;
 
 public class ConfigurationServlet extends HttpServlet implements java.io.Serializable {
 
@@ -38,7 +38,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 int tipoI = Integer.parseInt(tipo);
                 switch (tipoI) {
                     case 1:
-                        List<AppSource> fuentes = dao.retrieveAll();
+                        List<FuenteApp> fuentes = dao.obtenerFuentes();
                         int noOfRecords = dao.getNoFuentes();
                         request.setAttribute("fuentes", fuentes);
                         request.setAttribute("noOfRecords", noOfRecords);
@@ -46,6 +46,10 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         nextJSP = "/admin/configuration/sources.jsp";
                         break;
                         /*
+                    case 2:
+                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
+                        nextJSP = "/admin/configuration/lists.jsp";
+                        break;*/                        /*
                     case 2:
                         LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
                         nextJSP = "/admin/configuration/lists.jsp";
@@ -76,6 +80,9 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 }
             }
             if (action.equalsIgnoreCase("download")) {
+                String id = (String) request.getParameter("id");
+                //TODO: Actualizar registro de URL (FECHA)
+                LOG.log(Level.INFO, "Editar el ID: " + id);
                 String url = (String) request.getParameter("url");
                 LOG.log(Level.INFO, "Petici\u00f3n Download de URL: {0}", url);
                 response.setContentType("text/plain");

@@ -20,6 +20,14 @@
         <servlet-name>Servlet2</servlet-name>
         <servlet-class>test.pack.Servlet2</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExceptionServlet</servlet-name>
+        <servlet-class>test.pack.ExceptionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AppExceptionHandler</servlet-name>
+        <servlet-class>test.pack.AppExceptionHandler</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -40,6 +48,22 @@
         <servlet-name>Servlet2</servlet-name>
         <url-pattern>/admin/url/Servlet.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExceptionServlet</servlet-name>
+        <url-pattern>/ExceptionServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AppExceptionHandler</servlet-name>
+        <url-pattern>/AppExceptionHandler</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
     <session-config>
         <session-timeout>
             30

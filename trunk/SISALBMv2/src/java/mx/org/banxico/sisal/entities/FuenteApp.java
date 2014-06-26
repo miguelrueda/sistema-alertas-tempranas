@@ -2,35 +2,30 @@ package mx.org.banxico.sisal.entities;
 
 import java.util.Date;
 
-public class AppSource implements java.io.Serializable {
+public class FuenteApp implements java.io.Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -1L;
 
-    private int id;
+    private Integer id;
     private String nombre;
     private String url;
     private Date fechaActualizacion;
 
-    public AppSource() {
+    public FuenteApp() {
     }
 
-    public AppSource(int id, String url) {
-        this.id = id;
-        this.url = url;
-    }
-
-    public AppSource(int id, String nombre, String url, Date fechaActualizacion) {
+    public FuenteApp(Integer id, String nombre, String url, Date fechaActualizacion) {
         this.id = id;
         this.nombre = nombre;
         this.url = url;
         this.fechaActualizacion = fechaActualizacion;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

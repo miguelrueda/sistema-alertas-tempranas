@@ -4,30 +4,52 @@ public class Software implements java.io.Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    private int idProducto;
-    private String proveedor;
+    private Integer idSoftware;
+    private String fabricante;
     private String nombre;
     private String version;
-    private int tipo;
-    private int endoflife;
+    private Integer tipo;
+    private Integer endoflife;
+    private String UAResponsable;
+    private String AnalistaResponsable;
 
     public Software() {
     }
 
-    public int getIdProducto() {
-        return idProducto;
+    public Software(Integer idSoftware, String fabricante, String nombre, String version, Integer tipo, Integer endoflife) {
+        this.idSoftware = idSoftware;
+        this.fabricante = fabricante;
+        this.nombre = nombre;
+        this.version = version;
+        this.tipo = tipo;
+        this.endoflife = endoflife;
     }
 
-    public void setIdProducto(int idProducto) {
-        this.idProducto = idProducto;
+    public Software(Integer idSoftware, String fabricante, String nombre, String version, Integer tipo, Integer endoflife, String UAResponsable, String AnalistaResponsable) {
+        this.idSoftware = idSoftware;
+        this.fabricante = fabricante;
+        this.nombre = nombre;
+        this.version = version;
+        this.tipo = tipo;
+        this.endoflife = endoflife;
+        this.UAResponsable = UAResponsable;
+        this.AnalistaResponsable = AnalistaResponsable;
     }
 
-    public String getProveedor() {
-        return proveedor;
+    public Integer getTipo() {
+        return tipo;
     }
 
-    public void setProveedor(String proveedor) {
-        this.proveedor = proveedor;
+    public void setTipo(Integer tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getFabricante() {
+        return fabricante;
+    }
+
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
     }
 
     public String getNombre() {
@@ -46,25 +68,41 @@ public class Software implements java.io.Serializable {
         this.version = version;
     }
 
-    public int getTipo() {
-        return tipo;
+    public Integer getIdSoftware() {
+        return idSoftware;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+    public void setIdSoftware(Integer idSoftware) {
+        this.idSoftware = idSoftware;
     }
 
-    public int getEndoflife() {
+    public Integer getEndoflife() {
         return endoflife;
     }
 
-    public void setEndoflife(int endoflife) {
+    public void setEndoflife(Integer endoflife) {
         this.endoflife = endoflife;
+    }
+
+    public String getUAResponsable() {
+        return UAResponsable;
+    }
+
+    public void setUAResponsable(String UAResponsable) {
+        this.UAResponsable = UAResponsable;
+    }
+
+    public String getAnalistaResponsable() {
+        return AnalistaResponsable;
+    }
+
+    public void setAnalistaResponsable(String AnalistaResponsable) {
+        this.AnalistaResponsable = AnalistaResponsable;
     }
 
     @Override
     public String toString() {
-        return "Software{" + "idProducto=" + idProducto + ", proveedor=" + proveedor + ", nombre=" + nombre + ", version=" + version + ", tipo=" + tipo + ", endoflife=" + endoflife + '}';
+        return "Software{" + "idProducto=" + idSoftware + ", proveedor=" + fabricante + ", nombre=" + nombre + ", version=" + version + ", tipo=" + tipo + ", endoflife=" + endoflife + '}';
     }
 
 }
