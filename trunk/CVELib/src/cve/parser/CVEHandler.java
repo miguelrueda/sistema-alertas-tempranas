@@ -22,11 +22,12 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author t41507
  * @version 23.05.2014
  */
-class CVEHandler extends DefaultHandler {
+class CVEHandler extends DefaultHandler implements java.io.Serializable {
 
     /**
      * Atributos
      */
+    private static final long serialVersionUID = -1L;
     private List<CVE> cveList = null;
     private CVE nuevoCVE;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
