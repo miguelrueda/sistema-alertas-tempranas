@@ -33,6 +33,7 @@
                                     <th>Software</th>
                                     <th>Version</th>
                                     <th>Tipo</th>
+                                    <th>UA Responsable</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
@@ -48,6 +49,7 @@
                                                         <td>SW</td>
                                                     </c:otherwise>
                                                 </c:choose>
+                                                <td>${supSW.UAResponsable}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>

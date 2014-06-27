@@ -25,7 +25,8 @@ public class SoftwareDAO implements java.io.Serializable {
     /**
      * Atributos del DAO
      */
-    private static final String PRODSFILE = "/resources/softwareproducts.csv";
+    //private static final String PRODSFILE = "/resources/softwareproducts.csv";
+    private static final String PRODSFILE = "/resources/bdtest.csv";
     private Connection connection;
     private PreparedStatement pstmt;
     private List<Software> swList;
@@ -75,6 +76,10 @@ public class SoftwareDAO implements java.io.Serializable {
                 } else {
                     sw.setEndoflife(-1);
                 }
+                if (!(record[6].length() == 0)) {
+                    sw.setUAResponsable(record[6]);
+                }
+                sw.setAnalistaResponsable(record[7]);
                 swList.add(sw);
                 nr++;
             }
@@ -100,6 +105,7 @@ public class SoftwareDAO implements java.io.Serializable {
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
             + "WHERE idSoftware = ?";
     private static final String sqlDelete = "DELETE FROM Software WHERE idSoftware = ?";
+    private static final String sqlRetrieveUA = "SELECT DISTINCT UAResponsable FROM Software";
 
     public boolean agregarSoftware(Software sw) {
         boolean res = false;

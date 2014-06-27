@@ -28,6 +28,10 @@
         <servlet-name>AppExceptionHandler</servlet-name>
         <servlet-class>test.pack.AppExceptionHandler</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ScannerServlet</servlet-name>
+        <servlet-class>mx.org.banxico.sisal.servlets.ScannerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -64,6 +68,10 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error.jsp</location>
     </error-page>
+    <servlet-mapping>
+        <servlet-name>ScannerServlet</servlet-name>
+        <url-pattern>/scanner</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
