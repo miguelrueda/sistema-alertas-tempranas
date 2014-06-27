@@ -91,7 +91,7 @@
                             <li>
                                 <a href="#">Escaneo</a>
                                 <ul>
-                                    <li><a href="#">Nuevo Escaneo</a></li>
+                                    <li><a href="/sisalbm/admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -105,7 +105,7 @@
                     <div id="content_wrap">
                         <div id="content">
                             <div class="editForm">
-                                <form id="editSrcForm" name="editSrcForm" >
+                                <form id="form" name="editSrcForm" >
                                     <%
                                         FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
                                     %>

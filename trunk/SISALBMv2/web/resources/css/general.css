@@ -267,7 +267,7 @@ ul {
 /**
 FORM STYLE
 */
-#editSrcForm {
+.form {
     max-width: 700px;
     display: block;
     margin-left: auto;
