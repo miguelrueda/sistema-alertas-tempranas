@@ -18,6 +18,7 @@
         <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
         <script>
             $(document).ready(function() {
+                $("#dialog-message").hide();
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
@@ -41,7 +42,7 @@
                     var tokens = param.split("&");
                     var tk = tokens[1].split("=");
                     //alert(tk[1]);
-                    alert("/sisalbm/admin/configuration.controller?action=download&" + param);
+                    //alert("/sisalbm/admin/configuration.controller?action=download&" + param);
 
                     $.ajax({
                         type: 'get',
@@ -58,18 +59,41 @@
                         success: function(result) {
                             //alert(result);
                             if (result === 'OK') {
-                                jQuery.noticeAdd({
-                                    text: 'La descarga se realizo exitosamente',
-                                    stay: true,
-                                    type: 'success'
-                                });
+                                $("#dialog-message").attr("title", "Descarga Exitosa");
+                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La descarga ha sido completada de forma exitosa.</p>";
+                                $("#dialog-message").html(content);
+                                /*
+                                 jQuery.noticeAdd({
+                                 text: 'La descarga se realizo exitosamente',
+                                 stay: true,
+                                 type: 'success'
+                                 });*/
                             } else if (result === 'ERROR') {
+                                $("#dialog-message").attr("title", "Error de Descarga");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la descarga.</p>";
+                                $("#dialog-message").html(content);
+                                /*
                                 jQuery.noticeAdd({
                                     text: 'Ocurrio un error al realizar la descarga',
                                     stay: true,
                                     type: 'error'
-                                });
+                                });*/
+                            } else if (result === 'UPDATED') {
+                                $("#dialog-message").attr("title", "Referencia Actualizada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-minus' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La referencia está actualizada, no se requiere actualizar.</p>";
+                                $("#dialog-message").html(content);
                             }
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Ok: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
                         },
                         error: function() {
                             jQuery.noticeAdd({
@@ -82,7 +106,7 @@
                             setInterval(function() {
                                 jQuery.noticeRemove($('.notice-item-wrapper'), 400);
                             }, 5000);
-                            
+
                         }
                     });
                 });
@@ -111,39 +135,48 @@
                                         <tr>
                                             <th>Nombre</th>
                                             <th>URL</th>
-                                            <th>Fecha de Actualización</th>
+                                            <th>Ultima Actualización</th>
                                             <th colspan="2">Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach var="src" items="${fuentes}">
-                                            <fmt:formatDate value="${src.fechaActualizacion}"  var="parsedDate" dateStyle="long"/>
-                                            <tr>
-                                                <td>${src.nombre}</td>
-                                                <td id="dwnldurl">${src.url}</td>
-                                                <td>${parsedDate}</td>
-                                                <td>
-                                                    <a href="configuration/editSource.jsp?id=${src.id}">
-                                                        <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="#">
-                                                        <img src="../resources/images/download.png" 
-                                                             alt="id=${src.id}&url=${src.url}" id="tableicon" class="dwnldBtn" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
+                                        <c:choose>
+                                            <c:when test="${noOfRecords gt 0}">
+                                                <c:forEach var="src" items="${fuentes}">
+                                                    <fmt:formatDate value="${src.fechaActualizacion}"  var="parsedDate" dateStyle="long"/>
+                                                    <tr>
+                                                        <td>${src.nombre}</td>
+                                                        <td id="dwnldurl">${src.url}</td>
+                                                        <td>${parsedDate}</td>
+                                                        <td>
+                                                            <a href="configuration/editSource.jsp?id=${src.id}">
+                                                                <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#">
+                                                                <img src="../resources/images/download.png" 
+                                                                     alt="id=${src.id}&url=${src.url}" id="tableicon" class="dwnldBtn" />
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr>
+                                                    <td colspan="5" style="text-align: center">No se encontraron registros en la fuente de datos</td>
+                                                </tr>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </tbody>
                                 </table>
                             </div>
-                            <div id="dialogdiv" title="Editar Fuente" style=" display: none">
-                                <iframe id="thedialog" width="360" height="330"></iframe>
-                            </div>
                         </div>
+                        <br />
                     </div>
                 </div>
+            </div>
+            <div id="dialog-message">
             </div>
         </div>
     </body>

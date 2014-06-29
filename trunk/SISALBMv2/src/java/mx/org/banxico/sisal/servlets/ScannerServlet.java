@@ -21,16 +21,17 @@ public class ScannerServlet extends HttpServlet {
             String action = (String) request.getParameter("action");
             if (action.equalsIgnoreCase("retrieve")) {
                 String val = (String) request.getParameter("val");
-                List<Software> swList = swdao.obtenerTodos();
                 if (val.equalsIgnoreCase("ua")) {
+                    List<String> uasList = swdao.obtenerUAs();
                     out.println("<option value=''>Seleccionar UA</option>");
-                    for (Software sw : swList) {
-                        out.println("<option value='" + sw.getUAResponsable() + "'>" + sw.getUAResponsable().toUpperCase() + "</option>");
+                    for (String ua : uasList) {
+                        out.println("<option value='" + ua + "'>" + ua + "</option>");
                     }
                 } else if (val.equalsIgnoreCase("vendor")) {
+                    List<String> vendorList = swdao.obtenerFabricantes();
                     out.println("<option value=''>Seleccionar Fabricante</option>");
-                    for (Software sw : swList) {
-                        out.println("<option value='" + sw.getFabricante() + "'>" + sw.getFabricante() + "</option>");
+                    for (String vendor : vendorList) {
+                        out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                     }
                 }
             }

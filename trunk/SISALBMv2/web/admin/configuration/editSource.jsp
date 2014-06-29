@@ -15,43 +15,42 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
             $(document).ready(function() {
+                $("#dialog-message").hide();
                 $("#actualizar").click(function(e) {
-                    /*
-                    var id = $("#idf").val();
-                    var name = $("#namef").val();
-                    var url = $("#urlf").val();
-                    alert(id + "\n" + "¿AJAX?");
-                    */
-                   var a = $("#editSrcForm").serialize();
-                   var idf = $("#idf").val();
-                   alert("idf=" + idf + "&" + a);
-                   $.ajax({
-                       type: 'get',
-                       url: '/sisalbm/admin/configuration.controller?action=edit&tipo=1',
-                       data: "idf=" + idf + "&" + a,
-                       success: function(result) {
-                           if(result === "true") {
-                               alert("Edición Completa");
-                           } else {
-                               alert("Edición Incompleta");
-                           }
-                           location.reload();
-                       }
-                   });
+                    var a = $("#form").serialize();
+                    var idf = $("#idf").val();
+                    //alert("idf=" + idf + "&" + a);
+                    $.ajax({
+                        type: 'get',
+                        url: '/sisalbm/admin/configuration.controller?action=edit&tipo=1',
+                        data: "idf=" + idf + "&" + a,
+                        success: function(result) {
+                            if (result === "true") {
+                                //alert("Edición Completa");
+                                $("#dialog-message").attr("title", "Edición Completa");
+                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La Fuente ha sido actualizada de forma exitosa.</p>";
+                                $("#dialog-message").html(content);
+                                $("#actualizar").attr("disabled", true);
+                            } else {
+                                //alert("Edición Incompleta");
+                                $("#dialog-message").attr("title", "Edición Incompleta");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la actualización.</p>";
+                                $("#dialog-message").html(content);
+                            }
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Ok: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        }
+                    });
                 });
             });
-            /*$.get('admin/EditSource.do?action=edit&tipo=1', {id: id, nombre: nombre, url: url}, function(responseText) {
-             $("#resdiv").text(responseText);
-             alert(responseText);
-             $.get(
-             "admin/configuration.controller?action=edit&tipo=1",
-             {name: "Miguel"},
-             function(data) {
-             alert(data);
-             }
-             );
-             });
-             */
         </script>
     </head>
     <%
@@ -59,8 +58,6 @@
         int id = Integer.parseInt(srcId);
     %>
     <body>
-
-
         <div id="page_container">
             <div id="page_header">
                 <table id="header">
@@ -105,7 +102,7 @@
                     <div id="content_wrap">
                         <div id="content">
                             <div class="editForm">
-                                <form id="form" name="editSrcForm" >
+                                <form id="form" name="editSrcForm" class="form" >
                                     <%
                                         FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
                                     %>
@@ -125,6 +122,8 @@
                     </div>
                 </div>
             </div>
+            <div id="dialog-message">
+            </div>                                                           
         </div>
 
     </body>

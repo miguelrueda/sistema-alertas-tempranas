@@ -40,9 +40,12 @@ public class SourcesDAO implements java.io.Serializable {
     public SourcesDAO() {
         //iniciarFuentes();
         //TODO: Eliminar este método
-        iniciarFuentesTemp();
+        //Descomentar para usar sin conexion a BD
+        //iniciarFuentesTemp();
         //Iniciar la conexión a BD AQUI
-        //conn = ConnectionFactory.getInstance().getConnection();
+        conn = ConnectionFactory.getInstance().getConnection();
+        LOG.log(Level.INFO, "Conexión con BD exitosa!");
+        iniciarFuentes();
     }
 
     //TODO: Eliminar esté método
@@ -54,14 +57,18 @@ public class SourcesDAO implements java.io.Serializable {
         return nConn;
     }
 
+    private static final String sqlRetrieveAll = "SELECT * FROM FuenteApp";
+    private static final String sqlRetrieveDate = "SELECT fecha_actualizacion FROM FuenteApp WHERE idFuenteApp = ?";
+    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion) VALUES (?, ?, ?)";
+    private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=? WHERE idFuenteApp = ?";
+    private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
+    private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
+
     private void iniciarFuentes() {
-        String srcsQuery = "SELECT * FROM appsouces";
-        LOG.log(Level.INFO, "Query: {0}", srcsQuery);
         fuentes = new ArrayList<FuenteApp>();
         FuenteApp fuente;
         try {
-            this.conn = getConn();
-            pstmt = conn.prepareStatement(srcsQuery);
+            pstmt = conn.prepareStatement(sqlRetrieveAll);
             ResultSet rs = pstmt.executeQuery();
             int nr = 0;
             while (rs.next()) {
@@ -69,7 +76,7 @@ public class SourcesDAO implements java.io.Serializable {
                 fuente.setId(rs.getInt(1));
                 fuente.setNombre(rs.getString(2));
                 fuente.setUrl(rs.getString(3));
-                fuente.setFechaActualizacion(new Date());
+                fuente.setFechaActualizacion(rs.getDate(4));
                 LOG.log(Level.INFO, "Agregando Fuente:  {0} {1}", new Object[]{fuente.getId(), fuente.getNombre()});
                 fuentes.add(fuente);
                 nr++;
@@ -82,43 +89,20 @@ public class SourcesDAO implements java.io.Serializable {
             try {
                 if (pstmt != null) {
                     pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
+                }/*
+                 if (conn != null) {
+                 conn.close();
+                 }*/
+
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
     }
 
-    private void iniciarFuentesTemp() {
-        fuentes = new ArrayList<FuenteApp>();
-        FuenteApp fuente;
-        try {
-            int nr = 0;
-            for (FuenteApp src : testList) {
-                fuente = new FuenteApp();
-                fuente.setId(src.getId());
-                fuente.setNombre(src.getNombre());
-                fuente.setUrl(src.getUrl());
-                fuente.setFechaActualizacion(src.getFechaActualizacion());
-                fuentes.add(src);
-                nr++;
-            }
-            this.noFuentes = nr;
-        } catch (Exception e) {
-            LOG.log(Level.INFO, "Error al iniciar la lista temporal: {0}", e.getMessage());
-        }
-    }
-
     public int getNoFuentes() {
         return noFuentes;
     }
-    
-    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion) VALUES (?, ?, ?)";
-    private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=?, fecha_actualizacion=? WHERE idFuenteApp = ?";
-    private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
 
     public boolean crearFuente(String nombre, String url) {
         boolean res = false;
@@ -127,7 +111,7 @@ public class SourcesDAO implements java.io.Serializable {
             pstmt.setString(1, nombre);
             pstmt.setString(2, url);
             pstmt.setDate(3, new java.sql.Date(new Date().getTime()));
-            
+
             pstmt.executeUpdate();
             res = true;
         } catch (SQLException e) {
@@ -135,14 +119,14 @@ public class SourcesDAO implements java.io.Serializable {
         }
         return res;
     }
-    
+
     public List<FuenteApp> obtenerFuentes() {
         if (!this.fuentes.isEmpty()) {
             return this.fuentes;
         }
         return new ArrayList<FuenteApp>();
     }
-    
+
     public FuenteApp obtenerFuentePorId(int id) {
         for (FuenteApp src : fuentes) {
             if (src.getId() == id) {
@@ -152,15 +136,15 @@ public class SourcesDAO implements java.io.Serializable {
         }
         return new FuenteApp();
     }
-    
-    public boolean editarFuente(FuenteApp fuente) {
+
+    //public boolean editarFuente(FuenteApp fuente) {
+    public boolean editarFuente(int id, String nombreN, String urlN) {
         boolean res = false;
         try {
             pstmt = conn.prepareStatement(sqlUpdate);
-            pstmt.setString(1, fuente.getNombre());
-            pstmt.setString(2, fuente.getUrl());
-            pstmt.setDate(3, new java.sql.Date(fuente.getFechaActualizacion().getTime()));
-            pstmt.setInt(4, fuente.getId());
+            pstmt.setString(1, nombreN);
+            pstmt.setString(2, urlN);
+            pstmt.setInt(3, id);
             pstmt.executeUpdate();
             res = true;
         } catch (SQLException e) {
@@ -168,7 +152,7 @@ public class SourcesDAO implements java.io.Serializable {
         }
         return res;
     }
-    
+
     public boolean eliminarFuente(int id) {
         boolean res = false;
         try {
@@ -181,9 +165,26 @@ public class SourcesDAO implements java.io.Serializable {
         }
         return res;
     }
-    
+
+    public Date obtenerFechaActualizacion(String id) {
+        Date res = null;
+        try {
+            pstmt = conn.prepareStatement(sqlRetrieveDate);
+            pstmt.setInt(1, Integer.parseInt(id));
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                res = rs.getDate(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+
     //TODO: Eliminar este método y la inicialización estática
     private static List<FuenteApp> testList;
+
     static {
         testList = new ArrayList<FuenteApp>();
         testList.add(new FuenteApp(1, "Vulnerabilidades Recientes", "http://nvd.nist.gov/download/nvdcve-recent.xml", new Date()));
@@ -191,17 +192,18 @@ public class SourcesDAO implements java.io.Serializable {
     }
 
     //TODO: Eliminar esté método
-    public boolean editarFuente(int id, String name, String url) {
-        boolean res = true;
-        FuenteApp edit = this.obtenerFuentePorId(id);
-        LOG.log(Level.INFO, "Editando la fuente: {0}", edit.getId());
-        edit.setNombre(name);
-        edit.setUrl(url);
-        edit.setFechaActualizacion(new Date());
-        return res;
-    }
-
-    public boolean descargarFuente(String url) {
+    /*
+     public boolean editarFuente(int id, String name, String url) {
+     boolean res = true;
+     FuenteApp edit = this.obtenerFuentePorId(id);
+     LOG.log(Level.INFO, "Editando la fuente: {0}", edit.getId());
+     edit.setNombre(name);
+     edit.setUrl(url);
+     edit.setFechaActualizacion(new Date());
+     return res;
+     }
+     */
+    public boolean descargarFuente(String id, String url) {
         boolean res = false;
         LOG.log(Level.INFO, "Descargando Fuente: {0}", url);
         URL fileurl;
@@ -230,6 +232,7 @@ public class SourcesDAO implements java.io.Serializable {
             bw.close();
             br.close();
             res = true;
+            actualizarFecha(id);
         } catch (MalformedURLException e) {
             LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
         } catch (IOException ex) {
@@ -248,6 +251,39 @@ public class SourcesDAO implements java.io.Serializable {
             i++;
         }
         return tokens[3];
+    }
+
+    private void iniciarFuentesTemp() {
+        fuentes = new ArrayList<FuenteApp>();
+        FuenteApp fuente;
+        try {
+            int nr = 0;
+            for (FuenteApp src : testList) {
+                fuente = new FuenteApp();
+                fuente.setId(src.getId());
+                fuente.setNombre(src.getNombre());
+                fuente.setUrl(src.getUrl());
+                fuente.setFechaActualizacion(src.getFechaActualizacion());
+                fuentes.add(src);
+                nr++;
+            }
+            this.noFuentes = nr;
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "Error al iniciar la lista temporal: {0}", e.getMessage());
+        }
+    }
+
+    private void actualizarFecha(String id) {
+        Integer idI = Integer.parseInt(id);
+        try {
+            pstmt = conn.prepareStatement(sqlUpdateDate);
+            pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
+            pstmt.setInt(2, idI);
+            pstmt.executeQuery();
+            LOG.log(Level.INFO, "Fecha actualizada correctamente");
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
     }
 
 }

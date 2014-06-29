@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,168 @@ public class SoftwareDAO implements java.io.Serializable {
     private int noOfRecords;
 
     public SoftwareDAO() {
-        iniciarLista();
+        //iniciarLista();
         //Iniciar la conexión a BD AQUI
-        //connection = ConnectionFactory.getInstance().getConnection();
+        connection = ConnectionFactory.getInstance().getConnection();
+        LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+        cargarTodos();
+    }
+    
+    private void cargarTodos() {
+        swList = new ArrayList<Software>();
+        Software sw;
+        try {
+            pstmt = connection.prepareStatement(sqlRetrieveAll);
+            ResultSet rs = pstmt.executeQuery();
+            int nr = 0;
+            while (rs.next()) {
+                sw = new Software();
+                sw.setIdSoftware(rs.getInt(1));
+                sw.setFabricante(rs.getString(2));
+                sw.setNombre(rs.getString(3));
+                sw.setVersion(rs.getString(4));
+                sw.setTipo(rs.getInt(5));
+                sw.setEndoflife(rs.getInt(6));
+                sw.setUAResponsable(rs.getString(7));
+                sw.setAnalistaResponsable(rs.getString(8));
+                LOG.log(Level.INFO, "Sw Agregado: {0}", sw.getIdSoftware());
+                swList.add(sw);
+                nr++;
+            }
+            rs.close();
+            this.noOfRecords = nr;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Error a obtener las fuentes: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+    }
+ 
+    public int getNoOfRecords() {
+        return noOfRecords;
     }
 
-    public Connection getConnection() {
+    private static final String sqlInsert = "INSERT INTO Software "
+            + "(fabricante, nombre, version, tipo, end_of_life, UAResponsable, AnalistaResponsable) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String sqlUpdate = "UPDATE Software "
+            + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
+            + "WHERE idSoftware = ?";
+    private static final String sqlDelete = "DELETE FROM Software WHERE idSoftware = ?";
+    private static final String sqlRetrieveAll = "SELECT * FROM Software";
+    private static final String sqlRetrieveUAs = "SELECT DISTINCT UAResponsable FROM Software ORDER BY UAResponsable";
+    private static final String sqlRetrieveVendors = "SELECT DISTINCT fabricante FROM Software ORDER BY fabricante";
+
+    public boolean agregarSoftware(Software sw) {
+        boolean res = false;
+        try {
+            pstmt = connection.prepareStatement(sqlInsert);
+            pstmt.setString(1, sw.getFabricante());
+            pstmt.setString(2, sw.getNombre());
+            pstmt.setString(3, sw.getVersion());
+            pstmt.setInt(4, sw.getTipo());
+            pstmt.setInt(5, sw.getEndoflife());
+            pstmt.setString(6, sw.getUAResponsable());
+            pstmt.setString(7, sw.getAnalistaResponsable());
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+
+    public List<Software> obtenerTodos() {
+        return this.swList;
+    }
+
+    public Software obtenerSoftwarePorId(int index) {
+        return swList.get(index);
+    }
+    
+    public List<String> obtenerUAs() {
+        List<String> uas = new ArrayList<String>();
+        try {
+            pstmt = connection.prepareStatement(sqlRetrieveUAs);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                uas.add(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return uas;
+    }
+    
+    public List<String> obtenerFabricantes() {
+        List<String> vendors = new ArrayList<String>();
+        try {
+            pstmt = connection.prepareStatement(sqlRetrieveVendors);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                vendors.add(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return vendors;
+    }
+
+    public List<Software> retrieveFromList(int offset, int noOfRecords) {
+        List<Software> temp = new ArrayList<Software>();
+        Software sw;
+        for (int i = offset; i < offset + noOfRecords; i++) {
+            if (i >= this.noOfRecords) {
+                break;
+            }
+            sw = swList.get(i);
+            temp.add(sw);
+        }
+        return temp;
+    }
+
+    public boolean editarSoftware(Software sw) {
+        boolean res = false;
+        try {
+            pstmt = connection.prepareStatement(sqlUpdate);
+            pstmt.setString(1, sw.getFabricante());
+            pstmt.setString(2, sw.getNombre());
+            pstmt.setString(3, sw.getVersion());
+            pstmt.setInt(4, sw.getTipo());
+            pstmt.setInt(5, sw.getEndoflife());
+            pstmt.setString(6, sw.getUAResponsable());
+            pstmt.setString(7, sw.getAnalistaResponsable());
+            pstmt.setInt(8, sw.getIdSoftware());
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+
+    public boolean eliminarSoftware(int id) {
+        boolean res = false;
+        try {
+            pstmt = connection.prepareStatement(sqlDelete);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        return res;
+    }
+    
+     public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         if (nConn != null) {
             LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD: {0}", nConn.toString());
@@ -92,92 +249,6 @@ public class SoftwareDAO implements java.io.Serializable {
         } catch (java.lang.NumberFormatException nfe) {
             LOG.log(Level.INFO, "Error de Conversi\u00f3n: {0}", nfe.getMessage());
         }
-    }
-
-    public int getNoOfRecords() {
-        return noOfRecords;
-    }
-
-    private static final String sqlInsert = "INSERT INTO Software "
-            + "(fabricante, nombre, version, tipo, end_of_life, UAResponsable, AnalistaResponsable) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String sqlUpdate = "UPDATE Software "
-            + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
-            + "WHERE idSoftware = ?";
-    private static final String sqlDelete = "DELETE FROM Software WHERE idSoftware = ?";
-    private static final String sqlRetrieveUA = "SELECT DISTINCT UAResponsable FROM Software";
-
-    public boolean agregarSoftware(Software sw) {
-        boolean res = false;
-        try {
-            pstmt = connection.prepareStatement(sqlInsert);
-            pstmt.setString(1, sw.getFabricante());
-            pstmt.setString(2, sw.getNombre());
-            pstmt.setString(3, sw.getVersion());
-            pstmt.setInt(4, sw.getTipo());
-            pstmt.setInt(5, sw.getEndoflife());
-            pstmt.setString(6, sw.getUAResponsable());
-            pstmt.setString(7, sw.getAnalistaResponsable());
-            pstmt.executeUpdate();
-            res = true;
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
-        }
-        return res;
-    }
-
-    public List<Software> obtenerTodos() {
-        return this.swList;
-    }
-
-    public Software obtenerSoftwarePorId(int index) {
-        return swList.get(index);
-    }
-
-    public List<Software> retrieveFromList(int offset, int noOfRecords) {
-        List<Software> temp = new ArrayList<Software>();
-        Software sw;
-        for (int i = offset; i < offset + noOfRecords; i++) {
-            if (i >= this.noOfRecords) {
-                break;
-            }
-            sw = swList.get(i);
-            temp.add(sw);
-        }
-        return temp;
-    }
-
-    public boolean editarSoftware(Software sw) {
-        boolean res = false;
-        try {
-            pstmt = connection.prepareStatement(sqlUpdate);
-            pstmt.setString(1, sw.getFabricante());
-            pstmt.setString(2, sw.getNombre());
-            pstmt.setString(3, sw.getVersion());
-            pstmt.setInt(4, sw.getTipo());
-            pstmt.setInt(5, sw.getEndoflife());
-            pstmt.setString(6, sw.getUAResponsable());
-            pstmt.setString(7, sw.getAnalistaResponsable());
-            pstmt.setInt(8, sw.getIdSoftware());
-            pstmt.executeUpdate();
-            res = true;
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
-        }
-        return res;
-    }
-
-    public boolean eliminarSoftware(int id) {
-        boolean res = false;
-        try {
-            pstmt = connection.prepareStatement(sqlDelete);
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-            res = true;
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
-        }
-        return res;
     }
 
 }
