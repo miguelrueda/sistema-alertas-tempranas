@@ -1,6 +1,8 @@
 package mx.org.banxico.sisal.servlets;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -68,8 +70,9 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         response.setContentType("text/plain");
                         response.setCharacterEncoding("UTF-8");
                         String id = (String) request.getParameter("idf");
-                        String name = (String) request.getParameter("namef");
-                        String url = (String) request.getParameter("urlf");
+                        String name = (String) request.getParameter("namef").trim();
+                        String url = (String) request.getParameter("urlf").trim();
+                        LOG.log(Level.INFO, "Edici\u00f3n - Valores Recibidos: {0}/{1}/{2}", new Object[]{id, name, url});
                         boolean flag = dao.editarFuente(Integer.parseInt(id), name, url);
                         if (flag) {
                             response.getWriter().write("true");
@@ -82,16 +85,24 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             if (action.equalsIgnoreCase("download")) {
                 String id = (String) request.getParameter("id");
                 //TODO: Actualizar registro de URL (FECHA)
-                LOG.log(Level.INFO, "Editar el ID: " + id);
+                LOG.log(Level.INFO, "Editar el ID: {0}", id);
                 String url = (String) request.getParameter("url");
                 LOG.log(Level.INFO, "Petici\u00f3n Download de URL: {0}", url);
                 response.setContentType("text/plain");
                 response.setCharacterEncoding("UTF-8");
-                boolean flag = dao.descargarFuente(url);
-                if (flag) {
-                    response.getWriter().write("OK");
+                Date regDate = dao.obtenerFechaActualizacion(id);
+                Date now = new Date();
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+                // Se esta intentando actualizar el  mismo día
+                if (fmt.format(now).equals(fmt.format(regDate))) {
+                    response.getWriter().write("UPDATED");
                 } else {
-                    response.getWriter().write("ERROR");
+                    boolean flag = dao.descargarFuente(id, url);
+                    if (flag) {
+                        response.getWriter().write("OK");
+                    } else {
+                        response.getWriter().write("ERROR");
+                    }
                 }
             }
         }

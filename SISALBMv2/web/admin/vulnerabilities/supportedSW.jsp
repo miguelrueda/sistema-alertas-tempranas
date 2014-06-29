@@ -39,8 +39,8 @@
                                         <c:forEach var="supSW" items="${swList}">
                                             <tr>
                                                 <td style="width: 25%">${supSW.fabricante}</td>
-                                                <td style="width: 60%">${supSW.nombre}</td>
-                                                <td>${supSW.version}</td>
+                                                <td style="width: 50%">${supSW.nombre}</td>
+                                                <td style="width: 15%">${supSW.version}</td>
                                                 <c:choose>
                                                     <c:when test="${supSW.tipo eq 1}">
                                                         <td>OS</td>
