@@ -12,12 +12,62 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
             $(document).ready(function() {
-                $("#custom").hide();
                 $("#full").hide();
+                $("#custom").hide();
                 $($("input[name=tipo]")).on("click", function() {
                     var tipo = $("input:radio[name=tipo]:checked").val();
-                    if (tipo === 'custom') {
-                        //TODO: SHOW BASIC
+                    if (tipo === 'completo') {
+                        $("#full").show();
+                        $("#custom").hide();
+                        $("#fechaCdiv").hide();
+                        $("input:radio[name=fechaC]").on("click", function() {
+                            var fechaC = $("input:radio[name=fechaC]:checked").val();
+                            if (fechaC === "partialdate") {
+                                $("#fechaCdiv").show();
+                                $("#sdateC").datepicker({
+                                    defaultDate: +0,
+                                    changeMonth: true,
+                                    onClose: function(selectedDate) {
+                                        $("#edateC").datepicker("option", "minDate", selectedDate);
+                                    }
+                                });
+                                $("#edateC").datepicker({
+                                    onClose: function(selectedDate) {
+                                        $("#sdateC").datepicker("option", "maxDate", selectedDate);
+                                    }
+                                });
+                            } else if(fechaC === "fulldate") {
+                                $("#fechaCdiv").hide();
+                            }
+                        }); //onclick fecha
+                        $("#fullButton").click(function(event) {
+                            //var sForm = $("#scanForm").serialize();
+                            var param = "tipo=" + tipo + "&";
+                            var fecha = $("input:radio[name=fechaC]:checked").val();
+                            if (fecha === "fulldate") {
+                                param += "fecha=" + fecha;
+                            } else if (fecha === "partialdate") {
+                                param += "fecha=" + fecha + "&";
+                                param += "sdate=" + $("#sdateC").val() + "&";
+                                param += "edate=" + $("#edateC").val();
+                            }
+                            //alert(param);
+                            
+                            $.ajax({
+                                type: 'get',
+                                url: "/sisalbm/scanner?action=scan",
+                                data: param,
+                                //beforeSend: function() {
+                                  //alert("/sisalbm/scanner?action=scan&" + param);  
+                                //},
+                                
+                                success: function(result) {
+                                    alert(result);
+                                }
+                            });
+                            param = "";
+                        });
+                    } else if (tipo === 'custom') {
                         $("#custom").show();
                         $("#full").hide();
                         $("#vendordiv").hide();
@@ -36,6 +86,7 @@
                             var fecha = $("input:radio[name=fecha]:checked").val();
                             if (fecha === "partialdate") {
                                 $("#fechadiv").show();
+                                $("#fechadiv").show();
                                 $("#sdate").datepicker({
                                     defaultDate: +0,
                                     changeMonth: true,
@@ -53,41 +104,33 @@
                                 $("#fechadiv").hide();
                             }
                         });
-                        $("#basicButton").click(function(event) {
-                            var sForm = $("#scanForm").serialize();
-                            alert(sForm);
-                        });
-                    } else {
-                        //TODO: SHOW COMPLETE
-                        $("#custom").hide();
-                        $("#full").show();
-                        $("#fechaCdiv").hide();
-                        $("input:radio[name=fechaC]").on("click", function() {
-                            var fechaC = $("input:radio[name=fechaC]:checked").val();
-                            if (fechaC === "partialdate") {
-                                $("#fechaCdiv").show();
-                                $("#sdateC").datepicker({
-                                    defaultDate: +0,
-                                    changeMonth: true,
-                                    onClose: function(selectedDate) {
-                                        $("#edateC").datepicker("option", "minDate", selectedDate);
-                                    }
-                                });
-                                $("#edateC").datepicker({
-                                    onClose: function(selectedDate) {
-                                        $("#sdateC").datepicker("option", "maxDate", selectedDate);
-                                    }
-                                });
+                        $("#customButton").click(function(event){
+                            //var sForm = $("#scanForm").serialize();
+                            //alert(url + "\n" + sForm);
+                            var url = "/sisalbm/scanner?action=scan&tipo=" + tipo + "&";
+                            var ua = $("#UA").val();
+                            url += "UA=" + ua + "&";
+                            var fab = $("input:radio[name=fab]:checked").val();
+                            if (fab === "singleFab") {
+                                url += "fab=" + fab + "&";
+                                var vendor = $("#vendor").val();
+                                url += "vendor=" + vendor + "&";
                             } else {
-                                $("#fechaCdiv").hide();
+                                url += "fab=" + fab + "&";
                             }
+                            var fecha = $("input:radio[name=fecha]:checked").val();
+                            if (fecha === "fulldate") {
+                                url += "fecha=" + fecha;
+                            } else if (fecha === "partialdate") {
+                                url += "fecha=" + fecha + "&";
+                                url += "sdate=" + $("#sdate").val() + "&";
+                                url += "edate=" + $("#edate").val();
+                            }   
+                            alert(url);
+                            url = "";
                         });
-                        $("#fullButton").click(function(event) {
-                            var sForm = $("#scanForm").serialize();
-                            alert(sForm);
-                        });
-                    }
-                });
+                    } //else if
+                }); //onclick tipo
             });
         </script>
     </head>
@@ -139,13 +182,34 @@
                     <div id="content_wrap">
                         <div id="page_title">Realizar Escaneo</div>
                         <div id="content">
-                            <form class="form" id="scanForm">
+                            <form class="form" id="scanForm" >
                                 <label for="tipo">Tipo de Escaneo:</label>
                                 <input type="radio" name="tipo" value="completo" id="tipo" />Completo
                                 <br/>
                                 <input type="radio" name="tipo" value="custom" id="tipo" />Personalizado
                                 <br />
                                 <br />
+                                <div id="full">
+                                    <p style="text-align: center">
+                                        Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
+                                    </p>
+                                    <label for="fecha">Periodo de Escaneo: </label>
+                                    <input type="radio" name="fechaC" value="fulldate" id="date" />Periodo Completo
+                                    <br />
+                                    <input type="radio" name="fechaC" value="partialdate" id="date" />Periodo Específico
+                                    <br /><br />
+                                    <div id="fechaCdiv">
+                                        <label for="sdateC">Fecha de Inicio: </label>
+                                        <input type="text" id="sdateC" name="sdateC" />
+                                        <br /><br />
+                                        <label for="edateC">Fecha de Fin: </label>
+                                        <input type="text" id="edateC" name="edateC" />
+                                        <br />
+                                        <br />
+                                    </div>
+                                    <input type="button" value="Escanear" id="fullButton" />
+                                    <br />
+                                </div>
                                 <div id="custom">
                                     <label for="UA">Seleccionar UA:</label>
                                     <select name="UA" id="UA"></select><br /><br />
@@ -173,30 +237,10 @@
                                         <br />
                                         <br />
                                     </div>
-                                    <input type="button" value="Escanear" id="basicButton" />
+                                    <input type="button" value="Escanear" id="customButton" />
                                     <br />
                                 </div>
-                                <div id="full">
-                                    <p style="text-align: center">
-                                        Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
-                                    </p>
-                                    <label for="fecha">Periodo de Escaneo: </label>
-                                    <input type="radio" name="fechaC" value="fulldate" id="date" />Periodo Completo
-                                    <br />
-                                    <input type="radio" name="fechaC" value="partialdate" id="date" />Periodo Específico
-                                    <br /><br />
-                                    <div id="fechaCdiv">
-                                        <label for="sdateC">Fecha de Inicio: </label>
-                                        <input type="text" id="sdateC" name="sdateC" />
-                                        <br /><br />
-                                        <label for="edateC">Fecha de Fin: </label>
-                                        <input type="text" id="edateC" name="edateC" />
-                                        <br />
-                                        <br />
-                                    </div>
-                                    <input type="button" value="Escanear" id="fullButton" />
-                                    <br />
-                                </div>
+
                             </form>
                         </div>
                     </div>
@@ -205,3 +249,4 @@
         </div>
     </body>
 </html>
+
