@@ -36,7 +36,7 @@
                                         $("#sdateC").datepicker("option", "maxDate", selectedDate);
                                     }
                                 });
-                            } else if(fechaC === "fulldate") {
+                            } else if (fechaC === "fulldate") {
                                 $("#fechaCdiv").hide();
                             }
                         }); //onclick fecha
@@ -52,15 +52,15 @@
                                 param += "edate=" + $("#edateC").val();
                             }
                             //alert(param);
-                            
+
                             $.ajax({
                                 type: 'get',
                                 url: "/sisalbm/scanner?action=scan",
                                 data: param,
                                 //beforeSend: function() {
-                                  //alert("/sisalbm/scanner?action=scan&" + param);  
+                                //alert("/sisalbm/scanner?action=scan&" + param);  
                                 //},
-                                
+
                                 success: function(result) {
                                     alert(result);
                                 }
@@ -104,7 +104,7 @@
                                 $("#fechadiv").hide();
                             }
                         });
-                        $("#customButton").click(function(event){
+                        $("#customButton").click(function(event) {
                             //var sForm = $("#scanForm").serialize();
                             //alert(url + "\n" + sForm);
                             var url = "/sisalbm/scanner?action=scan&tipo=" + tipo + "&";
@@ -125,7 +125,7 @@
                                 url += "fecha=" + fecha + "&";
                                 url += "sdate=" + $("#sdate").val() + "&";
                                 url += "edate=" + $("#edate").val();
-                            }   
+                            }
                             alert(url);
                             url = "";
                         });
@@ -189,7 +189,9 @@
                                 <input type="radio" name="tipo" value="custom" id="tipo" />Personalizado
                                 <br />
                                 <br />
-                                <div id="full">
+                            </form>
+                            <div id="full">
+                                <form class="form" id="fullForm">
                                     <p style="text-align: center">
                                         Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
                                     </p>
@@ -209,8 +211,10 @@
                                     </div>
                                     <input type="button" value="Escanear" id="fullButton" />
                                     <br />
-                                </div>
-                                <div id="custom">
+                                </form>
+                            </div>
+                            <div id="custom">
+                                <form class="form" id="customForm">
                                     <label for="UA">Seleccionar UA:</label>
                                     <select name="UA" id="UA"></select><br /><br />
                                     <label for="fab">Tipo de Fabricante: </label>
@@ -239,9 +243,10 @@
                                     </div>
                                     <input type="button" value="Escanear" id="customButton" />
                                     <br />
-                                </div>
+                                </form>
+                            </div>
 
-                            </form>
+                            <!--</form>-->
                         </div>
                     </div>
                 </div>
