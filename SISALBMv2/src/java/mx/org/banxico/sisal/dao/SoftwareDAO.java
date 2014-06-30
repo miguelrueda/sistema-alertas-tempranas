@@ -34,13 +34,18 @@ public class SoftwareDAO implements java.io.Serializable {
     private int noOfRecords;
 
     public SoftwareDAO() {
-        //iniciarLista();
+        iniciarLista();
         //Iniciar la conexión a BD AQUI
+        /**
+         * TODO: Descomentar esté código para la conexión a BD
         connection = ConnectionFactory.getInstance().getConnection();
-        LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
-        cargarTodos();
+        if (connection != null) {
+            LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+            cargarTodos();
+        }
+        */
     }
-    
+
     private void cargarTodos() {
         swList = new ArrayList<Software>();
         Software sw;
@@ -76,7 +81,7 @@ public class SoftwareDAO implements java.io.Serializable {
             }
         }
     }
- 
+
     public int getNoOfRecords() {
         return noOfRecords;
     }
@@ -118,7 +123,7 @@ public class SoftwareDAO implements java.io.Serializable {
     public Software obtenerSoftwarePorId(int index) {
         return swList.get(index);
     }
-    
+
     public List<String> obtenerUAs() {
         List<String> uas = new ArrayList<String>();
         try {
@@ -134,6 +139,14 @@ public class SoftwareDAO implements java.io.Serializable {
         return uas;
     }
     
+    public List<String> obtenerUAsTemp() {
+        List<String> uas = new ArrayList<String>();
+        for (int i = 0; i < 5; i++) {
+            uas.add("Unidad Administrativa " + (i + 1));
+        }
+        return uas;
+    }
+
     public List<String> obtenerFabricantes() {
         List<String> vendors = new ArrayList<String>();
         try {
@@ -146,6 +159,17 @@ public class SoftwareDAO implements java.io.Serializable {
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
         }
+        return vendors;
+    }
+    
+    public List<String> obtenerFabricantesTemp() {
+        List<String> vendors = new ArrayList<String>();
+        vendors.add("Adobe Systems");
+        vendors.add("Apache Software Foundation");
+        vendors.add("Canonical");
+        vendors.add("Cisco");
+        vendors.add("IBM");
+        vendors.add("Microsoft");
         return vendors;
     }
 
@@ -194,8 +218,8 @@ public class SoftwareDAO implements java.io.Serializable {
         }
         return res;
     }
-    
-     public Connection getConnection() {
+
+    public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         if (nConn != null) {
             LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD: {0}", nConn.toString());

@@ -27,13 +27,13 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         if (!request.getParameter("action").equals("")) {
             String action = (String) request.getParameter("action");
             LOG.log(Level.INFO, "Procesando petici\u00f3n de configuraci\u00f3n de tipo: {0}", action);
-            
+
             String nextJSP = "/admin/Index.html";
             RequestDispatcher view;
             SourcesDAO dao = new SourcesDAO();
             HttpSession sesion = request.getSession();
             sesion.setAttribute("sourcesdao", dao);
-            
+
             if (action.equalsIgnoreCase("view")) {
                 //¿Solicitar el siguiente parametro?
                 String tipo = (String) request.getParameter("tipo");
@@ -42,20 +42,27 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                     case 1:
                         List<FuenteApp> fuentes = dao.obtenerFuentes();
                         int noOfRecords = dao.getNoFuentes();
-                        request.setAttribute("fuentes", fuentes);
-                        request.setAttribute("noOfRecords", noOfRecords);
-                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
-                        nextJSP = "/admin/configuration/sources.jsp";
+                        if (!fuentes.isEmpty() && noOfRecords > 0) {
+                            request.setAttribute("fuentes", fuentes);
+                            request.setAttribute("noOfRecords", noOfRecords);
+                            LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/sources.jsp");
+                            nextJSP = "/admin/configuration/sources.jsp";
+                        } else {
+                            LOG.log(Level.INFO, "Redireccionando a pagina de error: /error.jsp");
+                            response.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "No se encontro conexion con la BD");
+                            nextJSP = "/sisalbm/admin/error.jsp";
+                        }
                         break;
-                        /*
-                    case 2:
-                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
-                        nextJSP = "/admin/configuration/lists.jsp";
-                        break;*/                        /*
-                    case 2:
-                        LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
-                        nextJSP = "/admin/configuration/lists.jsp";
-                        break;*/
+                    /*
+                     case 2:
+                     LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
+                     nextJSP = "/admin/configuration/lists.jsp";
+                     break;*/                        /*
+                     case 2:
+                     LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/lists.jsp");
+                     nextJSP = "/admin/configuration/lists.jsp";
+                     break;*/
+
                 }
                 view = getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);

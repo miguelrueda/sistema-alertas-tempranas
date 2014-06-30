@@ -55,3 +55,10 @@ idProducto,fabricante,nombre,version,tipo,end_of_life,UAResponsable,AnalistaResp
 54,Microsoft,Orca 1.x,1.x,2,-1,RH,NombreAnalista
 55,Microsoft,SQL Server 2000 Reporting Services,2000,2,-1,FI,NombreAnalista
 56,Microsoft,Microsoft Office Excel Viewer 2003,11.x,2,1,FI,NombreAnalista
+57,Apache Software Foundation,Apache MyFaces 2.0.x,2.0.x,2,0,OSI,NombreAnalista
+58,Canonical Ltd.,Ubuntu Linux 13.10,13.1,1,0,Sistemas,NombreAnalista
+59,Canonical Ltd.,Ubuntu Linux 9.10,9.1,1,-1,Sistemas,NombreAnalista
+60,Canonical Ltd.,Bazaar 2.x,2.x,2,-1,Sistemas,NombreAnalista
+61,Canonical Ltd.,Ubuntu Linux 14.04,14.04,1,0,Sistemas,NombreAnalista
+62,Canonical Ltd.,Ubuntu Linux 13.04,13.04,1,1,Sistemas,NombreAnalista
+63,Canonical Ltd.,Ubuntu Linux 12.10,12.1,1,0,Sistemas,NombreAnalista

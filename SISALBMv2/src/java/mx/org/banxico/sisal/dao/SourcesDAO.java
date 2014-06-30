@@ -44,8 +44,13 @@ public class SourcesDAO implements java.io.Serializable {
         //iniciarFuentesTemp();
         //Iniciar la conexión a BD AQUI
         conn = ConnectionFactory.getInstance().getConnection();
-        LOG.log(Level.INFO, "Conexión con BD exitosa!");
-        iniciarFuentes();
+        if (conn != null) {
+            LOG.log(Level.INFO, "Conexión con BD exitosa!");
+            iniciarFuentes();
+        } else {
+            iniciarFuentesTemp();
+        }
+        
     }
 
     //TODO: Eliminar esté método
