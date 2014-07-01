@@ -192,6 +192,11 @@
                             </div>
                             <div id="custom">
                                 <form class="form" id="customForm" method="post" action="/sisalbm/scanner?action=scan&tipo=custom">
+                                    <div id="vulns">
+                                        <label for="vulnt">Tipo de Vulnerabilidades:</label>
+                                        <input type="radio" name="vulnt" value="recent" id="vulnt" />Solo Recientes
+                                        <input type="radio" name="vulnt" value="todas" id="vulnt" />Archivo
+                                    </div>
                                     <label for="UA">Seleccionar UA:</label>
                                     <select name="UA" id="UA"></select><br /><br />
                                     <label for="fab">Tipo de Fabricante: </label>

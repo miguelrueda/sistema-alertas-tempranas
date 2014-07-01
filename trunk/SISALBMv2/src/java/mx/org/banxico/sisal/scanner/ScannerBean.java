@@ -135,6 +135,8 @@ public class ScannerBean implements java.io.Serializable {
             } else if (pub.compareTo(inicio) > 0 && pub.compareTo(fin) < 0) {
                 //between
                 filtrados.add(vuln);
+            } else if (pub.equals(inicio)) {
+                filtrados.add(vuln);
             }
         }
         return filtrados;
