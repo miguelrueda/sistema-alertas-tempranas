@@ -43,13 +43,14 @@ public class SourcesDAO implements java.io.Serializable {
         //Descomentar para usar sin conexion a BD
         //iniciarFuentesTemp();
         //Iniciar la conexión a BD AQUI
+        /*
         conn = ConnectionFactory.getInstance().getConnection();
         if (conn != null) {
             LOG.log(Level.INFO, "Conexión con BD exitosa!");
             iniciarFuentes();
-        } else {
+        } else {*/
             iniciarFuentesTemp();
-        }
+        //}
         
     }
 

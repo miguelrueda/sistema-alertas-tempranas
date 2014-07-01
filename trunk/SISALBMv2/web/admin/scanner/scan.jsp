@@ -7,131 +7,108 @@
         <meta name="viewport" content="width=device-width">
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
-        <script src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
         <script>
             $(document).ready(function() {
+                $(function(){
+                    $.datepicker.setDefaults($.datepicker.regional['es']);
+                });
                 $("#full").hide();
                 $("#custom").hide();
                 $($("input[name=tipo]")).on("click", function() {
                     var tipo = $("input:radio[name=tipo]:checked").val();
-                    if (tipo === 'completo') {
-                        $("#full").show();
-                        $("#custom").hide();
-                        $("#fechaCdiv").hide();
-                        $("input:radio[name=fechaC]").on("click", function() {
-                            var fechaC = $("input:radio[name=fechaC]:checked").val();
-                            if (fechaC === "partialdate") {
-                                $("#fechaCdiv").show();
-                                $("#sdateC").datepicker({
-                                    defaultDate: +0,
-                                    changeMonth: true,
-                                    onClose: function(selectedDate) {
-                                        $("#edateC").datepicker("option", "minDate", selectedDate);
-                                    }
-                                });
-                                $("#edateC").datepicker({
-                                    onClose: function(selectedDate) {
-                                        $("#sdateC").datepicker("option", "maxDate", selectedDate);
-                                    }
-                                });
-                            } else if (fechaC === "fulldate") {
-                                $("#fechaCdiv").hide();
-                            }
-                        }); //onclick fecha
-                        $("#fullButton").click(function(event) {
-                            //var sForm = $("#scanForm").serialize();
-                            var param = "tipo=" + tipo + "&";
-                            var fecha = $("input:radio[name=fechaC]:checked").val();
-                            if (fecha === "fulldate") {
-                                param += "fecha=" + fecha;
-                            } else if (fecha === "partialdate") {
-                                param += "fecha=" + fecha + "&";
-                                param += "sdate=" + $("#sdateC").val() + "&";
-                                param += "edate=" + $("#edateC").val();
-                            }
-                            //alert(param);
+                    mostrarFormulario(tipo);
 
-                            $.ajax({
-                                type: 'get',
-                                url: "/sisalbm/scanner?action=scan",
-                                data: param,
-                                //beforeSend: function() {
-                                //alert("/sisalbm/scanner?action=scan&" + param);  
-                                //},
-
-                                success: function(result) {
-                                    alert(result);
+                });
+                $("#fullForm").submit(function(event) {
+                    var serForm = $("#fullForm").serialize();
+                    alert(serForm);
+                });
+                /*
+                $("#fullButton").click(function(event){
+                    var serForm = $("#fullForm").serialize();
+                    alert(serForm);
+                });
+                $("#customButton").click(function(event){
+                    var serForm = $("#customForm").serialize();
+                    alert(serForm);
+                });
+                */
+            });
+            function mostrarFormulario(tipo) {
+                if (tipo === 'completo') {
+                    $("#full").show();
+                    $("#custom").hide();
+                    $("#fechaFull").hide();
+                    $("input:radio[name=fechaF]").on("click", function(){
+                        var fechaF = $("input:radio[name=fechaF]:checked").val();
+                        if (fechaF === 'partial') {
+                            $("#fechaFull").show();
+                            $("#sdateF").datepicker({
+                                defaultDate: +0,
+                                maxDate: +0,
+                                changeMonth: true,
+                                onClose: function(selectedDate) {
+                                    $("#edateF").datepicker("option", "minDate", selectedDate);
                                 }
                             });
-                            param = "";
-                        });
-                    } else if (tipo === 'custom') {
-                        $("#custom").show();
-                        $("#full").hide();
-                        $("#vendordiv").hide();
-                        $("#fechadiv").hide();
-                        $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
-                        $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
-                        $("input:radio[name=fab]").on("click", function() {
-                            var fab = $("input:radio[name=fab]:checked").val();
-                            if (fab === "singleFab") {
-                                $("#vendordiv").show();
-                            } else {
-                                $("#vendordiv").hide();
-                            }
-                        });
-                        $("input:radio[name=fecha]").on("click", function() {
-                            var fecha = $("input:radio[name=fecha]:checked").val();
-                            if (fecha === "partialdate") {
-                                $("#fechadiv").show();
-                                $("#fechadiv").show();
-                                $("#sdate").datepicker({
-                                    defaultDate: +0,
-                                    changeMonth: true,
-                                    onClose: function(selectedDate) {
-                                        $("#edate").datepicker("option", "minDate", selectedDate);
-                                    }
-                                });
-                                $("#edate").datepicker({
-                                    maxDate: +0,
-                                    onClose: function(selectedDate) {
-                                        $("#sdate").datepicker("option", "maxDate", selectedDate);
-                                    }
-                                });
-                            } else {
-                                $("#fechadiv").hide();
-                            }
-                        });
-                        $("#customButton").click(function(event) {
-                            //var sForm = $("#scanForm").serialize();
-                            //alert(url + "\n" + sForm);
-                            var url = "/sisalbm/scanner?action=scan&tipo=" + tipo + "&";
-                            var ua = $("#UA").val();
-                            url += "UA=" + ua + "&";
-                            var fab = $("input:radio[name=fab]:checked").val();
-                            if (fab === "singleFab") {
-                                url += "fab=" + fab + "&";
-                                var vendor = $("#vendor").val();
-                                url += "vendor=" + vendor + "&";
-                            } else {
-                                url += "fab=" + fab + "&";
-                            }
-                            var fecha = $("input:radio[name=fecha]:checked").val();
-                            if (fecha === "fulldate") {
-                                url += "fecha=" + fecha;
-                            } else if (fecha === "partialdate") {
-                                url += "fecha=" + fecha + "&";
-                                url += "sdate=" + $("#sdate").val() + "&";
-                                url += "edate=" + $("#edate").val();
-                            }
-                            alert(url);
-                            url = "";
-                        });
-                    } //else if
-                }); //onclick tipo
-            });
+                            $("#edateF").datepicker({
+                                maxDate: +0,
+                                changeMonth: true,
+                                onClose: function(selectedDate) {
+                                    $("#sdateF").datepicker("option", "maxDate", selectedDate);
+                                }
+                            });
+                        } else if (fechaF === 'full') {
+                            $("#fechaFull").hide();
+                            $("#sdateF").val("");
+                            $("#edateF").val("");
+                        }
+                    });
+                } else if (tipo === 'custom') {
+                    $("#custom").show();
+                    $("#full").hide();
+                    $("#vendordiv").hide();
+                    $("#fechaCustom").hide();
+                    $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
+                    $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
+                    $("input:radio[name=fab]").on("click", function(){
+                        var fab = $("input:radio[name=fab]:checked").val();
+                        if (fab === 'single') {
+                            $("#vendordiv").show();
+                        } else if (fab === 'multi') {
+                            $("#vendordiv").hide();
+                            $("#vendor").val("");
+                        }
+                    });
+                    $("input:radio[name=fechaC]").on("click", function(){
+                        var fechaC = $("input:radio[name=fechaC]:checked").val();
+                        if (fechaC === 'partial') {
+                            $("#fechaCustom").show();
+                            $("#sdateC").datepicker({
+                                defaultDate: +0,
+                                maxDate: +0,
+                                changeMonth: true,
+                                onClose: function(selectedDate) {
+                                    $("#edateC").datepicker("option", "minDate", selectedDate);
+                                }
+                            });
+                            $("#edateC").datepicker({
+                                maxDate: +0,
+                                onClose: function(selectedDate) {
+                                    $("#sdateC").datepicker("option", "maxDate", selectedDate);
+                                }
+                            });
+                        } else if (fechaC === 'full') {
+                            $("#fechaCustom").hide();
+                            $("#sdateC").val("");
+                            $("#edateC").val("");
+                        }
+                    });
+                }
+            }
         </script>
     </head>
     <body>
@@ -191,53 +168,64 @@
                                 <br />
                             </form>
                             <div id="full">
-                                <form class="form" id="fullForm">
+                                <form class="form" id="fullForm" method="post" action="/sisalbm/scanner?action=scan&tipo=completo">
                                     <p style="text-align: center">
                                         Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
                                     </p>
                                     <label for="fecha">Periodo de Escaneo: </label>
-                                    <input type="radio" name="fechaC" value="fulldate" id="date" />Periodo Completo
+                                    <input type="radio" name="fechaF" value="full" id="date" />Periodo Completo
                                     <br />
-                                    <input type="radio" name="fechaC" value="partialdate" id="date" />Periodo Específico
+                                    <input type="radio" name="fechaF" value="partial" id="date" />Periodo Específico
                                     <br /><br />
-                                    <div id="fechaCdiv">
-                                        <label for="sdateC">Fecha de Inicio: </label>
-                                        <input type="text" id="sdateC" name="sdateC" />
+                                    <div id="fechaFull">
+                                        <label for="sdateF">Fecha de Inicio: </label>
+                                        <input type="text" id="sdateF" name="sdateF" />
                                         <br /><br />
-                                        <label for="edateC">Fecha de Fin: </label>
-                                        <input type="text" id="edateC" name="edateC" />
+                                        <label for="edateF">Fecha de Fin: </label>
+                                        <input type="text" id="edateF" name="edateF" />
                                         <br />
                                         <br />
                                     </div>
-                                    <input type="button" value="Escanear" id="fullButton" />
+                                    <input type="submit" value="Escanear" id="fullButton" />
                                     <br />
                                 </form>
                             </div>
                             <div id="custom">
-                                <form class="form" id="customForm">
+                                <form class="form" id="customForm" method="post" action="/sisalbm/scanner?action=scan&tipo=custom">
                                     <label for="UA">Seleccionar UA:</label>
                                     <select name="UA" id="UA"></select><br /><br />
                                     <label for="fab">Tipo de Fabricante: </label>
-                                    <input type="radio" name="fab" value="multiFab" id="fab" />Todos los Fabricantes
+                                    <input type="radio" name="fab" value="multi" id="fab" />Todos los Fabricantes
                                     <br />
-                                    <input type="radio" name="fab" value="singleFab" id="fab" />Fabricante Específico
+                                    <input type="radio" name="fab" value="single" id="fab" />Fabricante Específico
                                     <br /><br />
                                     <div id="vendordiv">
                                         <label for="vendor">Seleccionar Fabricante:</label>
                                         <select name="vendor" id="vendor"></select>
                                         <br /><br />
                                     </div>
-                                    <label for="fecha">Periodo de Escaneo: </label>
-                                    <input type="radio" name="fecha" value="fulldate" id="date" />Periodo Completo
+                                    <div id="sevDiv">
+                                        <label for="critic">Criticidad</label>
+                                        <select name="critic" id="critic">
+                                            <option value="0">Seleccionar nivel</option>
+                                            <option value="1">Baja</option>
+                                            <option value="2">Media</option>
+                                            <option value="3">Alta</option>
+                                        </select>
+                                    </div>
                                     <br />
-                                    <input type="radio" name="fecha" value="partialdate" id="date" />Periodo Específico
+                                    <label for="fecha">Periodo de Escaneo: </label>
+                                    <input type="radio" name="fechaC" value="full" id="date" />Periodo Completo
+                                    <br />
+                                    <input type="radio" name="fechaC" value="partial" id="date" />Periodo Específico
                                     <br /><br />
-                                    <div id="fechadiv">
-                                        <label for="sdate">Fecha de Inicio: </label>
-                                        <input type="text" id="sdate" name="sdate" />
+                                    
+                                    <div id="fechaCustom">
+                                        <label for="sdateC">Fecha de Inicio: </label>
+                                        <input type="text" id="sdateC" name="sdateC" />
                                         <br /><br />
-                                        <label for="edate">Fecha de Fin: </label>
-                                        <input type="text" id="edate" name="edate" />
+                                        <label for="edateC">Fecha de Fin: </label>
+                                        <input type="text" id="edateC" name="edateC" />
                                         <br />
                                         <br />
                                     </div>

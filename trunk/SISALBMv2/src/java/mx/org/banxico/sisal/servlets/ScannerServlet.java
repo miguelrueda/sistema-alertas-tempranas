@@ -50,22 +50,37 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
             } else if (action.equalsIgnoreCase("scan")) {
                 String tipo = (String) request.getParameter("tipo");
                 if (tipo.equalsIgnoreCase("completo")) {
-                    String fecha = (String) request.getParameter("fecha");
-                    if (fecha.equalsIgnoreCase("fulldate")) {
-                        String res = scannerService.doCompleteScan();
-                        response.getWriter().write(res);
-                        /*
+                    String fecha = (String) request.getParameter("fechaF");
+                    if (fecha.equalsIgnoreCase("full")) {
+                        //String res = scannerService.doCompleteScan();
+                        //response.getWriter().write(res);
                         Set<Result> resultados = scannerService.doCompleteScan();
+                        for (Result result : resultados) {
+                            result.getVulnerabilidad().getName();
+                        }
                         int noOfResults = resultados.size();
                         request.setAttribute("resultados", resultados);
                         request.setAttribute("noOfResults", noOfResults);
-                        LOG.log(Level.INFO, "Redireccionando al recurso: /scanner/results.jsp");
                         String nextJSP = "/admin/scanner/results.jsp";
-                        RequestDispatcher view = getServletContext().getRequestDispatcher(nextJSP);
+                        RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                         view.forward(request, response);
-                                */
-                    } else if (fecha.equalsIgnoreCase("partialdate")) {
-                        response.getWriter().write("Not implemented yet.");
+                        //out.println("<h1>" + res + "</h1>");
+                        out.println(addPageContent(resultados));
+                    } else if (fecha.equalsIgnoreCase("partial")) {
+                        //out.println(addPageHead());
+                        //out.println(addPageTop());
+                        String sdate = (String) request.getParameter("sdateF");
+                        String edate = (String) request.getParameter("edateF");
+                        int noOfResults = scannerService.doCompleteScan(sdate, edate);
+                        //request.setAttribute("resultados", resultados);
+                        request.setAttribute("noOfResults", noOfResults);
+                        //out.println("<div id=\"page_title\">Not implemented yet</div>\n");
+                        //out.println("<div id=\"content\">\n");
+                        //response.getWriter().write("Filtrar con respecto a las fechas: " + sdate + " y " + edate);
+                        //out.println(addPageBottom());
+                        String nextJSP = "/admin/scanner/results.jsp";
+                        RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
+                        view.forward(request, response);
                     }
                 } else if (tipo.equalsIgnoreCase("custom")) {
                     response.getWriter().write("Not implemented yet.");
@@ -96,4 +111,56 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
         return "Short description";
     }
 
+    private String addPageHead() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>\n");
+        sb.append("<head>\n").append("<title>Resultados</title>\n").append("<meta charset=\"UTF-8\" />\n");
+        sb.append("<meta name=\"viewport\" content=\"width=device-width\" />\n");
+        sb.append("<link href=\"/sisalbm/resources/css/general.css\" type=\"text/css\" rel=\"stylesheet\" />\n");
+        sb.append("<link href=\"/sisalbm/resources/css/jquery-ui-1.10.4.custom.css\" type=\"text/css\" rel=\"stylesheet\" />\n");
+        sb.append("<script src=\"//code.jquery.com/jquery-1.10.2.js\"></script>\n");
+        sb.append("<script src=\"//code.jquery.com/ui/1.10.4/jquery-ui.js\"></script>\n");
+        return sb.toString();
+    }
+
+    private String addPageContent(Set<Result> resultados) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div id=\"page_title\">Encontré: ").append(resultados.size()).append(" posibles amenazas.</div>\n");
+        sb.append("<div id=\"content\">\n");
+        for (Result result : resultados) {
+            sb.append("<p>").append(result).append("</p>").append("\n");
+        }
+        return sb.toString();
+    }
+
+    private String addPageTop() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<body>\n");
+        sb.append("<div id=\"page_container\">\n");
+        sb.append("<div id=\"page_header\">\n");
+        sb.append("<table id=\"header\">\n");
+        sb.append("<tr>\n");
+        sb.append("<td><img src=\"/sisalbm/resources/images/app_header.png\" alt=\"BMLogo\" /></td>\n");
+        sb.append("</tr>\n");
+        sb.append("</table>\n");
+        sb.append("</div>\n");//page_header
+        sb.append("<div id=\"page_content\">\n");
+        sb.append("<div id=\"title\">" + "Resultados" + "</div>\n");
+        sb.append("<div id=\"workarea\">\n");
+        sb.append("<div id=\"menu\">AGREGAR MENÚ</div>\n");   //menu
+        sb.append("<div id=\"content_wrap\">\n");
+        return sb.toString();
+    }
+
+    private String addPageBottom() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("</div>\n");//content
+        sb.append("</div>\n");//contentwrap
+        sb.append("</div>\n");//workarea
+        sb.append("</div>\n");//pagecontent
+        sb.append("</div>\n");//pagecontainer
+        sb.append("</body>\n");
+        sb.append("</html>");
+        return sb.toString();
+    }
 }
