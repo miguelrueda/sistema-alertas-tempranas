@@ -1,6 +1,9 @@
 package mx.org.banxico.sisal.scanner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +27,7 @@ public class ScannerBean implements java.io.Serializable {
     public ScannerBean() {
     }
 
-    public String doCompleteScan() {
+    public Set<Result> doCompleteScan() {
         swdao = new SoftwareDAO();
         vulndao = new VulnerabilityDAO();
         List<Software> swList = swdao.obtenerTodos();
@@ -83,8 +86,8 @@ public class ScannerBean implements java.io.Serializable {
         }//fore vuln
         //SCANEAR
         Set<Result> results = procesarLista(resultados);
-        return "Encontre: " + results.size() + " amenzas.";
-        //return results;
+        //return "Encontre: " + results.size() + " amenzas.";
+        return results;
     }
 
     public List<Result> getResultados() {
@@ -106,4 +109,34 @@ public class ScannerBean implements java.io.Serializable {
         return diferentes;
     }
 
+    public int doCompleteScan(String start, String end) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date inicio = null;
+        Date fin = null;
+        try {
+            inicio = format.parse(start);
+            fin = format.parse(end);
+        } catch (ParseException ex) {
+            LOG.log(Level.SEVERE, "Error al convertir las fechas!!");
+        }
+        LOG.log(Level.INFO, "Buscar entre vulnerabilidades del: {0} al {1}", new Object[]{inicio, fin});
+        vulndao = new VulnerabilityDAO();
+        List<CVE> vulns = limitar(vulndao.getArchivoCVE(), inicio, fin);
+        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", vulns.size());
+        return vulns.size();
+    }
+
+    private List<CVE> limitar(List<CVE> archivoCVE, Date inicio, Date fin) {
+        List<CVE> filtrados = new ArrayList<CVE>();
+        for (CVE vuln : archivoCVE) {
+            Date pub = vuln.getPublished();
+            if (pub.compareTo(inicio) < 0) {
+                //lesser
+            } else if (pub.compareTo(inicio) > 0 && pub.compareTo(fin) < 0) {
+                //between
+                filtrados.add(vuln);
+            }
+        }
+        return filtrados;
+    }
 }
