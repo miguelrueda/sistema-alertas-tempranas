@@ -65,10 +65,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                         view.forward(request, response);
                         //out.println("<h1>" + res + "</h1>");
-                        out.println(addPageContent(resultados));
                     } else if (fecha.equalsIgnoreCase("partial")) {
-                        //out.println(addPageHead());
-                        //out.println(addPageTop());
                         String sdate = (String) request.getParameter("sdateF");
                         String edate = (String) request.getParameter("edateF");
                         //int noOfResults = scannerService.doCompleteScan(sdate, edate);
@@ -85,7 +82,39 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         view.forward(request, response);
                     }
                 } else if (tipo.equalsIgnoreCase("custom")) {
-                    response.getWriter().write("Not implemented yet.");
+                    String vulnt = (String) request.getParameter("vulnt");
+                    if (vulnt.equalsIgnoreCase("recent")) {
+                        //Set solo recientes
+                    } else if (vulnt.equalsIgnoreCase("todas")) {
+                        //Set todo el archivo
+                    }
+                    String UA = (String) request.getParameter("UA");
+                    if (UA.equalsIgnoreCase("0")) {
+
+                    } else {
+                        //Traer UA con SW DAo
+                    }
+                    String fab = (String) request.getParameter("fab");
+                    if (fab.equalsIgnoreCase("single")) {
+                        //Trear fabricante con sW Dao
+                        String vendor = (String) request.getParameter("vendor");
+                    } else {
+                        //Aplicar a todos los fabricantes
+                    }
+                    String critic = (String) request.getParameter("critic");
+                    //Validar que critic no sea 0
+                    String fecha = (String) request.getParameter("fechaC");
+                    String sdate = null;
+                    String edate = null;
+                    if (fecha.equalsIgnoreCase("full")) {
+
+                    } else if (fecha.equalsIgnoreCase("partial")) {
+                        sdate = request.getParameter("sdateC");
+                        edate = request.getParameter("edateC");
+                    }
+                    request.setAttribute("noOfResults", 0);
+
+                    out.println("Parametros: " + vulnt + " * " + UA + " * " + fab + " * " + critic + " * " + fecha + " * " + sdate + " * " + edate);
                 } else {
                     response.getWriter().write("Error desconocido");
                 }

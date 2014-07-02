@@ -23,8 +23,11 @@
 
                 });
                 $("#fullForm").submit(function(event) {
-                    var serForm = $("#fullForm").serialize();
-                    alert(serForm);
+                    //var serForm = $("#fullForm").serialize();
+                    //alert(serForm);
+                });
+                $("#customForm").submit(function(event){
+                    
                 });
                 /*
                 $("#fullButton").click(function(event){
@@ -236,7 +239,7 @@
                                         <br />
                                         <br />
                                     </div>
-                                    <input type="button" value="Escanear" id="customButton" />
+                                    <input type="submit" value="Escanear" id="customButton" />
                                     <br />
                                 </form>
                             </div>
