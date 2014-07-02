@@ -36,7 +36,7 @@
                                 //alert("Edición Incompleta");
                                 $("#dialog-message").attr("title", "Edición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la actualización.</p>";
+                                        "Ocurrio un error al realizar la actualización. Favor de intentarlo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                             }
                             $("#dialog-message").dialog({
