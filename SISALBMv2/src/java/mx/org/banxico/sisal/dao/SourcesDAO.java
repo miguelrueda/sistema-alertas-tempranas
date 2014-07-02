@@ -34,32 +34,26 @@ public class SourcesDAO implements java.io.Serializable {
      */
     private Connection conn;
     private PreparedStatement pstmt;
+    private ResultSet rs;
     private List<FuenteApp> fuentes;
     private int noFuentes;
 
     public SourcesDAO() {
-        //iniciarFuentes();
-        //TODO: Eliminar este método
-        //Descomentar para usar sin conexion a BD
-        //iniciarFuentesTemp();
-        //Iniciar la conexión a BD AQUI
+        iniciarFuentes();
         /*
         conn = ConnectionFactory.getInstance().getConnection();
         if (conn != null) {
             LOG.log(Level.INFO, "Conexión con BD exitosa!");
             iniciarFuentes();
-        } else {*/
+        } else {
             iniciarFuentesTemp();
-        //}
+        }*/
         
     }
 
     //TODO: Eliminar esté método
-    public Connection getConn() {
+    public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
-        if (nConn != null) {
-            LOG.log(Level.INFO, "Se estableció la conexi\u00f3n con BD de forma exitosa: {0}", nConn.toString());
-        }
         return nConn;
     }
 
@@ -74,8 +68,9 @@ public class SourcesDAO implements java.io.Serializable {
         fuentes = new ArrayList<FuenteApp>();
         FuenteApp fuente;
         try {
+            conn = getConnection();
             pstmt = conn.prepareStatement(sqlRetrieveAll);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             int nr = 0;
             while (rs.next()) {
                 fuente = new FuenteApp();
@@ -83,7 +78,7 @@ public class SourcesDAO implements java.io.Serializable {
                 fuente.setNombre(rs.getString(2));
                 fuente.setUrl(rs.getString(3));
                 fuente.setFechaActualizacion(rs.getDate(4));
-                LOG.log(Level.INFO, "Agregando Fuente:  {0} {1}", new Object[]{fuente.getId(), fuente.getNombre()});
+                //LOG.log(Level.INFO, "Agregando Fuente:  {0} {1}", new Object[]{fuente.getId(), fuente.getNombre()});
                 fuentes.add(fuente);
                 nr++;
             }
@@ -95,11 +90,10 @@ public class SourcesDAO implements java.io.Serializable {
             try {
                 if (pstmt != null) {
                     pstmt.close();
-                }/*
+                }
                  if (conn != null) {
                  conn.close();
-                 }*/
-
+                 }
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
@@ -127,8 +121,8 @@ public class SourcesDAO implements java.io.Serializable {
     }
 
     public List<FuenteApp> obtenerFuentes() {
-        if (!this.fuentes.isEmpty()) {
-            return this.fuentes;
+        if (!fuentes.isEmpty()) {
+            return fuentes;
         }
         return new ArrayList<FuenteApp>();
     }
@@ -147,6 +141,7 @@ public class SourcesDAO implements java.io.Serializable {
     public boolean editarFuente(int id, String nombreN, String urlN) {
         boolean res = false;
         try {
+            conn = getConnection();
             pstmt = conn.prepareStatement(sqlUpdate);
             pstmt.setString(1, nombreN);
             pstmt.setString(2, urlN);
@@ -155,6 +150,17 @@ public class SourcesDAO implements java.io.Serializable {
             res = true;
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
         return res;
     }
