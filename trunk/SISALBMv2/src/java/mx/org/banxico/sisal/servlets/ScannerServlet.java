@@ -71,8 +71,10 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         //out.println(addPageTop());
                         String sdate = (String) request.getParameter("sdateF");
                         String edate = (String) request.getParameter("edateF");
-                        int noOfResults = scannerService.doCompleteScan(sdate, edate);
-                        //request.setAttribute("resultados", resultados);
+                        //int noOfResults = scannerService.doCompleteScan(sdate, edate);
+                        Set<Result> resultados = scannerService.doCompleteScan(sdate, edate);
+                        int noOfResults = resultados.size();
+                        request.setAttribute("resultados", resultados);
                         request.setAttribute("noOfResults", noOfResults);
                         //out.println("<div id=\"page_title\">Not implemented yet</div>\n");
                         //out.println("<div id=\"content\">\n");

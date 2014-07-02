@@ -195,7 +195,9 @@
                                     <div id="vulns">
                                         <label for="vulnt">Tipo de Vulnerabilidades:</label>
                                         <input type="radio" name="vulnt" value="recent" id="vulnt" />Solo Recientes
+                                        <br />
                                         <input type="radio" name="vulnt" value="todas" id="vulnt" />Archivo
+                                        <br /><br/>
                                     </div>
                                     <label for="UA">Seleccionar UA:</label>
                                     <select name="UA" id="UA"></select><br /><br />

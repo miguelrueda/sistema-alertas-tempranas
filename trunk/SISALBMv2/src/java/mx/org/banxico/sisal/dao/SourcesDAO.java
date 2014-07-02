@@ -39,16 +39,16 @@ public class SourcesDAO implements java.io.Serializable {
     private int noFuentes;
 
     public SourcesDAO() {
-        iniciarFuentes();
-        /*
+        //iniciarFuentes();
+
         conn = ConnectionFactory.getInstance().getConnection();
         if (conn != null) {
             LOG.log(Level.INFO, "Conexión con BD exitosa!");
             iniciarFuentes();
         } else {
             iniciarFuentesTemp();
-        }*/
-        
+        }
+
     }
 
     //TODO: Eliminar esté método
@@ -91,9 +91,9 @@ public class SourcesDAO implements java.io.Serializable {
                 if (pstmt != null) {
                     pstmt.close();
                 }
-                 if (conn != null) {
-                 conn.close();
-                 }
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
@@ -186,7 +186,7 @@ public class SourcesDAO implements java.io.Serializable {
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
-        } 
+        }
         return res;
     }
 
