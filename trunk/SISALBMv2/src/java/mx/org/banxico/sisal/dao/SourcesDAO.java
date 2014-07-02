@@ -168,19 +168,32 @@ public class SourcesDAO implements java.io.Serializable {
     public boolean eliminarFuente(int id) {
         boolean res = false;
         try {
+            conn = getConnection();
             pstmt = conn.prepareStatement(sqlDelete);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             res = true;
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
-        }
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        } 
         return res;
     }
 
     public Date obtenerFechaActualizacion(String id) {
         Date res = null;
         try {
+            conn = getConnection();
             pstmt = conn.prepareStatement(sqlRetrieveDate);
             pstmt.setInt(1, Integer.parseInt(id));
             ResultSet rs = pstmt.executeQuery();
@@ -190,6 +203,17 @@ public class SourcesDAO implements java.io.Serializable {
             rs.close();
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
         return res;
     }
@@ -288,6 +312,7 @@ public class SourcesDAO implements java.io.Serializable {
     private void actualizarFecha(String id) {
         Integer idI = Integer.parseInt(id);
         try {
+            conn = getConnection();
             pstmt = conn.prepareStatement(sqlUpdateDate);
             pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
             pstmt.setInt(2, idI);
@@ -295,6 +320,17 @@ public class SourcesDAO implements java.io.Serializable {
             LOG.log(Level.INFO, "Fecha actualizada correctamente");
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
     }
 
