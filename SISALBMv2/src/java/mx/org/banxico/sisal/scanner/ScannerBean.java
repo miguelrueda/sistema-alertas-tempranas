@@ -109,7 +109,7 @@ public class ScannerBean implements java.io.Serializable {
         return diferentes;
     }
 
-    public int doCompleteScan(String start, String end) {
+    public Set<Result> doCompleteScan(String start, String end) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date inicio = null;
         Date fin = null;
@@ -121,9 +121,11 @@ public class ScannerBean implements java.io.Serializable {
         }
         LOG.log(Level.INFO, "Buscar entre vulnerabilidades del: {0} al {1}", new Object[]{inicio, fin});
         vulndao = new VulnerabilityDAO();
+        swdao = new SoftwareDAO();
         List<CVE> vulns = limitar(vulndao.getArchivoCVE(), inicio, fin);
-        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", vulns.size());
-        return vulns.size();
+        Set<Result> totales = doScan(vulns, swdao.obtenerTodos());
+        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", totales.size());
+        return totales;
     }
 
     private List<CVE> limitar(List<CVE> archivoCVE, Date inicio, Date fin) {
@@ -140,5 +142,49 @@ public class ScannerBean implements java.io.Serializable {
             }
         }
         return filtrados;
+    }
+
+    private Set<Result> doScan(List<CVE> vulns, List<Software> sws) {
+        List<Result> res = new ArrayList<Result>();
+        LOG.log(Level.INFO, "Comparando: {0} vulnerabilidades y {1} productos.", new Object[]{vulns.size(), sws.size()});
+        for (CVE vuln : vulns) {
+            List<VulnSoftware> vulnswList = vuln.getVuln_soft();
+            if (!vulnswList.isEmpty()) {
+                for (VulnSoftware vulnsw : vulnswList) {
+                    for (int i = 0; i < sws.size(); i++) {
+                        if (vulnsw.getVendor().equalsIgnoreCase(sws.get(i).getFabricante())) {
+                            String name = vulnsw.getName().replace("_", " ");
+                            if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
+                                for (Version version : vulnsw.getVersion()) {
+                                    if (version.getNumber().equals(sws.get(i).getVersion())) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    } else if (version.getNumber().contains(sws.get(i).getVersion().replace("x", ""))) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    }
+                                }
+                            }
+                        } //if vendor fabricante
+                        else if (sws.get(i).getFabricante().toLowerCase().startsWith(vulnsw.getVendor().toLowerCase())) {
+                            String name = vulnsw.getName().replace("_", " ");
+                            if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
+                                for (Version version : vulnsw.getVersion()) {
+                                    if (version.getNumber().equals(sws.get(i).getVersion())) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    } else if (version.getNumber().contains(sws.get(i).getVersion().replace("x", ""))) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Set<Result> total = procesarLista(res);
+        return total;
     }
 }
