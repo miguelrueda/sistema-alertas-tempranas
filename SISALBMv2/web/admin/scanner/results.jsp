@@ -52,31 +52,42 @@
                         </ul>
                     </nav>
                     <div id="content_wrap">
-                        <div id="page_title">Encontre: ${noOfResults} posibles amenazas.</div>
+                        <c:choose>
+                            <c:when test="${noOfResults > 0}">
+                                <div id="page_title">Encontre: ${noOfResults} posibles amenazas.</div>
+                            </c:when>
+                            <c:when test="${noOfResults eq 0}">
+                                <div id="page_title">No se encontraron coincidencias con los parámetros seleccionados.</div>
+                            </c:when>
+                        </c:choose>
                         <div id="content">
-                            <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
-                                    <thead>
-                                        <tr>
-                                            <th>Vulnerabilidad</th>
-                                            <th>Software Afectado</th>
-                                            <th>Criticidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="res" items="${resultados}">
-                                            <tr>
-                                                <td>${res.vulnerabilidad.name}</td>
-                                                <td>${res.sw.nombre}</td>
-                                                <td>${res.vulnerabilidad.severity}</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">${res.vulnerabilidad.description}</td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <c:choose>
+                                <c:when test="${noOfResults > 0}">
+                                    <div class="datagrid">
+                                        <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Vulnerabilidad</th>
+                                                    <th>Software Afectado</th>
+                                                    <th>Criticidad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="res" items="${resultados}">
+                                                    <tr>
+                                                        <td>${res.vulnerabilidad.name}</td>
+                                                        <td>${res.sw.nombre}</td>
+                                                        <td>${res.vulnerabilidad.severity}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">${res.vulnerabilidad.description}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </c:when>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
