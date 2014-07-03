@@ -42,7 +42,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     //TODO: descomentar la linea siguiente
                     //List<String> vendorList = swdao.obtenerFabricantes();
                     List<String> vendorList = swdao.obtenerFabricantesTemp();
-                    out.println("<option value=''>Seleccionar Fabricante</option>");
+                    out.println("<option value='0'>Seleccionar Fabricante</option>");
                     for (String vendor : vendorList) {
                         out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                     }

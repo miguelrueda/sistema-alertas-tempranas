@@ -10,9 +10,10 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
+        <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script>
             $(document).ready(function() {
-                $(function(){
+                $(function() {
                     $.datepicker.setDefaults($.datepicker.regional['es']);
                 });
                 $("#full").hide();
@@ -22,30 +23,47 @@
                     mostrarFormulario(tipo);
 
                 });
-                $("#fullForm").submit(function(event) {
-                    //var serForm = $("#fullForm").serialize();
-                    //alert(serForm);
+                $("#fullForm").validate({
+                    rules: {
+                        fechaF: "required",
+                        sdateF: "required",
+                        edateF: "required"
+                    },
+                    messages: {
+                        fechaF: 'Seleccionar un periodo para realizar el escaneo',
+                        sdateF: 'Seleccionar una fecha de inicio',
+                        edateF: 'Seleccionar una fecha de termino'
+                    }
                 });
-                $("#customForm").submit(function(event){
-                    
+                $.validator.addMethod("valueNotEquals", function(value) {
+                    return (value !== '0');
+                }, "Seleccionar un fabricante");
+                $("#customForm").validate({
+                    rules: {
+                        vulnt: "required",
+                        fab: "required",
+                        vendor: {
+                            valueNotEquals: true
+                        },
+                        fechaC: "required",
+                        sdateC: "required",
+                        edateC: "required"
+                    },
+                    messages: {
+                        vulnt: 'Seleccionar un tipo de vulnerabilidades',
+                        fab: 'Seleccionar un tipo de fabricante',
+                        fechaC: 'Seleccionar un periodo para realizar el escaneo',
+                        sdateC: 'Seleccionar una fecha de inicio',
+                        edateC: 'Seleccionar una fecha de termino'
+                    }
                 });
-                /*
-                $("#fullButton").click(function(event){
-                    var serForm = $("#fullForm").serialize();
-                    alert(serForm);
-                });
-                $("#customButton").click(function(event){
-                    var serForm = $("#customForm").serialize();
-                    alert(serForm);
-                });
-                */
             });
             function mostrarFormulario(tipo) {
                 if (tipo === 'completo') {
                     $("#full").show();
                     $("#custom").hide();
                     $("#fechaFull").hide();
-                    $("input:radio[name=fechaF]").on("click", function(){
+                    $("input:radio[name=fechaF]").on("click", function() {
                         var fechaF = $("input:radio[name=fechaF]:checked").val();
                         if (fechaF === 'partial') {
                             $("#fechaFull").show();
@@ -74,10 +92,10 @@
                     $("#custom").show();
                     $("#full").hide();
                     $("#vendordiv").hide();
-                    $("#fechaCustom").hide();
+                    $(".fechaCustom").hide();
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                     $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
-                    $("input:radio[name=fab]").on("click", function(){
+                    $("input:radio[name=fab]").on("click", function() {
                         var fab = $("input:radio[name=fab]:checked").val();
                         if (fab === 'single') {
                             $("#vendordiv").show();
@@ -86,10 +104,10 @@
                             $("#vendor").val("");
                         }
                     });
-                    $("input:radio[name=fechaC]").on("click", function(){
+                    $("input:radio[name=fechaC]").on("click", function() {
                         var fechaC = $("input:radio[name=fechaC]:checked").val();
                         if (fechaC === 'partial') {
-                            $("#fechaCustom").show();
+                            $(".fechaCustom").show();
                             $("#sdateC").datepicker({
                                 defaultDate: +0,
                                 maxDate: +0,
@@ -105,7 +123,7 @@
                                 }
                             });
                         } else if (fechaC === 'full') {
-                            $("#fechaCustom").hide();
+                            $(".fechaCustom").hide();
                             $("#sdateC").val("");
                             $("#edateC").val("");
                         }
@@ -164,7 +182,7 @@
                         <div id="content">
                             <form class="form" id="scanForm" >
                                 <label for="tipo">Tipo de Escaneo:</label>
-                                <input type="radio" name="tipo" value="completo" id="tipo" />Completo
+                                <input type="radio" name="tipo" value="completo" id="tipo" class="required" />Completo
                                 <br/>
                                 <input type="radio" name="tipo" value="custom" id="tipo" />Personalizado
                                 <br />
@@ -175,76 +193,142 @@
                                     <p style="text-align: center">
                                         Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
                                     </p>
-                                    <label for="fecha">Periodo de Escaneo: </label>
-                                    <input type="radio" name="fechaF" value="full" id="date" />Periodo Completo
-                                    <br />
-                                    <input type="radio" name="fechaF" value="partial" id="date" />Periodo Específico
-                                    <br /><br />
-                                    <div id="fechaFull">
-                                        <label for="sdateF">Fecha de Inicio: </label>
-                                        <input type="text" id="sdateF" name="sdateF" />
+                                    <fieldset>
+                                        <legend>Seleccionar periodo de escaneo: </legend>
+                                        <br />
+                                        <label for="fecha">Periodo: </label>
+                                        <input type="radio" name="fechaF" value="full" id="date" />Completo
+                                        <br />
+                                        <input type="radio" name="fechaF" value="partial" id="date" />Específico
                                         <br /><br />
-                                        <label for="edateF">Fecha de Fin: </label>
-                                        <input type="text" id="edateF" name="edateF" />
-                                        <br />
-                                        <br />
-                                    </div>
+                                        <div id="fechaFull">
+                                            <label for="sdateF">Fecha de Inicio: </label>
+                                            <input type="text" id="sdateF" name="sdateF" />
+                                            <label for="sdateF" class="error"></label>
+                                            <br /><br /><br />
+                                            <label for="edateF">Fecha de Fin: </label>
+                                            <input type="text" id="edateF" name="edateF" />
+                                            <label for="edateF" class="error"></label>
+                                            <br />
+                                            <br />
+                                        </div>
+                                    </fieldset>
+                                    <label for="fechaF" class="error"></label>
                                     <input type="submit" value="Escanear" id="fullButton" />
                                     <br />
                                 </form>
                             </div>
                             <div id="custom">
                                 <form class="form" id="customForm" method="post" action="/sisalbm/scanner?action=scan&tipo=custom">
-                                    <div id="vulns">
-                                        <label for="vulnt">Tipo de Vulnerabilidades:</label>
-                                        <input type="radio" name="vulnt" value="recent" id="vulnt" />Solo Recientes
-                                        <br />
-                                        <input type="radio" name="vulnt" value="todas" id="vulnt" />Archivo
-                                        <br /><br/>
-                                    </div>
-                                    <label for="UA">Seleccionar UA:</label>
-                                    <select name="UA" id="UA"></select><br /><br />
-                                    <label for="fab">Tipo de Fabricante: </label>
-                                    <input type="radio" name="fab" value="multi" id="fab" />Todos los Fabricantes
-                                    <br />
-                                    <input type="radio" name="fab" value="single" id="fab" />Fabricante Específico
-                                    <br /><br />
-                                    <div id="vendordiv">
-                                        <label for="vendor">Seleccionar Fabricante:</label>
-                                        <select name="vendor" id="vendor"></select>
-                                        <br /><br />
-                                    </div>
-                                    <div id="sevDiv">
-                                        <label for="critic">Criticidad</label>
-                                        <select name="critic" id="critic">
-                                            <option value="0">Cualquier Nivel</option>
-                                            <option value="1">Baja</option>
-                                            <option value="2">Media</option>
-                                            <option value="3">Alta</option>
-                                        </select>
-                                    </div>
-                                    <br />
-                                    <label for="fecha">Periodo de Escaneo: </label>
-                                    <input type="radio" name="fechaC" value="full" id="date" />Periodo Completo
-                                    <br />
-                                    <input type="radio" name="fechaC" value="partial" id="date" />Periodo Específico
-                                    <br /><br />
-                                    
-                                    <div id="fechaCustom">
-                                        <label for="sdateC">Fecha de Inicio: </label>
-                                        <input type="text" id="sdateC" name="sdateC" />
-                                        <br /><br />
-                                        <label for="edateC">Fecha de Fin: </label>
-                                        <input type="text" id="edateC" name="edateC" />
-                                        <br />
-                                        <br />
-                                    </div>
+                                    <fieldset>
+                                        <legend>Seleccionar parámetros para el escaneo</legend>
+                                        <table>
+                                            <tbody>
+                                                <tr id="vulns">
+                                                    <td>
+                                                        <label>Tipo de Vulnerabilidades:</label>
+                                                    </td>
+                                                    <td style="width: 200px">
+                                                        <input type="radio" name="vulnt" value="recent" id="vulnt" />Solo Recientes
+                                                        <br />
+                                                        <input type="radio" name="vulnt" value="todas" id="vulnt" />Archivo
+                                                        <br />
+                                                    </td>
+                                                    <td>
+                                                        <label for="vulnt" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="UA">Seleccionar UA:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="UA" id="UA"></select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Tipo de Fabricante: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="radio" name="fab" value="multi" id="fab" />Todos los Fabricantes
+                                                        <br />
+                                                        <input type="radio" name="fab" value="single" id="fab" />Fabricante Específico
+                                                        <br />
+                                                    </td>
+                                                    <td>
+                                                        <label for="fab" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr id="vendordiv">
+                                                    <td>
+                                                        <label>Seleccionar Fabricante:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="vendor" id="vendor"></select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="vendor" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr id="sevDiv">
+                                                    <td>
+                                                        <label>Criticidad</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="critic" id="critic">
+                                                            <option value="0">Cualquier Nivel</option>
+                                                            <option value="1">Baja</option>
+                                                            <option value="2">Media</option>
+                                                            <option value="3">Alta</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="critic" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr id="periods">
+                                                    <td>
+                                                        <label>Periodo de Escaneo: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="radio" name="fechaC" value="full" id="date" />Periodo Completo
+                                                        <br />
+                                                        <input type="radio" name="fechaC" value="partial" id="date" />Periodo Específico
+                                                        <br />
+                                                    </td>
+                                                    <td>
+                                                        <label for="fechaC" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="fechaCustom">
+                                                    <td>
+                                                        <label>Fecha de Inicio: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="sdateC" name="sdateC" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="sdateC" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="fechaCustom">
+                                                    <td>
+                                                        <label>Fecha de Fin: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="edateC" name="edateC" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="edateC" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
                                     <input type="submit" value="Escanear" id="customButton" />
-                                    <br />
                                 </form>
                             </div>
-
-                            <!--</form>-->
                         </div>
                     </div>
                 </div>
