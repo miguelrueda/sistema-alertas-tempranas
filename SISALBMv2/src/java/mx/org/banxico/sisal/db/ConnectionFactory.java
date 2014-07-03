@@ -45,12 +45,6 @@ public class ConnectionFactory {
             InputStream is = ConnectionFactory.class.getResourceAsStream("db.properties");
             prop.load(is);
             String connUrl = prop.getProperty("url");
-            /*
-             System.setProperty("java.library.path", "D:\\devenv\\JavaLibs");
-             Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-             fieldSysPath.setAccessible(true);
-             fieldSysPath.set(null, null);
-             */
             connection = DriverManager.getConnection(connUrl);
             LOG.log(Level.INFO, "BD - Conexión establecida correctamente");
         } catch (SQLException ex) {

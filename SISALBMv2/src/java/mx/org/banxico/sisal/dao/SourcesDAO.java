@@ -40,7 +40,8 @@ public class SourcesDAO implements java.io.Serializable {
 
     public SourcesDAO() {
         //iniciarFuentes();
-
+        iniciarFuentesTemp();
+        /*
         conn = ConnectionFactory.getInstance().getConnection();
         if (conn != null) {
             LOG.log(Level.INFO, "Conexión con BD exitosa!");
@@ -48,7 +49,7 @@ public class SourcesDAO implements java.io.Serializable {
         } else {
             iniciarFuentesTemp();
         }
-
+        */
     }
 
     //TODO: Eliminar esté método

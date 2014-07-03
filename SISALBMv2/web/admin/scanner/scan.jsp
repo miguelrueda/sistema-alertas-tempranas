@@ -217,7 +217,7 @@
                                     <div id="sevDiv">
                                         <label for="critic">Criticidad</label>
                                         <select name="critic" id="critic">
-                                            <option value="0">Seleccionar nivel</option>
+                                            <option value="0">Cualquier Nivel</option>
                                             <option value="1">Baja</option>
                                             <option value="2">Media</option>
                                             <option value="3">Alta</option>
