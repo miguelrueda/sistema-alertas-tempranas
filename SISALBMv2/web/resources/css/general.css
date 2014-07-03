@@ -274,7 +274,7 @@ FORM STYLE
     margin-right: auto;
 }
 label {
-    width: 140px;
+    width: 150px;
     float: left;
     font-size: 13px;
     line-height: 24px;
@@ -287,7 +287,13 @@ input {
 }
 
 input[type=text] {
-    width: 400px;
+    width: 200px;
+    margin-bottom: 8px;
+    padding: 2px 5px;
+}
+
+select {
+    width: 200px;
     margin-bottom: 8px;
     padding: 2px 5px;
 }
@@ -300,4 +306,13 @@ input[type=button], input[type=submit] {
     padding: 2px 20px;
     /*background-color: #797ca3;;
     color: #FFF;*/
+}
+
+form label.error{
+    color: #ff0000;
+    width: 300px;
+}
+
+form div.error {
+    color: #3b7878 !important;
 }
