@@ -141,9 +141,10 @@ public class SoftwareDAO implements java.io.Serializable {
     
     public List<String> obtenerUAsTemp() {
         List<String> uas = new ArrayList<String>();
-        for (int i = 0; i < 5; i++) {
-            uas.add("Unidad Administrativa " + (i + 1));
-        }
+        uas.add("FI");
+        uas.add("OSI");
+        uas.add("RH");
+        uas.add("Sistemas");
         return uas;
     }
 

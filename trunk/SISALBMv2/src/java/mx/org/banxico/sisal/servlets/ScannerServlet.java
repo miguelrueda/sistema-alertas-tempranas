@@ -46,78 +46,79 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     for (String vendor : vendorList) {
                         out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                     }
-                } //h/sisalbm/scanner?tipo=completo&fechaC=fulldate&sdateC=&edateC=&UA=0&vendor=&sdate=&edate=
+                }
             } else if (action.equalsIgnoreCase("scan")) {
                 String tipo = (String) request.getParameter("tipo");
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
                     if (fecha.equalsIgnoreCase("full")) {
-                        //String res = scannerService.doCompleteScan();
-                        //response.getWriter().write(res);
                         Set<Result> resultados = scannerService.doCompleteScan();
-                        for (Result result : resultados) {
-                            result.getVulnerabilidad().getName();
-                        }
-                        int noOfResults = resultados.size();
                         request.setAttribute("resultados", resultados);
-                        request.setAttribute("noOfResults", noOfResults);
-                        String nextJSP = "/admin/scanner/results.jsp";
-                        RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
-                        view.forward(request, response);
-                        //out.println("<h1>" + res + "</h1>");
+                        request.setAttribute("noOfResults", resultados.size());
                     } else if (fecha.equalsIgnoreCase("partial")) {
                         String sdate = (String) request.getParameter("sdateF");
                         String edate = (String) request.getParameter("edateF");
-                        //int noOfResults = scannerService.doCompleteScan(sdate, edate);
                         Set<Result> resultados = scannerService.doCompleteScan(sdate, edate);
-                        int noOfResults = resultados.size();
                         request.setAttribute("resultados", resultados);
-                        request.setAttribute("noOfResults", noOfResults);
-                        //out.println("<div id=\"page_title\">Not implemented yet</div>\n");
-                        //out.println("<div id=\"content\">\n");
-                        //response.getWriter().write("Filtrar con respecto a las fechas: " + sdate + " y " + edate);
-                        //out.println(addPageBottom());
-                        String nextJSP = "/admin/scanner/results.jsp";
-                        RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
-                        view.forward(request, response);
+                        request.setAttribute("noOfResults", resultados.size());
                     }
                 } else if (tipo.equalsIgnoreCase("custom")) {
                     String vulnt = (String) request.getParameter("vulnt");
                     if (vulnt.equalsIgnoreCase("recent")) {
-                        //Set solo recientes
+                        scannerService.setPartialType(1);
                     } else if (vulnt.equalsIgnoreCase("todas")) {
-                        //Set todo el archivo
+                        scannerService.setPartialType(2);
                     }
                     String UA = (String) request.getParameter("UA");
                     if (UA.equalsIgnoreCase("0")) {
-
+                        scannerService.setUA("0");
                     } else {
                         //Traer UA con SW DAo
+                        scannerService.setUA(UA);
                     }
                     String fab = (String) request.getParameter("fab");
                     if (fab.equalsIgnoreCase("single")) {
                         //Trear fabricante con sW Dao
+                        scannerService.setVendorType(1);
                         String vendor = (String) request.getParameter("vendor");
-                    } else {
-                        //Aplicar a todos los fabricantes
+                        scannerService.setVendor(vendor);
                     }
                     String critic = (String) request.getParameter("critic");
-                    //Validar que critic no sea 0
+                    switch (Integer.parseInt(critic)) {
+                        case 0:
+                            scannerService.setSeverity("nd");
+                            break;
+                        case 1:
+                            scannerService.setSeverity("low");
+                            break;
+                        case 2:
+                            scannerService.setSeverity("medium");
+                            break;
+                        case 3:
+                            scannerService.setSeverity("high");
+                            break;
+                    }
                     String fecha = (String) request.getParameter("fechaC");
                     String sdate = null;
                     String edate = null;
                     if (fecha.equalsIgnoreCase("full")) {
-
+                        scannerService.setDateType("full");
                     } else if (fecha.equalsIgnoreCase("partial")) {
                         sdate = request.getParameter("sdateC");
                         edate = request.getParameter("edateC");
+                        scannerService.setDateType("partial");
+                        scannerService.setSdate(sdate);
+                        scannerService.setEdate(edate);
                     }
-                    request.setAttribute("noOfResults", 0);
-
-                    out.println("Parametros: " + vulnt + " * " + UA + " * " + fab + " * " + critic + " * " + fecha + " * " + sdate + " * " + edate);
+                    Set<Result> resultados = scannerService.doPartialScan();
+                    request.setAttribute("resultados", resultados);
+                    request.setAttribute("noOfResults", resultados.size());
                 } else {
                     response.getWriter().write("Error desconocido");
                 }
+                String nextJSP = "/admin/scanner/results.jsp";
+                RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
+                view.forward(request, response);
             }
 
         } finally {
@@ -137,61 +138,4 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
         processRequest(request, response);
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }
-
-    private String addPageHead() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>\n");
-        sb.append("<head>\n").append("<title>Resultados</title>\n").append("<meta charset=\"UTF-8\" />\n");
-        sb.append("<meta name=\"viewport\" content=\"width=device-width\" />\n");
-        sb.append("<link href=\"/sisalbm/resources/css/general.css\" type=\"text/css\" rel=\"stylesheet\" />\n");
-        sb.append("<link href=\"/sisalbm/resources/css/jquery-ui-1.10.4.custom.css\" type=\"text/css\" rel=\"stylesheet\" />\n");
-        sb.append("<script src=\"//code.jquery.com/jquery-1.10.2.js\"></script>\n");
-        sb.append("<script src=\"//code.jquery.com/ui/1.10.4/jquery-ui.js\"></script>\n");
-        return sb.toString();
-    }
-
-    private String addPageContent(Set<Result> resultados) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<div id=\"page_title\">Encontré: ").append(resultados.size()).append(" posibles amenazas.</div>\n");
-        sb.append("<div id=\"content\">\n");
-        for (Result result : resultados) {
-            sb.append("<p>").append(result).append("</p>").append("\n");
-        }
-        return sb.toString();
-    }
-
-    private String addPageTop() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<body>\n");
-        sb.append("<div id=\"page_container\">\n");
-        sb.append("<div id=\"page_header\">\n");
-        sb.append("<table id=\"header\">\n");
-        sb.append("<tr>\n");
-        sb.append("<td><img src=\"/sisalbm/resources/images/app_header.png\" alt=\"BMLogo\" /></td>\n");
-        sb.append("</tr>\n");
-        sb.append("</table>\n");
-        sb.append("</div>\n");//page_header
-        sb.append("<div id=\"page_content\">\n");
-        sb.append("<div id=\"title\">" + "Resultados" + "</div>\n");
-        sb.append("<div id=\"workarea\">\n");
-        sb.append("<div id=\"menu\">AGREGAR MENÚ</div>\n");   //menu
-        sb.append("<div id=\"content_wrap\">\n");
-        return sb.toString();
-    }
-
-    private String addPageBottom() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("</div>\n");//content
-        sb.append("</div>\n");//contentwrap
-        sb.append("</div>\n");//workarea
-        sb.append("</div>\n");//pagecontent
-        sb.append("</div>\n");//pagecontainer
-        sb.append("</body>\n");
-        sb.append("</html>");
-        return sb.toString();
-    }
 }
