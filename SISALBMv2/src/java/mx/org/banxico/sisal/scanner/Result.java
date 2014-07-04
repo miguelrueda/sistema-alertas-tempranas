@@ -1,33 +1,78 @@
 package mx.org.banxico.sisal.scanner;
 
+import java.util.logging.Logger;
 import mx.org.banxico.sisal.entities.Software;
 import mx.org.banxico.sisal.parser.entidades.CVE;
 
-public class Result {
+/**
+ * Clase que representa un envoltorio para los resultados
+ *
+ * @author t41507
+ * @version 04072014
+ */
+public class Result implements java.io.Serializable {
 
+    /**
+     * Atributos de serialización y Logger
+     */
+    private static final long serialVersionUID = -1L;
+    private static final Logger LOG = Logger.getLogger(Result.class.getName());
+
+    /**
+     * Atributos principales
+     */
     private CVE vulnerabilidad;
     private Software sw;
 
+    /**
+     * Constructor
+     */
     public Result() {
     }
 
+    /**
+     * Constructor con parámetros
+     *
+     * @param vulnerabilidad referencia de la vulnerabilidad
+     * @param sw software vulnerable
+     */
     public Result(CVE vulnerabilidad, Software sw) {
         this.vulnerabilidad = vulnerabilidad;
         this.sw = sw;
     }
 
+    /**
+     * Getter
+     *
+     * @return referencia de la vulenrabilidad
+     */
     public CVE getVulnerabilidad() {
         return vulnerabilidad;
     }
 
+    /**
+     * Setter
+     *
+     * @param vulnerabilidad referencia de la vulenrabilidad
+     */
     public void setVulnerabilidad(CVE vulnerabilidad) {
         this.vulnerabilidad = vulnerabilidad;
     }
 
+    /**
+     * Getter
+     *
+     * @return referencia del SW vulnerable
+     */
     public Software getSw() {
         return sw;
     }
 
+    /**
+     * Setter
+     *
+     * @param sw referencia del SW vulnerable
+     */
     public void setSw(Software sw) {
         this.sw = sw;
     }

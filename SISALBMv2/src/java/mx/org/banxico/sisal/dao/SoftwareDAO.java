@@ -96,6 +96,13 @@ public class SoftwareDAO implements java.io.Serializable {
     private static final String sqlRetrieveAll = "SELECT * FROM Software";
     private static final String sqlRetrieveUAs = "SELECT DISTINCT UAResponsable FROM Software ORDER BY UAResponsable";
     private static final String sqlRetrieveVendors = "SELECT DISTINCT fabricante FROM Software ORDER BY fabricante";
+    /*
+     * SQL LIMIT
+     * --MySQL
+     * SELECT * FROM Students ORDER BY Name ASC LIMIT 20,10
+     * --SQL Server
+     * SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY Name ASC) AS Row, * FROM Students) AS StudentsWithRowNumbers WHERE Row > 20 AND Row <= 30
+     */
 
     public boolean agregarSoftware(Software sw) {
         boolean res = false;
