@@ -16,7 +16,32 @@
         <script>
             $(document).ready(function() {
                 $("#dialog-message").hide();
+                /*
+                 $("#namef").on("input", function() {
+                 var input = $(this);
+                 var isname = input.val();
+                 if (isname) {
+                 $("#namevalidation").hide();
+                 $("#actualizar").attr("disabled", false);
+                 } else {
+                 $("#namevalidation").addClass("error");
+                 $("#namevalidation").html("El nombre ingresado no es válido");
+                 $("#namevalidation").show();
+                 $("#actualizar").attr("disabled", true);
+                 }
+                 });
+                 $("#urlf").on("input", function() {
+                 var input = $(this);
+                 if (input.length < 1) {
+                 $("#actualizar").attr("disabled", false);
+                 } else {
+                 $("#actualizar").attr("disabled", true);
+                 }
+                 });
+                 */
                 $("#actualizar").click(function(e) {
+                    var name = $("#namef").val();
+                    var url = $("#urlf").val();
                     var a = $("#form").serialize();
                     var idf = $("#idf").val();
                     //alert("idf=" + idf + "&" + a);
@@ -31,8 +56,21 @@
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "La Fuente ha sido actualizada de forma exitosa.</p>";
                                 $("#dialog-message").html(content);
+                                $("#namef").attr("disabled", true);
+                                $("#urlf").attr("disabled", true);
                                 $("#actualizar").attr("disabled", true);
-                            } else {
+                            } else if (result === "nombre") {
+                                $("#dialog-message").attr("title", "Error de entrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "El nombre ingresado no es válido</p>";
+                                $("#dialog-message").html(content);
+                            } else if (result === 'url') {
+                                $("#dialog-message").attr("title", "Error de entrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La URL ingresada no es válida.<br />La URL debe cumplir con el prefijo: ([http|https]://)</p>";
+                                $("#dialog-message").html(content);
+                            }
+                            else {
                                 //alert("Edición Incompleta");
                                 $("#dialog-message").attr("title", "Edición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
@@ -103,18 +141,54 @@
                         <div id="content">
                             <div class="editForm">
                                 <form id="form" name="editSrcForm" class="form" >
-                                    <%
-                                        FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
-                                    %>
-                                    <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
-                                    <label for="idf">Id:</label>
-                                    <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" /><br />
-                                    <label for="namef">Nombre:</label>
-                                    <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" /><br />
-                                    <label for="urlf">Url:</label>
-                                    <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" /><br />
-                                    <label for="datef">Ultima Actualización:</label>
-                                    <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" /><br />
+                                    <fieldset>
+                                        <legend>Edición de la fuente:</legend>
+                                        <%
+                                            FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
+                                        %>
+                                        <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label for="idf">Id:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" class="src" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Nombre:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" class="src" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="namef" id="namevalidation"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Url:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" class="src" />
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="datef">Ultima Actualización:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" class="src" /><br />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
                                     <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
                                 </form>
                             </div>

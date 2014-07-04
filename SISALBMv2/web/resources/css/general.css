@@ -316,3 +316,14 @@ form label.error{
 form div.error {
     color: #3b7878 !important;
 }
+
+form label.help{
+    color: #003366;
+    width: 300px;
+}
+
+td > input[type=text].src {
+    width: 300px;
+    margin-bottom: 8px;
+    padding: 2px 5px;
+}

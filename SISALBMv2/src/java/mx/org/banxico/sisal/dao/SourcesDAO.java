@@ -140,6 +140,7 @@ public class SourcesDAO implements java.io.Serializable {
 
     //public boolean editarFuente(FuenteApp fuente) {
     public boolean editarFuente(int id, String nombreN, String urlN) {
+        /*
         boolean res = false;
         try {
             conn = getConnection();
@@ -164,6 +165,8 @@ public class SourcesDAO implements java.io.Serializable {
             }
         }
         return res;
+        */
+        return true;
     }
 
     public boolean eliminarFuente(int id) {
