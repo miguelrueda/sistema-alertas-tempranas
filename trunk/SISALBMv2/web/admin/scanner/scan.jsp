@@ -62,11 +62,11 @@
                 if (tipo === 'completo') {
                     $("#full").show();
                     $("#custom").hide();
-                    $("#fechaFull").hide();
+                    $(".fechaFull").hide();
                     $("input:radio[name=fechaF]").on("click", function() {
                         var fechaF = $("input:radio[name=fechaF]:checked").val();
                         if (fechaF === 'partial') {
-                            $("#fechaFull").show();
+                            $(".fechaFull").show();
                             $("#sdateF").datepicker({
                                 defaultDate: +0,
                                 maxDate: +0,
@@ -83,7 +83,7 @@
                                 }
                             });
                         } else if (fechaF === 'full') {
-                            $("#fechaFull").hide();
+                            $(".fechaFull").hide();
                             $("#sdateF").val("");
                             $("#edateF").val("");
                         }
@@ -195,25 +195,47 @@
                                     </p>
                                     <fieldset>
                                         <legend>Seleccionar periodo de escaneo: </legend>
-                                        <br />
-                                        <label for="fecha">Periodo: </label>
-                                        <input type="radio" name="fechaF" value="full" id="date" />Completo
-                                        <br />
-                                        <input type="radio" name="fechaF" value="partial" id="date" />Específico
-                                        <br /><br />
-                                        <div id="fechaFull">
-                                            <label for="sdateF">Fecha de Inicio: </label>
-                                            <input type="text" id="sdateF" name="sdateF" />
-                                            <label for="sdateF" class="error"></label>
-                                            <br /><br /><br />
-                                            <label for="edateF">Fecha de Fin: </label>
-                                            <input type="text" id="edateF" name="edateF" />
-                                            <label for="edateF" class="error"></label>
-                                            <br />
-                                            <br />
-                                        </div>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label>Periodo</label>
+                                                    </td>
+                                                    <td style="width: 200px">
+                                                        <input type="radio" name="fechaF" value="full" id="date" />Completo
+                                                        <br />
+                                                        <input type="radio" name="fechaF" value="partial" id="date" />Específico
+                                                        <br />
+                                                    </td>
+                                                    <td>
+                                                        <label for="fechaF" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="fechaFull">
+                                                    <td>
+                                                        <label>Fecha de Inicio: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="sdateF" name="sdateF" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="sdateF" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr class="fechaFull">
+                                                    <td>
+                                                        <label>Fecha de Fin: </label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="edateF" name="edateF" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="edateF" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </fieldset>
-                                    <label for="fechaF" class="error"></label>
                                     <input type="submit" value="Escanear" id="fullButton" />
                                     <br />
                                 </form>

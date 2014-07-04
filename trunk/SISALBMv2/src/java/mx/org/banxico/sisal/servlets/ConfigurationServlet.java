@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -80,11 +82,20 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         String name = (String) request.getParameter("namef").trim();
                         String url = (String) request.getParameter("urlf").trim();
                         LOG.log(Level.INFO, "Edici\u00f3n - Valores Recibidos: {0}/{1}/{2}", new Object[]{id, name, url});
-                        boolean flag = dao.editarFuente(Integer.parseInt(id), name, url);
-                        if (flag) {
-                            response.getWriter().write("true");
+                        boolean flag = false;
+                        if (name.length() > 5 && validateURL(url)) {
+                            flag = dao.editarFuente(Integer.parseInt(id), name, url);
+                            if (flag) {
+                                response.getWriter().write("true");
+                            } else {
+                                response.getWriter().write("false");
+                            }
                         } else {
-                            response.getWriter().write("false");
+                            if (name.length() < 5) {
+                                response.getWriter().write("nombre");
+                            } else {
+                                response.getWriter().write("url");
+                            }
                         }
                         break;
                 }
@@ -118,6 +129,12 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
+    }
+
+    private boolean validateURL(String url) {
+        Pattern urlPattern = Pattern.compile("((https?|ftp|file):((//)|(\\\\\\\\))+[\\\\w\\\\d:#@%/;$()~_?\\\\+-=\\\\\\\\\\\\.&]*)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = urlPattern.matcher(url);
+        return matcher.find();
     }
 
 }
