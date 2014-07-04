@@ -16,10 +16,23 @@ import mx.org.banxico.sisal.parser.entidades.CVE;
 import mx.org.banxico.sisal.parser.entidades.Version;
 import mx.org.banxico.sisal.parser.entidades.VulnSoftware;
 
+/**
+ * Clase que se encarga de realizar las operaciones del escaneo y retornar los
+ * resultados como una lista de la clase Result
+ *
+ * @author t41507
+ * @version 04072014
+ */
 public class ScannerBean implements java.io.Serializable {
 
+    /**
+     * Atributos de serialización y Logger
+     */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ScannerBean.class.getName());
+    /**
+     * Atributos principales de la clase
+     */
     private SoftwareDAO swdao;
     private VulnerabilityDAO vulndao;
     private List<Result> resultados;
@@ -32,114 +45,115 @@ public class ScannerBean implements java.io.Serializable {
     private String edate;
     private String sdate;
 
+    /**
+     * Constructor
+     */
     public ScannerBean() {
     }
 
+    /**
+     * Setter
+     *
+     * @param partialType entero con el tipo de escaneo parcial 1para recientes
+     * 2 para archivo
+     */
     public void setPartialType(int partialType) {
         this.partialType = partialType;
     }
 
+    /**
+     * Setter
+     *
+     * @param UA cadena con la UA a filtrar
+     */
     public void setUA(String UA) {
         this.UA = UA;
     }
 
+    /**
+     * Setter
+     *
+     * @param vendor cadena con el fabricante a filtrar
+     */
     public void setVendor(String vendor) {
         this.vendor = vendor;
     }
 
+    /**
+     * Setter
+     *
+     * @param vendorType entero con el tipo de fabricante 1 unico 2 multiple
+     */
     public void setVendorType(int vendorType) {
         this.vendorType = vendorType;
     }
 
+    /**
+     * Setter
+     *
+     * @param severity cadena con la criticdad a filtrar
+     */
     public void setSeverity(String severity) {
         this.severity = severity;
     }
 
+    /**
+     * Setter
+     *
+     * @param dateType cadena con el tipo de fecha total o parcial
+     */
     public void setDateType(String dateType) {
         this.dateType = dateType;
     }
 
+    /**
+     * Setter
+     *
+     * @param edate cadena con la fecha de inicio
+     */
     public void setEdate(String edate) {
         this.edate = edate;
     }
 
+    /**
+     * Setter
+     *
+     * @param sdate cadena con la fecha de fin
+     */
     public void setSdate(String sdate) {
         this.sdate = sdate;
     }
-    
+
+    /**
+     * Método que realiza el escaneo más simple: Todas las vulnerabilidades
+     * contra todo el Software
+     *
+     * @return Conjunto de tipo Result con los resultados del escaneo
+     */
     public Set<Result> doCompleteScan() {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
         Set<Result> totales = doScan(vulndao.getArchivoCVE(), swdao.obtenerTodos());
-        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", totales.size());
+        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en el escaneo completo.", totales.size());
         return totales;
     }
-/*
-    public Set<Result> doCompleteScan() {
-        swdao = new SoftwareDAO();
-        vulndao = new VulnerabilityDAO();
-        List<Software> swList = swdao.obtenerTodos();
-        List<CVE> cveList = vulndao.getArchivoCVE();//vulndao.retrieveAllCVEsFromFile();//
-        resultados = new ArrayList<Result>();
-        LOG.log(Level.INFO, "Encontre: {0} elementos de SW y {1} vulnerabilidades", new Object[]{swList.size(), cveList.size()});
-        //SCANEAR
-        for (CVE vuln : cveList) {
-            List<VulnSoftware> vulnSWList = vuln.getVuln_soft();
-            if (!vulnSWList.isEmpty()) {
-                for (VulnSoftware vulnsw : vulnSWList) {
-                    for (int i = 0; i < swList.size(); i++) {
-                        //Caso: Mismo nombre como Cisco/cisco
-                        if (vulnsw.getVendor().equalsIgnoreCase(swList.get(i).getFabricante())) {
-                            String name = vulnsw.getName().replace("_", " ");
-                            if (swList.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
-                                for (Version version : vulnsw.getVersion()) {
-                                    if (version.getNumber().equals(swList.get(i).getVersion())) {
-                                        //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
-                                        LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
-                                        Result nResult = new Result(vuln, swList.get(i));
-                                        resultados.add(nResult);
-                                    } else if (version.getNumber().contains(swList.get(i).getVersion().replace("x", ""))) {
-                                        //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
-                                        LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
-                                        Result nResult = new Result(vuln, swList.get(i));
-                                        resultados.add(nResult);
-                                    }
-                                }
-                            }
-                        } //Caso: Mismo vendedor nombre similar: Apache Software Foundation/apache
-                        else if (swList.get(i).getFabricante().toLowerCase().startsWith(vulnsw.getVendor().toLowerCase())) {
-                            String name = vulnsw.getName().replace("_", " ");
-                            if (swList.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
-                                for (Version version : vulnsw.getVersion()) {
-                                    //System.out.println("*** Versiones: " + version.getNumber() + "/" + swList.get(i).getVersion());
-                                    if (version.getNumber().equals(swList.get(i).getVersion())) {
-                                        //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
-                                        LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
-                                        Result nResult = new Result(vuln, swList.get(i));
-                                        resultados.add(nResult);
-                                    } else if (version.getNumber().contains(swList.get(i).getVersion().replace("x", ""))) {
-                                        //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
-                                        LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
-                                        Result nResult = new Result(vuln, swList.get(i));
-                                        resultados.add(nResult);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } //if not empty
-        }//fore vuln
-        //SCANEAR
-        Set<Result> results = procesarListaResultados(resultados);
-        //return "Encontre: " + results.size() + " amenzas.";
-        return results;
-    }
-*/
+
+    /**
+     * Getter
+     *
+     * @return Lista de resultados de tipo Result
+     */
     public List<Result> getResultados() {
         return resultados;
     }
 
+    /**
+     * Método que se encarga de procesar la lista de resultados: se encarga de
+     * filtrar los elementos repetidos del conjunto de resultados
+     *
+     * @param resultados Lista de resultados
+     * @return Conjunto de resultados
+     */
     private Set<Result> procesarListaResultados(List<Result> resultados) {
         Set<Result> diferentes = new LinkedHashSet<Result>();
         Set<Result> duplicados = new LinkedHashSet<Result>();
@@ -153,6 +167,13 @@ public class ScannerBean implements java.io.Serializable {
         return diferentes;
     }
 
+    /**
+     * Método que realiza el escaneo a partir de las fecha ingresadas por el usuario
+     *
+     * @param start fecha de inicio
+     * @param end fecha de termino
+     * @return
+     */
     public Set<Result> doCompleteScan(String start, String end) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date inicio = null;
@@ -172,6 +193,13 @@ public class ScannerBean implements java.io.Serializable {
         return totales;
     }
 
+    /**
+     * Método que realiza el escaneo general
+     * 
+     * @param vulns lista de vulnerabilidades
+     * @param sws lista de software a comparar
+     * @return conjunto de resultados del escaneo
+     */
     private Set<Result> doScan(List<CVE> vulns, List<Software> sws) {
         List<Result> res = new ArrayList<Result>();
         LOG.log(Level.INFO, "Comparando: {0} vulnerabilidades y {1} productos.", new Object[]{vulns.size(), sws.size()});
@@ -216,6 +244,11 @@ public class ScannerBean implements java.io.Serializable {
         return total;
     }
 
+    /**
+     * Método que realiza el escaneo a partir de los parámetros ingresados
+     *
+     * @return Conjunto de resultados
+     */
     public Set<Result> doPartialScan() {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
@@ -270,6 +303,14 @@ public class ScannerBean implements java.io.Serializable {
         return totales;
     }
 
+    /**
+     * Método que se encarga de filtrar la lista de vulnerabilidades a partir de las fechas ingredas
+     * 
+     * @param archivoCVE lista de vulnerabilidades
+     * @param inicio fecha de inicio
+     * @param fin fecha de fin
+     * @return lista de vulnerabilidades filtrada
+     */
     private List<CVE> filtrarListaPorFecha(List<CVE> archivoCVE, Date inicio, Date fin) {
         List<CVE> filtrados = new ArrayList<CVE>();
         for (CVE vuln : archivoCVE) {
@@ -287,6 +328,13 @@ public class ScannerBean implements java.io.Serializable {
         return filtrados;
     }
 
+    /**
+     * M´étodo que se encarga de filtrar la lista de sw de acuerdo a la UA
+     * 
+     * @param swList lista de software a filtrar
+     * @param filtro filtro a aplicar a la lista
+     * @return lista de software filtrada
+     */
     private List<Software> filtrarListaSW(List<Software> swList, String filtro) {
         List<Software> filtrada = new ArrayList<Software>();
         for (Software sw : swList) {
@@ -298,9 +346,16 @@ public class ScannerBean implements java.io.Serializable {
         return filtrada;
     }
 
-    private List<Software> filtrarListaPorVendor(List<Software> filtrada, String vendor) {
+    /**
+     * Método que filtra la lista de sw por fabricante
+     * 
+     * @param swList lista de sw
+     * @param vendor filtro a aplicar
+     * @return lista de SW filtrada
+     */
+    private List<Software> filtrarListaPorVendor(List<Software> swList, String vendor) {
         List<Software> res = new ArrayList<Software>();
-        for (Software sw : filtrada) {
+        for (Software sw : swList) {
             if (sw.getFabricante().equalsIgnoreCase(vendor)) {
                 res.add(sw);
             } else if (sw.getFabricante().toLowerCase().startsWith(vendor.toLowerCase())) {
@@ -311,6 +366,13 @@ public class ScannerBean implements java.io.Serializable {
         return res;
     }
 
+    /**
+     * Método que se encarga de filtrar la lista de SW por nivel de criticidad
+     * 
+     * @param vulns lista de vulnerabilidades
+     * @param severity filtro de criticidad
+     * @return  lista de vulnerabilidades filtrada
+     */
     private List<CVE> filtrarListaPorCriticidad(List<CVE> vulns, String severity) {
         List<CVE> res = new ArrayList<CVE>();
         for (CVE vuln : vulns) {
@@ -322,4 +384,66 @@ public class ScannerBean implements java.io.Serializable {
         return res;
     }
 
+    /*
+     public Set<Result> doCompleteScan() {
+     swdao = new SoftwareDAO();
+     vulndao = new VulnerabilityDAO();
+     List<Software> swList = swdao.obtenerTodos();
+     List<CVE> cveList = vulndao.getArchivoCVE();//vulndao.retrieveAllCVEsFromFile();//
+     resultados = new ArrayList<Result>();
+     LOG.log(Level.INFO, "Encontre: {0} elementos de SW y {1} vulnerabilidades", new Object[]{swList.size(), cveList.size()});
+     //SCANEAR
+     for (CVE vuln : cveList) {
+     List<VulnSoftware> vulnSWList = vuln.getVuln_soft();
+     if (!vulnSWList.isEmpty()) {
+     for (VulnSoftware vulnsw : vulnSWList) {
+     for (int i = 0; i < swList.size(); i++) {
+     //Caso: Mismo nombre como Cisco/cisco
+     if (vulnsw.getVendor().equalsIgnoreCase(swList.get(i).getFabricante())) {
+     String name = vulnsw.getName().replace("_", " ");
+     if (swList.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
+     for (Version version : vulnsw.getVersion()) {
+     if (version.getNumber().equals(swList.get(i).getVersion())) {
+     //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
+     LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
+     Result nResult = new Result(vuln, swList.get(i));
+     resultados.add(nResult);
+     } else if (version.getNumber().contains(swList.get(i).getVersion().replace("x", ""))) {
+     //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
+     LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
+     Result nResult = new Result(vuln, swList.get(i));
+     resultados.add(nResult);
+     }
+     }
+     }
+     } //Caso: Mismo vendedor nombre similar: Apache Software Foundation/apache
+     else if (swList.get(i).getFabricante().toLowerCase().startsWith(vulnsw.getVendor().toLowerCase())) {
+     String name = vulnsw.getName().replace("_", " ");
+     if (swList.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
+     for (Version version : vulnsw.getVersion()) {
+     //System.out.println("*** Versiones: " + version.getNumber() + "/" + swList.get(i).getVersion());
+     if (version.getNumber().equals(swList.get(i).getVersion())) {
+     //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
+     LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
+     Result nResult = new Result(vuln, swList.get(i));
+     resultados.add(nResult);
+     } else if (version.getNumber().contains(swList.get(i).getVersion().replace("x", ""))) {
+     //System.out.println("**** Agregado: " + swList.get(i).getFabricante() + "/" + swList.get(i).getNombre() + "/" + swList.get(i).getVersion());
+     LOG.log(Level.INFO, "Agregado: {0}/{1}/{2}", new Object[]{swList.get(i).getFabricante(), swList.get(i).getNombre(), swList.get(i).getVersion()});
+     Result nResult = new Result(vuln, swList.get(i));
+     resultados.add(nResult);
+     }
+     }
+     }
+     }
+     }
+     }
+     } //if not empty
+     }//fore vuln
+     //SCANEAR
+     Set<Result> results = procesarListaResultados(resultados);
+     //return "Encontre: " + results.size() + " amenzas.";
+     return results;
+     }
+     */
 }

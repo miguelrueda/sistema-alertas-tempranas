@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -18,18 +17,34 @@ import javax.servlet.http.HttpSession;
 import mx.org.banxico.sisal.dao.SourcesDAO;
 import mx.org.banxico.sisal.entities.FuenteApp;
 
+/**
+ * Controlador para las fuentes y listas de sw
+ *
+ * @author t41507
+ * @version 04072014
+ */
 public class ConfigurationServlet extends HttpServlet implements java.io.Serializable {
 
+    /**
+     * Atributos de serialización y logger
+     */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ConfigurationServlet.class.getName());
 
+    /**
+     * Método doGet para resolver las peticiones
+     *
+     * @param request referencia de solicitud
+     * @param response referencia de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (!request.getParameter("action").equals("")) {
             String action = (String) request.getParameter("action");
             LOG.log(Level.INFO, "Procesando petici\u00f3n de configuraci\u00f3n de tipo: {0}", action);
-
             String nextJSP = "/admin/Index.html";
             RequestDispatcher view;
             SourcesDAO dao = new SourcesDAO();
@@ -126,11 +141,25 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         }
     }
 
+    /**
+     * Método doPost
+     *
+     * @param req referencia de solicitud
+     * @param resp referencia de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doGet(req, resp);
     }
 
+    /**
+     * Métod que se encarga de validar la URL introducida por el usuario
+     * 
+     * @param url cadena con la url a validar
+     * @return boleano con la condición de validez
+     */
     private boolean validateURL(String url) {
         Pattern urlPattern = Pattern.compile("((https?|ftp|file):((//)|(\\\\\\\\))+[\\\\w\\\\d:#@%/;$()~_?\\\\+-=\\\\\\\\\\\\.&]*)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = urlPattern.matcher(url);

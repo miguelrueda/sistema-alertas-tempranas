@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,11 +14,28 @@ import mx.org.banxico.sisal.dao.SoftwareDAO;
 import mx.org.banxico.sisal.scanner.Result;
 import mx.org.banxico.sisal.scanner.ScannerBean;
 
+/**
+ * Controlador para las peticiones del escaner
+ *
+ * @author t41507
+ * @version 02072014
+ */
 public class ScannerServlet extends HttpServlet implements java.io.Serializable {
 
+    /**
+     * Atributos de serialización y Logger
+     */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ScannerServlet.class.getName());
 
+    /**
+     * Método que se encarga de procesar las solicituds
+     *
+     * @param request referencia de solicitud
+     * @param response referencia de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SoftwareDAO swdao = new SoftwareDAO();
@@ -126,12 +142,28 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
         }
     }
 
+    /**
+     * Método doGet
+     *
+     * @param request referncia de solicitud
+     * @param response referencia de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Método doPost
+     *
+     * @param request referncia de solicitud
+     * @param response referencia de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
