@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -168,7 +169,8 @@ public class ScannerBean implements java.io.Serializable {
     }
 
     /**
-     * Método que realiza el escaneo a partir de las fecha ingresadas por el usuario
+     * Método que realiza el escaneo a partir de las fecha ingresadas por el
+     * usuario
      *
      * @param start fecha de inicio
      * @param end fecha de termino
@@ -195,7 +197,7 @@ public class ScannerBean implements java.io.Serializable {
 
     /**
      * Método que realiza el escaneo general
-     * 
+     *
      * @param vulns lista de vulnerabilidades
      * @param sws lista de software a comparar
      * @return conjunto de resultados del escaneo
@@ -304,8 +306,9 @@ public class ScannerBean implements java.io.Serializable {
     }
 
     /**
-     * Método que se encarga de filtrar la lista de vulnerabilidades a partir de las fechas ingredas
-     * 
+     * Método que se encarga de filtrar la lista de vulnerabilidades a partir de
+     * las fechas ingredas
+     *
      * @param archivoCVE lista de vulnerabilidades
      * @param inicio fecha de inicio
      * @param fin fecha de fin
@@ -330,7 +333,7 @@ public class ScannerBean implements java.io.Serializable {
 
     /**
      * M´étodo que se encarga de filtrar la lista de sw de acuerdo a la UA
-     * 
+     *
      * @param swList lista de software a filtrar
      * @param filtro filtro a aplicar a la lista
      * @return lista de software filtrada
@@ -348,7 +351,7 @@ public class ScannerBean implements java.io.Serializable {
 
     /**
      * Método que filtra la lista de sw por fabricante
-     * 
+     *
      * @param swList lista de sw
      * @param vendor filtro a aplicar
      * @return lista de SW filtrada
@@ -368,10 +371,10 @@ public class ScannerBean implements java.io.Serializable {
 
     /**
      * Método que se encarga de filtrar la lista de SW por nivel de criticidad
-     * 
+     *
      * @param vulns lista de vulnerabilidades
      * @param severity filtro de criticidad
-     * @return  lista de vulnerabilidades filtrada
+     * @return lista de vulnerabilidades filtrada
      */
     private List<CVE> filtrarListaPorCriticidad(List<CVE> vulns, String severity) {
         List<CVE> res = new ArrayList<CVE>();

@@ -49,15 +49,16 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 if (val.equalsIgnoreCase("ua")) {
                     //TODO: descomentar la linea siguiente
                     //List<String> uasList = swdao.obtenerUAs();
-                    List<String> uasList = swdao.obtenerUAsTemp();
-                    out.println("<option value='0'>Todas las UA</option>");
+                    //List<String> uasList = swdao.obtenerUAsTemp();
+                    Set<String> uasList = swdao.obtenerUAsTemp();
+                    out.println("<option value='0'>Todos los Grupos/Todas las UA</option>");
                     for (String ua : uasList) {
                         out.println("<option value='" + ua + "'>" + ua + "</option>");
                     }
                 } else if (val.equalsIgnoreCase("vendor")) {
                     //TODO: descomentar la linea siguiente
                     //List<String> vendorList = swdao.obtenerFabricantes();
-                    List<String> vendorList = swdao.obtenerFabricantesTemp();
+                    Set<String> vendorList = swdao.obtenerFabricantesTemp();
                     out.println("<option value='0'>Seleccionar Fabricante</option>");
                     for (String vendor : vendorList) {
                         out.println("<option value='" + vendor + "'>" + vendor + "</option>");

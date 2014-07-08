@@ -191,7 +191,7 @@
                             <div id="full">
                                 <form class="form" id="fullForm" method="post" action="/sisalbm/scanner?action=scan&tipo=completo">
                                     <p style="text-align: center">
-                                        Esté escaneo analizará todas las UA con el archivo completo de Vulnerabilidades.
+                                        Esté escaneo analizará (todos los grupos/todas las UA) con el archivo completo de Vulnerabilidades.
                                     </p>
                                     <fieldset>
                                         <legend>Seleccionar periodo de escaneo: </legend>
@@ -262,7 +262,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label for="UA">Seleccionar UA:</label>
+                                                        <label for="UA">Seleccionar Grupo/UA:</label>
                                                     </td>
                                                     <td>
                                                         <select name="UA" id="UA"></select>

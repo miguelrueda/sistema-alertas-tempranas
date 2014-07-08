@@ -29,27 +29,36 @@
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" id="tablestyle">
                                     <thead>
-                                    <th>Proveedor</th>
+                                    <th>Fabricante</th>
                                     <th>Software</th>
                                     <th>Version</th>
-                                    <th>Tipo</th>
+                                    <!--<th>Tipo</th>-->
                                     <th>UA Responsable</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
                                             <tr>
-                                                <td style="width: 25%">${supSW.fabricante}</td>
-                                                <td style="width: 50%">${supSW.nombre}</td>
-                                                <td style="width: 15%">${supSW.version}</td>
+                                                <td style="width: 150px">${supSW.fabricante}</td>
+                                                <td style="width: 240px">${supSW.nombre}</td>
                                                 <c:choose>
-                                                    <c:when test="${supSW.tipo eq 1}">
-                                                        <td>OS</td>
+                                                    <c:when test="${supSW.version eq '-1'}">
+                                                        <td style="width: 80px; text-align: center">ND</td>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <td>SW</td>
+                                                        <td style="width: 80px; text-align: center">${supSW.version}</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <td>${supSW.UAResponsable}</td>
+                                                <%--
+                                                <c:choose>
+                                                    <c:when test="${supSW.tipo eq 1}">
+                                                        <td style="width: 100px">OS</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td style="width: 100px">SW</td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                --%>
+                                                <td style="width: 200px">${supSW.UAResponsable}</td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
