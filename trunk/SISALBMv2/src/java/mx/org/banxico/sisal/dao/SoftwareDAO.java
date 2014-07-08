@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
@@ -27,7 +29,7 @@ public class SoftwareDAO implements java.io.Serializable {
      * Atributos del DAO
      */
     //private static final String PRODSFILE = "/resources/softwareproducts.csv";
-    private static final String PRODSFILE = "/resources/bdtest.csv";
+    private static final String PRODSFILE = "/resources/swdb.csv";
     private Connection connection;
     private PreparedStatement pstmt;
     private List<Software> swList;
@@ -37,13 +39,11 @@ public class SoftwareDAO implements java.io.Serializable {
         iniciarLista();
         //Iniciar la conexión a BD AQUI
         /**
-         * TODO: Descomentar esté código para la conexión a BD
-        connection = ConnectionFactory.getInstance().getConnection();
-        if (connection != null) {
-            LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
-            cargarTodos();
-        }
-        */
+         * TODO: Descomentar esté código para la conexión a BD connection =
+         * ConnectionFactory.getInstance().getConnection(); if (connection !=
+         * null) { LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la
+         * BD"); cargarTodos(); }
+         */
     }
 
     private void cargarTodos() {
@@ -145,14 +145,26 @@ public class SoftwareDAO implements java.io.Serializable {
         }
         return uas;
     }
-    
-    public List<String> obtenerUAsTemp() {
+
+    public Set<String> obtenerUAsTemp() {
         List<String> uas = new ArrayList<String>();
-        uas.add("FI");
-        uas.add("OSI");
-        uas.add("RH");
-        uas.add("Sistemas");
-        return uas;
+        for (Software software : swList) {
+            uas.add(software.getUAResponsable());
+        }
+        return filtrarUAS(uas);
+    }
+    
+    private Set<String> filtrarUAS(List<String> uas) {
+        Set<String> result = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String ua : uas) {
+            if (duplicados.contains(ua)) {
+                duplicados.add(ua);
+            } else {
+                result.add(ua);
+            }
+        }
+        return result;
     }
 
     public List<String> obtenerFabricantes() {
@@ -169,16 +181,33 @@ public class SoftwareDAO implements java.io.Serializable {
         }
         return vendors;
     }
-    
-    public List<String> obtenerFabricantesTemp() {
+
+    public Set<String> obtenerFabricantesTemp() {
         List<String> vendors = new ArrayList<String>();
-        vendors.add("Adobe Systems");
-        vendors.add("Apache Software Foundation");
-        vendors.add("Canonical");
-        vendors.add("Cisco");
-        vendors.add("IBM");
-        vendors.add("Microsoft");
-        return vendors;
+        /*
+         vendors.add("Adobe Systems");
+         vendors.add("Apache Software Foundation");
+         vendors.add("Canonical");
+         vendors.add("Cisco");
+         vendors.add("IBM");
+         vendors.add("Microsoft");*/
+        for (Software sw : swList) {
+            vendors.add(sw.getFabricante());
+        }
+        return filtrarVendors(vendors);
+    }
+    
+    private Set<String> filtrarVendors(List<String> vendors) {
+         Set<String> result = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String vendor : vendors) {
+            if (duplicados.contains(vendor)) {
+                duplicados.add(vendor);
+            } else {
+                result.add(vendor);
+            }
+        }
+        return result;
     }
 
     public List<Software> retrieveFromList(int offset, int noOfRecords) {
@@ -282,5 +311,7 @@ public class SoftwareDAO implements java.io.Serializable {
             LOG.log(Level.INFO, "Error de Conversi\u00f3n: {0}", nfe.getMessage());
         }
     }
+
+    
 
 }

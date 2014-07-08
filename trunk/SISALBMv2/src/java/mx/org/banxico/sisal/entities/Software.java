@@ -14,7 +14,7 @@ public class Software implements java.io.Serializable {
     private static final long serialVersionUID = -1L;
     /**
      * Atributos principales de la clase
-    */
+     */
     private Integer idSoftware;
     private String fabricante;
     private String nombre;
@@ -25,7 +25,7 @@ public class Software implements java.io.Serializable {
     private String AnalistaResponsable;
 
     /**
-     *  Constructor sin parámetros
+     * Constructor sin parámetros
      */
     public Software() {
     }
@@ -38,7 +38,8 @@ public class Software implements java.io.Serializable {
      * @param nombre cadena con el nombre del SW
      * @param version cadena con la versión del SW
      * @param tipo entero con el tipo de SW 1 para SW 2 para OS - Verificar
-     * @param endoflife entero con el fin del ciclo 1 para terminado, 2 para vivo
+     * @param endoflife entero con el fin del ciclo 1 para terminado, 2 para
+     * vivo
      */
     public Software(Integer idSoftware, String fabricante, String nombre, String version, Integer tipo, Integer endoflife) {
         this.idSoftware = idSoftware;
@@ -57,7 +58,8 @@ public class Software implements java.io.Serializable {
      * @param nombre cadena con el nombre del SW
      * @param version cadena con la versión del SW
      * @param tipo entero con el tipo de SW 1 para SW 2 para OS - Verificar
-     * @param endoflife entero con el fin del ciclo 1 para terminado, 2 para vivo
+     * @param endoflife entero con el fin del ciclo 1 para terminado, 2 para
+     * vivo
      * @param UAResponsable cadena con la referencia de la UA Responsable
      * @param AnalistaResponsable cadena con el nombre del analista
      */
@@ -214,6 +216,56 @@ public class Software implements java.io.Serializable {
      */
     public void setAnalistaResponsable(String AnalistaResponsable) {
         this.AnalistaResponsable = AnalistaResponsable;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + (this.idSoftware != null ? this.idSoftware.hashCode() : 0);
+        hash = 37 * hash + (this.fabricante != null ? this.fabricante.hashCode() : 0);
+        hash = 37 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
+        hash = 37 * hash + (this.version != null ? this.version.hashCode() : 0);
+        hash = 37 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
+        hash = 37 * hash + (this.endoflife != null ? this.endoflife.hashCode() : 0);
+        hash = 37 * hash + (this.UAResponsable != null ? this.UAResponsable.hashCode() : 0);
+        hash = 37 * hash + (this.AnalistaResponsable != null ? this.AnalistaResponsable.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Software other = (Software) obj;
+        if (this.idSoftware != other.idSoftware && (this.idSoftware == null || !this.idSoftware.equals(other.idSoftware))) {
+            return false;
+        }
+        if ((this.fabricante == null) ? (other.fabricante != null) : !this.fabricante.equals(other.fabricante)) {
+            return false;
+        }
+        if ((this.nombre == null) ? (other.nombre != null) : !this.nombre.equals(other.nombre)) {
+            return false;
+        }
+        if ((this.version == null) ? (other.version != null) : !this.version.equals(other.version)) {
+            return false;
+        }
+        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
+            return false;
+        }
+        if (this.endoflife != other.endoflife && (this.endoflife == null || !this.endoflife.equals(other.endoflife))) {
+            return false;
+        }
+        if ((this.UAResponsable == null) ? (other.UAResponsable != null) : !this.UAResponsable.equals(other.UAResponsable)) {
+            return false;
+        }
+        if ((this.AnalistaResponsable == null) ? (other.AnalistaResponsable != null) : !this.AnalistaResponsable.equals(other.AnalistaResponsable)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

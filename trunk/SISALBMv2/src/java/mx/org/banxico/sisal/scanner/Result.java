@@ -1,5 +1,6 @@
 package mx.org.banxico.sisal.scanner;
 
+import java.util.List;
 import java.util.logging.Logger;
 import mx.org.banxico.sisal.entities.Software;
 import mx.org.banxico.sisal.parser.entidades.CVE;
@@ -23,6 +24,7 @@ public class Result implements java.io.Serializable {
      */
     private CVE vulnerabilidad;
     private Software sw;
+    private List<Software> swList;
 
     /**
      * Constructor
@@ -79,7 +81,8 @@ public class Result implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
+        //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
+        return vulnerabilidad.getName() + "/" + sw.getNombre();
     }
 
     @Override
@@ -106,6 +109,14 @@ public class Result implements java.io.Serializable {
             return false;
         }
         return true;
+    }
+
+    public List<Software> getSwList() {
+        return swList;
+    }
+
+    public void setSwList(List<Software> swList) {
+        this.swList = swList;
     }
 
 }
