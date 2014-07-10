@@ -386,14 +386,14 @@ Id,Fabricante,Nombre,Version,Tipo,EndofLife,Grupo,Responsable
 385,OpenBSD,OpenSSH 3.x,3.x,2,-1,Linux Mandrake 10.6,ND
 386,OpenBSD,OpenSSH 5.x,5.x,2,-1,AIX,ND
 387,OpenBSD,OpenSSH 5.x,5.x,2,-1,AIX 6x,ND
-388,OpenBSD,OpenSSL 0.x,0.x,2,-1,redhat,ND
-389,OpenBSD,OpenSSL 0.x,0.x,2,-1,Linux Gentoo,ND
-390,OpenBSD,OpenSSL 0.x,0.x,2,-1,Linux Mandrake 9.9,ND
-391,OpenBSD,OpenSSL 0.x,0.x,2,-1,Linux Mandrake 10.7,ND
-392,OpenBSD,OpenSSL 0.x,0.x,2,-1,AIX,ND
-393,OpenBSD,OpenSSL 0.x,0.x,2,-1,AIX 6x,ND
-394,OpenBSD,OpenSSL 0.x,0.x,2,-1,SW_top20,ND
-395,OpenBSD,OpenSSL 1.x,1.x,2,-1,SW_top20,ND
+388,OpenSSL,OpenSSL 0.x,0.x,2,-1,redhat,ND
+389,OpenSSL,OpenSSL 0.x,0.x,2,-1,Linux Gentoo,ND
+390,OpenSSL,OpenSSL 0.x,0.x,2,-1,Linux Mandrake 9.9,ND
+391,OpenSSL,OpenSSL 0.x,0.x,2,-1,Linux Mandrake 10.7,ND
+392,OpenSSL,OpenSSL 0.x,0.x,2,-1,AIX,ND
+393,OpenSSL,OpenSSL 0.x,0.x,2,-1,AIX 6x,ND
+394,OpenSSL,OpenSSL 0.x,0.x,2,-1,SW_top20,ND
+395,OpenSSL,OpenSSL 1.x,1.x,2,-1,SW_top20,ND
 396,Oracle Corporation,Oracle Database 8.x,8.x,2,-1,Solaris,ND
 397,Oracle Corporation,Oracle Enterprise Manager 10.x,10.x,2,-1,AIX,ND
 398,Oracle Corporation,Oracle Enterprise Manager 10.x,10.x,2,-1,AIX 6x,ND
