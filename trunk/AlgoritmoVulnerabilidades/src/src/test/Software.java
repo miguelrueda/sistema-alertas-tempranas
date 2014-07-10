@@ -1,5 +1,7 @@
 package src.test;
 
+import java.util.Objects;
+
 public class Software implements java.io.Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -98,6 +100,36 @@ public class Software implements java.io.Serializable {
 
     public void setAnalistaResponsable(String AnalistaResponsable) {
         this.AnalistaResponsable = AnalistaResponsable;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.fabricante);
+        hash = 89 * hash + Objects.hashCode(this.nombre);
+        hash = 89 * hash + Objects.hashCode(this.version);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Software other = (Software) obj;
+        if (!Objects.equals(this.fabricante, other.fabricante)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

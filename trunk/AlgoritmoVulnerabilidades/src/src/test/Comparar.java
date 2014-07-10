@@ -173,56 +173,91 @@ public class Comparar {
         List<Result> listafinal = new ArrayList<>();
         int ib = 0, total = 0;
         List<Software> swlist = new ArrayList<>();
-        System.out.println("***Lista Instanciada");
+        //System.out.println("***Lista Instanciada");
         for (int i = 0; i < nueva.size(); i++) {
             Result actual = nueva.get(i);
             Result siguiente = new Result();
             Result nuevo = new Result();
             if ((i + 1) < nueva.size()) {
                 siguiente = nueva.get(i + 1);
-                System.out.println("Actual: " + actual.getVulnerabilidad().getName() + " - Siguiente:" + siguiente.getVulnerabilidad().getName());
+                //System.out.println("Actual: " + actual.getVulnerabilidad().getName() + " - Siguiente:" + siguiente.getVulnerabilidad().getName());
                 if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
-                    System.out.println("SW Actual: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
+                    //System.out.println("SW Actual: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
                     swlist.add(actual.getSw());
-                    System.out.println("Aumentando  en 1");
+                    //System.out.println("Aumentando  en 1");
                     ib++;
                 } else {
-                    System.out.println("SW: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
+                    //System.out.println("SW: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
                     swlist.add(actual.getSw());
-                    System.out.println("Aumentar en 1");
+                    //System.out.println("Aumentar en 1");
                     ib++;
-                    System.out.println("Añadir swlist");
-                    System.out.println("Agregar: " + actual.getVulnerabilidad().getName());
+                    //System.out.println("Añadir swlist");
+                    //System.out.println("Agregar: " + actual.getVulnerabilidad().getName());
                     nuevo.setVulnerabilidad(actual.getVulnerabilidad());
                     nuevo.setSwList(swlist);
-                    System.out.println("IB: " + swlist.size());
+                    //System.out.println("IB: " + swlist.size());
                     listafinal.add(nuevo);
                     ib = 0;
-                    System.out.println("Reiniciando Conteo");
+                    //System.out.println("Reiniciando Conteo");
                     total++;
                     swlist = new ArrayList<>();
-                    System.out.println("***Lista Instanciada");
+                   //System.out.println("***Lista Instanciada");
                 }
             } else if (i < nueva.size()) {
-                System.out.println("SW: " + actual.getSw().getNombre());
+                //System.out.println("SW: " + actual.getSw().getNombre());
                 swlist.add(actual.getSw());
-                System.out.println("Añadir swlist");
-                System.out.println("Agregar: " + actual.getVulnerabilidad().getName());
+                //System.out.println("Añadir swlist");
+                //System.out.println("Agregar: " + actual.getVulnerabilidad().getName());
                 nuevo.setVulnerabilidad(actual.getVulnerabilidad());
                 nuevo.setSwList(swlist);
-                System.out.println("IB: " + swlist.size());
+                //System.out.println("IB: " + swlist.size());
                 listafinal.add(nuevo);
                 total++;
             }
         }
-        System.out.println("Total: " + total);
+        /*
+        System.out.println("Total: " + listafinal.size());
         for (Result res : listafinal) {
             System.out.println(res);
             List<Software> swlistt = res.getSwList();
+            int swaux = 0 ;
             for (Software software : swlistt) {
                 System.out.println(software.getNombre());
+                swaux++;
             }
+            System.out.println("Total de SWS: " + swaux);
+            swaux = 0;
         }
+        */
+        for (Result res : listafinal) {
+            Set<Software> difs = new LinkedHashSet<>();
+            Set<Software> dups = new LinkedHashSet<>();
+            List<Software> swslist = res.getSwList();
+            for (Software sw : swslist) {
+                if (difs.contains(sw)) {
+                    dups.add(sw);
+                } else {
+                    difs.add(sw);
+                }
+            }
+            List<Software> resSw = new ArrayList<>();
+            resSw.addAll(difs);
+            res.setSwList(resSw);
+        }
+        System.out.println("Total: " + listafinal.size());
+        for (Result res : listafinal) {
+            System.out.println(res);
+            List<Software> swslist1 = res.getSwList();
+            int swaux = 0 ;
+            for (Software sw : swslist1) {
+                System.out.println(sw.getNombre());
+                swaux++;
+            }
+            System.out.println("Total de SWS: " + swaux);
+            swaux = 0;
+        }
+        
+        
         //Convertir la lista de sw a set y filtrar 
         /*
          int auxT = 0;
