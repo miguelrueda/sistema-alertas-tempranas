@@ -172,29 +172,36 @@ public class Comparar {
         nueva.addAll(items);
         List<Result> listafinal = new ArrayList<>();
         int ib = 0, total = 0;
+        List<Software> swlist = new ArrayList<>();
+        System.out.println("***Lista Instanciada");
         for (int i = 0; i < nueva.size(); i++) {
-            Result nuevo = new Result();
             Result actual = nueva.get(i);
             Result siguiente = new Result();
-            List<Software> swlist = new ArrayList<>();
-
+            Result nuevo = new Result();
             if ((i + 1) < nueva.size()) {
                 siguiente = nueva.get(i + 1);
                 System.out.println("Actual: " + actual.getVulnerabilidad().getName() + " - Siguiente:" + siguiente.getVulnerabilidad().getName());
                 if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
                     System.out.println("SW Actual: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
                     swlist.add(actual.getSw());
+                    System.out.println("Aumentando  en 1");
                     ib++;
                 } else {
                     System.out.println("SW: " + actual.getSw().getNombre() + " a la lista: " + actual.getVulnerabilidad().getName());
                     swlist.add(actual.getSw());
+                    System.out.println("Aumentar en 1");
+                    ib++;
                     System.out.println("Añadir swlist");
                     System.out.println("Agregar: " + actual.getVulnerabilidad().getName());
                     nuevo.setVulnerabilidad(actual.getVulnerabilidad());
                     nuevo.setSwList(swlist);
                     System.out.println("IB: " + swlist.size());
                     listafinal.add(nuevo);
+                    ib = 0;
+                    System.out.println("Reiniciando Conteo");
                     total++;
+                    swlist = new ArrayList<>();
+                    System.out.println("***Lista Instanciada");
                 }
             } else if (i < nueva.size()) {
                 System.out.println("SW: " + actual.getSw().getNombre());
@@ -209,6 +216,14 @@ public class Comparar {
             }
         }
         System.out.println("Total: " + total);
+        for (Result res : listafinal) {
+            System.out.println(res);
+            List<Software> swlistt = res.getSwList();
+            for (Software software : swlistt) {
+                System.out.println(software.getNombre());
+            }
+        }
+        //Convertir la lista de sw a set y filtrar 
         /*
          int auxT = 0;
          for (int i = 0; i < nueva.size(); i++) {
