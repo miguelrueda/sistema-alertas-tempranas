@@ -76,8 +76,27 @@
                                                 <c:forEach var="res" items="${resultados}">
                                                     <tr>
                                                         <td>${res.vulnerabilidad.name}</td>
-                                                        <td>${res.sw.nombre}</td>
-                                                        <td>${res.vulnerabilidad.severity}</td>
+                                                        <td>
+                                                            <table cellspacing="0" cellpadding="0" style="border: none">
+                                                                <c:forEach var="sw" items="${res.swList}">
+                                                                    <tr><td>${sw.nombre}</td></tr>
+                                                                </c:forEach>
+                                                            </table>
+                                                        </td>
+                                                        <c:choose>
+                                                            <c:when test="${res.vulnerabilidad.severity eq 'High'}">
+                                                                <td>Alta</td>
+                                                            </c:when>
+                                                            <c:when test="${res.vulnerabilidad.severity eq 'Medium'}">
+                                                                <td>Media</td>
+                                                            </c:when>
+                                                                <c:when test="${res.vulnerabilidad.severity eq 'Low'}">
+                                                                <td>Baja</td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td>Sin Definir</td>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3">${res.vulnerabilidad.description}</td>

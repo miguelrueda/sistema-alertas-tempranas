@@ -220,15 +220,10 @@ public class Software implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + (this.idSoftware != null ? this.idSoftware.hashCode() : 0);
-        hash = 37 * hash + (this.fabricante != null ? this.fabricante.hashCode() : 0);
-        hash = 37 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
-        hash = 37 * hash + (this.version != null ? this.version.hashCode() : 0);
-        hash = 37 * hash + (this.tipo != null ? this.tipo.hashCode() : 0);
-        hash = 37 * hash + (this.endoflife != null ? this.endoflife.hashCode() : 0);
-        hash = 37 * hash + (this.UAResponsable != null ? this.UAResponsable.hashCode() : 0);
-        hash = 37 * hash + (this.AnalistaResponsable != null ? this.AnalistaResponsable.hashCode() : 0);
+        int hash = 3;
+        hash = 61 * hash + (this.fabricante != null ? this.fabricante.hashCode() : 0);
+        hash = 61 * hash + (this.nombre != null ? this.nombre.hashCode() : 0);
+        hash = 61 * hash + (this.version != null ? this.version.hashCode() : 0);
         return hash;
     }
 
@@ -241,9 +236,6 @@ public class Software implements java.io.Serializable {
             return false;
         }
         final Software other = (Software) obj;
-        if (this.idSoftware != other.idSoftware && (this.idSoftware == null || !this.idSoftware.equals(other.idSoftware))) {
-            return false;
-        }
         if ((this.fabricante == null) ? (other.fabricante != null) : !this.fabricante.equals(other.fabricante)) {
             return false;
         }
@@ -251,18 +243,6 @@ public class Software implements java.io.Serializable {
             return false;
         }
         if ((this.version == null) ? (other.version != null) : !this.version.equals(other.version)) {
-            return false;
-        }
-        if (this.tipo != other.tipo && (this.tipo == null || !this.tipo.equals(other.tipo))) {
-            return false;
-        }
-        if (this.endoflife != other.endoflife && (this.endoflife == null || !this.endoflife.equals(other.endoflife))) {
-            return false;
-        }
-        if ((this.UAResponsable == null) ? (other.UAResponsable != null) : !this.UAResponsable.equals(other.UAResponsable)) {
-            return false;
-        }
-        if ((this.AnalistaResponsable == null) ? (other.AnalistaResponsable != null) : !this.AnalistaResponsable.equals(other.AnalistaResponsable)) {
             return false;
         }
         return true;
