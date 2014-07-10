@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -165,8 +164,67 @@ public class ScannerBean implements java.io.Serializable {
                 diferentes.add(result);
             }
         }
+        LOG.log(Level.INFO, "La lista original contiene: {0} elementos.", diferentes.size());
+
+        List<Result> nueva = new ArrayList<Result>();   //nueva --> lista diferentes
+        nueva.addAll(diferentes);
+        List<Result> listafinal = new ArrayList<Result>();
+        List<Software> swlist = new ArrayList<Software>();  //swlist --> addswlist
+        for (int i = 0; i < nueva.size(); i++) {
+            Result actual = nueva.get(i);
+            Result siguiente = new Result();
+            Result nuevo = new Result();
+            if ((i + 1) < nueva.size()) {
+                siguiente = nueva.get(i + 1);
+                if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
+                    swlist.add(actual.getSw());
+                } else {
+                    swlist.add(actual.getSw());
+                    nuevo.setVulnerabilidad(actual.getVulnerabilidad());
+                    nuevo.setSwList(swlist);
+                    listafinal.add(nuevo);
+                    LOG.log(Level.INFO, "Agregada la vulnerabilidad: {0} con: {1} SWs", new Object[]{nuevo.getVulnerabilidad().getName(), nuevo.getSwList().size()});
+                    swlist = new ArrayList<Software>();
+                }
+            } else if (i < nueva.size()) {
+                swlist.add(actual.getSw());
+                nuevo.setVulnerabilidad(actual.getVulnerabilidad());
+                nuevo.setSwList(swlist);
+                listafinal.add(nuevo);
+                LOG.log(Level.INFO, "Agregada la vulnerabilidad: {0} con: {1} SWs", new Object[]{nuevo.getVulnerabilidad().getName(), nuevo.getSwList().size()});
+            }
+        } // for
+        LOG.log(Level.INFO, "La lista final tiene: {0} elementos", listafinal.size());
+        duplicados = new LinkedHashSet<Result>();
+        diferentes = new LinkedHashSet<Result>();
+        for (Result res : listafinal) {
+            if (diferentes.contains(res)) {
+                duplicados.add(res);
+            } else {
+                diferentes.add(res);
+            }
+        }
         return diferentes;
     }
+    /*
+     Filtrar SW
+    
+     for (Result res : listafinal) {
+     Set<Software> difs = new LinkedHashSet<>();
+     Set<Software> dups = new LinkedHashSet<>();
+     List<Software> swslist = res.getSwList();
+     for (Software sw : swslist) {
+     if (difs.contains(sw)) {
+     dups.add(sw);
+     } else {
+     difs.add(sw);
+     }
+     }
+     List<Software> resSw = new ArrayList<>();
+     resSw.addAll(difs);
+     res.setSwList(resSw);
+     }
+     */
 
     /**
      * Método que realiza el escaneo a partir de las fecha ingresadas por el

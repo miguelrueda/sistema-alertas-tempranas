@@ -1,5 +1,6 @@
 package mx.org.banxico.sisal.scanner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import mx.org.banxico.sisal.entities.Software;
@@ -30,6 +31,7 @@ public class Result implements java.io.Serializable {
      * Constructor
      */
     public Result() {
+        swList = new ArrayList<Software>();
     }
 
     /**
@@ -41,6 +43,17 @@ public class Result implements java.io.Serializable {
     public Result(CVE vulnerabilidad, Software sw) {
         this.vulnerabilidad = vulnerabilidad;
         this.sw = sw;
+    }
+
+    /**
+     * Constructor con parámetros
+     *
+     * @param vulnerabilidad referencia de la vulnerabilidad
+     * @param swList lista de software vulnerable
+     */
+    public Result(CVE vulnerabilidad, List<Software> swList) {
+        this.vulnerabilidad = vulnerabilidad;
+        this.swList = swList;
     }
 
     /**
@@ -79,10 +92,22 @@ public class Result implements java.io.Serializable {
         this.sw = sw;
     }
 
-    @Override
-    public String toString() {
-        //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
-        return vulnerabilidad.getName() + "/" + sw.getNombre();
+    /**
+     * Getter
+     *
+     * @return lista de software vulnerable
+     */
+    public List<Software> getSwList() {
+        return swList;
+    }
+
+    /**
+     * Setter
+     *
+     * @param swList lista de software vulnerable
+     */
+    public void setSwList(List<Software> swList) {
+        this.swList = swList;
     }
 
     @Override
@@ -102,21 +127,15 @@ public class Result implements java.io.Serializable {
             return false;
         }
         final Result other = (Result) obj;
-        if (this.sw != other.sw && (this.sw == null || !this.sw.equals(other.sw))) {
-            return false;
-        }
         if (this.vulnerabilidad != other.vulnerabilidad && (this.vulnerabilidad == null || !this.vulnerabilidad.equals(other.vulnerabilidad))) {
             return false;
         }
         return true;
     }
 
-    public List<Software> getSwList() {
-        return swList;
+    @Override
+    public String toString() {
+        //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
+        return vulnerabilidad.getName() + "/" + sw.getNombre();
     }
-
-    public void setSwList(List<Software> swList) {
-        this.swList = swList;
-    }
-
 }
