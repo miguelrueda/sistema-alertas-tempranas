@@ -40,8 +40,7 @@ public class SourcesDAO implements java.io.Serializable {
 
     public SourcesDAO() {
         //iniciarFuentes();
-        iniciarFuentesTemp();
-        /*
+        //iniciarFuentesTemp();
         conn = ConnectionFactory.getInstance().getConnection();
         if (conn != null) {
             LOG.log(Level.INFO, "Conexión con BD exitosa!");
@@ -49,7 +48,6 @@ public class SourcesDAO implements java.io.Serializable {
         } else {
             iniciarFuentesTemp();
         }
-        */
     }
 
     //TODO: Eliminar esté método
@@ -140,7 +138,6 @@ public class SourcesDAO implements java.io.Serializable {
 
     //public boolean editarFuente(FuenteApp fuente) {
     public boolean editarFuente(int id, String nombreN, String urlN) {
-        /*
         boolean res = false;
         try {
             conn = getConnection();
@@ -165,8 +162,7 @@ public class SourcesDAO implements java.io.Serializable {
             }
         }
         return res;
-        */
-        return true;
+        //return true;
     }
 
     public boolean eliminarFuente(int id) {
@@ -272,6 +268,7 @@ public class SourcesDAO implements java.io.Serializable {
             bw.close();
             br.close();
             res = true;
+            LOG.log(Level.INFO, "SourcesDAO->DescargarFuente() - Descarga Completada");
             actualizarFecha(id);
         } catch (MalformedURLException e) {
             LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
@@ -315,15 +312,18 @@ public class SourcesDAO implements java.io.Serializable {
 
     private void actualizarFecha(String id) {
         Integer idI = Integer.parseInt(id);
+        LOG.log(Level.INFO, "Voy a actualizar la fecha de: {0}", id);
         try {
             conn = getConnection();
+            LOG.log(Level.INFO, "Conexion establecida");
             pstmt = conn.prepareStatement(sqlUpdateDate);
             pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
             pstmt.setInt(2, idI);
-            pstmt.executeQuery();
+            LOG.log(Level.INFO, "Query-->" + sqlUpdateDate);
+            pstmt.executeUpdate();
             LOG.log(Level.INFO, "Fecha actualizada correctamente");
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage() + e.getSQLState());
         } finally {
             try {
                 if (pstmt != null) {
