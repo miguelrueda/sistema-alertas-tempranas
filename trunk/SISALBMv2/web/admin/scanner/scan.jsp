@@ -236,7 +236,7 @@
                                             </tbody>
                                         </table>
                                     </fieldset>
-                                    <input type="submit" value="Escanear" id="fullButton" />
+                                    <input type="submit" class="inputsubmit" value="Escanear" id="fullButton" />
                                     <br />
                                 </form>
                             </div>

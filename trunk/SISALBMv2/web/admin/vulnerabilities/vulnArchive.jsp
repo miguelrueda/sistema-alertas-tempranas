@@ -13,6 +13,8 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
             $(document).ready(function() {
+                $("#resultsdiv").hide();
+                $("#searchkey").val("");
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
@@ -29,6 +31,58 @@
                         }
                     });
                     return false;
+                });
+                /*
+                 $("#searchkey").autocomplete({
+                 source: function(request, response) {
+                 $.ajax({
+                 url: '/sisalbm/admin/vulnerability.controller?action=search',
+                 type: 'GET',
+                 data: {
+                 term: request.term
+                 },
+                 dataType: "json",
+                 success: function(data) {
+                 response(data);
+                 }
+                 });
+                 }
+                 });*/
+                $("#searchbutton").on("click", function() {
+                    var val = $("#searchkey").val();
+                    $.ajax({
+                        url: '/sisalbm/admin/vulnerability.controller?action=search',
+                        type: 'GET',
+                        data: "key=" + val,
+                        success: function(result) {
+                            $("#content").hide();
+                            $("#resultsdiv").show();
+                            if (result === 'Not found') {
+                                //alert("Mensaje");
+                                $("#resultbody").html(result);
+                                $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro la vulnerabilidad.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#resultbody").html(result);
+                            }
+
+                        }
+                    });
+                });
+                $("#closesearch").on("click", function() {
+                    $("#content").show();
+                    $("#resultsdiv").hide();
+                    $("#searchkey").val("");
                 });
             });
         </script>
@@ -48,6 +102,35 @@
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <div id="page_title">Archivo de Vulnerabilidades</div>
+                        <br />
+                        <div class="searchdiv">
+                            <form class="searchform">
+                                <input id="searchkey" class="searchinput" type="text" placeholder="CVE-2014-XXXX" />
+                                <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
+                            </form>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <div id="resultsdiv">
+                            <div class="datagrid">
+                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 130px">Nombre</th>
+                                            <th>Fecha de Publicación</th>
+                                            <th>Calificación</th>
+                                            <th>Criticidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultbody">
+                                    </tbody>
+                                </table>
+                                <br />
+                                <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
+                                <br />
+                            </div>
+                        </div>
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
@@ -94,7 +177,7 @@
                                                         </c:when>
                                                         <c:when test="${currentpage lt arnoOfPages}">
                                                             <td><a href="vulnerability.controller?action=view&tipo=2&page=${i}" class="page">${i}</a></td>
-                                                        </c:when>
+                                                            </c:when>
                                                         </c:choose>
                                                     </c:when>
                                                 </c:choose>
@@ -112,8 +195,11 @@
                                 <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
                         </div>
+
                     </div>
                 </div>
+            </div>
+            <div id="dialog-message">
             </div>
         </div>
     </body>

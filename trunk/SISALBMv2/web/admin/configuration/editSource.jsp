@@ -197,7 +197,7 @@
                 </div>
             </div>
             <div id="dialog-message">
-            </div>                                                           
+            </div>
         </div>
 
     </body>
