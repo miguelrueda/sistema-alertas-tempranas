@@ -325,15 +325,15 @@ Id,Fabricante,Nombre,Version,Tipo,EndofLife,Grupo,Responsable
 324,Microsoft,Microsoft Windows Media Player 11.x,11.x,2,-1,ETB,ND
 325,Microsoft,Microsoft Windows Media Player 11.x,11.x,2,-1,DGTI,ND
 326,Microsoft,Microsoft Windows Mobile 6.x,6.x,1,-1,Windows Mobile,ND
-327,Microsoft,Microsoft Windows Server 2003 Enterprise Edition,2003,1,-1,Microsoft Windows Server 2003 Enterprise Edition,ND
-328,Microsoft,Microsoft Windows Server 2003 Enterprise Edition,2003,1,-1,Microsoft Windows Server XXXX,ND
-329,Microsoft,Microsoft Windows Server 2003 Standard Edition,2003,1,-1,OASR,ND
-330,Microsoft,Microsoft Windows Server 2003 Standard Edition,2003,1,-1,Trend,ND
-331,Microsoft,Microsoft Windows Server 2003 Standard Edition,2003,1,-1,Microsoft Windows Server XXXX,ND
-332,Microsoft,Microsoft Windows Server 2003 Standard Edition,2003,1,-1,Servidores OSI,ND
-333,Microsoft,Microsoft Windows Server 2003 Standard Edition,2003,1,-1,Websense consola,ND
-334,Microsoft,Microsoft Windows Server 2008,2008,1,-1,OASR NEW OS,ND
-335,Microsoft,Microsoft Windows Server 2008,2008,1,-1,Microsoft Windows Server XXXX,ND
+327,Microsoft,Microsoft Windows Server 2003 Enterprise Edition,sp2,1,-1,Microsoft Windows Server 2003 Enterprise Edition,ND
+328,Microsoft,Microsoft Windows Server 2003 Enterprise Edition,sp2,1,-1,Microsoft Windows Server XXXX,ND
+329,Microsoft,Microsoft Windows Server 2003 Standard Edition,sp2,1,-1,OASR,ND
+330,Microsoft,Microsoft Windows Server 2003 Standard Edition,sp2,1,-1,Trend,ND
+331,Microsoft,Microsoft Windows Server 2003 Standard Edition,sp2,1,-1,Microsoft Windows Server XXXX,ND
+332,Microsoft,Microsoft Windows Server 2003 Standard Edition,sp2,1,-1,Servidores OSI,ND
+333,Microsoft,Microsoft Windows Server 2003 Standard Edition,sp2,1,-1,Websense consola,ND
+334,Microsoft,Microsoft Windows Server 2008,sp1,1,-1,OASR NEW OS,ND
+335,Microsoft,Microsoft Windows Server 2008,sp1,1,-1,Microsoft Windows Server XXXX,ND
 336,Microsoft,Microsoft Windows Server 2012,2012,1,-1,Microsoft Windows Server XXXX,ND
 337,Microsoft,Microsoft Windows Server Update Services (WSUS) 2.x,2.x,2,-1,Microsoft Windows Server XXXX,ND
 338,Microsoft,Microsoft Windows Server Update Services (WSUS) 3.x,3.x,2,-1,Microsoft Windows Server XXXX,ND
