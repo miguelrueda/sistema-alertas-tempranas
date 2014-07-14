@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.org.banxico.sisal.dao.SoftwareDAO;
-import mx.org.banxico.sisal.entities.Software;
 import mx.org.banxico.sisal.scanner.Result;
 import mx.org.banxico.sisal.scanner.ScannerBean;
 
@@ -51,21 +49,24 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
             if (action.equalsIgnoreCase("retrieve")) {
                 String val = (String) request.getParameter("val");
                 if (val.equalsIgnoreCase("ua")) {
-                    //TODO: descomentar la linea siguiente
-                    //List<String> uasList = swdao.obtenerUAs();
-                    //List<String> uasList = swdao.obtenerUAsTemp();
-                    Set<String> uasList = swdao.obtenerUAsTemp();
+                    List<String> uasList = swdao.obtenerUAs();
                     out.println("<option value='0'>Todos los Grupos/Todas las UA</option>");
                     for (String ua : uasList) {
                         out.println("<option value='" + ua + "'>" + ua + "</option>");
                     }
                 } else if (val.equalsIgnoreCase("vendor")) {
-                    //TODO: descomentar la linea siguiente
-                    //List<String> vendorList = swdao.obtenerFabricantes();
-                    Set<String> vendorList = swdao.obtenerFabricantesTemp();
-                    out.println("<option value='0'>Seleccionar Fabricante</option>");
-                    for (String vendor : vendorList) {
-                        out.println("<option value='" + vendor + "'>" + vendor + "</option>");
+                    String retVendor = request.getParameter("vendor");
+                    if (retVendor.equals("0")) {    //Obtener todos
+                        List<String> vendorList = swdao.obtenerFabricantes();
+                        out.println("<option value='0'>Seleccionar Fabricante</option>");
+                        for (String vendor : vendorList) {
+                            out.println("<option value='" + vendor + "'>" + vendor + "</option>");
+                        }
+                    } else { //Obtener específico
+                        List<String> vendorList = swdao.obtenerFabricantes(retVendor);
+                        for (String vendor : vendorList) {
+                            out.println("<option value='" + vendor + "'>" + vendor + "</option>");
+                        }
                     }
                 }
             } else if (action.equalsIgnoreCase("scan")) {
@@ -74,7 +75,6 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     String fecha = (String) request.getParameter("fechaF");
                     if (fecha.equalsIgnoreCase("full")) {
                         Set<Result> resultados = scannerService.doCompleteScan();
-                        LOG.log(Level.INFO, "Recib\u00ed: {0} elementos", resultados.size());
                         request.setAttribute("resultados", resultados);
                         request.setAttribute("noOfResults", resultados.size());
                     } else if (fecha.equalsIgnoreCase("partial")) {

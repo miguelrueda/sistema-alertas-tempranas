@@ -338,7 +338,7 @@ td > input[type=text].src {
 
 .searchdiv {
     max-width: 500px;
-    right: 40px;
+    right: 25%;
     position: absolute;
     padding: 10px 10px 10px 10px;
 }

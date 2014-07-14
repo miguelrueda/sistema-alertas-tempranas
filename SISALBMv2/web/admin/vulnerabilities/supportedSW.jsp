@@ -9,6 +9,48 @@
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#resultsdiv").hide();
+                $("#searchkey").val("");
+                $("#searchbutton").on("click", function() {
+                    var val = $("#searchkey").val();
+                    $.ajax({
+                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=swsearch',
+                        type: 'GET',
+                        data: "key=" + val,
+                        success: function(result) {
+                            $("#content").hide();
+                            $("#resultsdiv").show();
+                            if (result === '') {
+                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                $("#resultbody").html(notResult);
+                                $("#dialog-message").attr("title", "Software No Encontrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro el software.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#resultbody").html(result);
+                            }
+
+                        }
+                    });
+                });
+                $("#closesearch").on("click", function() {
+                    $("#content").show();
+                    $("#resultsdiv").hide();
+                    $("#searchkey").val("");
+                });
+            });
+        </script>
     </head>
     <body>
         <div id="page_container">
@@ -25,6 +67,35 @@
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <div id="page_title">Software Soportado</div>
+                        <br />
+                        <div class="searchdiv">
+                            <form class="searchform">
+                                <input id="searchkey" class="searchinput" type="text" placeholder="Nombre del SW" />
+                                <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
+                            </form>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <div id="resultsdiv">
+                            <div class="datagrid">
+                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                    <thead>
+                                        <tr>
+                                            <th>Fabricante</th>
+                                            <th>Software</th>
+                                            <th>Versión</th>
+                                            <th>Grupo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultbody">
+                                    </tbody>
+                                </table>
+                                <br />
+                                <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
+                                <br />
+                            </div>
+                        </div>
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" id="tablestyle">
@@ -33,7 +104,7 @@
                                     <th>Software</th>
                                     <th>Version</th>
                                     <!--<th>Tipo</th>-->
-                                    <th>UA Responsable</th>
+                                    <th>Grupo</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
