@@ -51,15 +51,16 @@
                 $("#searchbutton").on("click", function() {
                     var val = $("#searchkey").val();
                     $.ajax({
-                        url: '/sisalbm/admin/vulnerability.controller?action=search',
+                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=vulnsearch',
                         type: 'GET',
                         data: "key=" + val,
                         success: function(result) {
                             $("#content").hide();
                             $("#resultsdiv").show();
-                            if (result === 'Not found') {
+                            if (result === '') {
                                 //alert("Mensaje");
-                                $("#resultbody").html(result);
+                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                $("#resultbody").html(notResult);
                                 $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "No se encontro la vulnerabilidad.</p>";
@@ -195,7 +196,6 @@
                                 <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

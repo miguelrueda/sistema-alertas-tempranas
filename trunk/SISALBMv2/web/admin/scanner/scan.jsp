@@ -94,7 +94,7 @@
                     $("#vendordiv").hide();
                     $(".fechaCustom").hide();
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
-                    $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
+                    //$("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
                     $("input:radio[name=fab]").on("click", function() {
                         var fab = $("input:radio[name=fab]:checked").val();
                         if (fab === 'single') {
@@ -130,6 +130,18 @@
                     });
                 }
             }
+            function cargarFabricantes() {
+                var ua = $("#UA").val();
+                $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor:ua});
+            }
+            
+              function showProducts(){
+                //obtiene los objetos productCode, 
+                var code=$("#productCode").val(); //.. y se obtiene el valor
+                //llama al servlet con el parametro seleccionado
+                $("#product").load("ProductServlet", {productCode:code})
+            }
+
         </script>
     </head>
     <body>
@@ -265,7 +277,7 @@
                                                         <label for="UA">Seleccionar Grupo/UA:</label>
                                                     </td>
                                                     <td>
-                                                        <select name="UA" id="UA"></select>
+                                                        <select name="UA" id="UA" onchange="cargarFabricantes()"></select>
                                                     </td>
                                                 </tr>
                                                 <tr>

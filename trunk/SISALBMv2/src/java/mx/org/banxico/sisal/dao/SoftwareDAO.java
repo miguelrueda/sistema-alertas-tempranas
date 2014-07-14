@@ -36,14 +36,15 @@ public class SoftwareDAO implements java.io.Serializable {
     private int noOfRecords;
 
     public SoftwareDAO() {
-        iniciarLista();
+        //iniciarLista();
         //Iniciar la conexión a BD AQUI
-        /**
-         * TODO: Descomentar esté código para la conexión a BD connection =
-         * ConnectionFactory.getInstance().getConnection(); if (connection !=
-         * null) { LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la
-         * BD"); cargarTodos(); }
-         */
+        connection = ConnectionFactory.getInstance().getConnection();
+        if (connection != null) {
+            LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+            cargarTodos();
+        } else {
+            iniciarLista();
+        }
     }
 
     private void cargarTodos() {
@@ -62,8 +63,7 @@ public class SoftwareDAO implements java.io.Serializable {
                 sw.setTipo(rs.getInt(5));
                 sw.setEndoflife(rs.getInt(6));
                 sw.setUAResponsable(rs.getString(7));
-                sw.setAnalistaResponsable(rs.getString(8));
-                LOG.log(Level.INFO, "Sw Agregado: {0}", sw.getIdSoftware());
+                sw.setAnalistaResponsable("ND");
                 swList.add(sw);
                 nr++;
             }
@@ -93,9 +93,14 @@ public class SoftwareDAO implements java.io.Serializable {
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
             + "WHERE idSoftware = ?";
     private static final String sqlDelete = "DELETE FROM Software WHERE idSoftware = ?";
-    private static final String sqlRetrieveAll = "SELECT * FROM Software";
-    private static final String sqlRetrieveUAs = "SELECT DISTINCT UAResponsable FROM Software ORDER BY UAResponsable";
+    private static final String sqlRetrieveAll = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre \n"
+            + "FROM Software s, Grupo g, Grupo_Software x \n"
+            + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo \n"
+            + "ORDER BY g.nombre";
+    private static final String sqlRetrieveUAs = "SELECT DISTINCT nombre FROM Grupo g ORDER BY g.nombre";
     private static final String sqlRetrieveVendors = "SELECT DISTINCT fabricante FROM Software ORDER BY fabricante";
+    private static final String sqlRetrieveVendorsByGroup = "SELECT DISTINCT s.fabricante FROM Software s, Grupo g, Grupo_Software x " +
+            "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo AND g.nombre LIKE ? ORDER BY s.fabricante ";
     /*
      * SQL LIMIT
      * --MySQL
@@ -153,7 +158,7 @@ public class SoftwareDAO implements java.io.Serializable {
         }
         return filtrarUAS(uas);
     }
-    
+
     private Set<String> filtrarUAS(List<String> uas) {
         Set<String> result = new LinkedHashSet<String>();
         Set<String> duplicados = new LinkedHashSet<String>();
@@ -179,6 +184,36 @@ public class SoftwareDAO implements java.io.Serializable {
         } catch (SQLException e) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
         }
+        try {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Excepci\u00f3n al cerrar el Statement: {0}", e.getMessage());
+        }
+        return vendors;
+    }
+
+    public List<String> obtenerFabricantes(String vendor) {
+        List<String> vendors = new ArrayList<String>();
+        try {
+            pstmt = connection.prepareStatement(sqlRetrieveVendorsByGroup);
+            pstmt.setString(1, "%" + vendor + "%");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                vendors.add(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        }
+        try {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Excepci\u00f3n al cerrar el Statement: {0}", e.getMessage());
+        }
         return vendors;
     }
 
@@ -196,9 +231,9 @@ public class SoftwareDAO implements java.io.Serializable {
         }
         return filtrarVendors(vendors);
     }
-    
+
     private Set<String> filtrarVendors(List<String> vendors) {
-         Set<String> result = new LinkedHashSet<String>();
+        Set<String> result = new LinkedHashSet<String>();
         Set<String> duplicados = new LinkedHashSet<String>();
         for (String vendor : vendors) {
             if (duplicados.contains(vendor)) {
@@ -270,7 +305,6 @@ public class SoftwareDAO implements java.io.Serializable {
         String[] record;
         try {
             File file = new File(SoftwareDAO.class.getResource(PRODSFILE).getFile());
-            LOG.log(Level.INFO, "Archivo Leido Correctamente");
             CSVReader reader = new CSVReader(new FileReader(file));
             reader.readNext();
             int nr = 0;
@@ -312,6 +346,19 @@ public class SoftwareDAO implements java.io.Serializable {
         }
     }
 
-    
+    public List<Software> searchSoftware(String key) {
+        List<Software> found = new ArrayList<Software>();
+        for (Software sw : swList) {
+            if (sw.getFabricante().equalsIgnoreCase(key) || sw.getNombre().equalsIgnoreCase(key) 
+                    || sw.getFabricante().toLowerCase().startsWith(key.toLowerCase()) || sw.getNombre().toLowerCase().startsWith(key.toLowerCase())
+                    || sw.getNombre().toLowerCase().contains(key.toLowerCase())) {
+                found.add(sw);
+            }
+        }
+        if (!found.isEmpty()) {
+            return found;
+        }
+        return new ArrayList<Software>();
+    }
 
 }
