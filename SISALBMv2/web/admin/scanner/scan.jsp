@@ -94,7 +94,7 @@
                     $("#vendordiv").hide();
                     $(".fechaCustom").hide();
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
-                    //$("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor");
+                    $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor:0});
                     $("input:radio[name=fab]").on("click", function() {
                         var fab = $("input:radio[name=fab]:checked").val();
                         if (fab === 'single') {

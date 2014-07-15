@@ -151,7 +151,20 @@
                                                 <td>${vuln.name}</td>
                                                 <td>${parsedDate}</td>
                                                 <td>${vuln.CVSS.score}</td>
-                                                <td>${vuln.severity}</td>
+                                                <c:choose>
+                                                    <c:when test="${vuln.severity eq 'High'}">
+                                                        <td>Alta</td>
+                                                    </c:when>
+                                                    <c:when test="${vuln.severity eq 'Medium'}">
+                                                        <td>Media</td>
+                                                    </c:when>
+                                                    <c:when test="${vuln.severity eq 'Low'}">
+                                                        <td>Baja</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td>${vuln.severity}</td>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <td>
                                                     <a href="vulnerabilities/vulnDetail.jsp?tipo=2&name=${vuln.name}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />

@@ -18,13 +18,13 @@ import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
 import mx.org.banxico.sisal.entities.Software;
 
-public class SoftwareDAO implements java.io.Serializable {
+public class SoftwareDAO { //implements java.io.Serializable {
 
     /**
      * Atributos de serialización y Logger
      */
     private static final Logger LOG = Logger.getLogger(SoftwareDAO.class.getName());
-    private static final long serialVersionUID = -1L;
+    //private static final long serialVersionUID = -1L;
     /**
      * Atributos del DAO
      */
@@ -351,7 +351,8 @@ public class SoftwareDAO implements java.io.Serializable {
         for (Software sw : swList) {
             if (sw.getFabricante().equalsIgnoreCase(key) || sw.getNombre().equalsIgnoreCase(key) 
                     || sw.getFabricante().toLowerCase().startsWith(key.toLowerCase()) || sw.getNombre().toLowerCase().startsWith(key.toLowerCase())
-                    || sw.getNombre().toLowerCase().contains(key.toLowerCase())) {
+                    || sw.getNombre().toLowerCase().contains(key.toLowerCase())
+                    || sw.getUAResponsable().toLowerCase().contains(key.toLowerCase())) {
                 found.add(sw);
             }
         }
