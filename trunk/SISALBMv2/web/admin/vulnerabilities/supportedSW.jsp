@@ -70,7 +70,7 @@
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
-                                <input id="searchkey" class="searchinput" type="text" placeholder="Nombre del SW" />
+                                <input id="searchkey" class="searchinput" type="text" placeholder="Nombre del SW de Grupo" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
                         </div>

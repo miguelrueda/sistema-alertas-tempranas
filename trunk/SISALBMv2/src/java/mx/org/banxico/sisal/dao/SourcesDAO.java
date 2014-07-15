@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,12 +23,12 @@ import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
 import mx.org.banxico.sisal.entities.FuenteApp;
 
-public class SourcesDAO implements java.io.Serializable {
+public class SourcesDAO { // implements java.io.Serializable {
 
     /**
      * Atributos de serialización y Logger
      */
-    private static final long serialVersionUID = -1L;
+    //private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SourcesDAO.class.getName());
     /**
      * Atributos del DAO
@@ -257,16 +258,28 @@ public class SourcesDAO implements java.io.Serializable {
             LOG.log(Level.INFO, "FilePath: {0}", filepath);
             String fileName = path + extraerNombre(url);
             File file = new File(fileName);
+            String nuevopath = file.getAbsolutePath();
+            LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
+            PrintWriter printWriter = null;
             if (!file.exists()) {
                 file.createNewFile();
+            } else if (file.exists()) {
+                file.delete();
             }
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            bw = new BufferedWriter(fw);
+            printWriter = new PrintWriter(new File(nuevopath));
+            StringBuilder buffer = new StringBuilder();
             while ((inputLine = br.readLine()) != null) {
-                bw.write(inputLine + "\n");
+                buffer.append(inputLine).append("\n");
             }
-            bw.close();
-            br.close();
+            printWriter.print(buffer);
+            //FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            //bw = new BufferedWriter(fw);
+            //while ((inputLine = br.readLine()) != null) {
+                //bw.write(inputLine + "\n");
+            //}
+            //bw.close();
+            //br.close();
+            printWriter.close();
             res = true;
             LOG.log(Level.INFO, "SourcesDAO->DescargarFuente() - Descarga Completada");
             actualizarFecha(id);

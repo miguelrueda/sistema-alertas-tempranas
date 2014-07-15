@@ -164,7 +164,6 @@ public class ScannerBean implements java.io.Serializable {
                 diferentes.add(result);
             }
         }
-        LOG.log(Level.INFO, "La lista original contiene: {0} elementos.", diferentes.size());
 
         List<Result> nueva = new ArrayList<Result>();   //nueva --> lista diferentes
         nueva.addAll(diferentes);
@@ -183,7 +182,6 @@ public class ScannerBean implements java.io.Serializable {
                     nuevo.setVulnerabilidad(actual.getVulnerabilidad());
                     nuevo.setSwList(swlist);
                     listafinal.add(nuevo);
-                    LOG.log(Level.INFO, "Agregada la vulnerabilidad: {0} con: {1} SWs", new Object[]{nuevo.getVulnerabilidad().getName(), nuevo.getSwList().size()});
                     swlist = new ArrayList<Software>();
                 }
             } else if (i < nueva.size()) {
@@ -191,10 +189,8 @@ public class ScannerBean implements java.io.Serializable {
                 nuevo.setVulnerabilidad(actual.getVulnerabilidad());
                 nuevo.setSwList(swlist);
                 listafinal.add(nuevo);
-                LOG.log(Level.INFO, "Agregada la vulnerabilidad: {0} con: {1} SWs", new Object[]{nuevo.getVulnerabilidad().getName(), nuevo.getSwList().size()});
             }
         } // for
-        LOG.log(Level.INFO, "La lista final tiene: {0} elementos", listafinal.size());
         duplicados = new LinkedHashSet<Result>();
         diferentes = new LinkedHashSet<Result>();
         for (Result res : listafinal) {
@@ -272,6 +268,10 @@ public class ScannerBean implements java.io.Serializable {
                             String name = vulnsw.getName().replace("_", " ");
                             if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
                                 for (Version version : vulnsw.getVersion()) {
+                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008") || name.equalsIgnoreCase("windows server 2012")) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    }
                                     if (version.getNumber().equals(sws.get(i).getVersion())) {    
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
@@ -286,6 +286,10 @@ public class ScannerBean implements java.io.Serializable {
                             String name = vulnsw.getName().replace("_", " ");
                             if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
                                 for (Version version : vulnsw.getVersion()) {
+                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008") || name.equalsIgnoreCase("windows server 2012")) {
+                                        Result nres = new Result(vuln, sws.get(i));
+                                        res.add(nres);
+                                    }
                                     if (version.getNumber().equals(sws.get(i).getVersion())) {
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);

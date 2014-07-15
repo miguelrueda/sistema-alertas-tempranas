@@ -9,6 +9,42 @@
         <link href="resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#dialog-message").hide();
+                $("#export").hide();
+                $("#okButton").hide();
+                $("#exportButton").click(function(e) {
+                    $("#okButton").show();
+                    $.ajax({
+                        url: '/sisalbm/scanner?action=export',
+                        type: 'GET',
+                        success: function(result) {
+                            $("#export").show();
+                            $("#export").html(result);
+                            /*
+                            $("#dialog-message").attr("title", "Información");
+                            var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left;margin0 7px 50px 0;'> </span>Descarga</p>";
+                            $("#dialog-message").html(content);
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Ok: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });*/
+                        }
+                    });
+                });
+                $("#okButton").click(function(e) {
+                    alert("Boton clickeado");
+                    $("#okButton").hide();
+                    $("#export").hide();
+                    $("#export").html("");
+                });
+            });
+        </script>
     </head>
     <body>
         <div id="page_container">
@@ -90,7 +126,7 @@
                                                             <c:when test="${res.vulnerabilidad.severity eq 'Medium'}">
                                                                 <td>Media</td>
                                                             </c:when>
-                                                                <c:when test="${res.vulnerabilidad.severity eq 'Low'}">
+                                                            <c:when test="${res.vulnerabilidad.severity eq 'Low'}">
                                                                 <td>Baja</td>
                                                             </c:when>
                                                             <c:otherwise>
@@ -105,8 +141,18 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <p>
+                                        <input type="submit" class="exportButton" id="exportButton" value="Versión Texto" /><br/>
+                                        <input type="submit" class="exportButton" id="okButton" value="Cerrar" />
+                                    </p>
+                                    <div id="export" style="max-width: 800px; display: block; margin-left: auto; margin-right: auto;">
+                                    </div>
                                 </c:when>
                             </c:choose>
+                            <br />
+                            <div id="dialog-message">
+                            </div>
+                            <br />
                         </div>
                     </div>
                 </div>
