@@ -115,6 +115,7 @@ nav ul {
     list-style: none;
     position: relative;
     display: inline-table;
+    z-index: 500;
 }
 
 nav ul:after {
@@ -337,7 +338,8 @@ td > input[type=text].src {
 }
 
 .searchdiv {
-    max-width: 500px;
+    max-width: 800px;
+    width: 800px;
     right: 25%;
     position: absolute;
     padding: 10px 10px 10px 10px;
@@ -368,4 +370,16 @@ td > input[type=text].src {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.searchform.searchinput {
+    border: 2px solid #FF0000;
+}
+
+.ui-dialog .ui-widget .ui-widget-content {
+    z-index: 999 !important;
+}
+
+.ui-front {
+    z-index: 999 !important;
 }
