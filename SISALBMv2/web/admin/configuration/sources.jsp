@@ -43,57 +43,73 @@
                     var tk = tokens[1].split("=");
                     //alert(tk[1]);
                     //alert("/sisalbm/admin/configuration.controller?action=download&" + param);
-
+                    //alert(param);
                     $.ajax({
-                        type: 'get',
+                        type: 'GET',
                         url: '/sisalbm/admin/configuration.controller?action=download',
                         data: param,
                         beforeSend: function() {
                             jQuery.noticeAdd({
-                                text: "Descargando el archivo:<br />" + tk[1] +
+                                text: "Procesando Descarga:" + //+ tk[1] + + 
                                         "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
-                                stay: true,
+                                stay: false,
                                 type: 'info'
                             });
                         },
                         success: function(result) {
                             //alert(result);
-                            if (result === 'OK') {
+                            var title = "";
+                            if (result === 'UPDATED') {
+                                $("#dialog-message").attr("title", "Referencia Actualizada");
+                                title = "Referencia Actualizada";
+                                var content = "<p><span class='ui-icon ui-icon-circle-minus' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La referencia está actualizada, no se requiere actualizar.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else if (result === 'OK') {
+                                title = "Descarga Exitosa";
                                 $("#dialog-message").attr("title", "Descarga Exitosa");
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "La descarga ha sido completada de forma exitosa.</p>";
                                 $("#dialog-message").html(content);
-                                /*
-                                 jQuery.noticeAdd({
-                                 text: 'La descarga se realizo exitosamente',
-                                 stay: true,
-                                 type: 'success'
-                                 });*/
+                                /*jQuery.noticeAdd({text: 'La descarga se realizo exitosamente',stay: true,type: 'success'});*/
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                             } else if (result === 'ERROR') {
+                                title = "Error de Descarga";
                                 $("#dialog-message").attr("title", "Error de Descarga");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "Ocurrio un error al realizar la descarga.</p>";
                                 $("#dialog-message").html(content);
                                 /*
-                                jQuery.noticeAdd({
-                                    text: 'Ocurrio un error al realizar la descarga',
-                                    stay: true,
-                                    type: 'error'
-                                });*/
-                            } else if (result === 'UPDATED') {
-                                $("#dialog-message").attr("title", "Referencia Actualizada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-minus' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "La referencia está actualizada, no se requiere actualizar.</p>";
-                                $("#dialog-message").html(content);
-                            }
-                            $("#dialog-message").dialog({
-                                modal: true,
-                                buttons: {
-                                    Ok: function() {
-                                        $(this).dialog("close");
+                                 jQuery.noticeAdd({
+                                 text: 'Ocurrio un error al realizar la descarga',
+                                 stay: true,
+                                 type: 'error'
+                                 });*/
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+                            //$("#dialog-message").attr("title", title);
                         },
                         error: function() {
                             jQuery.noticeAdd({
@@ -111,6 +127,7 @@
                     });
                 });
             });
+
         </script>
     </head>
     <body>
@@ -147,7 +164,7 @@
                                                     <tr>
                                                         <td>${src.nombre}</td>
                                                         <td id="dwnldurl">${src.url}</td>
-                                                        <td>${parsedDate}</td>
+                                                        <td id="fechaFuente">${parsedDate}</td>
                                                         <td>
                                                             <a href="configuration/editSource.jsp?id=${src.id}">
                                                                 <img src="../resources/images/edit.png" alt="editar" id="tableicon" />

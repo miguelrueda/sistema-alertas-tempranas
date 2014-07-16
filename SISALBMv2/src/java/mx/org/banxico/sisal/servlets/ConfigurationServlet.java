@@ -42,7 +42,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (!request.getParameter("action").equals("")) {
+        //if (!request.getParameter("action").equals("")) {
             String action = (String) request.getParameter("action");
             LOG.log(Level.INFO, "Procesando petici\u00f3n de configuraci\u00f3n de tipo: {0}", action);
             String nextJSP = "/admin/Index.html";
@@ -83,8 +83,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 }
                 view = getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);
-            }
-            if (action.equalsIgnoreCase("edit")) {
+            } else if (action.equalsIgnoreCase("edit")) {
                 String tipo = (String) request.getParameter("tipo");
                 int tipoI = Integer.parseInt(tipo);
                 LOG.log(Level.INFO, "Petici\u00f3n Edit de Tipo: {0}", tipoI);
@@ -114,31 +113,34 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                         }
                         break;
                 }
-            }
-            if (action.equalsIgnoreCase("download")) {
-                String id = (String) request.getParameter("id");
-                //TODO: Actualizar registro de URL (FECHA)
-                LOG.log(Level.INFO, "Editar el ID: {0}", id);
-                String url = (String) request.getParameter("url");
-                LOG.log(Level.INFO, "Petici\u00f3n Download de URL: {0}", url);
+            } else if (action.equalsIgnoreCase("download")) {
                 response.setContentType("text/plain");
                 response.setCharacterEncoding("UTF-8");
+                String id = (String) request.getParameter("id");
+                LOG.log(Level.INFO, "Actualizar la fuente: {0}", id);
+                String url = (String) request.getParameter("url");
+                LOG.log(Level.INFO, "Descargar la url: {0}", url);
                 Date regDate = dao.obtenerFechaActualizacion(id);
                 Date now = new Date();
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-                // Se esta intentando actualizar el  mismo día
+                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                LOG.log(Level.INFO, "Fecha del registro: {0}/Fecha actual:{1}", new Object[]{fmt.format(regDate), fmt.format(now)});
+                LOG.log(Level.INFO, "{0}", fmt.format(now).equals(fmt.format(regDate)));
                 if (fmt.format(now).equals(fmt.format(regDate))) {
+                    LOG.log(Level.INFO, "Fuente actualizada: {0}", id);
                     response.getWriter().write("UPDATED");
                 } else {
+                    //response.getWriter().write("NOT UPDATED");
                     boolean flag = dao.descargarFuente(id, url);
                     if (flag) {
+                        LOG.log(Level.INFO, "Descargar Fuente: {0}", id);
                         response.getWriter().write("OK");
-                    } else {
+                    } else { 
+                        LOG.log(Level.INFO, "Error en descarga: " + url);
                         response.getWriter().write("ERROR");
                     }
                 }
             }
-        }
+        //}
     }
 
     /**

@@ -9,8 +9,27 @@
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <style type="text/css">
+        </style>
         <script>
-            $(document).ready(function(){
+            $(document).ready(function() {
+                var dialog = $("#dialog-form");
+                $("#dialog-form").hide();
+                $("#addButton").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                    e.preventDefault();
+                    $("#dialog-form").dialog({
+                        resizable: false,
+                        height: 440,
+                        width: 500,
+                        modal: true,
+                        buttons: {
+                            'Agregar': addSoftware,
+                            Cancelar: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                });
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");
                 $("#searchbutton").on("click", function() {
@@ -50,6 +69,8 @@
                     $("#searchkey").val("");
                 });
             });
+
+
         </script>
     </head>
     <body>
@@ -70,7 +91,12 @@
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
-                                <input id="searchkey" class="searchinput" type="text" placeholder="Nombre del SW de Grupo" />
+                                <button type="submit" id="addButton" class="addbutton">
+                                    Agregar Software
+                                </button>
+                                <span class="espaciado" style="padding-left: 300px;">
+                                </span>
+                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW de Grupo" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
                         </div>
@@ -167,6 +193,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
