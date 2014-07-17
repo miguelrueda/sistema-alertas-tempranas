@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -49,7 +49,8 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      * 
      */
     
-    private Set<Result> exportSet;
+    private String scanGroup = "";
+    private StringBuilder exportBuffer;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -88,6 +89,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
             } else if (action.equalsIgnoreCase("scan")) {
                 response.setContentType("text/html;charset=UTF-8");
                 String tipo = (String) request.getParameter("tipo");
+                exportBuffer = new StringBuilder();
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
                     if (fecha.equalsIgnoreCase("full")) {
@@ -111,9 +113,21 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     String UA = (String) request.getParameter("UA");
                     if (UA.equalsIgnoreCase("0")) {
                         scannerService.setUA("0");
+                        //scanGroup = "Todos los Grupos";
+                        exportBuffer.append("<p>Resultado de Todos los Grupos</p>");
                     } else {
                         //Traer UA con SW DAo
                         scannerService.setUA(UA);
+                        request.setAttribute("grupo", UA);
+                        //scanGroup = UA;
+                        exportBuffer.append("<p>Resultado del Grupo: ").append(UA).append("</p>");
+                    }
+                    String onlyPublished = request.getParameter("onlypub");
+                    if (onlyPublished != null && onlyPublished.equalsIgnoreCase("onlypub")) {
+                        LOG.log(Level.INFO, "Buscar tambien en modificadas");
+                        scannerService.setModificadas(true);
+                    } else if (onlyPublished == null) {
+                        scannerService.setModificadas(false);
                     }
                     String fab = (String) request.getParameter("fab");
                     if (fab.equalsIgnoreCase("single")) {
@@ -150,9 +164,31 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         scannerService.setEdate(edate);
                     }
                     Set<Result> resultados = scannerService.doPartialScan();
+                    for (Result result : resultados) {
+                        String sev = result.getVulnerabilidad().getSeverity();
+                        String es_sev = "";
+                        if (sev.equalsIgnoreCase("high")) {
+                            es_sev = "Alta"; 
+                        } else if (sev.equalsIgnoreCase("medium")) {
+                            es_sev = "Media";
+                        } else if (sev.equalsIgnoreCase("low")) {
+                            es_sev = "Baja";
+                        } else {
+                            es_sev = "ND";
+                        }
+                        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                        exportBuffer.append("La vulnerabilidad <u>").append(result.getVulnerabilidad().getName()).append("</u> " + "publicada el ").append(fmt.format(result.getVulnerabilidad().getPublished())).append(" de gravedad: ").append(es_sev).append(" ");
+                        exportBuffer.append("puede afectar al Software: ");
+                        for (Software sw : result.getSwList()) {
+                            exportBuffer.append("<br /> + ").append(sw.getNombre());
+                        }
+                        exportBuffer.append("<br/>Descripción: ").append(result.getVulnerabilidad().getDescription()).append("<br />");
+                        exportBuffer.append("</p>");
+                    }
                     request.setAttribute("resultados", resultados);
                     request.setAttribute("noOfResults", resultados.size());
-                    exportSet = resultados;
+                    request.setAttribute("exportBuffer", exportBuffer);
+                    //exportSet = resultados;
                 } else {
                     response.getWriter().write("Error desconocido");
                 }
@@ -160,30 +196,26 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);
             } else if (action.equalsIgnoreCase("export")) {
-                response.setContentType("text/html;charset=UTF-8");
-                StringBuilder sb = new StringBuilder();
-                out.println("<p>");
-                for (Result result : exportSet) {
-                    String severity = "";
-                    if (result.getVulnerabilidad().getSeverity().equalsIgnoreCase("high")) {
-                        severity = "Alta";
-                    } else if (result.getVulnerabilidad().getSeverity().equalsIgnoreCase("medium")) {
-                        severity = "Media";
-                    } else if (result.getVulnerabilidad().getSeverity().equalsIgnoreCase("low")) {
-                        severity = "Baja";
-                    } else {
-                        severity = "ND";
-                    }
-                    out.println("La vulnerabilidad: <u>" + result.getVulnerabilidad().getName()
-                            + "</u> de criticidad: " + severity);
-                    out.println(" puede afectar al Software: ");
-                    for (Software sw : result.getSwList()) {
-                        out.println("<br />" + sw.getNombre());
-                    }
-                    out.println("<br />Descripción: " + result.getVulnerabilidad().getDescription() + "<br />");
+                //response.setContentType("text/html;charset=UTF-8");
+                //out.print(exportBuffer.toString());
+                //exportBuffer = new StringBuilder();
+                File f = new File("My File.txt");
+                String text = "FILE TEXT FILE TEXT";
+                Writer writer = new BufferedWriter(new FileWriter(f));
+                writer.write(text);
+                writer.close();
+                
+                response.setContentType("text/plain");
+                response.setHeader("Content-Disposition", "attachment;filename=download.txt");
+                int read = 0;
+                InputStream is = new FileInputStream(f);
+                byte [] bytes = new byte[1024];
+                OutputStream os = response.getOutputStream();
+                while ((read = is.read(bytes)) != -1) {
+                    os.write(bytes, 0, read);
                 }
-                out.println("</p>");
-                //out.println(sb.toString());
+                os.flush();
+                os.close();
             }
         } finally {
             out.close();
@@ -193,7 +225,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
     /**
      * Método doGet
      *
-     * @param request referncia de solicitud
+     * @param request referencia de solicitud
      * @param response referencia de respuesta
      * @throws ServletException
      * @throws IOException

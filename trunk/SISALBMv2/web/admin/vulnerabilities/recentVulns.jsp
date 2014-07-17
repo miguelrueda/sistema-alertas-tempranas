@@ -64,7 +64,7 @@
                                             <th>Nombre</th>
                                             <th>Fecha de Publicación</th>
                                             <th>Calificación</th>
-                                            <th>Criticidad</th>
+                                            <th>Gravedad</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>

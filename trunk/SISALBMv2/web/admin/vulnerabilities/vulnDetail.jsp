@@ -50,7 +50,7 @@
                 doc.text(0.5, 1.5, "Fecha de Modificación: ");
                 doc.text(3, 1.5, mod);
                 var crit = $("#criticidad").html();
-                doc.text(0.5, 2, "Criticidad: ");
+                doc.text(0.5, 2, "Gravedad: ");
                 doc.text(3, 2, crit);
                 var score = $("#cvsscore").html();
                 doc.text(0.5, 2.5, "Calificación CVSS: ");
