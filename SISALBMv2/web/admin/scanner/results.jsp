@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,38 +15,74 @@
                 $("#dialog-message").hide();
                 $("#export").hide();
                 $("#okButton").hide();
-                $("#exportButton").click(function(e) {
-                    $("#okButton").show();
-                    $.ajax({
-                        url: '/sisalbm/scanner?action=export',
-                        type: 'GET',
-                        success: function(result) {
-                            $("#export").show();
-                            $("#export").html(result);
-                            /*
-                            $("#dialog-message").attr("title", "Información");
-                            var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left;margin0 7px 50px 0;'> </span>Descarga</p>";
-                            $("#dialog-message").html(content);
-                            $("#dialog-message").dialog({
-                                modal: true,
-                                buttons: {
-                                    Ok: function() {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            });*/
-                        }
-                    });
-                });
+                /*
+                 $("#exportButton").click(function(e){
+                 var link = document.getElementById("downloadlink");
+                 link.href = crearArchivo("ABCDEF");
+                 link.style.display = 'block';
+                 });
+                 */
                 $("#okButton").click(function(e) {
-                    alert("Boton clickeado");
                     $("#okButton").hide();
                     $("#export").hide();
-                    $("#export").html("");
                 });
+                /*
+                 var textFile = null;
+                 function crearArchivo(texto) {
+                 var data = new Blob([texto], {type: 'text/plain'}); 
+                 if (textFile !== null) {
+                 window.URL.revokeObjectURL(textFile);
+                 }
+                 textFile = window.URL.createObjectURL(data);
+                 return textFile;
+                 }
+                 */
+                $("#exportButton").click(function(e) {
+                    //$("#okButton").show();
+                    //$("#export").show();
+                    //var content = $("#testdiv").html();
+                    //alert(content);
+                    $("#dialog-message").attr("title", "Resultados");
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        width: 800,
+                        height: 800,
+                        modal: true,
+                        draggable: false,
+                        resizable: false,
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                });                   
+                //$.ajax({
+                //url: '/sisalbm/scanner?action=export',
+                //type: 'GET',
+                //success: function(result) {
+                //alert(result);
+                //$("#export").show();
+                //$("#export").html(result);
+                /*
+                 $("#dialog-message").attr("title", "Información");
+                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left;margin0 7px 50px 0;'> </span>Descarga</p>";
+                 $("#dialog-message").html(content);
+                 $("#dialog-message").dialog({
+                 modal: true,
+                 buttons: {
+                 Ok: function() {
+                 $(this).dialog("close");
+                 }
+                 }
+                 });*/
+                //}
+                //});
+                //});
             });
         </script>
     </head>
+
     <body>
         <div id="page_container">
             <div id="page_header">
@@ -90,7 +127,7 @@
                     <div id="content_wrap">
                         <c:choose>
                             <c:when test="${noOfResults > 0}">
-                                <div id="page_title">Encontre: ${noOfResults} posibles amenazas.</div>
+                                <div id="page_title">Se encontraron: ${noOfResults} posibles amenazas.</div>
                             </c:when>
                             <c:when test="${noOfResults eq 0}">
                                 <div id="page_title">No se encontraron coincidencias con los parámetros seleccionados.</div>
@@ -105,11 +142,13 @@
                                                 <tr>
                                                     <th>Vulnerabilidad</th>
                                                     <th>Software Afectado</th>
-                                                    <th>Criticidad</th>
+                                                    <th>Gravedad</th>
+                                                    <th>Fecha de Publicación</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <c:forEach var="res" items="${resultados}">
+                                                    <fmt:formatDate value="${res.vulnerabilidad.published}"  var="parsedDate" dateStyle="long"/>
                                                     <tr>
                                                         <td>${res.vulnerabilidad.name}</td>
                                                         <td>
@@ -133,9 +172,10 @@
                                                                 <td>Sin Definir</td>
                                                             </c:otherwise>
                                                         </c:choose>
+                                                        <td>${parsedDate}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">${res.vulnerabilidad.description}</td>
+                                                        <td colspan="4">${res.vulnerabilidad.description}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
@@ -146,11 +186,14 @@
                                         <input type="submit" class="exportButton" id="okButton" value="Cerrar" />
                                     </p>
                                     <div id="export" style="max-width: 800px; display: block; margin-left: auto; margin-right: auto;">
+                                        <div id="export-content">
+                                        </div>    
                                     </div>
                                 </c:when>
                             </c:choose>
                             <br />
                             <div id="dialog-message">
+                                ${exportBuffer}
                             </div>
                             <br />
                         </div>

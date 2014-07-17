@@ -44,6 +44,7 @@ public class ScannerBean implements java.io.Serializable {
     private String severity;
     private String edate;
     private String sdate;
+    private boolean modificadas = false;
 
     /**
      * Constructor
@@ -122,6 +123,14 @@ public class ScannerBean implements java.io.Serializable {
      */
     public void setSdate(String sdate) {
         this.sdate = sdate;
+    }
+
+    public boolean isModificadas() {
+        return modificadas;
+    }
+
+    public void setModificadas(boolean modificadas) {
+        this.modificadas = modificadas;
     }
 
     /**
@@ -268,11 +277,14 @@ public class ScannerBean implements java.io.Serializable {
                             String name = vulnsw.getName().replace("_", " ");
                             if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
                                 for (Version version : vulnsw.getVersion()) {
-                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008") || name.equalsIgnoreCase("windows server 2012")) {
+                                    //Filtro para Microsoft
+                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008")
+                                            || name.equalsIgnoreCase("windows server 2012") || name.equalsIgnoreCase("windows 7") || name.equalsIgnoreCase("windows 8")
+                                            || name.equalsIgnoreCase("windows 8.1") || name.equalsIgnoreCase("internet explorer")) {
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
                                     }
-                                    if (version.getNumber().equals(sws.get(i).getVersion())) {    
+                                    if (version.getNumber().equals(sws.get(i).getVersion())) {
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
                                     } else if (version.getNumber().contains(sws.get(i).getVersion().replace("x", ""))) {
@@ -286,7 +298,9 @@ public class ScannerBean implements java.io.Serializable {
                             String name = vulnsw.getName().replace("_", " ");
                             if (sws.get(i).getNombre().toLowerCase().contains(name.toLowerCase())) {
                                 for (Version version : vulnsw.getVersion()) {
-                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008") || name.equalsIgnoreCase("windows server 2012")) {
+                                    if (name.equalsIgnoreCase("windows server 2003") || name.equalsIgnoreCase("windows server 2008")
+                                            || name.equalsIgnoreCase("windows server 2012") || name.equalsIgnoreCase("windows 7") || name.equalsIgnoreCase("windows 8")
+                                            || name.equalsIgnoreCase("windows 8.1") || name.equalsIgnoreCase("internet explorer")) {
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
                                     }
@@ -379,36 +393,50 @@ public class ScannerBean implements java.io.Serializable {
     private List<CVE> filtrarListaPorFecha(List<CVE> archivoCVE, Date inicio, Date fin) {
         List<CVE> filtrados = new ArrayList<CVE>();
         int pubs = 0, mods = 0;
-        for (CVE vuln : archivoCVE) {
-            Date pub = vuln.getPublished();
-            Date mod = vuln.getModified();
-            //LOG.log(Level.INFO, "Soy: {0} mi publicacion: {1} fui modificada: {2}", new Object[]{vuln.getName(), pub.toString(), mod.toString()});
-            //if (pub.compareTo(inicio) < 0) {
-            //Fecha Menor
-            //} else 
-            /*
-            if (pub.compareTo(inicio) > 0 && pub.compareTo(fin) < 0) {
-                filtrados.add(vuln);
-                pubs++;
-            }  
-            else if (pub.equals(inicio) || mod.equals(inicio) || pub.equals(fin) || mod.equals(fin)) {
-                filtrados.add(vuln);
-                pubs++;
+        LOG.log(Level.INFO, "Buscar en modificadas: {0}", modificadas);
+        if (isModificadas()) {
+            LOG.log(Level.INFO, "Buscar en todas las fechas");
+            for (CVE vuln : archivoCVE) {
+                Date pub = vuln.getPublished();
+                Date mod = vuln.getModified();
+                if ((pub.after(inicio) && pub.before(fin)) || (mod.after(inicio) && mod.before(fin))) {
+                    filtrados.add(vuln);
+                }
             }
-            */
-            if ((pub.after(inicio) && pub.before(fin)) || (mod.after(inicio) && mod.before(fin))) {
-                filtrados.add(vuln);
+        } else {
+            LOG.log(Level.INFO, "Buscar solo en fechas publicación");
+            for (CVE vuln : archivoCVE) {
+                Date pub = vuln.getPublished();
+                Date mod = vuln.getModified();
+                if (pub.after(inicio) && pub.before(fin)) {
+                    filtrados.add(vuln);
+                }
             }
         }
+
+        //LOG.log(Level.INFO, "Soy: {0} mi publicacion: {1} fui modificada: {2}", new Object[]{vuln.getName(), pub.toString(), mod.toString()});
+        //if (pub.compareTo(inicio) < 0) {
+        //Fecha Menor
+        //} else 
+            /*
+         if (pub.compareTo(inicio) > 0 && pub.compareTo(fin) < 0) {
+         filtrados.add(vuln);
+         pubs++;
+         }  
+         else if (pub.equals(inicio) || mod.equals(inicio) || pub.equals(fin) || mod.equals(fin)) {
+         filtrados.add(vuln);
+         pubs++;
+         }
+         */
         /*
-        for (CVE vuln : archivoCVE) {
-            Date mod = vuln.getModified();
-            if (mod.compareTo(inicio) > 0 && mod.compareTo(fin) < 0) {
-                //Fecha de publicacion entre 1-XX y 30-XX o fecha de modificacion entre 1-xx y 30-xx
-                filtrados.add(vuln);
-                mods++;
-            }
-        }*/
+         for (CVE vuln : archivoCVE) {
+         Date mod = vuln.getModified();
+         if (mod.compareTo(inicio) > 0 && mod.compareTo(fin) < 0) {
+         //Fecha de publicacion entre 1-XX y 30-XX o fecha de modificacion entre 1-xx y 30-xx
+         filtrados.add(vuln);
+         mods++;
+         }
+         }*/
         return filtrados;
     }
 

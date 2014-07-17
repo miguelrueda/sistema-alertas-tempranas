@@ -71,6 +71,8 @@
                                 defaultDate: +0,
                                 maxDate: +0,
                                 changeMonth: true,
+                                changeYear: true,
+                                yearRange: '2012:2014',
                                 onClose: function(selectedDate) {
                                     $("#edateF").datepicker("option", "minDate", selectedDate);
                                 }
@@ -111,6 +113,8 @@
                             $("#sdateC").datepicker({
                                 defaultDate: +0,
                                 maxDate: +0,
+                                changeYear: true,
+                                yearRange: '2012:2014',
                                 changeMonth: true,
                                 onClose: function(selectedDate) {
                                     $("#edateC").datepicker("option", "minDate", selectedDate);
@@ -307,7 +311,7 @@
                                                 </tr>
                                                 <tr id="sevDiv">
                                                     <td>
-                                                        <label>Criticidad</label>
+                                                        <label>Gravedad</label>
                                                     </td>
                                                     <td>
                                                         <select name="critic" id="critic">
@@ -355,6 +359,17 @@
                                                     </td>
                                                     <td>
                                                         <label for="edateC" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label></label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" name="onlypub" value="onlypub" />Buscar en Modificadas
+                                                    </td>
+                                                    <td>
+                                                        <label for="" class="error"></label>
                                                     </td>
                                                 </tr>
                                             </tbody>

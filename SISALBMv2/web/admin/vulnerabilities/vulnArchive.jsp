@@ -121,8 +121,9 @@
                                         <tr>
                                             <th style="width: 130px">Nombre</th>
                                             <th>Fecha de Publicación</th>
+                                            <th>Ultima Modificación</th>
                                             <th>Calificación</th>
-                                            <th>Criticidad</th>
+                                            <th>Gravedad</th>
                                         </tr>
                                     </thead>
                                     <tbody id="resultbody">
@@ -141,7 +142,7 @@
                                             <th>Nombre</th>
                                             <th>Fecha de Publicación</th>
                                             <th>Calificación</th>
-                                            <th>Criticidad</th>
+                                            <th>Gravedad</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -206,6 +207,10 @@
                                     </tr>
                                 </table>
                             </div>
+                            <br />
+                            <p style="text-align: center">
+                                Existen: ${total} vulnerabilidades.
+                            </p>
                             <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none; z-index: 999;">
                                 <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>

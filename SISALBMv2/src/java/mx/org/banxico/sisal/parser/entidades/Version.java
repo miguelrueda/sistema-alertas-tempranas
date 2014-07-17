@@ -58,7 +58,7 @@ public class Version implements java.io.Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         //return "{" + number + ", edition=" + edition + '}';
-        sb.append("{");
+        sb.append("");
         if (!number.equals("") && !number.equals("-")) {
             sb.append(number);
         } else {
@@ -67,7 +67,7 @@ public class Version implements java.io.Serializable {
         if (!edition.equals("-1") && !edition.equals("") && !edition.equals("-")) {
             sb.append(", ").append("edición: ").append(edition); 
         }
-        sb.append("}");
+        sb.append("");
         return sb.toString();
     }
 
