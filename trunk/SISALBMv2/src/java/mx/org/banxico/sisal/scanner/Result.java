@@ -137,33 +137,6 @@ public class Result implements java.io.Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.vulnerabilidad != null ? this.vulnerabilidad.hashCode() : 0);
-        hash = 97 * hash + (this.sw != null ? this.sw.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Result other = (Result) obj;
-        if (this.vulnerabilidad != other.vulnerabilidad && (this.vulnerabilidad == null || !this.vulnerabilidad.equals(other.vulnerabilidad))) {
-            return false;
-        }
-        if (this.sw != other.sw && (this.sw == null || !this.sw.equals(other.sw))) {
-            return false;
-        }
-        return true;
-    }
-    
-/*
-    @Override
-    public int hashCode() {
-        int hash = 7;
         hash = 53 * hash + (this.sw != null ? this.sw.hashCode() : 0);
         hash = 53 * hash + (this.vulnerabilidad != null ? this.vulnerabilidad.hashCode() : 0);
         return hash;
@@ -183,17 +156,17 @@ public class Result implements java.io.Serializable {
         }
         return true;
     }
-*/
-/*
-    @Override
-    public String toString() {
-    //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
-    return vulnerabilidad.getName() + "/" + sw.getNombre();
-    }
+
+    /*
+     @Override
+     public String toString() {
+     //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
+     return vulnerabilidad.getName() + "/" + sw.getNombre();
+     }
      */
     @Override
     public String toString() {
         return "Result{" + "vulnerabilidad=" + vulnerabilidad + ", sw=" + sw + ", swList=" + swList + ", grupo=" + grupo + ", gruposList=" + gruposList + '}';
     }
-    
+
 }

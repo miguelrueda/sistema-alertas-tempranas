@@ -492,71 +492,96 @@ public class ScannerBean implements java.io.Serializable {
      * @return Conjunto de filtradaultados
      */
     private Set<Result> procesarListaResultados(List<Result> resultados) {
+        //Instanciar conjuntos para obtener Resultados diferentes y duplicados
         Set<Result> diferentes = new LinkedHashSet<Result>();
         Set<Result> duplicados = new LinkedHashSet<Result>();
-        Set<Result> setWithGroups = obtenerResultadosConGrupos(resultados);
-        for (Result result : resultados) {
+        //Obtener una lista de resultados con la union de grupos y lista de SW
+        List<Result> listaConGrupos = obtenerResultadosConGruposYSW(resultados);
+        //Eliminar duplicados en caso de existir
+        for (Result result : listaConGrupos) {
+            //Si el resultado ya existen en el conjunto de resultados
             if (diferentes.contains(result)) {
                 duplicados.add(result);
             } else {
                 diferentes.add(result);
             }
         }
-        List<Result> nueva = new ArrayList<Result>();   //nueva --> lista diferentes
-        nueva.addAll(diferentes);
-        List<Result> listafinal = new ArrayList<Result>();
-        List<Software> swlist = new ArrayList<Software>();  //swlist --> addswlist
-        List<String> listaGrupos = new ArrayList<String>();
-        List<String> grupos = new ArrayList<String>();
-        grupos.add("Grupo1");
-        grupos.add("Grupo2");
-        grupos.add("Grupo3");
-        grupos.add("Grupo4");
-        for (int i = 0; i < nueva.size(); i++) {
-            Result actual = nueva.get(i);
-            Result siguiente = new Result();
-            Result nuevo = new Result();
-            if ((i + 1) < nueva.size()) {
-                siguiente = nueva.get(i + 1);
-                if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
-                    swlist.add(actual.getSw());
-                    listaGrupos.add(actual.getSw().getUAResponsable());
-                } else {
-                    swlist.add(actual.getSw());
-                    listaGrupos.add(actual.getSw().getUAResponsable());
-                    nuevo.setVulnerabilidad(actual.getVulnerabilidad());
-                    nuevo.setSwList(eliminarDuplicadosListaSw(swlist));
-                    //nuevo.setGruposList(eliminarDuplicadosLista(listaGrupos));
-                    nuevo.setGruposList(grupos);
-                    listafinal.add(nuevo);
-                    swlist = new ArrayList<Software>();
-                    listaGrupos = new ArrayList<String>();
-                }
-            } else if (i < nueva.size()) {
-                swlist.add(actual.getSw());
-                listaGrupos.add(actual.getSw().getUAResponsable());
-                nuevo.setVulnerabilidad(actual.getVulnerabilidad());
-                nuevo.setSwList(eliminarDuplicadosListaSw(swlist));
-                //nuevo.setGruposList(eliminarDuplicadosLista(listaGrupos));
-                nuevo.setGruposList(grupos);
-                listafinal.add(nuevo);
-            }
-        } // for
-        duplicados = new LinkedHashSet<Result>();
-        diferentes = new LinkedHashSet<Result>();
-        for (Result res : listafinal) {
-            if (diferentes.contains(res)) {
-                duplicados.add(res);
-            } else {
-                diferentes.add(res);
-            }
-        }
         return diferentes;
     }
 
+    /**
+     * Método que se encarga de juntar SW y Grupos para vulnerabilidades con el mismo nombre
+     * @param listaAFiltrar Recibe la lista de resultados obtenida del escaneo
+     * @return lista de resultados con vulnerabilidades que tienen agrupados su SW y grupo
+     */
+    private List<Result> obtenerResultadosConGruposYSW(List<Result> listaAFiltrar) {
+        //Instanciar una lista para retornar la lista filtrada
+        List<Result> listaFiltrada = new ArrayList<Result>();
+        //Instanciar una lista para almacenar los grupos y otra para el Software
+        List<String> gruposList = new ArrayList<String>();
+        List<Software> swlist = new ArrayList<Software>();
+        //Iterar la lista recibida
+        for (int i = 0; i < listaAFiltrar.size(); i++) {
+            //Obtener una referencia al resultado actual, a la siguiente y una nueva
+            Result actual = listaAFiltrar.get(i);
+            Result siguiente = new Result();
+            Result nuevo = new Result();
+            //Si i + 1 es menor que el tamaño buscar para agrupar
+            if ((i + 1) < listaAFiltrar.size()) {
+                //Iniciar referencia a siguiente con el valor del siguiente resultado
+                siguiente = listaAFiltrar.get(i + 1);
+                //Si la vulnerabilidad actual y la siguiente son las mismas, entonces juntar su SW y obtener su Grupo
+                if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
+                    gruposList.add(actual.getSw().getUAResponsable());
+                    swlist.add(actual.getSw());
+                } else {
+                    //Añadir el grupo y SW actual a la lista
+                    swlist.add(actual.getSw()); //agregado
+                    gruposList.add(actual.getSw().getUAResponsable());
+                    //Al resultado nuevo agregar la vulnerabilidad, la lista de grupos, lista de SW
+                    nuevo.setVulnerabilidad(actual.getVulnerabilidad());
+                    nuevo.setGruposList(gruposList);
+                    nuevo.setSwList(swlist);
+                    //A la lista de resultados agregar el nuevo resultado
+                    listaFiltrada.add(nuevo);
+                    //reiniciar las listas de SW y Grupos
+                    gruposList = new ArrayList<String>();
+                    swlist = new ArrayList<Software>();
+                }
+                //En otro caso si es el ultimo elemento
+            } else if (i < listaAFiltrar.size()) {
+                //Añadir el ultimo elemento a la lista de grupos y de SW
+                gruposList.add(actual.getSw().getUAResponsable());
+                swlist.add(actual.getSw());
+                //Al resultado nuevo agregar la vulnerabilidad, la lista de grupos, lista de SW
+                nuevo.setVulnerabilidad(actual.getVulnerabilidad());
+                nuevo.setGruposList(gruposList);
+                nuevo.setSwList(swlist);
+                //A la lista de resultados agregar el nuevo resultado
+                listaFiltrada.add(nuevo);
+            }
+        }
+        //Una vez que se completa se tiene una lista con SW  y Grupos duplicados
+        //Iterar la lista para eliminar los duplicados
+        for (Result res : listaFiltrada) {
+            List<String> filtrada = eliminarDuplicadosLista(res.getGruposList());
+            res.setGruposList(filtrada);
+            List<Software> filtradasw = eliminarDuplicadosListaSw(res.getSwList());
+            res.setSwList(filtradasw);
+        }
+        return listaFiltrada;
+    }
+
+    /**
+     * Método que elimina los grupos duplicados dentro de la lista de Grupos
+     * @param listaGrupos Lista de Grupos a filtrar
+     * @return  Lista de Grupos sin duplicados
+     */
     private List<String> eliminarDuplicadosLista(List<String> listaGrupos) {
+        //Instanciar conjuntos duplicados y diferentes
         Set<String> duplicados = new LinkedHashSet<String>();
         Set<String> diferentes = new LinkedHashSet<String>();
+        //Instanciar una lista de String para almacenar el resultado
         List<String> result = new ArrayList<String>();
         for (String res : listaGrupos) {
             if (diferentes.contains(res)) {
@@ -569,9 +594,16 @@ public class ScannerBean implements java.io.Serializable {
         return result;
     }
 
+    /**
+     * Método que se encarga de eliminar duplicados dentro de una lista de SW
+     * @param listaConDuplicados lista con elementos duplicados
+     * @return  Lista siin elementos duplicados
+     */
     private List<Software> eliminarDuplicadosListaSw(List<Software> listaConDuplicados) {
+        //Instanciar conjuntos duplicados y diferentes
         Set<Software> duplicados = new LinkedHashSet<Software>();
         Set<Software> diferentes = new LinkedHashSet<Software>();
+        //Instanciar una lista para almacenar los resultados
         List<Software> result = new ArrayList<Software>();
         for (Software software : listaConDuplicados) {
             if (diferentes.contains(software)) {
@@ -665,39 +697,4 @@ public class ScannerBean implements java.io.Serializable {
      return results;
      }
      */
-    private Set<Result> obtenerResultadosConGrupos(List<Result> resultados) {
-        Set<Result> resultswithgroups = new LinkedHashSet<Result>();
-        List<String> gruposList = new ArrayList<String>();
-        for (int i = 0; i < resultados.size(); i++) {
-            Result actual = resultados.get(i);
-            Result siguiente = new Result();
-            Result nuevo = new Result();
-            if ((i + 1) < resultados.size()) {
-                siguiente = resultados.get(i + 1);
-                if (actual.getVulnerabilidad().equals(siguiente.getVulnerabilidad())) {
-                    gruposList.add(actual.getSw().getUAResponsable());
-                } else {
-                    gruposList.add(actual.getSw().getUAResponsable());
-                    nuevo.setVulnerabilidad(actual.getVulnerabilidad());
-                    nuevo.setGruposList(gruposList);
-                    resultswithgroups.add(nuevo);
-                    gruposList = new ArrayList<String>();
-                }
-            } else if (i < resultados.size()) {
-                gruposList.add(actual.getSw().getUAResponsable());
-                nuevo.setVulnerabilidad(actual.getVulnerabilidad());
-                nuevo.setGruposList(gruposList);
-                resultswithgroups.add(nuevo);
-            }
-        }
-        for (Result res : resultswithgroups) {
-            List<String> lista = res.getGruposList();
-            System.out.println("Mi lista de grupos es: ");
-            for (String string : lista) {
-                System.out.println(string);
-            }
-        }
-        return resultswithgroups;
-    }
-
 }
