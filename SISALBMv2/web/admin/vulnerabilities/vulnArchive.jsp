@@ -59,7 +59,7 @@
                             $("#resultsdiv").show();
                             if (result === '') {
                                 //alert("Mensaje");
-                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                var notResult = "<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
                                 $("#resultbody").html(notResult);
                                 $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +

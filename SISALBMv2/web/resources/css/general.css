@@ -109,9 +109,9 @@ nav ul li:hover > ul {
 }
 
 nav ul {
-    background: #ffffff;
+    background: #FFF;
     padding: 0 20px;
-    border-radius: 10px;
+    border-radius: 0px;
     list-style: none;
     position: relative;
     display: inline-table;

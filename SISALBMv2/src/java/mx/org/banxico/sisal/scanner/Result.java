@@ -26,6 +26,8 @@ public class Result implements java.io.Serializable {
     private CVE vulnerabilidad;
     private Software sw;
     private List<Software> swList;
+    private String grupo;
+    private List<String> gruposList;
 
     /**
      * Constructor
@@ -54,6 +56,12 @@ public class Result implements java.io.Serializable {
     public Result(CVE vulnerabilidad, List<Software> swList) {
         this.vulnerabilidad = vulnerabilidad;
         this.swList = swList;
+    }
+
+    public Result(CVE vulnerabilidad, Software sw, String grupo) {
+        this.vulnerabilidad = vulnerabilidad;
+        this.sw = sw;
+        this.grupo = grupo;
     }
 
     /**
@@ -110,6 +118,49 @@ public class Result implements java.io.Serializable {
         this.swList = swList;
     }
 
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
+
+    public List<String> getGruposList() {
+        return gruposList;
+    }
+
+    public void setGruposList(List<String> gruposList) {
+        this.gruposList = gruposList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.vulnerabilidad != null ? this.vulnerabilidad.hashCode() : 0);
+        hash = 97 * hash + (this.sw != null ? this.sw.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Result other = (Result) obj;
+        if (this.vulnerabilidad != other.vulnerabilidad && (this.vulnerabilidad == null || !this.vulnerabilidad.equals(other.vulnerabilidad))) {
+            return false;
+        }
+        if (this.sw != other.sw && (this.sw == null || !this.sw.equals(other.sw))) {
+            return false;
+        }
+        return true;
+    }
+    
+/*
     @Override
     public int hashCode() {
         int hash = 7;
@@ -132,10 +183,17 @@ public class Result implements java.io.Serializable {
         }
         return true;
     }
-
+*/
+/*
     @Override
     public String toString() {
-        //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
-        return vulnerabilidad.getName() + "/" + sw.getNombre();
+    //return "La vulnerabilidad: " + vulnerabilidad.getName() + " puede afectar al sw: " + sw.getNombre() + "\nDetalle: " + vulnerabilidad.getDescription();
+    return vulnerabilidad.getName() + "/" + sw.getNombre();
     }
+     */
+    @Override
+    public String toString() {
+        return "Result{" + "vulnerabilidad=" + vulnerabilidad + ", sw=" + sw + ", swList=" + swList + ", grupo=" + grupo + ", gruposList=" + gruposList + '}';
+    }
+    
 }

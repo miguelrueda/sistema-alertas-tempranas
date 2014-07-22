@@ -1,18 +1,10 @@
 package mx.org.banxico.sisal.servlets;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,8 +29,8 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ScannerServlet.class.getName());
-    private static final int BYTES_DOWNLOAD = 1024;
-
+    private StringBuilder exportBuffer;
+    
     /**
      * Método que se encarga de procesar las solicituds
      *
@@ -46,22 +38,16 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      * @param response referencia de respuesta
      * @throws ServletException
      * @throws IOException
-     * 
+     *
      */
-    
-    private String scanGroup = "";
-    private StringBuilder exportBuffer;
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SoftwareDAO swdao = new SoftwareDAO();
         ScannerBean scannerService = new ScannerBean();
         PrintWriter out = response.getWriter();
-        
         try {
             String action = (String) request.getParameter("action");
-            int page = 1;
-            int recordsPerPage = 20;
+            int page = 1; int recordsPerPage = 20;
             if (action.equalsIgnoreCase("retrieve")) {
                 response.setContentType("text/html;charset=UTF-8");
                 String val = (String) request.getParameter("val");
@@ -92,17 +78,46 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 exportBuffer = new StringBuilder();
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
+                    Set<Result> resultados = null;
+                    exportBuffer.append("<p>Resultados del Escaneo Completo</p>");
                     if (fecha.equalsIgnoreCase("full")) {
-                        Set<Result> resultados = scannerService.doCompleteScan();
-                        request.setAttribute("resultados", resultados);
-                        request.setAttribute("noOfResults", resultados.size());
+                        //Set<Result> 
+                        resultados = scannerService.doCompleteScan();
                     } else if (fecha.equalsIgnoreCase("partial")) {
                         String sdate = (String) request.getParameter("sdateF");
                         String edate = (String) request.getParameter("edateF");
-                        Set<Result> resultados = scannerService.doCompleteScan(sdate, edate);
-                        request.setAttribute("resultados", resultados);
-                        request.setAttribute("noOfResults", resultados.size());
+                        //Set<Result> 
+                        resultados = scannerService.doCompleteScan(sdate, edate);
+                        //request.setAttribute("resultados", resultados);
+                        //request.setAttribute("noOfResults", resultados.size());
                     }
+                    for (Result result : resultados) {
+                        String sev = result.getVulnerabilidad().getSeverity();
+                        String es_sev = "";
+                        if (sev.equalsIgnoreCase("high")) {
+                            es_sev = "Alta";
+                        } else if (sev.equalsIgnoreCase("medium")) {
+                            es_sev = "Medium";
+                        } else if (sev.equalsIgnoreCase("low")) {
+                            es_sev = "Baja";
+                        } else {
+                            es_sev = "ND";
+                        }
+                        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                        exportBuffer.append("La vulnerabilidad <u>").append(result.getVulnerabilidad().getName())
+                                .append("</u> " + "publicada el: ").append(fmt.format(result.getVulnerabilidad().getPublished()))
+                                .append(" de gravedad ").append(result.getVulnerabilidad().getSeverity())
+                                .append(" ");
+                        exportBuffer.append("puede afectar al Software: ");
+                        for (Software sw : result.getSwList()) {
+                            exportBuffer.append("<br /> + ").append(sw.getNombre());
+                        }
+                        exportBuffer.append("<br />Descripción:").append(result.getVulnerabilidad().getDescription()).append("<br/>");
+                        exportBuffer.append("</p>");
+                    }
+                    request.setAttribute("resultados", resultados);
+                    request.setAttribute("noOfResults", resultados.size());
+                    request.setAttribute("exportBuffer", exportBuffer);
                 } else if (tipo.equalsIgnoreCase("custom")) {
                     String vulnt = (String) request.getParameter("vulnt");
                     if (vulnt.equalsIgnoreCase("recent")) {
@@ -124,14 +139,12 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     }
                     String onlyPublished = request.getParameter("onlypub");
                     if (onlyPublished != null && onlyPublished.equalsIgnoreCase("onlypub")) {
-                        LOG.log(Level.INFO, "Buscar tambien en modificadas");
                         scannerService.setModificadas(true);
                     } else if (onlyPublished == null) {
                         scannerService.setModificadas(false);
                     }
                     String fab = (String) request.getParameter("fab");
                     if (fab.equalsIgnoreCase("single")) {
-                        //Trear fabricante con sW Dao
                         scannerService.setVendorType(1);
                         String vendor = (String) request.getParameter("vendor");
                         scannerService.setVendor(vendor);
@@ -168,7 +181,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         String sev = result.getVulnerabilidad().getSeverity();
                         String es_sev = "";
                         if (sev.equalsIgnoreCase("high")) {
-                            es_sev = "Alta"; 
+                            es_sev = "Alta";
                         } else if (sev.equalsIgnoreCase("medium")) {
                             es_sev = "Media";
                         } else if (sev.equalsIgnoreCase("low")) {
@@ -196,26 +209,6 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);
             } else if (action.equalsIgnoreCase("export")) {
-                //response.setContentType("text/html;charset=UTF-8");
-                //out.print(exportBuffer.toString());
-                //exportBuffer = new StringBuilder();
-                File f = new File("My File.txt");
-                String text = "FILE TEXT FILE TEXT";
-                Writer writer = new BufferedWriter(new FileWriter(f));
-                writer.write(text);
-                writer.close();
-                
-                response.setContentType("text/plain");
-                response.setHeader("Content-Disposition", "attachment;filename=download.txt");
-                int read = 0;
-                InputStream is = new FileInputStream(f);
-                byte [] bytes = new byte[1024];
-                OutputStream os = response.getOutputStream();
-                while ((read = is.read(bytes)) != -1) {
-                    os.write(bytes, 0, read);
-                }
-                os.flush();
-                os.close();
             }
         } finally {
             out.close();
