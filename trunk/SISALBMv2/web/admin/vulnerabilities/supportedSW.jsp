@@ -94,7 +94,7 @@
                                 <button type="submit" id="addButton" class="addbutton">
                                     Agregar Software
                                 </button>
-                                <span class="espaciado" style="padding-left: 300px;">
+                                <span class="espaciado" style="padding-left: 250px;">
                                 </span>
                                 <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW de Grupo" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
