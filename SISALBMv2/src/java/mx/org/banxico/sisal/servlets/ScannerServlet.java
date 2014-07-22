@@ -112,8 +112,12 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         for (Software sw : result.getSwList()) {
                             exportBuffer.append("<br /> + ").append(sw.getNombre());
                         }
-                        exportBuffer.append("<br />Descripción:").append(result.getVulnerabilidad().getDescription()).append("<br/>");
-                        exportBuffer.append("</p>");
+                        exportBuffer.append("<br />Descripción: ").append(result.getVulnerabilidad().getDescription()).append("<br/>");
+                        exportBuffer.append("<br/>Los grupos afectados son: ");
+                        for (String grupo : result.getGruposList()) {
+                            exportBuffer.append("<br /> + ").append(grupo);
+                        }
+                        exportBuffer.append("</p><br />");
                     }
                     request.setAttribute("resultados", resultados);
                     request.setAttribute("noOfResults", resultados.size());
@@ -196,12 +200,15 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                             exportBuffer.append("<br /> + ").append(sw.getNombre());
                         }
                         exportBuffer.append("<br/>Descripción: ").append(result.getVulnerabilidad().getDescription()).append("<br />");
-                        exportBuffer.append("</p>");
+                        exportBuffer.append("<br/>Los grupos afectados son: ");
+                        for (String grupo : result.getGruposList()) {
+                            exportBuffer.append("<br /> + ").append(grupo);
+                        }
+                        exportBuffer.append("</p><br />");
                     }
                     request.setAttribute("resultados", resultados);
                     request.setAttribute("noOfResults", resultados.size());
                     request.setAttribute("exportBuffer", exportBuffer);
-                    //exportSet = resultados;
                 } else {
                     response.getWriter().write("Error desconocido");
                 }

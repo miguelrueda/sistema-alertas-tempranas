@@ -106,7 +106,7 @@
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
-                                <span style="padding-left: 500px"></span>
+                                <span style="padding-left: 440px"></span>
                                 <input id="searchkey" class="searchinput" type="text" placeholder="CVE-2014-XXXX" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
