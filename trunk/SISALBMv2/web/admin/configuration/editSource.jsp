@@ -124,10 +124,12 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">Escaneo</a>
+                                <a href="/sisalbm/admin/scanner/scan.jsp">Escaneo</a>
+                                <!--
                                 <ul>
                                     <li><a href="/sisalbm/admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
                                 </ul>
+                                -->
                             </li>
                             <li>
                                 <a href="#">Reportes</a>

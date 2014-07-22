@@ -97,6 +97,16 @@
                     $(".fechaCustom").hide();
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                     $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor:0});
+                    /*
+                    $("input:radio[name=vulnt]").change(function(){
+                       var temp = $(this).val();
+                       if (temp === 'recent') {
+                           $("input:radio[name=fechaC]").attr("disabled", "disabled");
+                        } else {
+                            $("input:radio[name=fechaC]").removeAttr("disabled");
+                        }
+                    });
+                    */
                     $("input:radio[name=fab]").on("click", function() {
                         var fab = $("input:radio[name=fab]:checked").val();
                         if (fab === 'single') {
@@ -179,10 +189,12 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="#">Escaneo</a>
+                                    <a href="../scanner/scan.jsp">Escaneo</a>
+                                    <!--
                                     <ul>
                                         <li><a href="../scanner/scan.jsp">Nuevo Escaneo</a></li>
                                     </ul>
+                                    -->
                                 </li>
                                 <li>
                                     <a href="#">Reportes</a>

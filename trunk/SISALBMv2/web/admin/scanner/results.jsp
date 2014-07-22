@@ -111,10 +111,12 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">Escaneo</a>
+                                <a href="/sisalbm/admin/scanner/scan.jsp">Escaneo</a>
+                                <!--
                                 <ul>
                                     <li><a href="/sisalbm/admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
                                 </ul>
+                                -->
                             </li>
                             <li>
                                 <a href="#">Reportes</a>
@@ -144,6 +146,7 @@
                                                     <th>Software Afectado</th>
                                                     <th>Gravedad</th>
                                                     <th>Fecha de Publicación</th>
+                                                    <th>Grupos Afectados</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -173,9 +176,16 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                         <td>${parsedDate}</td>
+                                                        <td>
+                                                            <table cellspacing="0" cellpadding="0" style="border: none">
+                                                                <c:forEach var="grp" items="${res.gruposList}">
+                                                                    <tr><td>${grp}</td></tr>
+                                                                </c:forEach>
+                                                            </table>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="4">${res.vulnerabilidad.description}</td>
+                                                        <td colspan="5">${res.vulnerabilidad.description}</td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>

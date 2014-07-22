@@ -245,15 +245,43 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return result;
     }
 
-    public List<Software> retrieveFromList(int offset, int noOfRecords) {
+    public List<Software> retrieveFromLimit(int offset, int noOfRecords) {
+        String qry = "SELECT * FROM ( SELECT s.idSoftware, s.fabricante, s.nombre, "
+                + "s.version, s.tipo, s.end_of_life, g.nombre as gnombre, g.categoria as gcategoria, "
+                + "ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s, "
+                + "Grupo_Software x, Grupo g WHERE s.idSoftware = x.idSoftware AND x.idGrupo = g.idGrupo) z "
+                + "WHERE z.row > ? and z.row <= ?";        
         List<Software> temp = new ArrayList<Software>();
         Software sw;
+        /*
         for (int i = offset; i < offset + noOfRecords; i++) {
             if (i >= this.noOfRecords) {
                 break;
             }
             sw = swList.get(i);
             temp.add(sw);
+        }*/
+        try {
+            pstmt = connection.prepareStatement(qry);
+            pstmt.setInt(1, offset);
+            pstmt.setInt(2, offset + noOfRecords);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                sw = new Software();
+                sw.setIdSoftware(rs.getInt("idSoftware"));
+                sw.setFabricante(rs.getString("fabricante"));
+                sw.setNombre(rs.getString("nombre"));
+                sw.setVersion(rs.getString("version"));
+                sw.setTipo(rs.getInt("tipo"));
+                sw.setEndoflife(rs.getInt("end_of_life"));
+                sw.setUAResponsable(rs.getString("gnombre"));
+                sw.setAnalistaResponsable(rs.getString("gcategoria"));
+                temp.add(sw);
+            }
+            rs.close();
+            LOG.log(Level.INFO, "Consulta realizada, agregados: {0}", (offset + noOfRecords));
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Excepci\u00f3n de SQL: {0}", e.getMessage());
         }
         return temp;
     }
