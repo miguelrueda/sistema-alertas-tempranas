@@ -52,7 +52,7 @@
                             jQuery.noticeAdd({
                                 text: "Procesando Descarga:" + //+ tk[1] + + 
                                         "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
-                                stay: false,
+                                stay: true,
                                 type: 'info'
                             });
                         },
