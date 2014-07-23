@@ -1,6 +1,6 @@
 package mx.org.banxico.sisal.dao;
 
-import au.com.bytecode.opencsv.CSVReader;
+//import au.com.bytecode.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -42,9 +42,9 @@ public class SoftwareDAO { //implements java.io.Serializable {
         if (connection != null) {
             LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
             cargarTodos();
-        } else {
-            iniciarLista();
-        }
+        } //else {
+            //iniciarLista();
+        //}
     }
 
     private void cargarTodos() {
@@ -326,7 +326,7 @@ public class SoftwareDAO { //implements java.io.Serializable {
         }
         return nConn;
     }
-
+/*
     private void iniciarLista() {
         swList = new ArrayList<Software>();
         Software sw;
@@ -373,7 +373,7 @@ public class SoftwareDAO { //implements java.io.Serializable {
             LOG.log(Level.INFO, "Error de Conversi\u00f3n: {0}", nfe.getMessage());
         }
     }
-
+*/
     public List<Software> searchSoftware(String key) {
         List<Software> found = new ArrayList<Software>();
         for (Software sw : swList) {
