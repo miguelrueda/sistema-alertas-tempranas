@@ -125,10 +125,20 @@ public class ScannerBean implements java.io.Serializable {
         this.sdate = sdate;
     }
 
+    /**
+     * Getter
+     *
+     * @return la bandera de fechas modificadas
+     */
     public boolean isModificadas() {
         return modificadas;
     }
 
+    /**
+     * Setter
+     *
+     * @param modificadas la bandera de fechas modificadas
+     */
     public void setModificadas(boolean modificadas) {
         this.modificadas = modificadas;
     }
