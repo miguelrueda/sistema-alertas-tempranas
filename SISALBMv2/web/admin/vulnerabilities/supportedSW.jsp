@@ -15,8 +15,8 @@
             $(document).ready(function() {
                 var dialog = $("#dialog-form");
                 $("#dialog-form").hide();
-                $("#addButton").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
-                    e.preventDefault();
+                $("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                    /* Dialogo
                     $("#dialog-form").dialog({
                         resizable: false,
                         height: 440,
@@ -28,7 +28,7 @@
                                 $(this).dialog("close");
                             }
                         }
-                    });
+                    }); DIALOGO*/
                 });
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");
@@ -91,12 +91,17 @@
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
+                                <!--
                                 <button type="submit" id="addButton" class="addbutton">
                                     Agregar Software
                                 </button>
+                                -->
+                                <a href="vulnerabilities/addSW.jsp" id="add" class="addbutton">
+                                    Agregar Software
+                                </a>
                                 <span class="espaciado" style="padding-left: 250px;">
                                 </span>
-                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW de Grupo" />
+                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW o de Grupo" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
                         </div>
@@ -129,7 +134,6 @@
                                     <th>Fabricante</th>
                                     <th>Software</th>
                                     <th>Version</th>
-                                    <!--<th>Tipo</th>-->
                                     <th>Grupo</th>
                                     </thead>
                                     <tbody>
@@ -145,16 +149,6 @@
                                                         <td style="width: 80px; text-align: center">${supSW.version}</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <%--
-                                                <c:choose>
-                                                    <c:when test="${supSW.tipo eq 1}">
-                                                        <td style="width: 100px">OS</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td style="width: 100px">SW</td>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                --%>
                                                 <td style="width: 200px">${supSW.UAResponsable}</td>
                                             </tr>
                                         </c:forEach>

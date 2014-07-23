@@ -79,17 +79,13 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
                     Set<Result> resultados = null;
-                    exportBuffer.append("<p>Resultados del Escaneo Completo</p>");
+                    exportBuffer.append("<p>Resultados del Escaneo Completo<br/>");
                     if (fecha.equalsIgnoreCase("full")) {
-                        //Set<Result> 
                         resultados = scannerService.doCompleteScan();
                     } else if (fecha.equalsIgnoreCase("partial")) {
                         String sdate = (String) request.getParameter("sdateF");
                         String edate = (String) request.getParameter("edateF");
-                        //Set<Result> 
                         resultados = scannerService.doCompleteScan(sdate, edate);
-                        //request.setAttribute("resultados", resultados);
-                        //request.setAttribute("noOfResults", resultados.size());
                     }
                     for (Result result : resultados) {
                         String sev = result.getVulnerabilidad().getSeverity();
@@ -112,7 +108,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         for (Software sw : result.getSwList()) {
                             exportBuffer.append("<br /> + ").append(sw.getNombre());
                         }
-                        exportBuffer.append("<br />Descripción: ").append(result.getVulnerabilidad().getDescription()).append("<br/>");
+                        exportBuffer.append("<br />Descripción: ").append(result.getVulnerabilidad().getDescription());
                         exportBuffer.append("<br/>Los grupos afectados son: ");
                         for (String grupo : result.getGruposList()) {
                             exportBuffer.append("<br /> + ").append(grupo);
@@ -132,14 +128,11 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     String UA = (String) request.getParameter("UA");
                     if (UA.equalsIgnoreCase("0")) {
                         scannerService.setUA("0");
-                        //scanGroup = "Todos los Grupos";
-                        exportBuffer.append("<p>Resultado de Todos los Grupos</p>");
+                        exportBuffer.append("<p>Resultado de Todos los Grupos");
                     } else {
-                        //Traer UA con SW DAo
                         scannerService.setUA(UA);
                         request.setAttribute("grupo", UA);
-                        //scanGroup = UA;
-                        exportBuffer.append("<p>Resultado del Grupo: ").append(UA).append("</p>");
+                        exportBuffer.append("<p>Resultado del Grupo: <u>").append(UA).append("</u>");
                     }
                     String onlyPublished = request.getParameter("onlypub");
                     if (onlyPublished != null && onlyPublished.equalsIgnoreCase("onlypub")) {
@@ -152,6 +145,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         scannerService.setVendorType(1);
                         String vendor = (String) request.getParameter("vendor");
                         scannerService.setVendor(vendor);
+                        exportBuffer.append("<br/> Resultados del Fabricante: <u>").append(vendor).append("</u><br />");
                     }
                     String critic = (String) request.getParameter("critic");
                     switch (Integer.parseInt(critic)) {
@@ -199,7 +193,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         for (Software sw : result.getSwList()) {
                             exportBuffer.append("<br /> + ").append(sw.getNombre());
                         }
-                        exportBuffer.append("<br/>Descripción: ").append(result.getVulnerabilidad().getDescription()).append("<br />");
+                        exportBuffer.append("<br/>Descripción: ").append(result.getVulnerabilidad().getDescription());
                         exportBuffer.append("<br/>Los grupos afectados son: ");
                         for (String grupo : result.getGruposList()) {
                             exportBuffer.append("<br /> + ").append(grupo);

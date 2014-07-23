@@ -20,7 +20,7 @@
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
-                        <div id="page_title">Listas de SW</div>
+                        <div id="page_title">Grupos de SW</div>
                         <div id="content">
                         </div>
                     </div>
