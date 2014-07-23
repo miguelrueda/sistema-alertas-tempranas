@@ -58,6 +58,13 @@ public class Result implements java.io.Serializable {
         this.swList = swList;
     }
 
+    /**
+     * Constructor con parametros
+     *
+     * @param vulnerabilidad referencia a la vulnerabilidad
+     * @param sw Referencia al Sw
+     * @param grupo Referencia del grupo al que pertenece
+     */
     public Result(CVE vulnerabilidad, Software sw, String grupo) {
         this.vulnerabilidad = vulnerabilidad;
         this.sw = sw;
@@ -118,18 +125,38 @@ public class Result implements java.io.Serializable {
         this.swList = swList;
     }
 
+    /**
+     * GETTER
+     *
+     * @return metodo para obtener el grupo del resultado
+     */
     public String getGrupo() {
         return grupo;
     }
 
+    /**
+     * Setter
+     *
+     * @param grupo Método para establecer el grupo del resultado
+     */
     public void setGrupo(String grupo) {
         this.grupo = grupo;
     }
 
+    /**
+     * Getter
+     *
+     * @return Método para obtener la lista de grupos del resultado
+     */
     public List<String> getGruposList() {
         return gruposList;
     }
 
+    /**
+     * Setter
+     *
+     * @param gruposList método para establecer la lista de grupos del resultado
+     */
     public void setGruposList(List<String> gruposList) {
         this.gruposList = gruposList;
     }
@@ -166,7 +193,7 @@ public class Result implements java.io.Serializable {
      */
     @Override
     public String toString() {
-        return "Result{" + "vulnerabilidad=" + vulnerabilidad + ", sw=" + sw + ", swList=" + swList + ", grupo=" + grupo + ", gruposList=" + gruposList + '}';
+        return "Result{" + "vulnerabilidad=" + vulnerabilidad + ", sw=" + sw + ", swList=" + swList + ", gruposList=" + gruposList + '}';
     }
 
 }

@@ -18,6 +18,12 @@ import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
 import mx.org.banxico.sisal.entities.Software;
 
+/**
+ * Clase que se encarga de manejar el acceso a datos relacionados con la entidad Software
+ *
+ * @author t41507
+ * @version 23.07.2014
+ */
 public class SoftwareDAO { //implements java.io.Serializable {
 
     /**
@@ -35,10 +41,11 @@ public class SoftwareDAO { //implements java.io.Serializable {
     private List<Software> swList;
     private int noOfRecords;
 
+    /**
+     *  Constructor
+     */
     public SoftwareDAO() {
         //iniciarLista();
-        //Iniciar la conexión a BD AQUI
-        connection = ConnectionFactory.getInstance().getConnection();
         if (connection != null) {
             LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
             cargarTodos();
@@ -82,10 +89,18 @@ public class SoftwareDAO { //implements java.io.Serializable {
         }
     }
 
+    /**
+     * Getter
+     *
+     * @return numero de registros encontrados
+     */
     public int getNoOfRecords() {
         return noOfRecords;
     }
 
+    /**
+     * Consultas SQL
+     */
     private static final String sqlInsert = "INSERT INTO Software "
             + "(fabricante, nombre, version, tipo, end_of_life, UAResponsable, AnalistaResponsable) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -109,6 +124,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
      * SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY Name ASC) AS Row, * FROM Students) AS StudentsWithRowNumbers WHERE Row > 20 AND Row <= 30
      */
 
+    /**
+     * Método agregar SW se encarga de tomar un objeto de la entidad SW y darle persistencia dentro de la BD
+     *
+     * @param sw referencia al objeto de SW
+     * @return bandera de estado de la operación
+     */
     public boolean agregarSoftware(Software sw) {
         boolean res = false;
         try {
@@ -128,14 +149,30 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return res;
     }
 
+    /**
+     * GETTER
+     *
+     * @return lista de todo el SW
+     */
     public List<Software> obtenerTodos() {
         return this.swList;
     }
 
+    /**
+     * Getter
+     *
+     * @param index llave del elemento a buscar
+     * @return referencia a un objeto de SW
+     */
     public Software obtenerSoftwarePorId(int index) {
         return swList.get(index);
     }
 
+    /**
+     * Getter
+     *
+     * @return lista con todos los Grupos o UA
+     */
     public List<String> obtenerUAs() {
         List<String> uas = new ArrayList<String>();
         try {
@@ -151,6 +188,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return uas;
     }
 
+    /**
+     * Getter
+     *
+     * @return Método de prueba para cuando no existe conexxión a BD
+     * TODO: Eliminar este método
+     */
     public Set<String> obtenerUAsTemp() {
         List<String> uas = new ArrayList<String>();
         for (Software software : swList) {
@@ -159,6 +202,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return filtrarUAS(uas);
     }
 
+    /**
+     * Método que se encarga de filtrar los grupos o UAS
+     * 
+     * @param uas refencia a la lista de grupos
+     * @return conjunto de grupos filtrado
+     */
     private Set<String> filtrarUAS(List<String> uas) {
         Set<String> result = new LinkedHashSet<String>();
         Set<String> duplicados = new LinkedHashSet<String>();
@@ -172,6 +221,11 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return result;
     }
 
+    /**
+     *  Getter
+     *
+     * @return lista de fabricantes
+     */
     public List<String> obtenerFabricantes() {
         List<String> vendors = new ArrayList<String>();
         try {
@@ -194,6 +248,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return vendors;
     }
 
+    /**
+     * Getter
+     *
+     * @param vendor referncia de la clave del fabricante
+     * @return lista de fabricantes
+     */
     public List<String> obtenerFabricantes(String vendor) {
         List<String> vendors = new ArrayList<String>();
         try {
@@ -217,20 +277,26 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return vendors;
     }
 
+    /**
+     * Getter
+     *
+     * @return lista de fabricantes temporal
+     * TODO: Eliminar esté método
+     */
     public Set<String> obtenerFabricantesTemp() {
         List<String> vendors = new ArrayList<String>();
-        /*
-         vendors.add("Adobe Systems");
-         vendors.add("Apache Software Foundation");
-         vendors.add("Canonical");
-         vendors.add("Cisco");
-         vendors.add("IBM");
-         vendors.add("Microsoft");*/
         for (Software sw : swList) {
             vendors.add(sw.getFabricante());
         }
         return filtrarVendors(vendors);
     }
+    
+    /**
+     * Método que se encarga de eliminar duplicados dentro de una lista de fabricantes
+     *
+     * @param vendors referncia del fabricante
+     * @return  conjunto filtrado de fabricantes
+     */
 
     private Set<String> filtrarVendors(List<String> vendors) {
         Set<String> result = new LinkedHashSet<String>();
@@ -245,6 +311,15 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return result;
     }
 
+    /**
+     * Método que se encarga de devolver los elelemtnso de SW para ser presentados
+     * por el paginador
+     * Simula un LIMIT X, Y de MySQL
+     *
+     * @param offset no. desde el que inicia la consulta
+     * @param noOfRecords limite a buscar de registros
+     * @return
+     */
     public List<Software> retrieveFromLimit(int offset, int noOfRecords) {
         String qry = "SELECT * FROM ( SELECT s.idSoftware, s.fabricante, s.nombre, "
                 + "s.version, s.tipo, s.end_of_life, g.nombre as gnombre, g.categoria as gcategoria, "
@@ -286,6 +361,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return temp;
     }
 
+    /**
+     * Método que se encarga de editar un SW a partir de la referncia del mismo
+     *
+     * @param sw referencia del SW a editar
+     * @return bandera con el resultado de la operación
+     */
     public boolean editarSoftware(Software sw) {
         boolean res = false;
         try {
@@ -306,6 +387,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return res;
     }
 
+    /**
+     * Método que se encarga de eliminar un elemento de SW por su clave
+     *
+     * @param id clave del SW
+     * @return bandera con el resultado de la operación
+     */
     public boolean eliminarSoftware(int id) {
         boolean res = false;
         try {
@@ -319,6 +406,11 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return res;
     }
 
+    /**
+     * Método para obtener la conexión a BD
+     *
+     * @return objeto de tipo Conexión con la conexión a la BD
+     */
     public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         if (nConn != null) {
@@ -374,6 +466,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
         }
     }
 */
+    /**
+     * Método que se encarga de buscar dentro de la lista de SW a traves de su nombre, fabricante o grupo
+     *
+     * @param key parámetro de búsqueda ya sea nombre, fabricante o grupo
+     * @return Lista de SW con las coincidencias encontradas:
+     */
     public List<Software> searchSoftware(String key) {
         List<Software> found = new ArrayList<Software>();
         for (Software sw : swList) {

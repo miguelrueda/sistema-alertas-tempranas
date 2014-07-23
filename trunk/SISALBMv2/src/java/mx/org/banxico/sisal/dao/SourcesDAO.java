@@ -3,7 +3,6 @@ package mx.org.banxico.sisal.dao;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -23,6 +22,10 @@ import java.util.logging.Logger;
 import mx.org.banxico.sisal.db.ConnectionFactory;
 import mx.org.banxico.sisal.entities.FuenteApp;
 
+/**
+ *
+ * @author t41507
+ */
 public class SourcesDAO { // implements java.io.Serializable {
 
     /**
@@ -39,6 +42,9 @@ public class SourcesDAO { // implements java.io.Serializable {
     private List<FuenteApp> fuentes;
     private int noFuentes;
 
+    /**
+     *
+     */
     public SourcesDAO() {
         //iniciarFuentes();
         //iniciarFuentesTemp();
@@ -52,7 +58,12 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     //TODO: Eliminar esté método
-    public Connection getConnection() {
+
+    /**
+     *
+     * @return
+     */
+        public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         return nConn;
     }
@@ -100,10 +111,20 @@ public class SourcesDAO { // implements java.io.Serializable {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNoFuentes() {
         return noFuentes;
     }
 
+    /**
+     *
+     * @param nombre
+     * @param url
+     * @return
+     */
     public boolean crearFuente(String nombre, String url) {
         boolean res = false;
         try {
@@ -120,6 +141,10 @@ public class SourcesDAO { // implements java.io.Serializable {
         return res;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<FuenteApp> obtenerFuentes() {
         if (!fuentes.isEmpty()) {
             return fuentes;
@@ -127,6 +152,11 @@ public class SourcesDAO { // implements java.io.Serializable {
         return new ArrayList<FuenteApp>();
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public FuenteApp obtenerFuentePorId(int id) {
         for (FuenteApp src : fuentes) {
             if (src.getId() == id) {
@@ -138,7 +168,15 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     //public boolean editarFuente(FuenteApp fuente) {
-    public boolean editarFuente(int id, String nombreN, String urlN) {
+
+    /**
+     *
+     * @param id
+     * @param nombreN
+     * @param urlN
+     * @return
+     */
+        public boolean editarFuente(int id, String nombreN, String urlN) {
         boolean res = false;
         try {
             conn = getConnection();
@@ -166,6 +204,11 @@ public class SourcesDAO { // implements java.io.Serializable {
         //return true;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public boolean eliminarFuente(int id) {
         boolean res = false;
         try {
@@ -191,6 +234,11 @@ public class SourcesDAO { // implements java.io.Serializable {
         return res;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Date obtenerFechaActualizacion(String id) {
         Date res = null;
         try {
@@ -240,6 +288,14 @@ public class SourcesDAO { // implements java.io.Serializable {
      return res;
      }
      */
+
+    /**
+     *
+     * @param id
+     * @param url
+     * @return
+     */
+    
     public boolean descargarFuente(String id, String url) {
         boolean res = false;
         LOG.log(Level.INFO, "Descargando Fuente: {0}", url);
