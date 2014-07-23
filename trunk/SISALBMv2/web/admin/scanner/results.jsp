@@ -48,7 +48,7 @@
                         width: 800,
                         height: 800,
                         modal: true,
-                        draggable: false,
+                                draggable: false,
                         resizable: false,
                         buttons: {
                             Ok: function() {
@@ -56,7 +56,7 @@
                             }
                         }
                     });
-                });                   
+                });
                 //$.ajax({
                 //url: '/sisalbm/scanner?action=export',
                 //type: 'GET',
@@ -101,6 +101,7 @@
                                 <a href="#">Configuración</a>
                                 <ul>
                                     <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
+                                    <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=2">Administrar Grupos</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Vulnerabilidades</a>
@@ -112,17 +113,9 @@
                             </li>
                             <li>
                                 <a href="/sisalbm/admin/scanner/scan.jsp">Escaneo</a>
-                                <!--
-                                <ul>
-                                    <li><a href="/sisalbm/admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
-                                </ul>
-                                -->
                             </li>
                             <li>
-                                <a href="#">Reportes</a>
-                                <ul>
-                                    <li><a href="#">Generar Reporte</a></li>
-                                </ul>
+                                <a href="/sisalbm/admin/help.jsp">Ayuda</a>
                             </li>
                         </ul>
                     </nav>

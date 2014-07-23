@@ -15,7 +15,7 @@ import java.util.List;
 public class CVE implements java.io.Serializable {
 
     private static final long serialVersionUID = -1L;
-    
+
     /**
      * Atributos
      */
@@ -206,11 +206,45 @@ public class CVE implements java.io.Serializable {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 83 * hash + (this.severity != null ? this.severity.hashCode() : 0);
+        hash = 83 * hash + (this.published != null ? this.published.hashCode() : 0);
+        hash = 83 * hash + (this.cvss != null ? this.cvss.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CVE other = (CVE) obj;
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if ((this.severity == null) ? (other.severity != null) : !this.severity.equals(other.severity)) {
+            return false;
+        }
+        if (this.published != other.published && (this.published == null || !this.published.equals(other.published))) {
+            return false;
+        }
+        if (this.cvss != other.cvss && (this.cvss == null || !this.cvss.equals(other.cvss))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CVE{" + "name=" + name + "}").append("\n");
         sb.append("{CVE severity=").append(severity).append(", published=").append(published).append(", modified=").append(modified).append("\n").append(cvss).append("}").append("\n");
         sb.append("{CVE description=").append(description).append("}\n");
-        if (!(references == null ||  references.isEmpty())) {
+        if (!(references == null || references.isEmpty())) {
             sb.append("References List").append("\n");
             for (CVEReference ref : references) {
                 sb.append(ref.toString()).append("\n");
@@ -220,7 +254,7 @@ public class CVE implements java.io.Serializable {
         }
         if (!(vuln_soft == null || vuln_soft.isEmpty())) {
             sb.append("Vulnerable Sofware list\n");
-            for (VulnSoftware soft: vuln_soft) {
+            for (VulnSoftware soft : vuln_soft) {
                 sb.append(soft.toString()).append("\n");
             }
         } else {

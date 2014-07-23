@@ -7,7 +7,7 @@
                 <a href="#">Configuración</a>
                 <ul>
                     <li><a href="../admin/configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
-                    <!--<li><a href="../admin/configuration.controller?action=view&tipo=2">Listas de Software</a></li>-->
+                    <li><a href="../admin/configuration.controller?action=view&tipo=2">Administrar Grupos</a></li>
                 </ul>
             </li>
             <li><a href="#">Vulnerabilidades</a>
@@ -19,17 +19,9 @@
             </li>
             <li>
                 <a href="../admin/scanner/scan.jsp">Escaneo</a>
-                <!--
-                <ul>
-                    <li><a href="../admin/scanner/scan.jsp">Nuevo Escaneo</a></li>
-                </ul>
-                -->
             </li>
             <li>
-                <a href="#">Reportes</a>
-                <ul>
-                    <li><a href="#">Generar Reporte</a></li>
-                </ul>
+                <a href="../admin/help.jsp">Ayuda</a>
             </li>
         </ul>
     </nav>

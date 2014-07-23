@@ -13,7 +13,7 @@
             <div id="page_header">
                 <table id="header">
                     <tr>
-                        <td><img src="resources/images/app_header.png" alt="BMLogo" /></td>
+                        <td><img src="/sisalbm/resources/images/app_header.png" alt="BMLogo" /></td>
                     </tr>
                 </table>
             </div>
