@@ -61,7 +61,7 @@
                             <br />
                             <br />
                             <div id="pdf" style=" z-index: 100">
-                                <object data="CVE-2014-4268.pdf"
+                                <object data="../resources/pdf/manual.pdf"
                                         type="application/pdf" width="100%" height="100%"></object>
                             </div>
                         </div>

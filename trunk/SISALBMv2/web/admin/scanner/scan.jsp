@@ -16,6 +16,7 @@
                 $(function() {
                     $.datepicker.setDefaults($.datepicker.regional['es']);
                 });
+                $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                 $("#full").hide();
                 $("#custom").hide();
                 $($("input[name=tipo]")).on("click", function() {
@@ -94,6 +95,7 @@
                     $("#custom").show();
                     $("#full").hide();
                     $("#vendordiv").hide();
+                    //$("#productrow").hide();
                     $(".fechaCustom").hide();
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                     $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor:0});
@@ -111,8 +113,10 @@
                         var fab = $("input:radio[name=fab]:checked").val();
                         if (fab === 'single') {
                             $("#vendordiv").show();
+                            //$("#productrow").show();
                         } else if (fab === 'multi') {
                             $("#vendordiv").hide();
+                            //$("#productrow").hide();
                             $("#vendor").val("");
                         }
                     });
@@ -147,6 +151,12 @@
             function cargarFabricantes() {
                 var ua = $("#UA").val();
                 $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor:ua});
+            }
+            
+            function cargarProductos() {
+                var fab = $("#vendor").val();
+                //alert("/sisalbm/scanner?action=retrieve&val=product&vendor=" + fab);
+                $("#product").load("/sisalbm/scanner?action=retrieve&val=product", {vendor:fab});
             }
             
               function showProducts(){
@@ -312,12 +322,25 @@
                                                         <label>Seleccionar Fabricante:</label>
                                                     </td>
                                                     <td>
-                                                        <select name="vendor" id="vendor"></select>
+                                                        <select name="vendor" id="vendor" onchange="cargarProductos()"></select>
                                                     </td>
                                                     <td>
-                                                        <label for="vendor" class="error"></label>
+                                                        <label for="vendor" class="error" ></label>
                                                     </td>
                                                 </tr>
+                                                <!--
+                                                <tr id="productrow">
+                                                    <td>
+                                                        <label>Seleccionar Producto:</label>
+                                                    </td>
+                                                    <td>
+                                                        <select name="product" id="product"></select>
+                                                    </td>
+                                                    <td>
+                                                        <label for="product" class="error"></label>
+                                                    </td>
+                                                </tr>
+                                                -->
                                                 <tr id="sevDiv">
                                                     <td>
                                                         <label>Gravedad</label>

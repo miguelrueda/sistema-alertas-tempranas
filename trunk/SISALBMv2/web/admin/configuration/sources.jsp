@@ -75,7 +75,7 @@
                                 });
                             } else if (result === 'OK') {
                                 title = "Descarga Exitosa";
-                                $("#dialog-message").attr("title", "Descarga Exitosa");
+                                $("#dialog-message").attr("title", "Actualización Exitosa");
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "La descarga ha sido completada de forma exitosa.</p>";
                                 $("#dialog-message").html(content);
