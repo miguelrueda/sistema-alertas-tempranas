@@ -71,6 +71,14 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                             out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                         }
                     }
+                } else if (val.equalsIgnoreCase("product")) {
+                    String fabricante = request.getParameter("vendor");
+                    if (!fabricante.equals("0")) {
+                        List<String> productos = swdao.obtenerProductos(fabricante);
+                        for (String product : productos) {
+                            out.println("<option value='" + product + "'>" + product + "</option>");
+                        }
+                    }
                 }
             } else if (action.equalsIgnoreCase("scan")) {
                 response.setContentType("text/html;charset=UTF-8");
