@@ -132,10 +132,7 @@
                                 -->
                             </li>
                             <li>
-                                <a href="#">Reportes</a>
-                                <ul>
-                                    <li><a href="#">Generar Reporte</a></li>
-                                </ul>
+                                <a href="../help.jsp">Ayuda</a>
                             </li>
                         </ul>
                     </nav>
