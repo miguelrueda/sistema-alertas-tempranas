@@ -48,12 +48,13 @@ public class SoftwareDAO { //implements java.io.Serializable {
      */
     public SoftwareDAO() {
         //iniciarLista();
-        if (connection != null) {
-            LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+        //if (connection != null) {
+            //LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+            //cargarTodos();
+        //} else {
+            //iniciarLista();
             cargarTodos();
-        } else {
-            iniciarLista();
-        }
+        //}
     }
 
     private void cargarTodos() {
