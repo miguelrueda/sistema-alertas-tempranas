@@ -140,8 +140,9 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
+                                            <th>Afecta a</th>
                                             <th>Fecha de Publicación</th>
-                                            <th>Calificación</th>
+                                            <th>Calificación**</th>
                                             <th>Gravedad</th>
                                             <th>Opciones</th>
                                         </tr>
@@ -151,6 +152,17 @@
                                             <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
                                             <tr>
                                                 <td>${vuln.name}</td>
+                                                <td>
+                                                    <table style="border: 0; max-width: 150px">
+                                                        <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
+                                                            <tr>
+                                                                <td>
+                                                                    ${vulnsw.name}
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </table>
+                                                </td>
                                                 <td>${parsedDate}</td>
                                                 <td>${vuln.CVSS.score}</td>
                                                 <c:choose>

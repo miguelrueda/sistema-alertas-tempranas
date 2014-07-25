@@ -108,7 +108,7 @@
                                 <ul>
                                     <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=1">Más Recientes</a></li>
                                     <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=2">Archivo</a></li>
-                                    <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=3">Software Soportado</a></li>
+                                    <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=3">Software Registrado</a></li>
                                 </ul>
                             </li>
                             <li>
