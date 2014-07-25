@@ -41,7 +41,18 @@ public class VulnSoftware implements java.io.Serializable {
      * @return fabricante del software
      */
     public String getVendor() {
-        return vendor;
+        vendor = vendor.replace("_", " ");
+        char [] chars = vendor.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (!found && Character.isLetter(chars[i])) {
+                chars[i] = Character.toUpperCase(chars[i]);
+                found = true;
+            } else if (Character.isWhitespace(chars[i])) {
+                found = false;
+            }
+        }
+        return String.valueOf(chars);
     }
 
     /**
@@ -59,7 +70,18 @@ public class VulnSoftware implements java.io.Serializable {
      * @return nombre del producto
      */
     public String getName() {
-        return name;
+        name = name.replace("_", " ");
+        char [] chars = name.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (!found && Character.isLetter(chars[i])) {
+                chars[i] = Character.toUpperCase(chars[i]);
+                found = true;
+            } else if (Character.isWhitespace(chars[i])) {
+                found = false;
+            }
+        }
+        return String.valueOf(chars);
     }
 
     /**
@@ -91,7 +113,31 @@ public class VulnSoftware implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "\nVulnerable Software {" + "vendor=" + vendor + ", name=" + name + ", version(s)=" + version + '}';
+        //return "\nVulnerable Software {" + "vendor=" + vendor + ", name=" + name + ", version(s)=" + version + '}';
+        vendor = vendor.replace("_", " ");
+        char [] caracteres = vendor.toLowerCase().toCharArray();
+        boolean found = false;
+        for (int i = 0; i < caracteres.length; i++) {
+            if (!found && Character.isLetter(caracteres[i])) {
+                caracteres[i] = Character.toUpperCase(caracteres[i]);
+                found = true;
+            } else if (Character.isWhitespace(caracteres[i])) {
+                found = false;
+            }
+        }
+        vendor = String.valueOf(caracteres);
+        name = name.replace("_", " ");
+        found = false;
+        char [] namechar = name.toLowerCase().toCharArray();
+        for (int i = 0; i < namechar.length; i++) {
+            if (!found && Character.isLetter(namechar[i])) {
+                namechar[i] = Character.toUpperCase(namechar[i]);
+                found = true;
+            } else if (Character.isWhitespace(namechar[i])) {
+                found = false;
+            }
+        }
+        return vendor + "/" + name;
     }
 
 }
