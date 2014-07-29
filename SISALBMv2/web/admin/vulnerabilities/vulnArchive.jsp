@@ -9,6 +9,7 @@
         <title>Archivo de Vulnerabilidades</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
@@ -102,6 +103,7 @@
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
+                        <br />
                         <div id="page_title">Archivo de Vulnerabilidades</div>
                         <br />
                         <div class="searchdiv">
@@ -142,7 +144,7 @@
                                             <th>Nombre</th>
                                             <th>Afecta a</th>
                                             <th>Fecha de Publicación</th>
-                                            <th>Calificación**</th>
+                                            <!--<th>Calificación**</th>-->
                                             <th>Gravedad</th>
                                             <th>Opciones</th>
                                         </tr>
@@ -150,7 +152,7 @@
                                     <tbody>
                                         <c:forEach var="vuln" items="${arcveList}">
                                             <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
-                                            <tr>
+                                            <tr style="text-align: center">
                                                 <td>${vuln.name}</td>
                                                 <td>
                                                     <table style="border: 0; max-width: 150px">
@@ -164,7 +166,7 @@
                                                     </table>
                                                 </td>
                                                 <td>${parsedDate}</td>
-                                                <td>${vuln.CVSS.score}</td>
+                                                <!--<td>$ {vuln.CVSS.score}</td>-->
                                                 <c:choose>
                                                     <c:when test="${vuln.severity eq 'High'}">
                                                         <td>Alta</td>

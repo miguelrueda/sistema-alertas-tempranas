@@ -11,6 +11,7 @@
         <title>Admin Index</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <!--
         <script type="text/css" src="../resources/js/jquery-2.1.1.js"></script>
         <script type="text/css" src="../resources/js/jquery-ui-1.10.4.custom.js"></script>
@@ -56,6 +57,7 @@
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
+                        <br />
                         <div id="page_title">Vulnerabilidades Más Recientes</div>
                         <div id="content">
                             <div class="datagrid">
@@ -65,7 +67,7 @@
                                             <th>Nombre</th>
                                             <th>Afecta a:</th>
                                             <th>Fecha de Publicación</th>
-                                            <th>Calificación**</th>
+                                            <!--<th>Calificación**</th>-->
                                             <th>Gravedad</th>
                                             <th>Opciones</th>
                                         </tr>
@@ -73,7 +75,7 @@
                                     <tbody>
                                         <c:forEach var="vuln" items="${cveList}">
                                             <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
-                                            <tr>
+                                            <tr style="text-align: center">
                                                 <td>${vuln.name}</td>
                                                 <td>
                                                     <table style="border: 0; max-width: 150px">
@@ -87,19 +89,19 @@
                                                     </table>
                                                 </td>
                                                 <td>${parsedDate}</td>
-                                                <td>${vuln.CVSS.score}</td>
+                                                <!--<td>$ {vuln.CVSS.score}</td> -->
                                                 <c:choose>
                                                     <c:when test="${vuln.severity eq 'High'}">
-                                                        <td>Alta</td>
+                                                        <td style="text-align:center">Alta</td>
                                                     </c:when>
                                                     <c:when test="${vuln.severity eq 'Medium'}">
-                                                        <td>Media</td>
+                                                        <td style="text-align:center">Media</td>
                                                     </c:when>
                                                     <c:when test="${vuln.severity eq 'Low'}">
-                                                        <td>Baja</td>
+                                                        <td  style="text-align:center">Baja</td>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <td>${vuln.severity}</td>
+                                                        <td  style="text-align:center">${vuln.severity}</td>
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <td>

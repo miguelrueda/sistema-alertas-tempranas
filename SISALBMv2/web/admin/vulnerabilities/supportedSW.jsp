@@ -7,6 +7,7 @@
         <title>Software Soportado</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <style type="text/css">
@@ -95,11 +96,11 @@
                                 <button type="submit" id="addButton" class="addbutton">
                                     Agregar Software
                                 </button>
-                                -->
                                 <a href="vulnerabilities/addSW.jsp" id="add" class="addbutton">
                                     Agregar Software
                                 </a>
-                                <span class="espaciado" style="padding-left: 250px;">
+                                -->
+                                <span class="espaciado" style="padding-left: 440px;">
                                 </span>
                                 <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW o de Grupo" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />

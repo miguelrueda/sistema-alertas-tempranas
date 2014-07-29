@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
+<!--
 <div id="menu">
     <nav>
         <ul>
@@ -25,12 +26,38 @@
             </li>
         </ul>
     </nav>
-    <!--
-    <table>
-        <tr>
-            <td align="center" valign="top" width="15%"><a href="admin/Index.html">Página Administrativa</a></td>
-            <td align="center" valign="top" width="15%"><a href="consulta/Index.html">Página de Consulta</a></td>
-        </tr>
-    </table>
-    -->
+</div>
+-->
+<div id="cssmenu">
+    <ul>
+        <li><a href="../AppIndex.html"><span>AppIndex</span></a></li>
+        <li class="has-sub"><a href="#"><span>Configuración</span></a>
+            <ul>
+                <li class="has-sub"><a href="#"><span>Fuentes</span></a>
+                    <ul>
+                        <li><a href="../admin/configuration.controller?action=view&tipo=1"><span>Administrar</span></a></li>
+                    </ul>
+                </li>
+                <li class="has-sub"><a href="#"><span>Grupos</span></a>
+                    <ul>
+                        <li><a href="../admin/configuration.controller?action=view&tipo=2"><span>Administrar</span></a></li>
+                    </ul>
+                </li>
+                <li class="has-sub"><a href="#"><span>Software</span></a>
+                    <ul>
+                        <li><a href="../admin/vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
+                        <li><a href="../admin/vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="#"><span>Vulnerabilidades</span></a>
+            <ul>
+                <li><a href="../admin/vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
+                <li><a href="../admin/vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
+            </ul>
+        </li>
+        <li><a href="../admin/scanner/scan.jsp"><span>Escaneo</span></a></li>
+        <li><a href="../admin/help.jsp"><span>Ayuda</span></a></li>
+    </ul>
 </div>

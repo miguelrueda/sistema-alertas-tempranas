@@ -8,6 +8,7 @@
         <title>Administración de Fuentes</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <!--
@@ -144,6 +145,7 @@
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
+                        <br />
                         <div id="page_title">Fuentes de la aplicación</div>
                         <div id="content">
                             <div class="datagrid">
