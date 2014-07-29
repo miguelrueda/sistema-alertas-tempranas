@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width">
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
+        <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
@@ -180,6 +181,40 @@
             <div id="page_content">
                 <div id="title">&nbsp;Nuevo Escaneo</div>
                 <div id="workarea">
+                    <div id="cssmenu">
+                        <ul>
+                            <li><a href="../../AppIndex.html"><span>AppIndex</span></a></li>
+                            <li class="has-sub"><a href="#"><span>Configuración</span></a>
+                                <ul>
+                                    <li class="has-sub"><a href="#"><span>Fuentes</span></a>
+                                        <ul>
+                                            <li><a href="../configuration.controller?action=view&tipo=1"><span>Administrar</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub"><a href="#"><span>Grupos</span></a>
+                                        <ul>
+                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Administrar</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub"><a href="#"><span>Software</span></a>
+                                        <ul>
+                                            <li><a href="../vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
+                                            <li><a href="../vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><span>Vulnerabilidades</span></a>
+                                <ul>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="../scanner/scan.jsp"><span>Escaneo</span></a></li>
+                            <li><a href="../help.jsp"><span>Ayuda</span></a></li>
+                        </ul>
+                    </div>
+                    <!--
                     <div id="menu">
                         <nav>
                             <ul>
@@ -200,11 +235,6 @@
                                 </li>
                                 <li>
                                     <a href="../scanner/scan.jsp">Escaneo</a>
-                                    <!--
-                                    <ul>
-                                        <li><a href="../scanner/scan.jsp">Nuevo Escaneo</a></li>
-                                    </ul>
-                                    -->
                                 </li>
                                 <li>
                                     <a href="../help.jsp">Ayuda</a>
@@ -212,7 +242,9 @@
                             </ul>
                         </nav>
                     </div>
+                    -->
                     <div id="content_wrap">
+                        <br />
                         <div id="page_title">Realizar Escaneo</div>
                         <div id="content">
                             <form class="form" id="scanForm" >

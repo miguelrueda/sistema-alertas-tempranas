@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
+        <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <style type="text/css">
             #pdf {
                 width: 80%;
@@ -29,6 +30,40 @@
             <div id="page_content">
                 <div id="title">&nbsp;Versión Adminstrativa</div>
                 <div id="workarea">
+                    <div id="cssmenu">
+                        <ul>
+                            <li><a href="../AppIndex.html"><span>AppIndex</span></a></li>
+                            <li class="has-sub"><a href="#"><span>Configuración</span></a>
+                                <ul style="z-index: 999">
+                                    <li class="has-sub"><a href="#"><span>Fuentes</span></a>
+                                        <ul>
+                                            <li><a href="configuration.controller?action=view&tipo=1"><span>Administrar</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub"><a href="#"><span>Grupos</span></a>
+                                        <ul>
+                                            <li><a href="configuration.controller?action=view&tipo=2"><span>Administrar</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-sub"><a href="#"><span>Software</span></a>
+                                        <ul>
+                                            <li><a href="#"><span>Agregar Software</span></a></li>
+                                            <li><a href="vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><span>Vulnerabilidades</span></a>
+                                <ul>
+                                    <li><a href="vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
+                                    <li><a href="vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="scanner/scan.jsp"><span>Escaneo</span></a></li>
+                            <li><a href="#"><span>Ayuda</span></a></li>
+                        </ul>
+                    </div>
+                    <!--
                     <div id="menu">
                         <nav>
                             <ul style=" z-index: 999">
@@ -56,6 +91,7 @@
                             </ul>
                         </nav>
                     </div>
+                    -->
                     <div id="content_wrap">
                         <div id="content">
                             <br />
