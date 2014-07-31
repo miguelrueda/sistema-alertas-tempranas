@@ -88,6 +88,7 @@
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
+                        <br />
                         <div id="page_title">Software Soportado</div>
                         <br />
                         <div class="searchdiv">
