@@ -272,6 +272,13 @@ public class ScannerBean implements java.io.Serializable {
         LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en el escaneo completo.", totales.size());
         return totales;
     }
+    
+    public Set<Result> doRecentScan() {
+        vulndao = new VulnerabilityDAO();
+        swdao = new SoftwareDAO();
+        Set<Result> totales = doScan(vulndao.getRecents(), swdao.obtenerTodos());
+        return totales;
+    }
 
     /**
      * Método que realiza el escaneo a partir de las fecha ingfiltradaadas por
