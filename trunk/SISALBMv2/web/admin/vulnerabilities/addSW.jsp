@@ -113,6 +113,7 @@
                                             <li><a href="../vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
                                         </ul>
                                     </li>
+                                    <li class="last"><a href="/sisalbm/JobScheduleServlet"><span>Tareas Programadas</span></a></li>
                                 </ul>
                             </li>
                             <li><a href="#"><span>Vulnerabilidades</span></a>
