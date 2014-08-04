@@ -3,6 +3,7 @@ package mx.org.banxico.sisal.scanner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Date;
 import mx.org.banxico.sisal.entities.Software;
 import mx.org.banxico.sisal.parser.entidades.CVE;
 
@@ -12,7 +13,7 @@ import mx.org.banxico.sisal.parser.entidades.CVE;
  * @author t41507
  * @version 04072014
  */
-public class Result implements java.io.Serializable {
+public class Result implements java.io.Serializable, java.lang.Comparable {
 
     /**
      * Atributos de serialización y Logger
@@ -194,6 +195,16 @@ public class Result implements java.io.Serializable {
     @Override
     public String toString() {
         return "Result{" + "vulnerabilidad=" + vulnerabilidad + ", sw=" + sw + ", swList=" + swList + ", gruposList=" + gruposList + '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Date thisdate = vulnerabilidad.getPublished();
+        Date otherdate = ((Result) o).getVulnerabilidad().getPublished();
+        if (thisdate == null || otherdate == null) {
+            return 0;
+        }
+        return thisdate.compareTo(otherdate);
     }
 
 }

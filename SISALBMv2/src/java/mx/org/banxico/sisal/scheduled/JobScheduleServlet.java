@@ -17,11 +17,28 @@ import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 import java.text.SimpleDateFormat;
 
+/**
+ * Servlet que inicializa y obtiene la información de las tareas a ejecutar
+ *
+ * @author t41507
+ * @version 04082014
+ */
 public class JobScheduleServlet extends HttpServlet {
 
+    /**
+     * Atributo Logger
+     */
     private static final Logger LOG = Logger.getLogger(JobScheduleServlet.class.getName());
+    /**
+     * Instancia del scheduler
+     */
     private JobScheduler jScheduler;
 
+    /**
+     * Iniciar el scheduler al iniciar el servlet
+     *
+     * @throws ServletException
+     */
     @Override
     public void init() throws ServletException {
         LOG.log(Level.INFO, "Iniciando el servlet scheduler: {0}", new Date());
@@ -29,11 +46,20 @@ public class JobScheduleServlet extends HttpServlet {
         jScheduler.start();
     }
 
+    /**
+     * Método que maneja las solicitudes del servlet
+     *
+     * @param request referencia de la solicitud
+     * @param response referencia de la respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
+            //Contenido de la respuesta
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -115,13 +141,17 @@ public class JobScheduleServlet extends HttpServlet {
             out.println("</tr>");
             out.println("</thead>");
             out.println("<tbody>");
+            //Se iteran todos los grupo del scheduler para obtener su informacion
             for (String grupo : sched.getJobGroupNames()) {
+                //Se compara cada llave para obtener incidencias
                 for (JobKey jobKey : sched.getJobKeys(GroupMatcher.jobGroupEquals(grupo))) {
+                    //Se obtiene nombre, grupo e información del trigger
                     String jobName = jobKey.getName();
                     String jobGroup = jobKey.getGroup();
                     List<Trigger> triggers = (List<Trigger>) sched.getTriggersOfJob(jobKey);
                     Date nextFireTime = triggers.get(0).getNextFireTime();
                     Date previousFireTime = triggers.get(0).getPreviousFireTime();
+                    //Contenido de la respuesta
                     out.println("<tr>");
                     out.println("<td>" + jobName + "</td>");
                     if (previousFireTime != null) {
@@ -157,12 +187,28 @@ public class JobScheduleServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Método que procesa la solicitud Get
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Método que procesa la solicitud Post
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

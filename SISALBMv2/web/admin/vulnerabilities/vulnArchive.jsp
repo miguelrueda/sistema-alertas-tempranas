@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -154,17 +155,24 @@
                                             <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
                                             <tr style="text-align: center">
                                                 <td>${vuln.name}</td>
-                                                <td>
-                                                    <table style="border: 0; max-width: 150px">
-                                                        <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
-                                                            <tr>
-                                                                <td>
-                                                                    ${vulnsw.name}
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </table>
-                                                </td>
+                                                <c:if test="${fn:length(vuln.vuln_soft) > 0}">
+                                                    <td>
+                                                        <table style="border: 0; max-width: 150px">
+                                                            <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
+                                                                <tr>
+                                                                    <td>
+                                                                        ${vulnsw.name}
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </table>
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
+                                                    <td style="text-align: left">
+                                                        No definido
+                                                    </td>
+                                                </c:if>
                                                 <td>${parsedDate}</td>
                                                 <!--<td>$ {vuln.CVSS.score}</td>-->
                                                 <c:choose>
