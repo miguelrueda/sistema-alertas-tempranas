@@ -37,6 +37,10 @@
         <servlet-class>mx.org.banxico.sisal.scheduled.JobScheduleServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>TestReportServlet</servlet-name>
+        <servlet-class>mx.org.banxico.sisal.servlets.TestReportServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -80,6 +84,10 @@
     <servlet-mapping>
         <servlet-name>JobScheduleServlet</servlet-name>
         <url-pattern>/JobScheduleServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestReportServlet</servlet-name>
+        <url-pattern>/TestReportServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mx.org.banxico.sisal.dao.SoftwareDAO;
@@ -273,6 +275,11 @@ public class ScannerBean implements java.io.Serializable {
         return totales;
     }
     
+    /**
+     * Método que realiza el escaneo solo de vulnerabilidades recientes
+     *
+     * @return incidencias sobre las vulnerabilidades recientes
+     */
     public Set<Result> doRecentScan() {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
@@ -310,7 +317,41 @@ public class ScannerBean implements java.io.Serializable {
         LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", totales.size());
         return totales;
     }
-
+    
+    /**
+     * Método que realiza el escaneo mensual
+     *
+     * @return conjunto de resultados del escaneo mensual
+     */
+    public Set<Result> doMonthlyScan() {
+        //Obtener una isntancial del calendario y apuntarla al primer dia del mes
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        //Establecerla como parametro fecha de inicio
+        Date inicio = cal.getTime();
+        //Obtener una referencia a la fecha actual
+        Date now = new Date();
+        //Establecer el tiempo como el fin de mes
+        cal.setTime(now);
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.DATE, -1);
+        //Establecer la referncia como el fin de mes
+        Date fin = cal.getTime();
+        //Iniciar los daos
+        vulndao = new VulnerabilityDAO();
+        swdao = new SoftwareDAO();
+        List<CVE> vulns = filtrarListaPorFecha(vulndao.getArchivoCVE(), inicio, fin);
+        //Ejecutar ele scaneo.
+        Set<Result> totales = doScan(vulns, swdao.obtenerTodos());
+        LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en el periodo: {1}/{2}", new Object[]{totales.size(), inicio.toString(), fin.toString()});
+        return totales;
+    }
+    
     /**
      * Método que realiza el escaneo a partir de los parámetros ingfiltradaados
      *
@@ -523,6 +564,11 @@ public class ScannerBean implements java.io.Serializable {
                 diferentes.add(result);
             }
         }
+        List<Result> order = new ArrayList<Result>();
+        order.addAll(diferentes);
+        Collections.sort(order);
+        diferentes = new LinkedHashSet<Result>();
+        diferentes.addAll(order);
         return diferentes;
     }
 

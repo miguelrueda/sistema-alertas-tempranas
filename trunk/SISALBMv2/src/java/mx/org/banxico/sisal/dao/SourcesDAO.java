@@ -43,7 +43,7 @@ public class SourcesDAO { // implements java.io.Serializable {
     private int noFuentes;
 
     /**
-     *
+     * Constructor del dao
      */
     public SourcesDAO() {
         //iniciarFuentes();
@@ -60,8 +60,9 @@ public class SourcesDAO { // implements java.io.Serializable {
     //TODO: Eliminar esté método
 
     /**
+     * Método que se encarga de obtener la conexión de BD
      *
-     * @return
+     * @return objeto de tipo Connection 
      */
         public Connection getConnection() {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
@@ -75,6 +76,9 @@ public class SourcesDAO { // implements java.io.Serializable {
     private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
     private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
 
+    /**
+     * Método que se encarga de obtener las fuentes de la BD
+     */
     private void iniciarFuentes() {
         fuentes = new ArrayList<FuenteApp>();
         FuenteApp fuente;
@@ -112,18 +116,20 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     /**
+     * Método que devuleve el total de fuentes en la BD
      *
-     * @return
+     * @return no. de fuentes
      */
     public int getNoFuentes() {
         return noFuentes;
     }
 
     /**
+     * Método que se encarga de crear una nueva fuente
      *
-     * @param nombre
-     * @param url
-     * @return
+     * @param nombre nombre de la fuente
+     * @param url direccion del archivo de la fuente
+     * @return true cuando se crea la fuente y false cuando no se crea.
      */
     public boolean crearFuente(String nombre, String url) {
         boolean res = false;
@@ -142,8 +148,9 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     /**
+     * Método que se encarga de obtener la lista de fuentes
      *
-     * @return
+     * @return lista de fuentes obtenidas
      */
     public List<FuenteApp> obtenerFuentes() {
         if (!fuentes.isEmpty()) {
@@ -153,9 +160,10 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     /**
+     * Método que obtiene la referencia de una fuente a partir de su di
      *
-     * @param id
-     * @return
+     * @param id identificador de la fuente
+     * @return referencia de la fuente 
      */
     public FuenteApp obtenerFuentePorId(int id) {
         for (FuenteApp src : fuentes) {

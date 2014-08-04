@@ -77,16 +77,24 @@
                                             <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
                                             <tr style="text-align: center">
                                                 <td>${vuln.name}</td>
-                                                <td>
-                                                    <table style="border: 0; max-width: 150px">
-                                                        <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
-                                                            <tr>
-                                                                <td>
-                                                                    ${vulnsw.name}
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </table>
+                                                <c:if test="${fn:length(vuln.vuln_soft) > 0}">
+                                                    <td>
+                                                        <table style="border: 0; max-width: 150px">
+                                                            <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
+                                                                <tr>
+                                                                    <td>
+                                                                        ${vulnsw.name}
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </table>
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
+                                                    <td style="text-align:left">
+                                                        No definido
+                                                    </td>
+                                                </c:if>
                                                 </td>
                                                 <td>${parsedDate}</td>
                                                 <!--<td>$ {vuln.CVSS.score}</td> -->

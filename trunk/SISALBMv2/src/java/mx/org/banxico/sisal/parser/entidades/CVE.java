@@ -12,7 +12,7 @@ import java.util.List;
  * @author t41507
  * @version 20.05.2014
  */
-public class CVE implements java.io.Serializable {
+public class CVE implements java.io.Serializable, java.lang.Comparable {
 
     private static final long serialVersionUID = -1L;
 
@@ -261,6 +261,16 @@ public class CVE implements java.io.Serializable {
             sb.append("No Vulnerable SW Available\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Date thisdate = published;
+        Date otherdate = ((CVE) o).getPublished();
+        if (thisdate == null || otherdate == null) {
+            return 0;
+        }
+        return thisdate.compareTo(otherdate);
     }
 
 }

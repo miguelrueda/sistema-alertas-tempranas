@@ -470,6 +470,10 @@ public class SoftwareDAO { //implements java.io.Serializable {
         return nConn;
     }
 
+    /**
+     * Método que se encarga de iniciar la lista de Softwares apartir de un archivo
+     * TODO: ELiminar esté método
+     */
     private void iniciarLista() {
         swList = new ArrayList<Software>();
         Software sw;
@@ -582,6 +586,12 @@ public class SoftwareDAO { //implements java.io.Serializable {
     
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
 
+    /**
+     * Método que devuelve una lista de productos a partir de el nombre de un fabricante
+     *
+     * @param fabricante fabricante a buscar
+     * @return lista de productos del fabricante
+     */
     public List<String> obtenerProductos(String fabricante) {
         List<String> productos = new ArrayList<String>();
         try {
