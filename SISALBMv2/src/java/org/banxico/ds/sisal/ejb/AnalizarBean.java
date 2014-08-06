@@ -45,7 +45,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
         initialExpiration.set(Calendar.SECOND, START_SECONDS);
         long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
-        LOG.log(Level.INFO, "Timer de analisi creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
+        LOG.log(Level.INFO, "Timer de analisis creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
         timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
     }
 
@@ -67,11 +67,6 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "Se encontraron: {0} posible amenazas.", resultados.size());
         LOG.log(Level.INFO, "El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
-/*
-        scanner = new ScannerBean();
-        Set<Result> resultados = scanner.doRecentScan();
-    */
-    
     
     @Override
     public String getDescripcion() {
@@ -107,11 +102,6 @@ public class AnalizarBean implements AnalizarBeanLocal {
             Date regdate = new Date();
             msg.setSubject(asunto + fmt.format(regdate));
             StringBuilder cuerpo = new StringBuilder();
-            cuerpo.append("<h3>Se encontraron: ")
-                    .append(resultados.size())
-                    .append(" posibles amenazas - ")
-                    .append(fmt.format(regdate))
-                    .append("</h3>");
             for (Result result : resultados) {
                 cuerpo.append("<p>");
                 String sev = result.getVulnerabilidad().getSeverity();

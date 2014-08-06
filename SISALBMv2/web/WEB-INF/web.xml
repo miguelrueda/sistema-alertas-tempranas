@@ -9,20 +9,8 @@
         <servlet-class>org.banxico.ds.sisal.servlets.ConfigurationServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AppExceptionHandler</servlet-name>
-        <servlet-class>test.pack.AppExceptionHandler</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ScannerServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.servlets.ScannerServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>JobScheduleServlet</servlet-name>
-        <servlet-class>org.banxico.ds.sisal.scheduled.JobScheduleServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>TestReportServlet</servlet-name>
-        <servlet-class>org.banxico.ds.sisal.servlets.TestReportServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>JobServlet</servlet-name>
@@ -37,10 +25,6 @@
         <servlet-name>ConfigurationServlet</servlet-name>
         <url-pattern>/admin/configuration.controller</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AppExceptionHandler</servlet-name>
-        <url-pattern>/AppExceptionHandler</url-pattern>
-    </servlet-mapping>
     <error-page>
         <error-code>404</error-code>
         <location>/error.jsp</location>
@@ -52,14 +36,6 @@
     <servlet-mapping>
         <servlet-name>ScannerServlet</servlet-name>
         <url-pattern>/scanner</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>JobScheduleServlet</servlet-name>
-        <url-pattern>/JobScheduleServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TestReportServlet</servlet-name>
-        <url-pattern>/TestReportServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>JobServlet</servlet-name>
