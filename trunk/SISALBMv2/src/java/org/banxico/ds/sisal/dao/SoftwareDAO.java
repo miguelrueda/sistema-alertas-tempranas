@@ -1,11 +1,6 @@
 package org.banxico.ds.sisal.dao;
 
 //import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,7 +32,7 @@ public class SoftwareDAO { //implements java.io.Serializable {
      * Atributos del DAO
      */
     //private static final String PRODSFILE = "/resources/softwareproducts.csv";
-    private static final String PRODSFILE = "/resources/swdb.csv";
+    //private static final String PRODSFILE = "/resources/swdb.csv";
     private Connection connection;
     private PreparedStatement pstmt;
     private List<Software> swList;
@@ -49,11 +44,11 @@ public class SoftwareDAO { //implements java.io.Serializable {
     public SoftwareDAO() {
         //iniciarLista();
         //if (connection != null) {
-            //LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
-            //cargarTodos();
+        //LOG.log(Level.INFO, "Se ha establecido conexi\u00f3n con la BD");
+        //cargarTodos();
         //} else {
-            //iniciarLista();
-            cargarTodos();
+        //iniciarLista();
+        cargarTodos();
         //}
     }
 
@@ -471,56 +466,28 @@ public class SoftwareDAO { //implements java.io.Serializable {
     }
 
     /**
-     * Método que se encarga de iniciar la lista de Softwares apartir de un archivo
-     * TODO: ELiminar esté método
+     * Método que se encarga de iniciar la lista de Softwares apartir de un
+     * archivo TODO: ELiminar esté método
+     *
+     * private void iniciarLista() { swList = new ArrayList<Software>();
+     * Software sw; String[] record; try { File file = new
+     * File(SoftwareDAO.class.getResource(PRODSFILE).getFile()); CSVReader
+     * reader = new CSVReader(new FileReader(file)); reader.readNext(); int nr =
+     * 0; while ((record = reader.readNext()) != null) { sw = new Software();
+     * sw.setIdSoftware(Integer.parseInt(record[0])); if (!(record[1].length()
+     * == 0)) { sw.setFabricante(record[1]); } sw.setNombre(record[2]); if
+     * (!(record[3].length() == 0)) { sw.setVersion(record[3]); } else {
+     * sw.setVersion("-"); } if (!(record[4].length() == 0)) {
+     * sw.setTipo(Integer.parseInt(record[4])); } if (!(record[5].length() ==
+     * 0)) { sw.setEndoflife(Integer.parseInt(record[5])); } else {
+     * sw.setEndoflife(-1); } if (!(record[6].length() == 0)) {
+     * sw.setUAResponsable(record[6]); } sw.setAnalistaResponsable(record[7]);
+     * swList.add(sw); nr++; } reader.close(); this.noOfRecords = nr; } catch
+     * (FileNotFoundException e) { LOG.log(Level.SEVERE, null, e); } catch
+     * (IOException ex) { LOG.log(Level.SEVERE, null, ex); } catch
+     * (java.lang.NumberFormatException nfe) { LOG.log(Level.INFO, "Error de
+     * Conversi\u00f3n: {0}", nfe.getMessage()); } }
      */
-    private void iniciarLista() {
-        swList = new ArrayList<Software>();
-        Software sw;
-        String[] record;
-        try {
-            File file = new File(SoftwareDAO.class.getResource(PRODSFILE).getFile());
-            CSVReader reader = new CSVReader(new FileReader(file));
-            reader.readNext();
-            int nr = 0;
-            while ((record = reader.readNext()) != null) {
-                sw = new Software();
-                sw.setIdSoftware(Integer.parseInt(record[0]));
-                if (!(record[1].length() == 0)) {
-                    sw.setFabricante(record[1]);
-                }
-                sw.setNombre(record[2]);
-                if (!(record[3].length() == 0)) {
-                    sw.setVersion(record[3]);
-                } else {
-                    sw.setVersion("-");
-                }
-                if (!(record[4].length() == 0)) {
-                    sw.setTipo(Integer.parseInt(record[4]));
-                }
-                if (!(record[5].length() == 0)) {
-                    sw.setEndoflife(Integer.parseInt(record[5]));
-                } else {
-                    sw.setEndoflife(-1);
-                }
-                if (!(record[6].length() == 0)) {
-                    sw.setUAResponsable(record[6]);
-                }
-                sw.setAnalistaResponsable(record[7]);
-                swList.add(sw);
-                nr++;
-            }
-            reader.close();
-            this.noOfRecords = nr;
-        } catch (FileNotFoundException e) {
-            LOG.log(Level.SEVERE, null, e);
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
-        } catch (java.lang.NumberFormatException nfe) {
-            LOG.log(Level.INFO, "Error de Conversi\u00f3n: {0}", nfe.getMessage());
-        }
-    }
-    
     private static final String searchQry = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre, g.categoria "
             + "FROM Software s, Grupo g, Grupo_Software x "
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo "
@@ -570,24 +537,25 @@ public class SoftwareDAO { //implements java.io.Serializable {
             }
         }
         /*
-        for (Software sw : swList) {
-            if (sw.getFabricante().equalsIgnoreCase(key) || sw.getNombre().equalsIgnoreCase(key)
-                    || sw.getFabricante().toLowerCase().startsWith(key.toLowerCase()) || sw.getNombre().toLowerCase().startsWith(key.toLowerCase())
-                    || sw.getNombre().toLowerCase().contains(key.toLowerCase())
-                    || sw.getUAResponsable().toLowerCase().contains(key.toLowerCase())) {
-                found.add(sw);
-            }
-        }*/
+         for (Software sw : swList) {
+         if (sw.getFabricante().equalsIgnoreCase(key) || sw.getNombre().equalsIgnoreCase(key)
+         || sw.getFabricante().toLowerCase().startsWith(key.toLowerCase()) || sw.getNombre().toLowerCase().startsWith(key.toLowerCase())
+         || sw.getNombre().toLowerCase().contains(key.toLowerCase())
+         || sw.getUAResponsable().toLowerCase().contains(key.toLowerCase())) {
+         found.add(sw);
+         }
+         }*/
         if (!found.isEmpty()) {
             return found;
         }
         return new ArrayList<Software>();
     }
-    
+
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
 
     /**
-     * Método que devuelve una lista de productos a partir de el nombre de un fabricante
+     * Método que devuelve una lista de productos a partir de el nombre de un
+     * fabricante
      *
      * @param fabricante fabricante a buscar
      * @return lista de productos del fabricante
