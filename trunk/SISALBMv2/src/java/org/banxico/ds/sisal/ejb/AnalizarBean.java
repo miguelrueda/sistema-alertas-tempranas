@@ -23,22 +23,51 @@ import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
 
+/**
+ * Bean que realiza la tarea del analisis de vulnerabilidades
+ *
+ * @author t41507
+ * @version 07.08.2014
+ */
 @Stateless
 public class AnalizarBean implements AnalizarBeanLocal {
     
+    /**
+     * Inyección del recurso del servicio de tiempo
+     */
     @Resource
     TimerService timerService;
+    /**
+     * Atributo Logger
+     */
     private static final Logger LOG = Logger.getLogger(AnalizarBean.class.getName());
+    /**
+     * Atributos que definen la hora de la actualización
+     */
     private static final int START_HOUR = 11;
     private static final int START_MINUTES = 0;
     private static final int START_SECONDS = 0;
-    private static final int INTERVAL_IN_MINUTES = 360;
+    private static final int INTERVAL_IN_MINUTES = 1440;
+    /**
+     * Atributos del Bean
+     */
     private static final String descripcion = "Analisis";
     private ScannerBean scanner;
+    /**
+     * Atributos de Envio de correo
+     */
+    private static final String host = "bmmail.banxico.org.mx";
+    private static final String port = "25";
+    private static final String from = "termometro_OSI@correobm.org.mx";
+    private static final String to = "jamaya@banxico.org.mx";
+    private static final String CCss = "T41507@correobm.org.mx";
+    private static final String asunto = "+ Resultados ";
 
+    /**
+     * Método que se encarga de establecer el tiempo para el analisis
+     */
     @Override
     public void setTimer() {
-        LOG.log(Level.INFO, "Estableciendo el timer de analisis");
         stopTimer();
         Calendar initialExpiration = Calendar.getInstance();
         initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
@@ -49,6 +78,9 @@ public class AnalizarBean implements AnalizarBeanLocal {
         timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
     }
 
+    /**
+     * Método que se utiliza para detener los temporizadores
+     */
     @Override
     public void stopTimer() {
         Collection<Timer> timers = timerService.getTimers();
@@ -58,21 +90,35 @@ public class AnalizarBean implements AnalizarBeanLocal {
         }
     }
     
+    /**
+     * Método que se encarga de realizar el escaneo de vulnerabilidades recientes
+     *
+     * @param timer objeto de tipo Timer
+     */
     @Timeout
     public void doScan(Timer timer) {
         LOG.log(Level.INFO, "Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
         scanner = new ScannerBean();
         Set<Result> resultados = scanner.doRecentScan();
         enviarResultados(resultados);
-        LOG.log(Level.INFO, "Se encontraron: {0} posible amenazas.", resultados.size());
         LOG.log(Level.INFO, "El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
     
+    /**
+     * Método que se encarga de retornar la descripción de la tarea
+     *
+     * @return cadena con la descripción
+     */
     @Override
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     * Método que se encarga de retornar información de la siguiente ejecución de la tarea
+     *
+     * @return fecha de la siguiente ejecución
+     */
     @Override
     public Date getNextFireTime() {
         Collection<Timer> timers = timerService.getTimers();
@@ -83,28 +129,39 @@ public class AnalizarBean implements AnalizarBeanLocal {
         return next;
     }
     
-    private static final String host = "bmmail.banxico.org.mx";
-    private static final String port = "25";
-    private static final String from = "termometro_OSI@correobm.org.mx";
-    private static final String to = "T41507@correobm.org.mx";
-    private static final String asunto = "+ Resultados ";
-
+    /**
+     * Método que se encarga de enviar los resultados por correo, usando javaMail
+     * 
+     * @param resultados conjunto de resultados para generar el cuerpo del correo
+     */
     private void enviarResultados(Set<Result> resultados) {
+        //Instanciar un objeto de propiedades
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
-        props.put("mail.debug", "true");
+        //props.put("mail.debug", "true");
         try {
+            //Obtener una sesión de correo
             Session session = Session.getInstance(props, null);
+            //Crear una instancia del mensaje
             Message msg = new MimeMessage(session);
+            //Establecer emisor
             msg.setFrom(new InternetAddress(from));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            //Establecer receptor
+            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
+            //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
+            //Asunto del correo
             msg.setSubject(asunto + fmt.format(regdate));
+            //Buffer para el cuerpo del correo
             StringBuilder cuerpo = new StringBuilder();
+            cuerpo.append("Se encontraron: ").append(resultados.size()).append(" posibles amenazas.");
+            //Para cada resultado
             for (Result result : resultados) {
                 cuerpo.append("<p>");
                 String sev = result.getVulnerabilidad().getSeverity();
+                //Traducir gravedad
                 String es_sev = "";
                 if (sev.equalsIgnoreCase("high")) {
                     es_sev = "Alta";
@@ -115,7 +172,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
                 } else {
                     es_sev = "ND";
                 }
-                
+                //Cuerpo del mensaje
                 cuerpo.append("La vulnerabilidad <u style='background: #FD0; color: #02F; text-decoration:none; font-size:18px'>")
                         .append(result.getVulnerabilidad().getName())
                         .append("</u> publicada el: ")
@@ -142,6 +199,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
                 cuerpo.append("</ul>");
                 cuerpo.append("</p>");
             }
+            //cuerpo.append("Correo generado por Java - ").append(fmt.format(new Date()));
             //msg.setText(cuerpo.toString());
             msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
             msg.setSentDate(new Date());

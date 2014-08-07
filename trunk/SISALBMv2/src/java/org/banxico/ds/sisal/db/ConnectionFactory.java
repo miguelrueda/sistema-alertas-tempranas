@@ -13,12 +13,12 @@ import java.util.logging.Logger;
  * Clase que implementa el patron singleton para devolver una instancia de la conexión a BD
  *
  * @author t41507
- * @version 02072014
+ * @version 07.08.2014
  */
 public class ConnectionFactory {
 
     /**
-     * Atributo de serialización
+     * Atributo LOGGER
      */
     private static final Logger LOG = Logger.getLogger(ConnectionFactory.class.getName());
     /**
@@ -31,9 +31,11 @@ public class ConnectionFactory {
      */
     private ConnectionFactory() {
         try {
+            //Instanciar y un objeto de propiedades y leer las propiedades de la bd
             Properties prop = new Properties();
             InputStream is = ConnectionFactory.class.getResourceAsStream("db.properties");
             prop.load(is);
+            //Obtener la clase del driver y el url de conexión
             String driverClass = prop.getProperty("driver");
             String connUrl = prop.getProperty("url");
             Class.forName(driverClass);
@@ -47,7 +49,7 @@ public class ConnectionFactory {
     /**
      * Método que devuelve la instancia de la clase connection Factory
      *
-     * @return
+     * @return instancia de la conexión
      */
     public static ConnectionFactory getInstance() {
         if (instance == null) {
@@ -60,11 +62,12 @@ public class ConnectionFactory {
      * Método que se encarga de obtener la conexión con la BD, obteniendo la url de la BD de un 
      * archivo de propiedades localizado en el mismo paquete
      *
-     * @return
+     * @return objeto de tipo connection que hace referncia a la conexión
      */
     public Connection getConnection() {
         Connection connection = null;
         try {
+            //Instanciar un objeto de propiedades y cargar el archivo de propiedades
             Properties prop = new Properties();
             InputStream is = ConnectionFactory.class.getResourceAsStream("db.properties");
             prop.load(is);
@@ -76,10 +79,10 @@ public class ConnectionFactory {
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al abrir el archivo de propiedades: {0}", ex.getMessage());
         } catch (SecurityException ex) {
-            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "Ocurrio una excepci\u00f3n de seguridad: {0}", ex.getMessage());
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            LOG.log(Level.SEVERE, "Ocurrio una excepci\u00f3n de argumento invalido: {0}", ex.getMessage());
+        } 
         return connection;
     }
 

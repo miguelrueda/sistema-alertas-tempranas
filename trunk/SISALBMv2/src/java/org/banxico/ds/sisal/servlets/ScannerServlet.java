@@ -42,48 +42,61 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Instanciar dao y bean de escaneo
         SoftwareDAO swdao = new SoftwareDAO();
         ScannerBean scannerService = new ScannerBean();
         PrintWriter out = response.getWriter();
         try {
+            //Solicitar el parametro action
             String action = (String) request.getParameter("action");
+            //Atributos de paginador
             int page = 1; int recordsPerPage = 20;
+            //Si el parametro es retrieve
             if (action.equalsIgnoreCase("retrieve")) {
                 response.setContentType("text/html;charset=UTF-8");
+                //Obtener el parametro val 
                 String val = (String) request.getParameter("val");
+                //Buscar por UA
                 if (val.equalsIgnoreCase("ua")) {
                     List<String> uasList = swdao.obtenerUAs();
                     out.println("<option value='0'>Todos los Grupos/Todas las UA</option>");
                     for (String ua : uasList) {
                         out.println("<option value='" + ua + "'>" + ua + "</option>");
                     }
+                    //Buscar por proveedor
                 } else if (val.equalsIgnoreCase("vendor")) {
                     String retVendor = request.getParameter("vendor");
+                    //Todos los vendedores
                     if (retVendor.equals("0")) {    //Obtener todos
                         List<String> vendorList = swdao.obtenerFabricantes();
                         out.println("<option value='0'>Seleccionar Fabricante</option>");
                         for (String vendor : vendorList) {
                             out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                         }
+                        //Vendedor especifico
                     } else { //Obtener específico
                         List<String> vendorList = swdao.obtenerFabricantes(retVendor);
                         for (String vendor : vendorList) {
                             out.println("<option value='" + vendor + "'>" + vendor + "</option>");
                         }
                     }
+                    //Buscar por producto
                 } else if (val.equalsIgnoreCase("product")) {
                     String fabricante = request.getParameter("vendor");
                     if (!fabricante.equals("0")) {
-                        List<String> productos = swdao.obtenerProductos(fabricante);
+                        List<String> productos = swdao.obtenerProductosPorFabricante(fabricante);
                         for (String product : productos) {
                             out.println("<option value='" + product + "'>" + product + "</option>");
                         }
                     }
                 }
+                //Si el parametro es scan
             } else if (action.equalsIgnoreCase("scan")) {
                 response.setContentType("text/html;charset=UTF-8");
+                //Solicitar el parametro tipo
                 String tipo = (String) request.getParameter("tipo");
                 exportBuffer = new StringBuilder();
+                //Tipo completo = analisis profundo
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
                     Set<Result> resultados = null;
@@ -126,6 +139,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     request.setAttribute("resultados", resultados);
                     request.setAttribute("noOfResults", resultados.size());
                     request.setAttribute("exportBuffer", exportBuffer);
+                    //Tipo custom = analisis parcial
                 } else if (tipo.equalsIgnoreCase("custom")) {
                     String vulnt = (String) request.getParameter("vulnt");
                     if (vulnt.equalsIgnoreCase("recent")) {
@@ -211,9 +225,11 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     request.setAttribute("resultados", resultados);
                     request.setAttribute("noOfResults", resultados.size());
                     request.setAttribute("exportBuffer", exportBuffer);
+                    //Error
                 } else {
                     response.getWriter().write("Error desconocido");
                 }
+                //Redirección a resultados
                 String nextJSP = "/admin/scanner/results.jsp";
                 RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);

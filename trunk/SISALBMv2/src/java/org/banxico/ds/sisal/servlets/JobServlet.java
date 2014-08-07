@@ -11,23 +11,47 @@ import javax.servlet.http.HttpServletResponse;
 import org.banxico.ds.sisal.ejb.AnalizarBeanLocal;
 import org.banxico.ds.sisal.ejb.UpdateBeanLocal;
 
+/**
+ * Servlet que se encarga de inicializar las tareas agendadas
+ *
+ * @author t41507
+ * @version 07.08.2014
+ */
 public class JobServlet extends HttpServlet {
     
+    /**
+     * Inyección de los enterprise beans
+     */
     @EJB
     private AnalizarBeanLocal analizarBean;
     @EJB
     private UpdateBeanLocal updateBean;
 
+    /**
+     * Método de inicialización del servlet
+     *
+     * @throws ServletException cuando no se pueda inicializar
+     */
     @Override
     public void init() throws ServletException {
+        //Iniciar los timers
         updateBean.setTimer();
         analizarBean.setTimer();
     }
 
+    /**
+     * Método que procesa las solicitudes del servlet
+     *
+     * @param request objeto de solicitud
+     * @param response objeto de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        //Codigo HTML
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
@@ -93,30 +117,30 @@ public class JobServlet extends HttpServlet {
         out.println("<th>");
         out.println("Tarea");
         out.println("</th>");
-        /*
-        out.println("<th>");
-        out.println("Ultima Ejecución");
-        out.println("</th>");
-                */
         out.println("<th>");
         out.println("Siguiente Ejecución");
         out.println("</th>");
         out.println("</tr>");
         out.println("</thead>");
+        //Cuerpo de la tabla
         out.println("<tbody>");
         out.println("<tr>");
         out.println("<td>");
+        //Descripción de la tarea
         out.println(updateBean.getDescripcion());
         out.println("</td>");
         out.println("<td>");
+        //Siguiente ejecución
         out.println(formater.format(updateBean.getNextFireTime()));
         out.println("</td>");
         out.println("</tr>");
         out.println("<tr>");
         out.println("<td>");
+        //Descripción de la tarea
         out.println(analizarBean.getDescripcion());
         out.println("</td>");
         out.println("<td>");
+        //Siguiente ejecución
         out.println(formater.format(analizarBean.getNextFireTime()));
         out.println("</td>");
         out.println("</tr>");
@@ -134,21 +158,32 @@ public class JobServlet extends HttpServlet {
         out.println("</html>");
     }
 
+    /**
+     * Método doGet
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Método doPost
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Short description";
     }
 
 }
