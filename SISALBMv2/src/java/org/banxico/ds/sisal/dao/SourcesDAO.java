@@ -23,84 +23,82 @@ import org.banxico.ds.sisal.db.ConnectionFactory;
 import org.banxico.ds.sisal.entities.FuenteApp;
 
 /**
+ * Clase que se encarga de manejar el acceso a datos relacionados con la entidad
+ * Fuente
  *
  * @author t41507
+ * @version 07.08.2014
  */
-public class SourcesDAO { // implements java.io.Serializable {
+public class SourcesDAO {
 
     /**
-     * Atributos de serialización y Logger
+     * Atributo LOGGER
      */
-    //private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(SourcesDAO.class.getName());
     /**
-     * Atributos del DAO
+     * Atributos de Conexión
      */
     private Connection conn;
     private PreparedStatement pstmt;
     private ResultSet rs;
+    /**
+     * Atributos del DAO
+     */
     private List<FuenteApp> fuentes;
     private int noFuentes;
-
     /**
-     * Constructor del dao
+     * Consultas SQL
      */
-    public SourcesDAO() {
-        //iniciarFuentes();
-        //iniciarFuentesTemp();
-        conn = ConnectionFactory.getInstance().getConnection();
-        if (conn != null) {
-            LOG.log(Level.INFO, "Conexión con BD exitosa!");
-            iniciarFuentes();
-        } else {
-            iniciarFuentesTemp();
-        }
-    }
-
-    //TODO: Eliminar esté método
-
-    /**
-     * Método que se encarga de obtener la conexión de BD
-     *
-     * @return objeto de tipo Connection 
-     */
-        public Connection getConnection() {
-        Connection nConn = ConnectionFactory.getInstance().getConnection();
-        return nConn;
-    }
-
     private static final String sqlRetrieveAll = "SELECT * FROM FuenteApp";
     private static final String sqlRetrieveDate = "SELECT fecha_actualizacion FROM FuenteApp WHERE idFuenteApp = ?";
     private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion) VALUES (?, ?, ?)";
     private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=? WHERE idFuenteApp = ?";
     private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
     private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
+    
+    /**
+     * Constructor del dao
+     */
+    public SourcesDAO() {
+        /*
+        urlconn = ConnectionFactory.getInstance().getConnection();
+        if (urlconn != null) {
+            LOG.log(Level.INFO, "Conexión con BD exitosa!");
+            iniciarFuentes();
+        } else {
+            iniciarFuentesTemp();
+        }*/
+        iniciarFuentes();
+    }
 
     /**
      * Método que se encarga de obtener las fuentes de la BD
      */
     private void iniciarFuentes() {
+        //Inicializar la lista e instanciar un objeto de tipo fuente
         fuentes = new ArrayList<FuenteApp>();
         FuenteApp fuente;
         try {
+            //Obtener conexión y preparar el statement
             conn = getConnection();
             pstmt = conn.prepareStatement(sqlRetrieveAll);
             rs = pstmt.executeQuery();
             int nr = 0;
+            //Iterar los resultados y poblar la lista
             while (rs.next()) {
                 fuente = new FuenteApp();
                 fuente.setId(rs.getInt(1));
                 fuente.setNombre(rs.getString(2));
                 fuente.setUrl(rs.getString(3));
                 fuente.setFechaActualizacion(rs.getDate(4));
-                //LOG.log(Level.INFO, "Agregando Fuente:  {0} {1}", new Object[]{fuente.getId(), fuente.getNombre()});
                 fuentes.add(fuente);
                 nr++;
             }
             rs.close();
+            //Establecer el no de registros
             this.noFuentes = nr;
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Error a obtener las fuentes: {0}", e.getMessage());
+            LOG.log(Level.INFO, "Ocurrio un error en la conexión a BD: {0}", e.getMessage());
         } finally {
             try {
                 if (pstmt != null) {
@@ -114,15 +112,89 @@ public class SourcesDAO { // implements java.io.Serializable {
             }
         }
     }
+    
+    /**
+     * Método que se encarga de obtener la conexión de BD
+     *
+     * @return objeto de tipo Connection
+     */
+    public Connection getConnection() {
+        Connection nConn = ConnectionFactory.getInstance().getConnection();
+        return nConn;
+    }
 
     /**
      * Método que devuleve el total de fuentes en la BD
      *
      * @return no. de fuentes
      */
-    public int getNoFuentes() {
+    public int obtenerNumeroFuentes() {
         return noFuentes;
     }
+    
+    /**
+     * Método que se encarga de obtener la lista de fuentes
+     *
+     * @return lista de fuentes obtenidas
+     */
+    public List<FuenteApp> obtenerFuentes() {
+        if (!fuentes.isEmpty()) {
+            return fuentes;
+        }
+        return new ArrayList<FuenteApp>();
+    }
+    
+    /**
+     * Método que obtiene la referencia de una fuente a partir de su di
+     *
+     * @param id identificador de la fuente
+     * @return referencia de la fuente
+     */
+    public FuenteApp obtenerFuentePorId(int id) {
+        for (FuenteApp src : fuentes) {
+            if (src.getId() == id) {
+                return src;
+            }
+        }
+        return new FuenteApp();
+    }
+    
+    /**
+     * Método que obtiene la fecha de actualización de una fuente a partir de su id
+     *
+     * @param id identificador de la fuente
+     * @return fecha de actualización de la fuente
+     */
+    public Date obtenerFechaActualizacion(String id) {
+        Date res = null;
+        try {
+            //Obtener conexión y preparar el statement
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sqlRetrieveDate);
+            pstmt.setInt(1, Integer.parseInt(id));
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                res = rs.getDate(1);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return res;
+    }
+    
+    //OPERACIONES CRUD
 
     /**
      * Método que se encarga de crear una nueva fuente
@@ -148,45 +220,18 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     /**
-     * Método que se encarga de obtener la lista de fuentes
+     * Método que se encarga de actualizar la fuente
      *
-     * @return lista de fuentes obtenidas
+     * @param id identificador de la fuente a actualizar
+     * @param nombreN numero nombre ade la fuente
+     * @param urlN nueva url de la fuente
+     * 
+     * @return bandera con la ejecución del resultado
      */
-    public List<FuenteApp> obtenerFuentes() {
-        if (!fuentes.isEmpty()) {
-            return fuentes;
-        }
-        return new ArrayList<FuenteApp>();
-    }
-
-    /**
-     * Método que obtiene la referencia de una fuente a partir de su di
-     *
-     * @param id identificador de la fuente
-     * @return referencia de la fuente 
-     */
-    public FuenteApp obtenerFuentePorId(int id) {
-        for (FuenteApp src : fuentes) {
-            if (src.getId() == id) {
-                LOG.log(Level.INFO, "Fuente encontrada: {0}", src.getNombre());
-                return src;
-            }
-        }
-        return new FuenteApp();
-    }
-
-    //public boolean editarFuente(FuenteApp fuente) {
-
-    /**
-     *
-     * @param id
-     * @param nombreN
-     * @param urlN
-     * @return
-     */
-        public boolean editarFuente(int id, String nombreN, String urlN) {
+    public boolean editarFuente(int id, String nombreN, String urlN) {
         boolean res = false;
         try {
+            //Obtener conexión y preparar el statement
             conn = getConnection();
             pstmt = conn.prepareStatement(sqlUpdate);
             pstmt.setString(1, nombreN);
@@ -205,21 +250,23 @@ public class SourcesDAO { // implements java.io.Serializable {
                     conn.close();
                 }
             } catch (SQLException e) {
-                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
         return res;
-        //return true;
     }
 
     /**
+     * Método que se encarga de la eliminación de las fuentes
      *
-     * @param id
-     * @return
+     * @param id identificador de la fuente
+     * 
+     * @return bandera con el resultado de la ejecución
      */
     public boolean eliminarFuente(int id) {
         boolean res = false;
         try {
+            //Obtener conexión y preparar el statement
             conn = getConnection();
             pstmt = conn.prepareStatement(sqlDelete);
             pstmt.setInt(1, id);
@@ -243,23 +290,103 @@ public class SourcesDAO { // implements java.io.Serializable {
     }
 
     /**
+     * Método que se encarga de descargar las actualizaciones de la fuente
      *
-     * @param id
-     * @return
+     * @param id identificador de la fuente a actualizar
+     * @param url la url a descargar
+     * @return bandera con el resultado de la ejecución
      */
-    public Date obtenerFechaActualizacion(String id) {
-        Date res = null;
+    public boolean descargarFuente(String id, String url) {
+        boolean res = false;
+        LOG.log(Level.INFO, "Se realizar\u00e1 la descarga de la Fuente: {0} - {1}", new Object[]{id, url});
+        //Variables para manejar la conexión y descarga del archivo
+        URL fileurl = null;
+        URLConnection urlconn = null;
+        BufferedReader br = null;
+        String inputLine = null;
+        String path = null;
+        BufferedWriter bw = null;
         try {
-            conn = getConnection();
-            pstmt = conn.prepareStatement(sqlRetrieveDate);
-            pstmt.setInt(1, Integer.parseInt(id));
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                res = rs.getDate(1);
+            //Inicializar la variable con la URL y obtener una conexión
+            fileurl = new URL(url);
+            urlconn = fileurl.openConnection();
+            br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+            //Obtener el path y crear una ruta
+            path = SourcesDAO.class.getResource("/resources/").getPath();
+            File filepath = new File(path);
+            String fileName = path + extraerNombre(url);
+            File file = new File(fileName);
+            String nuevopath = file.getAbsolutePath();
+            LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
+            PrintWriter printWriter = null;
+            //Comprobar existencia del archivo
+            if (!file.exists()) {
+                file.createNewFile();
+            } else if (file.exists()) {
+                file.delete();
             }
-            rs.close();
+            //Crear un escritor de flujo y un buffer
+            printWriter = new PrintWriter(new File(nuevopath));
+            StringBuilder buffer = new StringBuilder();
+            while ((inputLine = br.readLine()) != null) {
+                buffer.append(inputLine).append("\n");
+            }
+            //Escribir el flujo en el archivo
+            printWriter.print(buffer);
+            printWriter.close();
+            res = true;
+            LOG.log(Level.INFO, "Descarga de la fuente: {0}Completada", id);
+            //Actualizar el registro de la fecha
+            actualizarFecha(id);
+        } catch (MalformedURLException e) {
+            LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
+        }
+        return res;
+    }
+
+    /**
+     * Método para obtener el nombre del archivo a partir de una url
+     * 
+     * @param url url a analizar
+     * 
+     * @return cadena con el nombre del archivo
+     */
+    private String extraerNombre(String url) {
+        //Tokenizer para dividir la cadena
+        StringTokenizer tokenizer = new StringTokenizer(url, "/");
+        //Crear un arreglo para almacenar los tokens
+        String[] tokens = new String[tokenizer.countTokens()];
+        int i = 0;
+        //Iterar los elementos encontrados para poblar el arreglo
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            tokens[i] = token;
+            i++;
+        }
+        //Retornar el ultimo token que contiene el nombre
+        return tokens[3];
+    }
+
+    /**
+     * Método que se encarga de actualizar el registro de la fecha
+     * 
+     * @param id identificador de la fuente a actualizar
+     */
+    private void actualizarFecha(String id) {
+        //Parsear el identificador a Entero
+        Integer idI = Integer.parseInt(id);
+        try {
+            //Obtener la conexión y preparar el Statement
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sqlUpdateDate);
+            pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
+            pstmt.setInt(2, idI);
+            pstmt.executeUpdate();
+            LOG.log(Level.INFO, "Fecha actualizada correctamente");
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage() + e.getSQLState());
         } finally {
             try {
                 if (pstmt != null) {
@@ -269,11 +396,14 @@ public class SourcesDAO { // implements java.io.Serializable {
                     conn.close();
                 }
             } catch (SQLException e) {
-                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
-        return res;
     }
+    
+    /**
+     * CODIGO BASURA
+     */
 
     //TODO: Eliminar este método y la inicialización estática
     private static List<FuenteApp> testList;
@@ -296,77 +426,10 @@ public class SourcesDAO { // implements java.io.Serializable {
      return res;
      }
      */
-
-    /**
-     *
-     * @param id
-     * @param url
-     * @return
-     */
     
-    public boolean descargarFuente(String id, String url) {
-        boolean res = false;
-        LOG.log(Level.INFO, "Descargando Fuente: {0}", url);
-        URL fileurl;
-        URLConnection conn;
-        BufferedReader br;
-        String inputLine;
-        String path;
-        BufferedWriter bw;
-        try {
-            fileurl = new URL(url);
-            conn = fileurl.openConnection();
-            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            path = SourcesDAO.class.getResource("/resources/").getPath();
-            File filepath = new File(path);
-            LOG.log(Level.INFO, "FilePath: {0}", filepath);
-            String fileName = path + extraerNombre(url);
-            File file = new File(fileName);
-            String nuevopath = file.getAbsolutePath();
-            LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
-            PrintWriter printWriter = null;
-            if (!file.exists()) {
-                file.createNewFile();
-            } else if (file.exists()) {
-                file.delete();
-            }
-            printWriter = new PrintWriter(new File(nuevopath));
-            StringBuilder buffer = new StringBuilder();
-            while ((inputLine = br.readLine()) != null) {
-                buffer.append(inputLine).append("\n");
-            }
-            printWriter.print(buffer);
-            //FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            //bw = new BufferedWriter(fw);
-            //while ((inputLine = br.readLine()) != null) {
-                //bw.write(inputLine + "\n");
-            //}
-            //bw.close();
-            //br.close();
-            printWriter.close();
-            res = true;
-            LOG.log(Level.INFO, "SourcesDAO->DescargarFuente() - Descarga Completada");
-            actualizarFecha(id);
-        } catch (MalformedURLException e) {
-            LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
-        } catch (IOException ex) {
-            LOG.log(Level.INFO, "Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
-        }
-        return res;
-    }
-
-    private String extraerNombre(String url) {
-        StringTokenizer tokenizer = new StringTokenizer(url, "/");
-        String[] tokens = new String[tokenizer.countTokens()];
-        int i = 0;
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            tokens[i] = token;
-            i++;
-        }
-        return tokens[3];
-    }
-
+    /**
+     * TODO: Eliminar esté metodo
+     */
     private void iniciarFuentesTemp() {
         fuentes = new ArrayList<FuenteApp>();
         FuenteApp fuente;
@@ -384,34 +447,6 @@ public class SourcesDAO { // implements java.io.Serializable {
             this.noFuentes = nr;
         } catch (Exception e) {
             LOG.log(Level.INFO, "Error al iniciar la lista temporal: {0}", e.getMessage());
-        }
-    }
-
-    private void actualizarFecha(String id) {
-        Integer idI = Integer.parseInt(id);
-        LOG.log(Level.INFO, "Voy a actualizar la fecha de: {0}", id);
-        try {
-            conn = getConnection();
-            LOG.log(Level.INFO, "Conexion establecida");
-            pstmt = conn.prepareStatement(sqlUpdateDate);
-            pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
-            pstmt.setInt(2, idI);
-            LOG.log(Level.INFO, "Query-->" + sqlUpdateDate);
-            pstmt.executeUpdate();
-            LOG.log(Level.INFO, "Fecha actualizada correctamente");
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage() + e.getSQLState());
-        } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                LOG.log(Level.INFO, "Error al cerrar la conexi\u00f3n: {0}", e.getMessage());
-            }
         }
     }
 

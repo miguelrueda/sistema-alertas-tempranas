@@ -20,7 +20,7 @@ import org.banxico.ds.sisal.parser.entidades.VulnSoftware;
 
 /**
  * Clase que se encarga de realizar las operaciones del escaneo y retornar los
- * filtradaultados como una lista de la clase Result
+ * resultados como una lista de la clase Result
  *
  * @author t41507
  * @version 04072014
@@ -270,7 +270,7 @@ public class ScannerBean implements java.io.Serializable {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
         //Crear un conjunto para recibir los scanResults, llamar al metodo doScan()
-        Set<Result> totales = doScan(vulndao.getArchivoCVE(), swdao.obtenerTodos());
+        Set<Result> totales = doScan(vulndao.obtenerListaArchivo(), swdao.obtenerListadeSoftware());
         LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en el escaneo completo.", totales.size());
         return totales;
     }
@@ -283,7 +283,7 @@ public class ScannerBean implements java.io.Serializable {
     public Set<Result> doRecentScan() {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
-        Set<Result> totales = doScan(vulndao.getRecents(), swdao.obtenerTodos());
+        Set<Result> totales = doScan(vulndao.obtenerListaRecientes(), swdao.obtenerListadeSoftware());
         return totales;
     }
 
@@ -311,9 +311,9 @@ public class ScannerBean implements java.io.Serializable {
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
         //Obteer la lista de vulnerabilidades y filtrarlas por la fecha elegida
-        List<CVE> vulns = filtrarListaPorFecha(vulndao.getArchivoCVE(), inicio, fin);
+        List<CVE> vulns = filtrarListaPorFecha(vulndao.obtenerListaArchivo(), inicio, fin);
         //Llamar al metodo para realizar el escaneo
-        Set<Result> totales = doScan(vulns, swdao.obtenerTodos());
+        Set<Result> totales = doScan(vulns, swdao.obtenerListadeSoftware());
         LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en ese periodo", totales.size());
         return totales;
     }
@@ -345,9 +345,9 @@ public class ScannerBean implements java.io.Serializable {
         //Iniciar los daos
         vulndao = new VulnerabilityDAO();
         swdao = new SoftwareDAO();
-        List<CVE> vulns = filtrarListaPorFecha(vulndao.getArchivoCVE(), inicio, fin);
+        List<CVE> vulns = filtrarListaPorFecha(vulndao.obtenerListaArchivo(), inicio, fin);
         //Ejecutar ele scaneo.
-        Set<Result> totales = doScan(vulns, swdao.obtenerTodos());
+        Set<Result> totales = doScan(vulns, swdao.obtenerListadeSoftware());
         LOG.log(Level.INFO, "Existen: {0} vulnerabilidades en el periodo: {1}/{2}", new Object[]{totales.size(), inicio.toString(), fin.toString()});
         return totales;
     }
@@ -369,17 +369,17 @@ public class ScannerBean implements java.io.Serializable {
         Set<Result> scanResults;
         //Si el tipo es 1 obtener Vulnerabilidades recientes
         if (partialType == 1) {
-            vulns = vulndao.getRecents();
+            vulns = vulndao.obtenerListaRecientes();
         } //Si el tipo es 2 obtener el Archivo de Vulnerabilidades
         else if (partialType == 2) {
-            vulns = vulndao.getArchivoCVE();
+            vulns = vulndao.obtenerListaArchivo();
         }
         //El valor 0 implica que no hay filtro por grupo
         if (UA.equals("0")) {
-            swList = swdao.obtenerTodos();
+            swList = swdao.obtenerListadeSoftware();
         } else {
             //Obtener el SW de la UA/Grupo seleccionado
-            swList = swdao.obtenerTodos();
+            swList = swdao.obtenerListadeSoftware();
             filtrada = filtrarListaSW(swList, UA);
         }
         //Si el tipo de proveedor es 1 se va a filtrar por vendedor
@@ -702,8 +702,8 @@ public class ScannerBean implements java.io.Serializable {
      public Set<Result> doCompleteScan() {
      swdao = new SoftwareDAO();
      vulndao = new VulnerabilityDAO();
-     List<Software> swList = swdao.obtenerTodos();
-     List<CVE> cveList = vulndao.getArchivoCVE();//vulndao.retrieveAllCVEsFromFile();//
+     List<Software> swList = swdao.obtenerListadeSoftware();
+     List<CVE> cveList = vulndao.obtenerListaArchivo();//vulndao.retrieveAllCVEsFromFile();//
      scanResults = new ArrayList<Result>();
      LOG.log(Level.INFO, "Encontre: {0} elementos de SW y {1} vulnerabilidades", new Object[]{swList.size(), cveList.size()});
      //SCANEAR
