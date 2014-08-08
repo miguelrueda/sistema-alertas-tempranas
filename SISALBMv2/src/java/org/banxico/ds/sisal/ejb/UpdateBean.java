@@ -21,7 +21,7 @@ import org.banxico.ds.sisal.entities.FuenteApp;
  * @author t41507
  * @version 07.08.2014
  */
-@Stateless
+@Stateless(name = "UpdateBean", mappedName = "ejb/ds/sisalbm/UpdateBean")
 public class UpdateBean implements UpdateBeanLocal {
     
     /**
@@ -45,13 +45,14 @@ public class UpdateBean implements UpdateBeanLocal {
      */
     private static final String descripcion = "Actualizaciones";
     private SourcesDAO sourcesdao;
+    private Date ultimaEjecucion;
 
     /**
      * Método que se encarga de establecer el tiempo para actualización
      */
     @Override
     public void setTimer() {
-        stopTimer();
+        //stopTimer();
         Calendar initialExpiration = Calendar.getInstance();
         initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
@@ -87,6 +88,7 @@ public class UpdateBean implements UpdateBeanLocal {
     @Timeout
     public void doUpdate(Timer timer) {
         LOG.log(Level.INFO, "Ejecutando el Bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
+        this.setUltimaEjecucion(new Date());
         sourcesdao = new SourcesDAO();
         List<FuenteApp> fuentes = sourcesdao.obtenerFuentes();
         for (FuenteApp fuente : fuentes) {
@@ -125,6 +127,29 @@ public class UpdateBean implements UpdateBeanLocal {
             next = timer.getNextTimeout();
         }
         return next;
+    }
+
+    /**
+     * Getter
+     *
+     * @return fecha con la ultima ejecucion
+     */
+    @Override
+    public String getUltimaEjecucion() {
+        if (ultimaEjecucion != null) {
+            return ultimaEjecucion.toString();
+        } else {
+            return "No ejecutada";
+        }
+    }
+
+    /**
+     * Setter
+     *
+     * @param ultimaEjecucion fecha con la ultima ejecucion
+     */
+    public void setUltimaEjecucion(Date ultimaEjecucion) {
+        this.ultimaEjecucion = ultimaEjecucion;
     }
    
 }

@@ -118,6 +118,9 @@ public class JobServlet extends HttpServlet {
         out.println("Tarea");
         out.println("</th>");
         out.println("<th>");
+        out.println("Ultima Ejecución");
+        out.println("</th>");
+        out.println("<th>");
         out.println("Siguiente Ejecución");
         out.println("</th>");
         out.println("</tr>");
@@ -130,6 +133,9 @@ public class JobServlet extends HttpServlet {
         out.println(updateBean.getDescripcion());
         out.println("</td>");
         out.println("<td>");
+        out.println(updateBean.getUltimaEjecucion());
+        out.println("</td>");
+        out.println("<td>");
         //Siguiente ejecución
         out.println(formater.format(updateBean.getNextFireTime()));
         out.println("</td>");
@@ -138,6 +144,9 @@ public class JobServlet extends HttpServlet {
         out.println("<td>");
         //Descripción de la tarea
         out.println(analizarBean.getDescripcion());
+        out.println("</td>");
+        out.println("<td>");
+        out.println(analizarBean.getUltimaEjecucion());
         out.println("</td>");
         out.println("<td>");
         //Siguiente ejecución

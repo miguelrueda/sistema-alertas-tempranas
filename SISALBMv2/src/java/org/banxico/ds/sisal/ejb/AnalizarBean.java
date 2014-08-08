@@ -29,7 +29,7 @@ import org.banxico.ds.sisal.scanner.ScannerBean;
  * @author t41507
  * @version 07.08.2014
  */
-@Stateless
+@Stateless(name="AnalizarBean", mappedName = "ejb/ds/sisalbm/AnalizarBean")
 public class AnalizarBean implements AnalizarBeanLocal {
     
     /**
@@ -53,6 +53,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     private static final String descripcion = "Analisis";
     private ScannerBean scanner;
+    private Date ultimaEjecucion;
     /**
      * Atributos de Envio de correo
      */
@@ -68,7 +69,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Override
     public void setTimer() {
-        stopTimer();
+        //stopTimer();
         Calendar initialExpiration = Calendar.getInstance();
         initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
@@ -98,6 +99,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     @Timeout
     public void doScan(Timer timer) {
         LOG.log(Level.INFO, "Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
+        this.setUltimaEjecucion(new Date());
         scanner = new ScannerBean();
         Set<Result> resultados = scanner.doRecentScan();
         enviarResultados(resultados);
@@ -208,4 +210,29 @@ public class AnalizarBean implements AnalizarBeanLocal {
             LOG.log(Level.INFO, "ocurrio un error al enviar el correo: {0}", e.getMessage());
         }
     }
+
+    /**
+     * Getter
+     *
+     * @return fecha con la ultima ejecucion
+     */
+    @Override
+    public String getUltimaEjecucion() {
+        if (ultimaEjecucion != null) {
+            return this.ultimaEjecucion.toString();
+        } else {
+            return "No ejecutada";
+        }
+    }
+
+    /**
+     * Setter
+     *
+     * @param ultimaEjecucion fecha con la ultima ejecucion
+     */
+    public void setUltimaEjecucion(Date ultimaEjecucion) {
+        this.ultimaEjecucion = ultimaEjecucion;
+    }
+    
+    
 }
