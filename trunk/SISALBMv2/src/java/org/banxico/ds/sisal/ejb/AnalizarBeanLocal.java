@@ -35,4 +35,12 @@ public interface AnalizarBeanLocal {
      * @return fecha con al siguiente ejecución
      */
     public Date getNextFireTime();
+    
+    /**
+     * Método que retorna la fecha de la ultima ejecución
+     *
+     * @return fecha de la ultima ejecución
+     */
+    public String getUltimaEjecucion();
+    
 }
