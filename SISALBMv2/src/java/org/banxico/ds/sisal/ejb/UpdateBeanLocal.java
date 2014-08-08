@@ -40,5 +40,5 @@ public interface UpdateBeanLocal {
      *
      * @return fecha de la ultima ejecución
      */
-    public String getUltimaEjecucion();
+    public Date getUltimaEjecucion();
 }

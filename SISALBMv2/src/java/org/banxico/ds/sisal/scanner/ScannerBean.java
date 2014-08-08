@@ -286,7 +286,53 @@ public class ScannerBean implements java.io.Serializable {
         Set<Result> totales = doScan(vulndao.obtenerListaRecientes(), swdao.obtenerListadeSoftware());
         return totales;
     }
-
+    /**
+     * Método para realizar el analisis de vulnerabilidades recientes a partir de la fecha actual
+     * 
+     * @param actual la fecha en que se solicita el analisis
+     * @return Conjuntio con resultados cuando no es sabado o domingo
+     */
+    public Set<Result> doRecentScan(Date actual) {
+        //Inicializar daos
+        vulndao = new VulnerabilityDAO();
+        swdao = new SoftwareDAO();
+        //Instanciar un calendario y establecer como tiempo la fecha actual
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(actual);
+        //Instanciar una fecha para el inicio
+        Date inicio = new Date();
+        //Obtener el numero de dia de la semana
+        int ndia = cal.get(Calendar.DAY_OF_WEEK);
+        //Comparar el numero de dia para filtrar la lista
+        switch (ndia) {
+            case 1: //Domingo
+                return new LinkedHashSet<Result>();
+            case 2: //Lunes Restar 3 dias por Viernes, Sabado y Domingo
+                cal.add(Calendar.DAY_OF_WEEK, -3);
+                break;
+            case 3: //Martes
+                cal.add(Calendar.DAY_OF_WEEK, -1);
+                break;
+            case 4: //Miercoles
+                cal.add(Calendar.DAY_OF_WEEK, -1);
+                break;
+            case 5: //Jueves
+                cal.add(Calendar.DAY_OF_WEEK, -1);
+                break;
+            case 6: //Viernes
+                cal.add(Calendar.DAY_OF_WEEK, -1);
+                break;
+            case 7:  //Sabado
+                return new LinkedHashSet<Result>();
+        }
+        //La fecha de inicio sera el calendario - el tiempo que se resto
+        inicio = cal.getTime();
+        //Obtener la lista de vulnerabilidades
+        List<CVE> filtrada = this.filtrarListaPorFecha(vulndao.obtenerListaRecientes(), inicio, actual);
+        Set<Result> totales = doScan(filtrada, swdao.obtenerListadeSoftware());
+        return totales;
+    }
+    
     /**
      * Método que realiza el escaneo a partir de las fecha ingfiltradaadas por
      * el usuario

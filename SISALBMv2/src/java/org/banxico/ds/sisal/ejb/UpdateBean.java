@@ -52,7 +52,7 @@ public class UpdateBean implements UpdateBeanLocal {
      */
     @Override
     public void setTimer() {
-        //stopTimer();
+        stopTimer();
         Calendar initialExpiration = Calendar.getInstance();
         initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
@@ -135,12 +135,11 @@ public class UpdateBean implements UpdateBeanLocal {
      * @return fecha con la ultima ejecucion
      */
     @Override
-    public String getUltimaEjecucion() {
+    public Date getUltimaEjecucion() {
         if (ultimaEjecucion != null) {
-            return ultimaEjecucion.toString();
-        } else {
-            return "No ejecutada";
+            return ultimaEjecucion;
         }
+        return null;
     }
 
     /**
