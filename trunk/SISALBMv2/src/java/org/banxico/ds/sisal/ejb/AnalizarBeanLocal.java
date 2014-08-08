@@ -41,6 +41,6 @@ public interface AnalizarBeanLocal {
      *
      * @return fecha de la ultima ejecución
      */
-    public String getUltimaEjecucion();
+    public Date getUltimaEjecucion();
     
 }

@@ -69,7 +69,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Override
     public void setTimer() {
-        //stopTimer();
+        stopTimer();
         Calendar initialExpiration = Calendar.getInstance();
         initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
@@ -98,11 +98,14 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Timeout
     public void doScan(Timer timer) {
-        LOG.log(Level.INFO, "Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
-        this.setUltimaEjecucion(new Date());
+        Date reg = new Date();
+        LOG.log(Level.INFO, "Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), reg});
+        this.setUltimaEjecucion(reg);
         scanner = new ScannerBean();
-        Set<Result> resultados = scanner.doRecentScan();
-        enviarResultados(resultados);
+        Set<Result> resultados = scanner.doRecentScan(reg);
+        if (!resultados.isEmpty()) {
+            enviarResultados(resultados);
+        }
         LOG.log(Level.INFO, "El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
     
@@ -151,7 +154,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //Establecer receptor
             //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
             //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss));
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             //Asunto del correo
@@ -217,12 +221,11 @@ public class AnalizarBean implements AnalizarBeanLocal {
      * @return fecha con la ultima ejecucion
      */
     @Override
-    public String getUltimaEjecucion() {
+    public Date getUltimaEjecucion() {
         if (ultimaEjecucion != null) {
-            return this.ultimaEjecucion.toString();
-        } else {
-            return "No ejecutada";
-        }
+            return this.ultimaEjecucion;
+        } 
+        return null;
     }
 
     /**

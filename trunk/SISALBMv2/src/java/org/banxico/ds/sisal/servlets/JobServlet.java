@@ -2,8 +2,11 @@ package org.banxico.ds.sisal.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import javax.ejb.EJB;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,12 +29,11 @@ public class JobServlet extends HttpServlet {
     private AnalizarBeanLocal analizarBean;
     @EJB
     private UpdateBeanLocal updateBean;
-
     /**
-     * Método de inicialización del servlet
-     *
-     * @throws ServletException cuando no se pueda inicializar
+     * Atributo LOGGER
      */
+    private static final Logger LOG = Logger.getLogger(JobServlet.class.getName());
+    
     @Override
     public void init() throws ServletException {
         //Iniciar los timers
@@ -46,9 +48,10 @@ public class JobServlet extends HttpServlet {
      * @param response objeto de respuesta
      * @throws ServletException
      * @throws IOException
+     * @throws java.text.ParseException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         //Codigo HTML
@@ -133,7 +136,11 @@ public class JobServlet extends HttpServlet {
         out.println(updateBean.getDescripcion());
         out.println("</td>");
         out.println("<td>");
-        out.println(updateBean.getUltimaEjecucion());
+        if (updateBean.getUltimaEjecucion() != null) {
+            out.println(formater.format(updateBean.getUltimaEjecucion()));
+        } else {
+            out.println("No ejecutada");
+        }
         out.println("</td>");
         out.println("<td>");
         //Siguiente ejecución
@@ -146,7 +153,11 @@ public class JobServlet extends HttpServlet {
         out.println(analizarBean.getDescripcion());
         out.println("</td>");
         out.println("<td>");
-        out.println(analizarBean.getUltimaEjecucion());
+        if (analizarBean.getUltimaEjecucion() != null) {
+            out.println(formater.format(analizarBean.getUltimaEjecucion()));
+        } else {
+            out.println("No ejecutada");
+        }
         out.println("</td>");
         out.println("<td>");
         //Siguiente ejecución
@@ -178,7 +189,11 @@ public class JobServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            LOG.log(Level.SEVERE, "ocurrio un error al parsear la fecha de ejecuci\u00f3n: {0}", ex.getMessage());
+        }
     }
 
     /**
@@ -192,7 +207,11 @@ public class JobServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            LOG.log(Level.SEVERE, "ocurrio un error al parsear la fecha de ejecuci\u00f3n: {0}", ex.getMessage());
+        }
     }
 
 }
