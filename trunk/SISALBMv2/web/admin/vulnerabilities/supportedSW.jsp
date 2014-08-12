@@ -10,26 +10,14 @@
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <style type="text/css">
-        </style>
         <script>
             $(document).ready(function() {
                 var dialog = $("#dialog-form");
                 $("#dialog-form").hide();
                 $("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
                     /* Dialogo
-                    $("#dialog-form").dialog({
-                        resizable: false,
-                        height: 440,
-                        width: 500,
-                        modal: true,
-                        buttons: {
-                            'Agregar': addSoftware,
-                            Cancelar: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    }); DIALOGO*/
+                    $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
+                        buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
                 });
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");

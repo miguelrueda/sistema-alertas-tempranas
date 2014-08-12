@@ -125,7 +125,7 @@
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Software</span></a>
                                         <ul>
-                                            <li><a href="#"><span>Agregar Software</span></a></li>
+                                            <!--<li><a href="#"><span>Agregar Software</span></a></li>-->
                                             <li><a href="../vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
                                         </ul>
                                     </li>

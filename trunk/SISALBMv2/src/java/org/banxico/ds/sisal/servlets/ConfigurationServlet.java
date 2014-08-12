@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.SourcesDAO;
 import org.banxico.ds.sisal.entities.FuenteApp;
+import org.banxico.ds.sisal.entities.Grupo;
 
 /**
  * Controlador para las fuentes y listas de sw
@@ -44,13 +46,18 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             throws ServletException, IOException {
         //Solicitar el parametro action
         String action = (String) request.getParameter("action");
+        //Atributos del paginador
+        int page = 1;
+        int recordsPerPage = 20;
         String nextJSP = "/admin/Index.html";
-        //Instanciar RequestDispatcher para redirecciones
+        //Instancia del request dispatcher
         RequestDispatcher view;
         //Instanciar el dao de fuentes y guardarlo en sesion
         SourcesDAO dao = new SourcesDAO();
+        GruposDAO gdao = new GruposDAO();
         HttpSession sesion = request.getSession();
         sesion.setAttribute("sourcesdao", dao);
+        sesion.setAttribute("gruposdao", gdao);
         //Si el parametro es vista solicitar el siguiente parametro - Tipo
         if (action.equalsIgnoreCase("view")) {
             String tipo = (String) request.getParameter("tipo");
@@ -73,7 +80,16 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                     }
                     break;
                 case 2:
-                    LOG.log(Level.INFO, "Redireccionando al recurso: /configuration/groups.jsp");
+                    if (request.getParameter("page") != null) {
+                        page = Integer.parseInt(request.getParameter("page"));
+                    }
+                    //Obtener la lista de grupos
+                    List<Grupo> listaGrupos = gdao.retrieveGroupsFromLimit((page - 1) * recordsPerPage, recordsPerPage);
+                    int grnoOfRecords = gdao.obtenerNumeroGrupos();
+                    int grnoOfPages = (int) Math.ceil(grnoOfRecords * 1.0 / recordsPerPage);
+                    request.setAttribute("listaGrupos", listaGrupos);
+                    request.setAttribute("grnoOfPages", grnoOfPages);
+                    request.setAttribute("currentPage", page);
                     nextJSP = "/admin/configuration/groups.jsp";
                     break;
             }
