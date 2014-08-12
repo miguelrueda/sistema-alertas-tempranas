@@ -126,35 +126,6 @@
                             <li><a href="../help.jsp"><span>Ayuda</span></a></li>
                         </ul>
                     </div>
-                    <!--
-                    <div id="menu">
-                        <nav>
-                            <ul>
-                                <li><a href="../../AppIndex.html">AppIndex</a></li>
-                                <li>
-                                    <a href="#">Configuración</a>
-                                    <ul>
-                                        <li><a href="../configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
-                                        <li><a href="../configuration.controller?action=view&tipo=2">Administrar Grupos</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Vulnerabilidades</a>
-                                    <ul>
-                                        <li><a href="../vulnerability.controller?action=view&tipo=1">Más Recientes</a></li>
-                                        <li><a href="../vulnerability.controller?action=view&tipo=2">Archivo</a></li>
-                                        <li><a href="../vulnerability.controller?action=view&tipo=3">Software Registrado</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="../scanner/scan.jsp">Escaneo</a>
-                                </li>
-                                <li>
-                                    <a href="../help.jsp">Ayuda</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    -->
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Agregar Software</div>
