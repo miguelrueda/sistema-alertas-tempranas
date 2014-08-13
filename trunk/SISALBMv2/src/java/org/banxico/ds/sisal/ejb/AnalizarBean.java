@@ -103,8 +103,12 @@ public class AnalizarBean implements AnalizarBeanLocal {
         this.setUltimaEjecucion(reg);
         scanner = new ScannerBean();
         Set<Result> resultados = scanner.doRecentScan(reg);
+        LOG.log(Level.INFO, "Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
+            LOG.log(Level.INFO, "Enviando resultados por correo . . .");
             enviarResultados(resultados);
+        } else {
+            LOG.log(Level.INFO, "Los resultados no fueron enviados. . . ");
         }
         LOG.log(Level.INFO, "El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
@@ -210,6 +214,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
             msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
             msg.setSentDate(new Date());
             Transport.send(msg);
+            LOG.log(Level.INFO, "El mensaje fue enviado correctamente!");
         } catch (MessagingException e) {
             LOG.log(Level.INFO, "ocurrio un error al enviar el correo: {0}", e.getMessage());
         }

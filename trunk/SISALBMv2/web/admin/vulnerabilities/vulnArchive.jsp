@@ -35,21 +35,9 @@
                     return false;
                 });
                 /*
-                 $("#searchkey").autocomplete({
-                 source: function(request, response) {
-                 $.ajax({
-                 url: '/sisalbm/admin/vulnerability.controller?action=search',
-                 type: 'GET',
-                 data: {
-                 term: request.term
-                 },
-                 dataType: "json",
-                 success: function(data) {
-                 response(data);
-                 }
-                 });
-                 }
-                 });*/
+                 $("#searchkey").autocomplete({ source: function(request, response) {
+                 $.ajax({ url: '/sisalbm/admin/vulnerability.controller?action=search', type: 'GET', data: { term: request.term },
+                 dataType: "json", success: function(data) { response(data); } }); }});*/
                 $("#searchbutton").on("click", function() {
                     var val = $("#searchkey").val();
                     $.ajax({
@@ -59,8 +47,7 @@
                         success: function(result) {
                             $("#content").hide();
                             $("#resultsdiv").show();
-                            if (result === '') {
-                                //alert("Mensaje");
+                            if (result === 'notfound') {
                                 var notResult = "<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
                                 $("#resultbody").html(notResult);
                                 $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");

@@ -34,6 +34,12 @@ public class JobServlet extends HttpServlet {
      */
     private static final Logger LOG = Logger.getLogger(JobServlet.class.getName());
     
+    /**
+     * Método de inicialización del servlet, se inicia cuando en el descriptor
+     * se tiene como iniciador el valor 1
+     *
+     * @throws ServletException
+     */
     @Override
     public void init() throws ServletException {
         //Iniciar los timers
