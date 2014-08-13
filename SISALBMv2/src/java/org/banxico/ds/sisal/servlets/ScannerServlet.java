@@ -150,7 +150,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     String UA = (String) request.getParameter("UA");
                     if (UA.equalsIgnoreCase("0")) {
                         scannerService.setUA("0");
-                        exportBuffer.append("<p>Resultado de Todos los Grupos");
+                        exportBuffer.append("<p>Resultado de Todos los Grupos<br />");
                     } else {
                         scannerService.setUA(UA);
                         request.setAttribute("grupo", UA);

@@ -158,8 +158,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //Establecer receptor
             //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
             //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss));
+            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             //Asunto del correo
