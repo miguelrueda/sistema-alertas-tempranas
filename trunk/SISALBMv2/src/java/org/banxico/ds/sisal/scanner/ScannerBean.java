@@ -326,8 +326,11 @@ public class ScannerBean implements java.io.Serializable {
                 return new LinkedHashSet<Result>();
         }
         //La fecha de inicio sera el calendario - el tiempo que se resto
+        cal.set(Calendar.HOUR_OF_DAY, 1);
+        //cal.add(Calendar.HOUR_OF_DAY, -8);
         inicio = cal.getTime();
         //Obtener la lista de vulnerabilidades
+        LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{inicio, actual});
         List<CVE> filtrada = this.filtrarListaPorFecha(vulndao.obtenerListaRecientes(), inicio, actual);
         Set<Result> totales = doScan(filtrada, swdao.obtenerListadeSoftware());
         return totales;
@@ -454,7 +457,11 @@ public class ScannerBean implements java.io.Serializable {
             } catch (ParseException ex) {
                 LOG.log(Level.SEVERE, "Ocurrio un error al realizar el parseo de las fechas: {0}", ex.getMessage());
             }
-            vulns = filtrarListaPorFecha(vulns, inicio, fin);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(inicio);
+            cal.set(Calendar.HOUR_OF_DAY, 1);
+            LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{cal.getTime(), fin});
+            vulns = filtrarListaPorFecha(vulns, cal.getTime(), fin);
         }
         //Si la UA o el grupo es '0' ejecutar escaneo en toda la lista
         if (UA.equals("0")) {
@@ -492,7 +499,7 @@ public class ScannerBean implements java.io.Serializable {
                         //Si el fabricante del SW(vuln) es igual al de la Lista recibida - Buscar incidencia en producto
                         if (vulnsw.getVendor().toLowerCase().equalsIgnoreCase(sws.get(i).getFabricante())) {
                             //Obtener el nombre del SW de la vulnerabilidad y reemplazar _ con ' '- Ej: microsoft_windows --> microsoft windows
-                            String name = vulnsw.getName().replace("_", " ");
+                            String name = vulnsw.getName().toLowerCase().replace("_", " ");
                             //Filtro para productos Microsoft
                             //Si el nombre del SW de la Vuln es: Windows XXXX o Internet Explorer Iterar para buscar version(es)
                             if (name.contains("windows server 2003") || name.contains("windows server 2008")
@@ -513,7 +520,7 @@ public class ScannerBean implements java.io.Serializable {
                                             Result nres = new Result(vuln, sws.get(i));
                                             res.add(nres);
                                             //Filtro especifico para windows 8 y windows server 2012 - SOLO AQUI FUNCIONA
-                                        } else if (name.contains("windows 8") || name.contains("windows server 2012")) {
+                                        } else if (name.contains("windows 8") || name.contains("windows server 2012") || name.contains("internet explorer")) {
                                             Result nres = new Result(vuln, sws.get(i));
                                             res.add(nres);
                                         }
