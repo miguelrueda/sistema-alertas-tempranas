@@ -209,6 +209,7 @@
                                 <ul>
                                     <li><a href="../vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
                                     <li><a href="../vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
+                                    <li><a href="../vulnerability.controller?action=view&tipo=4"><span>Boletínes de Microsoft</span></a></li>
                                 </ul>
                             </li>
                             <li><a href="../scanner/scan.jsp"><span>Escaneo</span></a></li>
