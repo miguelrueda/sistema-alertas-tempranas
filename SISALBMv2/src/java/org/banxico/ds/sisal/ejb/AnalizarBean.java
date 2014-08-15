@@ -106,7 +106,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "Enviando resultados por correo . . .");
-            enviarResultados(resultados);
+            //enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "Los resultados no fueron enviados. . . ");
         }
@@ -158,8 +158,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //Establecer receptor
             //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
             //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
-            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss));
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             //Asunto del correo

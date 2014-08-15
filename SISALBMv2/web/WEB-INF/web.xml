@@ -15,7 +15,7 @@
     <servlet>
         <servlet-name>JobServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.servlets.JobServlet</servlet-class>
-        <!--<load-on-startup>1</load-on-startup>-->
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
