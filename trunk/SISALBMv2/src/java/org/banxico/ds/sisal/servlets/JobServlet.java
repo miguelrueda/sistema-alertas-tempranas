@@ -91,6 +91,7 @@ public class JobServlet extends HttpServlet {
         out.println("</li>");
         out.println("<li class=\"has-sub\"><a href=\"#\"><span>Grupos</span></a>");
         out.println("<ul>");
+        out.println("<li><a href=\"/sisalbm/admin/configuration/agregarGrupo.jsp\"><span>Agregar Grupo</span></a></li>");
         out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=2\"><span>Administrar</span></a></li>");
         out.println("</ul>");
         out.println("</li>");

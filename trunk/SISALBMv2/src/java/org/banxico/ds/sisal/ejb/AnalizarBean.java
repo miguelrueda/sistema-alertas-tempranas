@@ -62,7 +62,9 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String from = "termometro_OSI@correobm.org.mx";
     private static final String to = "jamaya@banxico.org.mx";
     private static final String CCss = "T41507@correobm.org.mx";
+    private static final String to1  = "";
     private static final String asunto = "+ Resultados ";
+    private static final String [] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
 
     /**
      * Método que se encarga de establecer el tiempo para el analisis
@@ -106,7 +108,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "Enviando resultados por correo . . .");
-            //enviarResultados(resultados);
+            enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "Los resultados no fueron enviados. . . ");
         }
@@ -156,10 +158,15 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //Establecer emisor
             msg.setFrom(new InternetAddress(from));
             //Establecer receptor
+            //InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
+            //for (int i = 0; i < recipientsArray.length; i++) {
+            //    recipients[i] = new InternetAddress(recipientsArray[i]);
+            //}
             //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
             //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss));
+            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            //msg.setRecipients(Message.RecipientType.TO, recipients);
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             //Asunto del correo

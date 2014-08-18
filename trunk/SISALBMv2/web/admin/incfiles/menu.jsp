@@ -11,7 +11,8 @@
                 </li>
                 <li class="has-sub"><a href="#"><span>Grupos</span></a>
                     <ul>
-                        <li><a href="../admin/configuration.controller?action=view&tipo=2"><span>Administrar</span></a></li>
+                        <li><a href="../admin/configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
+                        <li><a href="../admin/configuration.controller?action=view&tipo=2"><span>Ver Grupos</span></a></li>
                     </ul>
                 </li>
                 <li class="has-sub"><a href="#"><span>Software</span></a>
