@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="java.util.Date"%>
-<%@page import="mx.org.banxico.sisal.entities.FuenteApp"%>
-<%@page import="mx.org.banxico.sisal.dao.SourcesDAO"%>
+<%@page import="org.banxico.ds.sisal.entities.FuenteApp"%>
+<%@page import="org.banxico.ds.sisal.dao.SourcesDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -126,7 +126,7 @@
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Software</span></a>
                                         <ul>
-                                            <!--<li><a href="#"><span>Agregar Software</span></a></li>-->
+                                            <li><a href="../vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
                                             <li><a href="../vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
                                         </ul>
                                     </li>
@@ -143,32 +143,6 @@
                             <li><a href="../help.jsp"><span>Ayuda</span></a></li>
                         </ul>
                     </div>
-                    <!--
-                    <nav>
-                        <ul>
-                            <li><a href="../../AppIndex.html">AppIndex</a></li>
-                            <li>
-                                <a href="#">Configuración</a>
-                                <ul>
-                                    <li><a href="../configuration.controller?action=view&tipo=1">Administrar Fuentes</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Vulnerabilidades</a>
-                                <ul>
-                                    <li><a href="../vulnerability.controller?action=view&tipo=1">Más Recientes</a></li>
-                                    <li><a href="../vulnerability.controller?action=view&tipo=2">Archivo</a></li>
-                                    <li><a href="../vulnerability.controller?action=view&tipo=3">Software Registrado</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="/sisalbm/admin/scanner/scan.jsp">Escaneo</a>
-                            </li>
-                            <li>
-                                <a href="../help.jsp">Ayuda</a>
-                            </li>
-                        </ul>
-                    </nav>
-                    -->
                     <div id="content_wrap">
                         <div id="content">
                             <div class="editForm">

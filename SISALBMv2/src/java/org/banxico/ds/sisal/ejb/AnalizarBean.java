@@ -108,7 +108,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "Enviando resultados por correo . . .");
-            enviarResultados(resultados);
+            //enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "Los resultados no fueron enviados. . . ");
         }
