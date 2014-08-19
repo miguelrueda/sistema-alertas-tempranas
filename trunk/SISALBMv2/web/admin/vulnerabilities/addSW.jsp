@@ -10,32 +10,47 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
-        <style type="text/css">
-        </style>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
                 $("#dialog-message").hide();
-                $("#fabricante").load("/sisalbm/scanner?action=retrieve&val=vendor&vendor=0");
-                $.validator.addMethod("valueNotEquals", function(value) {
-                    return (value !== '0');
-                }, "Seleccionar un fabricante");
-
-                $.validator.addMethod("valFab", function(value) {
-                    return (value !== '0');
-                }, 'Seleccionar un fabricante');
+                var vendor = $("#vendor");
+                var vendorval = $("#vendor").val();
+                $.get("/sisalbm/autocomplete?action=getvendor&vendorq=" + vendorval, function(data) {
+                    var items = data.split("\n");
+                    vendor.autocomplete({
+                        source: items, minLength: 3,
+                        select: function(event, ui) {
+                            cargarProductos(ui.item.value);
+                        }
+                    });
+                });
+                function cargarProductos(vendor) {
+                    $("#product").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
+                }
+                $("#product").on("change", function() {
+                    $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})
+                });
+                $.validator.addMethod("valProduct", function(value) {
+                    return (value !== '0')
+                }, "Seleccionar un Producto");
+                $.validator.addMethod("valVersion", function(value) {
+                    return (value !== '0')
+                }, "Seleccionar una versión");
                 $.validator.addMethod("valTipo", function(value) {
                     return (value !== '0');
                 }, 'Seleccionar un tipo del SW');
                 $.validator.addMethod("valEOL", function(value) {
                     return (value !== '0');
                 }, 'Seleccionar Fin de Vida');
-                $("#addForm").validate({
+                $("#addSWForm").validate({
                     rules: {
-                        fabricante: {
-                            valFab: true
+                        vendor: "required",
+                        product: {
+                            valProduct: true
                         },
-                        nombre: "required",
-                        version: "required",
+                        version: {
+                            valVersion: true
+                        },
                         tipo: {
                             valTipo: true
                         },
@@ -44,8 +59,7 @@
                         }
                     },
                     messages: {
-                        nombre: 'Ingresar un nombre de SW',
-                        version: 'Ingresar una versión del SW'
+                        vendor: "Ingresar el nombre del fabricante"
                     },
                     submitHandler: function(form) {
                         $.ajax({
@@ -58,7 +72,7 @@
                                 if (response === 'OK') {
                                     content = 'El Software ha sido agregado exitosamente.';
                                 } else if (response === 'NOT') {
-                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo más tarde.';
+                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo mⳠtarde.';
                                 } else {
                                     content = 'Ocurrio un error inesperado.';
                                 }
@@ -70,8 +84,8 @@
                                             $(this).dialog("close");
                                         }
                                     }
-                                });  
-                                $("#addForm")[0].reset();
+                                });
+                                $("#addSWForm")[0].reset();
                             }
                         });
                         return false;
@@ -131,31 +145,33 @@
                         <div id="page_title">Agregar Software</div>
                         <div id="content">
                             <div id="full">
-                                <form class="form" id="addForm">
+                                <form class="form" id="addSWForm" name="addSWForm" action="" method="get">
                                     <fieldset>
                                         <legend>Información del Software: </legend>
                                         <table>
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <label>Seleccionar Fabricante</label>
+                                                        <label>Ingresar Fabricante</label>
                                                     </td>
                                                     <td>
-                                                        <select name="fabricante" id="fabricante"></select>
+                                                        <!--<select name="fabricante" id="fabricante"></select>-->
+                                                        <input type="text" name="vendor" id="vendor" style="width: 185px"/>
                                                     </td>
                                                     <td>
-                                                        <label for="fabricante" class="error"></label>
+                                                        <label for="vendor" class="error"></label>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>Nombre </label>
+                                                        <label>Seleccionar Producto</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="nombre" name="nombre" style="width: 185px" />
+                                                        <!--<input type="text" id="nombre" name="nombre" style="width: 185px" />-->
+                                                        <select id="product" name="product" style=" width: 195px"></select>
                                                     </td>
                                                     <td>
-                                                        <label for="nombre" class="error"></label>
+                                                        <label for="product" class="error"></label>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -163,7 +179,8 @@
                                                         <label>Versión</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" id="version" name="version" style="width: 185px" />
+                                                        <!--<input type="text" id="version" name="version" style="width: 185px" />-->
+                                                        <select name="version" id="version" style=" width: 195px"></select>
                                                     </td>
                                                     <td>
                                                         <label for="version" class="error"></label>
@@ -174,7 +191,7 @@
                                                         <label>Tipo</label>
                                                     </td>
                                                     <td>
-                                                        <select name="tipo" id="tipo">
+                                                        <select name="tipo" id="tipo" style=" width: 195px">
                                                             <option value="0">Seleccionar tipo</option>
                                                             <option value="1">Sistema Operativo</option>
                                                             <option value="2">Software</option>
@@ -189,7 +206,7 @@
                                                         <label>Fin de Vida</label>
                                                     </td>
                                                     <td>
-                                                        <select name="eol" id="eol">
+                                                        <select name="eol" id="eol" style=" width: 195px">
                                                             <option value="0">Seleccionar Fin</option>
                                                             <option value="1">Si</option>
                                                             <option value="2">No</option>

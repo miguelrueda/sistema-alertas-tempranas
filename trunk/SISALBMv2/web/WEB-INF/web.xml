@@ -17,6 +17,10 @@
         <servlet-class>org.banxico.ds.sisal.servlets.JobServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>AutocompleteServlet</servlet-name>
+        <servlet-class>org.banxico.ds.sisal.util.AutocompleteServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -41,6 +45,10 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error.jsp</location>
     </error-page>
+    <servlet-mapping>
+        <servlet-name>AutocompleteServlet</servlet-name>
+        <url-pattern>/autocomplete</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

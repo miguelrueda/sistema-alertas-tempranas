@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.banxico.ds.sisal.db.ConnectionFactory;
 import org.banxico.ds.sisal.entities.Software;
+import org.banxico.ds.sisal.parser.CPEParser;
 
 /**
  * Clase que se encarga de manejar el acceso a datos relacionados con la entidad
@@ -36,6 +37,8 @@ public class SoftwareDAO {
      */
     private List<Software> swList;
     private int noOfRecords;
+    private List<Software> softwareDisponible;
+    private CPEParser parser = new CPEParser();
     //private static final String PRODSFILE = "/resources/softwareproducts.csv";
     //private static final String PRODSFILE = "/resources/swdb.csv";
     /**
@@ -80,6 +83,7 @@ public class SoftwareDAO {
      */
     public SoftwareDAO() {
         cargarElementosEnLista();
+        softwareDisponible = parser.getList();
     }
 
     /**
@@ -589,6 +593,79 @@ public class SoftwareDAO {
         return result;
     }
 
+    public List<String> completarFabricantes(String query) {
+        LOG.log(Level.INFO, "Buscar fabricantes like: {0}", query);
+        List<String> vendors = retrieveAllVendors();
+        List<String> filter = new ArrayList<String>();
+        for (String vendor : vendors) {
+            vendor = vendor.toLowerCase();
+            if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
+                filter.add(vendor);
+                LOG.log(Level.INFO, "Agregado: {0}", vendor);
+            }
+        }
+        return filter;
+    }
+
+    private List<String> retrieveAllVendors() {
+        List<String> vendors = new ArrayList<String>();
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (Software sw : softwareDisponible) {
+            if (diferentes.contains(sw.getFabricante())) {
+                duplicados.add(sw.getFabricante());
+            } else {
+                diferentes.add(sw.getFabricante());
+            }
+        }
+        vendors.addAll(diferentes);
+        LOG.log(Level.INFO, "Existen {0} fabricantes", diferentes.size());
+        return vendors;
+    }
+
+    public List<String> obtenerProductosPorFabricanteAC(String vendor) {
+        List<String> productos = new ArrayList<String>();
+        for (Software sw : softwareDisponible) {
+            if (sw.getFabricante().equalsIgnoreCase(vendor)) {
+                productos.add(sw.getNombre());
+            }
+        }
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String prod : productos) {
+            if (diferentes.contains(prod)) {
+                duplicados.add(prod);
+            } else {
+                diferentes.add(prod);
+            }
+        }
+        List<String> result = new ArrayList<String>();
+        result.addAll(diferentes);
+        return result;
+    }
+
+    public List<String> obtenerVersionesdeProducto(String product) {
+        List<String> products = new ArrayList<String>();
+        List<String> versions = new ArrayList<String>();
+        for (Software sw : softwareDisponible) {
+            if (sw.getNombre().equalsIgnoreCase(product) && !"-".equals(sw.getNombre())) {
+                versions.add(sw.getVersion());
+            }
+        }
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String version : versions) {
+            if (diferentes.contains(version)) {
+                duplicados.add(version);
+            } else {
+                diferentes.add(version);
+            }
+        }
+        versions = new ArrayList<String>();
+        versions.addAll(diferentes);
+        return versions;
+    }
+        
     /**
      * Método que se encarga de iniciar la lista de Softwares apartir de un
      * archivo TODO: ELiminar esté método
