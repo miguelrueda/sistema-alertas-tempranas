@@ -157,16 +157,16 @@ public class AnalizarBean implements AnalizarBeanLocal {
             Message msg = new MimeMessage(session);
             //Establecer emisor
             msg.setFrom(new InternetAddress(from));
-            //Establecer receptor
-            //InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
-            //for (int i = 0; i < recipientsArray.length; i++) {
-            //    recipients[i] = new InternetAddress(recipientsArray[i]);
-            //}
-            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to)); -- JAMAYA
-            //msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); -- Servicio Social
-            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            //msg.setRecipients(Message.RecipientType.TO, recipients);
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss));
+            //Establecer receptor o lista de receptores
+            /*
+            InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
+            for (int i = 0; i < recipientsArray.length; i++) {
+                recipients[i] = new InternetAddress(recipientsArray[i]);
+            }
+            msg.setRecipients(Message.RecipientType.TO, recipients);
+            */
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             //Asunto del correo
