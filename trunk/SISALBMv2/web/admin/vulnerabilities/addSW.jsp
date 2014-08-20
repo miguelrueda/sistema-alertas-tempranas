@@ -13,8 +13,8 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#dialog-message").hide();
-                var vendor = $("#vendor");
-                var vendorval = $("#vendor").val();
+                var vendor = $("#fabricante");
+                var vendorval = $("#fabricante").val();
                 $.get("/sisalbm/autocomplete?action=getvendor&vendorq=" + vendorval, function(data) {
                     var items = data.split("\n");
                     vendor.autocomplete({
@@ -25,9 +25,9 @@
                     });
                 });
                 function cargarProductos(vendor) {
-                    $("#product").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
+                    $("#nombre").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
                 }
-                $("#product").on("change", function() {
+                $("#nombre").on("change", function() {
                     $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})
                 });
                 $.validator.addMethod("valProduct", function(value) {
@@ -44,8 +44,8 @@
                 }, 'Seleccionar Fin de Vida');
                 $("#addSWForm").validate({
                     rules: {
-                        vendor: "required",
-                        product: {
+                        fabricante: "required",
+                        nombre: {
                             valProduct: true
                         },
                         version: {
@@ -59,9 +59,10 @@
                         }
                     },
                     messages: {
-                        vendor: "Ingresar el nombre del fabricante"
+                        fabricante: "Ingresar el nombre del fabricante"
                     },
                     submitHandler: function(form) {
+                        alert($(form).serialize());
                         $.ajax({
                             type: 'POST',
                             url: "/sisalbm/admin/vulnerability.controller?action=add&tipo=2",
@@ -72,7 +73,7 @@
                                 if (response === 'OK') {
                                     content = 'El Software ha sido agregado exitosamente.';
                                 } else if (response === 'NOT') {
-                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo mⳠtarde.';
+                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo más tarde.';
                                 } else {
                                     content = 'Ocurrio un error inesperado.';
                                 }
@@ -118,7 +119,8 @@
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Grupos</span></a>
                                         <ul>
-                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Administrar</span></a></li>
+                                            <li><a href="../configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
+                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Ver Grupos</span></a></li>
                                         </ul>
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Software</span></a>
@@ -156,10 +158,10 @@
                                                     </td>
                                                     <td>
                                                         <!--<select name="fabricante" id="fabricante"></select>-->
-                                                        <input type="text" name="vendor" id="vendor" style="width: 185px"/>
+                                                        <input type="text" name="fabricante" id="fabricante" style="width: 185px"/>
                                                     </td>
                                                     <td>
-                                                        <label for="vendor" class="error"></label>
+                                                        <label for="fabricante" class="error"></label>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -168,10 +170,10 @@
                                                     </td>
                                                     <td>
                                                         <!--<input type="text" id="nombre" name="nombre" style="width: 185px" />-->
-                                                        <select id="product" name="product" style=" width: 195px"></select>
+                                                        <select id="nombre" name="nombre" style=" width: 195px"></select>
                                                     </td>
                                                     <td>
-                                                        <label for="product" class="error"></label>
+                                                        <label for="nombre" class="error"></label>
                                                     </td>
                                                 </tr>
                                                 <tr>
