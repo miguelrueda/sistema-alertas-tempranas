@@ -47,6 +47,7 @@ public class GruposDAO {
             + "g.nombre, g.categoria FROM Software s, Grupo g, Grupo_Software x WHERE s.idSoftware = x.idSoftware "
             + "AND g.idGrupo = x.idGrupo AND g.idGrupo = ?";
     private static final String retrieveGroupById = "SELECT * FROM Grupo WHERE idGrupo = ?";
+    private static final String retrieveAllCategorias = "SELECT DISTINCT(categoria) FROM Grupo";
     
     /**
      * Constructor
@@ -341,6 +342,33 @@ public class GruposDAO {
             }
         }
         return lista;
+    }
+
+    public List<String> obtenerCategorias() {
+        List<String> cats = new ArrayList<String>();
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(retrieveAllCategorias);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                cats.add(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "ocurrio un error de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return cats;
     }
 
 }

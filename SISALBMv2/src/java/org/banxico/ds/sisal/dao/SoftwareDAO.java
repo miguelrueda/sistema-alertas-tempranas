@@ -69,6 +69,7 @@ public class SoftwareDAO {
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo "
             + "AND (s.fabricante LIKE ? OR s.nombre LIKE ? OR g.nombre LIKE ?) "
             + " ORDER BY g.nombre";
+    private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
     /* La manera de realizar un LIMIT es diferente dependiendo el proveedor del DBMS:
      * SQL LIMIT
@@ -594,14 +595,14 @@ public class SoftwareDAO {
     }
 
     public List<String> completarFabricantes(String query) {
-        LOG.log(Level.INFO, "Buscar fabricantes like: {0}", query);
+        //LOG.log(Level.INFO, "Buscar fabricantes like: {0}", query);
         List<String> vendors = retrieveAllVendors();
         List<String> filter = new ArrayList<String>();
         for (String vendor : vendors) {
             vendor = vendor.toLowerCase();
             if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
                 filter.add(vendor);
-                LOG.log(Level.INFO, "Agregado: {0}", vendor);
+                //LOG.log(Level.INFO, "Agregado: {0}", vendor);
             }
         }
         return filter;
@@ -619,7 +620,7 @@ public class SoftwareDAO {
             }
         }
         vendors.addAll(diferentes);
-        LOG.log(Level.INFO, "Existen {0} fabricantes", diferentes.size());
+        //LOG.log(Level.INFO, "Existen {0} fabricantes", diferentes.size());
         return vendors;
     }
 
@@ -664,6 +665,36 @@ public class SoftwareDAO {
         versions = new ArrayList<String>();
         versions.addAll(diferentes);
         return versions;
+    }
+
+    public List<String> completarProductos(String prodq) {
+        List<String> products = new ArrayList<String>();
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlRetrieveProductsLike);
+            pstmt.setString(1, "%" + prodq + "%");
+            LOG.log(Level.INFO, pstmt.toString());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                LOG.log(Level.INFO, "Agregado: {0}", rs.getString(1));
+                products.add(rs.getString(1));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Error al realizar la consulta: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return products;
     }
         
     /**
