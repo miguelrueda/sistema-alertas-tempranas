@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -55,12 +56,40 @@ public class AutocompleteServlet extends HttpServlet {
                 }
             } else if (action.equalsIgnoreCase("acproduct")) {
                 String prodq = request.getParameter("prodq");
-                LOG.log(Level.INFO, "Buscando productos LIKE: {0}", prodq);
                 List<String> prodsList = swdao.completarProductos(prodq.toLowerCase());
-                LOG.log(Level.INFO, "Se encontraron: {0} productos", prodsList.size());
                 for (String prod : prodsList) {
                     out.println(prod);
+                } //action=getProdId&prodName
+            } else if (action.equalsIgnoreCase("getProdId")) {
+                String prodName = request.getParameter("prodName");
+                String prodid = swdao.buscarIdProducto(prodName);
+                out.println(prodid);
+            } else if (action.equalsIgnoreCase("test")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                String nombre = request.getParameter("nombre");
+                LOG.log(Level.INFO, "Parametro nombre: " + nombre);
+                sb.append("nombre: ").append(nombre).append(", ");
+                String categoria = request.getParameter("categoria");
+                LOG.log(Level.INFO, "parametro categoria: " + categoria);
+                sb.append("categoria: ").append(categoria).append(", ");
+                String keys = request.getParameter("producto");
+                LOG.log(Level.INFO, "Parametro producto: " + keys);
+                sb.append("llaves: ").append("{");
+                StringTokenizer st = new StringTokenizer(keys, "[,]");
+                int ntokens = st.countTokens();
+                String [] temp = new String[ntokens];
+                int i = 0;
+                while (st.hasMoreTokens()) {
+                    temp[i] = st.nextToken().replace("\"", "").replace("\\r\\n", "");
+                    i++;
                 }
+                for (String string : temp) {
+                    sb.append(string).append(",");
+                }
+                sb.append("}");
+                sb.append("}");
+                out.println(sb.toString());
             }
         } finally {
             out.close();

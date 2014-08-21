@@ -71,6 +71,7 @@ public class SoftwareDAO {
             + " ORDER BY g.nombre";
     private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
+    private static final String sqlRetrieveProductId = "SELECT * FROM Software WHERE nombre = ?";
     /* La manera de realizar un LIMIT es diferente dependiendo el proveedor del DBMS:
      * SQL LIMIT
      * >> MySQL
@@ -676,7 +677,6 @@ public class SoftwareDAO {
             LOG.log(Level.INFO, pstmt.toString());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                LOG.log(Level.INFO, "Agregado: {0}", rs.getString(1));
                 products.add(rs.getString(1));
             }
             rs.close();
@@ -695,6 +695,35 @@ public class SoftwareDAO {
             }
         }
         return products;
+    }
+
+    public String buscarIdProducto(String prodName) {
+        int id = 0;
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlRetrieveProductId);
+            pstmt.setString(1, prodName);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("idSoftware");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Error al realizar la consulta: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        LOG.log(Level.INFO, "Se encontro el ID: {0}", id);
+        return (id + "");
     }
         
     /**
