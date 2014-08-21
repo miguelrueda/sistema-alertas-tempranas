@@ -62,7 +62,7 @@
                         fabricante: "Ingresar el nombre del fabricante"
                     },
                     submitHandler: function(form) {
-                        alert($(form).serialize());
+                        //alert($(form).serialize());
                         $.ajax({
                             type: 'POST',
                             url: "/sisalbm/admin/vulnerability.controller?action=add&tipo=2",
