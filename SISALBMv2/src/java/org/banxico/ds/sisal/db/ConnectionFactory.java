@@ -73,7 +73,7 @@ public class ConnectionFactory {
             prop.load(is);
             String connUrl = prop.getProperty("url");
             connection = DriverManager.getConnection(connUrl);
-            LOG.log(Level.INFO, "BD - Conexión establecida correctamente");
+            //LOG.log(Level.INFO, "BD - Conexión establecida correctamente");
         } catch (SQLException ex) {
             LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al iniciar la conexi\u00f3n SQL: {0}", ex.getMessage());
         } catch (IOException ex) {

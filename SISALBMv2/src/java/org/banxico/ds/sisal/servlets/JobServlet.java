@@ -64,7 +64,7 @@ public class JobServlet extends HttpServlet {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet JobScheduleServlet</title>");
+        out.println("<title>Tareas Programadas</title>");
         out.println("<link href=\"resources/css/general.css\" type=\"text/css\" rel=\"stylesheet\" />");
         out.println("<link href=\"resources/css/menu.css\" type=\"text/css\" rel=\"stylesheet\"/>");
         out.println("</head>");
