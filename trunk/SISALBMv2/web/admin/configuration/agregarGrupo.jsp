@@ -21,6 +21,7 @@
                 var prodid = 0;
                 var ikeys = [];
                 var tempdiv = $("#tempdiv");
+                var flag = false;
                 $("#addtolist").attr("disabled", true);
                 $.get("/sisalbm/autocomplete?action=acproduct&prodq=" + prodval, function(data) {
                     var items = data.split("\n");
@@ -30,26 +31,48 @@
                         select: function(event, ui) {
                             $.get("/sisalbm/autocomplete?action=getProdId&prodName=" + ui.item.value, function(ret) {
                                 prodid = ret;
-                                var flag = $.inArray(prodid, ikeys);
-                                alert(flag);
-                                //ikeys[ikeys.length] = ret;
                                 $("#addtolist").attr("disabled", false);
+                                
+                                /*
+                                if (!flag) {
+                                    alert("Agregar elemento");
+                                    ikeys[ikeys.length] = ret;
+                                } 
+                                */
                             });
                         }
                     });
                 });
                 var i = 0;
                 $("#addtolist").click(function() {
+                    //Mostrar la lista de elementos
                     $("#selectedList").show();
-                    var listElements = $("#listElements").html();
-                    var selected = $("#producto").val();
-                    listElements += "<li data-value='" + (i++) + "'>";
-                    listElements += "<i id='icon-minus' class='icon-minus-sign'><img src='../../resources/images/remove.jpg' alt='#' class='li-img'/></i>";
-                    listElements += "<label class='itemvalue'>" + selected + " (" + prodid + ")</label><br/><br/>";
-                    listElements += "</li>";
-                    $("#listElements").html(listElements);
-                    $("#producto").val("");
+                    //Iterar el arreglo buscando los elementos ya existentes
+                    for(i = 0; i < ikeys.length; i++) {
+                        //SI elemento i es igual al que se quiere guardar, cambiar bandera
+                        if(ikeys[i] === prodid) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    //No existe el elelemtno
+                    if (!flag) {
+                        alert("Elemento Agregado");
+                        ikeys[ikeys.length] = prodid;
+                        var listElements = $("#listElements").html();
+                        var selected = $("#producto").val();
+                        listElements += "<li data-value='" + (i++) + "'>";
+                        listElements += "<i id='icon-minus' class='icon-minus-sign'><img src='../../resources/images/remove.jpg' alt='#' class='li-img'/></i>";
+                        listElements += "<label class='itemvalue'>" + selected + " (" + prodid + ")</label><br/><br/>";
+                        listElements += "</li>";
+                        $("#listElements").html(listElements);
+                    } else if (flag) {
+                        //El elemento ya existe
+                        alert("El producto seleccionado ya se encuentra en la lista.");
+                    }
+                    flag = false;
                     prodid = 0;
+                    $("#producto").val("");
                     $("#addtolist").attr("disabled", true);
                 });
                 $(document).on("click", "#icon-minus", function() {
@@ -58,20 +81,6 @@
                         $(this).remove();
                     });
                 });
-                /*
-                $("#addButton").on("click", function(){
-                    var test = ["1", "2", "3", "4"];
-                    var jkeys = JSON.stringify(ikeys);
-                    $.ajax({
-                        url: "/sisalbm/autocomplete?action=test",
-                        type: "POST",
-                        data: {keys: jkeys, nombre: 'Miguel'},
-                        dataType: 'json',
-                        success: function(data) { alert("Recibi: " + data + " elementos"); }
-                    });
-                    return false;
-                });
-                */
                $.validator.addMethod("valCategoria", function(value){
                    return (value !== '0')
                }, "Seleccionar una categoría");
@@ -86,6 +95,7 @@
                         nombre: "Ingresar el nombre del grupo"
                     },
                     submitHandler: function(form) {
+                        $("#producto").val("");
                         var formserialized = $(form).serialize();
                         var jkeys = JSON.stringify(ikeys);
                         var sdata = formserialized + jkeys;

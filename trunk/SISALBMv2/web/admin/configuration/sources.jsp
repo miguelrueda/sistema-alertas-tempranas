@@ -44,11 +44,11 @@
                     var tk = tokens[1].split("=");
                     //alert(tk[1]);
                     //alert("/sisalbm/admin/configuration.controller?action=download&" + param);
-                    //alert(param);
+                    //data: param,
                     $.ajax({
                         type: 'GET',
-                        url: '/sisalbm/admin/configuration.controller?action=download',
-                        data: param,
+                        url: '/sisalbm/admin/configuration.controller?action=download&' + param,
+                        
                         beforeSend: function() {
                             jQuery.noticeAdd({
                                 text: "Procesando Descarga:" + //+ tk[1] + + 

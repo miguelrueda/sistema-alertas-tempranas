@@ -2,6 +2,7 @@ package org.banxico.ds.sisal.servlets;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -139,18 +140,20 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             Date now = new Date();
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             //Si las fechas son iguales la fuentes esta actualizada
-            if (fmt.format(now).equals(fmt.format(regDate))) {
-                response.getWriter().write("UPDATED");
+            LOG.log(Level.INFO, "Comparando las fechas: {0} y {1}", new Object[]{fmt.format(now), fmt.format(regDate)});
+            //if (fmt.format(now).equals(fmt.format(regDate))) {
+                //response.getWriter().write("UPDATED");
                 //En otro caso se requiere actualizar
-            } else {
+            //} else {
                 //Descargar la fuente
                 boolean flag = dao.descargarFuente(id, url);
+                //boolean flag = dao.descargarFuente(id, url, request.getServletContext().getRealPath(""));
                 if (flag) {
                     response.getWriter().write("OK");
                 } else {
                     response.getWriter().write("ERROR");
                 }
-            }
+            //}
         }
     }
 

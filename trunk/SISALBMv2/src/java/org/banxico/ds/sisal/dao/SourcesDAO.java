@@ -345,7 +345,49 @@ public class SourcesDAO {
         }
         return res;
     }
-
+    
+    private static final String SAVE_DIR = "FuentesDescargadas";
+    
+    public boolean descargarFuente(String id, String url, String appPath) {
+        boolean res = false;
+        String savePath = appPath + File.separator + SAVE_DIR;
+        LOG.log(Level.INFO, "Voy a guardar la fuente en: {0}", savePath);
+        File saveDir = new File(savePath);
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        //doSave()
+        try {
+            URL fileurl = new URL(url);
+            URLConnection urlconn = fileurl.openConnection();
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+            String fileName = savePath + File.separator + extraerNombre(url);
+            File file = new File(fileName);
+            LOG.log(Level.INFO, "Archivo de Nombre: {0}", file.getName());
+            if (!file.exists()) {
+                LOG.log(Level.INFO, "Creando un archivo nuevo");
+                file.createNewFile();
+            } else if (file.exists()) {
+                LOG.log(Level.INFO, "Eliminando el archivo existente");
+                file.delete();
+            }
+            PrintWriter pw  = new PrintWriter(file.getAbsolutePath());
+            StringBuilder buffer = new StringBuilder();
+            String inputLine = null;
+            while ((inputLine = br.readLine()) != null) {
+                buffer.append(inputLine).append("\n");
+            }
+            pw.print(buffer);
+            pw.close();
+            LOG.log(Level.INFO, "Archivo({0}) guardado satisfactoriamente!!!", id);
+            res = true;
+            actualizarFecha(id);
+        } catch (IOException e) {
+            LOG.log(Level.INFO, "Ocurrio un problema al descargar el archivo: " + e.getMessage());
+        }
+        return res;
+    }
+    
     /**
      * Método para obtener el nombre del archivo a partir de una url
      * 

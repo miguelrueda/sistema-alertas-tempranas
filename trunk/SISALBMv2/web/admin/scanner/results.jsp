@@ -107,7 +107,7 @@
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Grupos</span></a>
                                         <ul>
-                                            <li><a href="../configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
+                                            <li><a href="/sisalbm/admin/configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
                                             <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=2"><span>Ver Grupos</span></a></li>
                                         </ul>
                                     </li>
