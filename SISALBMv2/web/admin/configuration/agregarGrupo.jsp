@@ -15,14 +15,28 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#categoria").load("/sisalbm/autocomplete?action=getcats");
+                $("#dialog-message").hide();
                 $("#selectedList").hide();
+                $("#cat-existente").hide();
+                $("#cat-nueva").hide();
                 var prod = $("#producto");
                 var prodval = $("#producto").val();
                 var prodid = 0;
                 var ikeys = [];
                 var tempdiv = $("#tempdiv");
                 var flag = false;
+                var i = 0;
                 $("#addtolist").attr("disabled", true);
+                $("input[name=tipo]").on("click", function() {
+                    var tipo = $("input:radio[name=tipo]:checked").val();
+                    if (tipo === 'nueva') {
+                        $("#cat-nueva").show();
+                        $("#cat-existente").hide();
+                    } else if (tipo === 'existente') {
+                        $("#cat-existente").show();
+                        $("#cat-nueva").hide();
+                    }
+                });
                 $.get("/sisalbm/autocomplete?action=acproduct&prodq=" + prodval, function(data) {
                     var items = data.split("\n");
                     prod.autocomplete({
@@ -30,45 +44,47 @@
                         minLength: 3,
                         select: function(event, ui) {
                             $.get("/sisalbm/autocomplete?action=getProdId&prodName=" + ui.item.value, function(ret) {
-                                prodid = ret;
+                                prodid = Number(ret);
                                 $("#addtolist").attr("disabled", false);
-                                
-                                /*
-                                if (!flag) {
-                                    alert("Agregar elemento");
-                                    ikeys[ikeys.length] = ret;
-                                } 
-                                */
                             });
                         }
                     });
                 });
-                var i = 0;
                 $("#addtolist").click(function() {
                     //Mostrar la lista de elementos
                     $("#selectedList").show();
                     //Iterar el arreglo buscando los elementos ya existentes
-                    for(i = 0; i < ikeys.length; i++) {
+                    for (i = 0; i < ikeys.length; i++) {
                         //SI elemento i es igual al que se quiere guardar, cambiar bandera
-                        if(ikeys[i] === prodid) {
+                        if (ikeys[i] === prodid) {
                             flag = true;
                             break;
                         }
                     }
                     //No existe el elelemtno
                     if (!flag) {
-                        alert("Elemento Agregado");
                         ikeys[ikeys.length] = prodid;
                         var listElements = $("#listElements").html();
                         var selected = $("#producto").val();
-                        listElements += "<li data-value='" + (i++) + "'>";
+                        listElements += "<li data-value='" + (i++) + "' data-key='" + prodid + "'>";
                         listElements += "<i id='icon-minus' class='icon-minus-sign'><img src='../../resources/images/remove.jpg' alt='#' class='li-img'/></i>";
                         listElements += "<label class='itemvalue'>" + selected + " (" + prodid + ")</label><br/><br/>";
                         listElements += "</li>";
                         $("#listElements").html(listElements);
                     } else if (flag) {
                         //El elemento ya existe
-                        alert("El producto seleccionado ya se encuentra en la lista.");
+                        $("#dialog-message").attr("title", "Elemento Duplicado");
+                        var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                "El producto seleccionado ya se encuentra en la lista.</p>";
+                        $("#dialog-message").html(content);
+                        $("#dialog-message").dialog({
+                            modal: true,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
                     }
                     flag = false;
                     prodid = 0;
@@ -76,39 +92,95 @@
                     $("#addtolist").attr("disabled", true);
                 });
                 $(document).on("click", "#icon-minus", function() {
-                    var $list = $("#listElements"), listValue = $(this).parent().data("value");
+                    var $list = $("#listElements"), listValue = $(this).parent().data("value"), listKey = $(this).parent().data("key");
+                    var keyindex = ikeys.indexOf(listKey);
+                    alert(listKey + "/" + keyindex);
                     $list.find('li[data-value="' + listValue + '"]').slideUp("fast", function() {
                         $(this).remove();
+                        if (keyindex > -1) {
+                            ikeys.splice(keyindex, 1);
+                        }
                     });
                 });
-               $.validator.addMethod("valCategoria", function(value){
-                   return (value !== '0')
-               }, "Seleccionar una categoría");
+                $.validator.addMethod("valCategoria", function(value) {
+                    return (value !== '0')
+                }, "Seleccionar una categoría");
                 $("#addGroupSW").validate({
                     rules: {
                         nombre: "required",
+                        tipo: "required",
+                        nuevacat: "required",
                         categoria: {
                             valCategoria: true
                         }
-                    }, 
+                    },
                     messages: {
-                        nombre: "Ingresar el nombre del grupo"
+                        nombre: "Ingresar el nombre del grupo",
+                        tipo: "Seleccionar un tipo de categoría",
+                        nuevacat: "Ingresar una categoría"
                     },
                     submitHandler: function(form) {
                         $("#producto").val("");
-                        var formserialized = $(form).serialize();
-                        var jkeys = JSON.stringify(ikeys);
-                        var sdata = formserialized + jkeys;
-                        alert(sdata);
+                        var tipo = $("input:radio[name=tipo]:checked").val();
+                        if (tipo === 'nueva') {
+                            $("#categoria").val("");
+                        } else if (tipo === 'existente') {
+                            $("#nuevacat").val("");
+                        }
+
+                        if (ikeys.length > 0) {
+                            var formserialized = $(form).serialize();
+                            var jkeys = JSON.stringify(ikeys);
+                            var sdata = formserialized + jkeys;
+                            //alert(sdata);
+                        } else {
+                            $("#dialog-message").attr("title", "Error");
+                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "La lista debe contener al menos un elemento seleccionado</p>";
+                            $("#dialog-message").html(content);
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Ok: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                            return false;
+                        }
+                        //url: "/sisalbm/autocomplete?action=test",
                         $.ajax({
-                            url: "/sisalbm/autocomplete?action=test",
+                            url: "/sisalbm/admin/configuration.controller?action=addGroup",
                             type: "POST",
                             data: sdata,
                             success: function(response) {
-                                alert(response);
-                                ikeys = [];
-                                $("#addGroupSW")[0].reset();
-                                 $("#listElements").html("");
+                                //alert(response);
+                                var content = '';
+                                if (response === 'OK') {
+                                    $("#dialog-message").attr("title", "Grupo Agregado");
+                                    content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "El grupo fue agregado exitosamente.</p>";
+                                    ikeys = [];
+                                    $("#addGroupSW")[0].reset();
+                                    $("#listElements").html("");
+                                    $("#dialog-message").hide();
+                                    $("#selectedList").hide();
+                                    $("#cat-existente").hide();
+                                    $("#cat-nueva").hide();
+                                } else if (response === 'ERROR') {
+                                    $("#dialog-message").attr("title", "Error");
+                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo.</p>";
+                                } 
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                             }
                         });
                         return false;
@@ -197,11 +269,30 @@
                                                 <td><label for="nombre" class="error"></label></td>
                                             </tr>
                                             <tr>
+                                                <td>
+                                                    <label>Seleccionar Categoría</label>
+                                                </td>
+                                                <td>
+                                                    <input type="radio" name="tipo" id="tipo" value="existente" />Existente
+                                                    <br />
+                                                    <input type="radio" name="tipo" id="tipo" value="nueva" />Nueva
+                                                    <br />
+                                                </td>
+                                                <td><label for="tipo" class="error"></label></td>
+                                            </tr>
+                                            <tr id="cat-existente">
                                                 <td><label>Categoría</label></td>
                                                 <td>
                                                     <select id="categoria" name="categoria" style="width: 195px"></select>
                                                 </td>
                                                 <td><label for="categoria" class="error"></label></td>
+                                            </tr>
+                                            <tr id="cat-nueva">
+                                                <td><label>Categoría</label></td>
+                                                <td>
+                                                    <input type="text" name="nuevacat" id="nuevacat" style=" width: 185px;" />
+                                                </td>
+                                                <td><label for="nuevacat" class="error"></label></td>
                                             </tr>
                                             <tr>
                                                 <td>Buscar Producto</td>
@@ -226,6 +317,7 @@
                     </div>
                 </div>
             </div>
+            <div id="dialog-message"></div>
         </div>
     </body>
 </html>
