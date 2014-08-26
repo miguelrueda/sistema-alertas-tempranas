@@ -2,11 +2,8 @@ package org.banxico.ds.sisal.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,20 +11,43 @@ import javax.servlet.http.HttpServletResponse;
 import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.SoftwareDAO;
 
+/**
+ * Servlet que sirve como utilidad para realizar los autocompletados que se encuentren en la aplicación
+ *
+ * @author t41507
+ * @version 26.08.2014
+ */
 public class AutocompleteServlet extends HttpServlet {
     
+    /**
+     * Atributo Logger
+     */
+    private static final Logger LOG = Logger.getLogger(AutocompleteServlet.class.getName());
+    /**
+     * DAOS
+     */
     private SoftwareDAO swdao;
     private GruposDAO gdao;
-    private static final Logger LOG = Logger.getLogger(AutocompleteServlet.class.getName());
-
+    
+    /**
+     * Método que se encarga de procesar todas las solicitudes que se reciban
+     *
+     * @param request referencia al objeto de solicitud
+     * @param response referencia al objeto de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Establecer parametros de la respuesta
         response.setContentType("text/html;charset=UTF-8");
         response.setHeader("Cache-control", "no-cache, no-store");
         PrintWriter out = response.getWriter();
+        //Inicializar el DAO
         swdao = new SoftwareDAO();
         gdao = new GruposDAO();
         try {
+            //Obtener la accion a realizar y la llave del fabricante
             String action = request.getParameter("action");
             String vendorq = request.getParameter("vendorq");
             //LOG.log(Level.INFO, "Parametros recibidos: action={0}&vendorq={1}", new Object[]{action, vendorq});
@@ -104,12 +124,28 @@ public class AutocompleteServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Metodo doGet
+     *
+     * @param request refernecia al objeto de solicitud
+     * @param response referencia al objeto de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Metodo doPost
+     *
+     * @param request refernecia al objeto de solicitud
+     * @param response referencia al objeto de respuesta
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -77,7 +77,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
         initialExpiration.set(Calendar.SECOND, START_SECONDS);
         long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
-        LOG.log(Level.INFO, "Timer de analisis creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
+        LOG.log(Level.INFO, "AnalizarBean#setTimer() - Timer de analisis creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
         timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
     }
 
@@ -89,7 +89,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         Collection<Timer> timers = timerService.getTimers();
         for (Timer timer : timers) {
             timer.cancel();
-            LOG.log(Level.INFO, "Timer: {0} cancelado.", timer.getInfo());
+            LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Timer: {0} cancelado.", timer.getInfo());
         }
     }
     
@@ -101,18 +101,18 @@ public class AnalizarBean implements AnalizarBeanLocal {
     @Timeout
     public void doScan(Timer timer) {
         Date reg = new Date();
-        LOG.log(Level.INFO, "Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), reg});
+        LOG.log(Level.INFO, "AnalizarBean#doScan() - Ejecutando el bean: {0} / {1}", new Object[]{timer.getInfo(), reg});
         this.setUltimaEjecucion(reg);
         scanner = new ScannerBean();
         Set<Result> resultados = scanner.doRecentScan(reg);
-        LOG.log(Level.INFO, "Se encontraron: {0} Posibles amenzas", resultados.size());
+        LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
-            LOG.log(Level.INFO, "Enviando resultados por correo . . .");
+            LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
             //enviarResultados(resultados);
         } else {
-            LOG.log(Level.INFO, "Los resultados no fueron enviados. . . ");
+            LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }
-        LOG.log(Level.INFO, "El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
+        LOG.log(Level.INFO, "AnalizarBean#doScan() - El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
     
     /**
@@ -221,9 +221,9 @@ public class AnalizarBean implements AnalizarBeanLocal {
             msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
             msg.setSentDate(new Date());
             Transport.send(msg);
-            LOG.log(Level.INFO, "El mensaje fue enviado correctamente!");
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - El mensaje fue enviado correctamente!");
         } catch (MessagingException e) {
-            LOG.log(Level.INFO, "ocurrio un error al enviar el correo: {0}", e.getMessage());
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - Ocurrio un error al enviar el correo: {0}", e.getMessage());
         }
     }
 

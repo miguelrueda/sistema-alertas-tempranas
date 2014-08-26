@@ -58,7 +58,7 @@ public class UpdateBean implements UpdateBeanLocal {
         initialExpiration.set(Calendar.MINUTE, START_MINUTES);
         initialExpiration.set(Calendar.SECOND, START_SECONDS);
         long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
-        LOG.log(Level.INFO, "Timer de actualizaci\u00f3n creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
+        LOG.log(Level.INFO, "UpdateBean#setTimer() - Timer de actualizaci\u00f3n creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
         Collection<Timer> timers = timerService.getTimers();
         if (timers.size() > 0) {
             return;
@@ -75,7 +75,7 @@ public class UpdateBean implements UpdateBeanLocal {
         if (timers != null) {
             for (Timer t : timers) {
                 t.cancel();
-                LOG.log(Level.INFO, "Timer: {0} cancelado.", t);
+                LOG.log(Level.INFO, "UpdateBean#stopTimer() - Timer: {0} cancelado.", t);
             }
         }
     }
@@ -87,21 +87,21 @@ public class UpdateBean implements UpdateBeanLocal {
      */
     @Timeout
     public void doUpdate(Timer timer) {
-        LOG.log(Level.INFO, "Ejecutando el Bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
+        LOG.log(Level.INFO, "UpdateBean#doUpdate() - Ejecutando el Bean: {0} / {1}", new Object[]{timer.getInfo(), new Date()});
         this.setUltimaEjecucion(new Date());
         sourcesdao = new SourcesDAO();
         List<FuenteApp> fuentes = sourcesdao.obtenerFuentes();
         for (FuenteApp fuente : fuentes) {
-            LOG.log(Level.INFO, "Actualizando la fuente: {0} - Descargando: {1} - {2}", new Object[]{fuente.getId().toString(), fuente.getUrl(), new Date()});
+            LOG.log(Level.INFO, "UpdateBean#doUpdate() - Actualizando la fuente: {0} - Descargando: {1} - {2}", new Object[]{fuente.getId().toString(), fuente.getUrl(), new Date()});
             //sourcesdao.descargarFuente(fuente.getId().toString(), fuente.getUrl());
             long delay = 30000L;
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
-                LOG.log(Level.INFO, "Ocurrio un error al ejecutar la espera!!!");
+                LOG.log(Level.INFO, "UpdateBean#doUpdate() - Ocurrio un error al ejecutar la espera!!!");
             }
         }
-        LOG.log(Level.INFO, "La siguiente actualización se ejecutará el: {0}", timer.getNextTimeout());
+        LOG.log(Level.INFO, "UpdateBean#doUpdate() - La siguiente actualización se ejecutará el: {0}", timer.getNextTimeout());
     }
 
     /**
