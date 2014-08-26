@@ -2,6 +2,7 @@ package org.banxico.ds.sisal.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,33 +65,40 @@ public class AutocompleteServlet extends HttpServlet {
                 String prodName = request.getParameter("prodName");
                 String prodid = swdao.buscarIdProducto(prodName);
                 out.println(prodid);
-            } else if (action.equalsIgnoreCase("test")) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("{");
+            } 
+            /*
+            else if (action.equalsIgnoreCase("test")) {
                 String nombre = request.getParameter("nombre");
-                LOG.log(Level.INFO, "Parametro nombre: " + nombre);
-                sb.append("nombre: ").append(nombre).append(", ");
-                String categoria = request.getParameter("categoria");
-                LOG.log(Level.INFO, "parametro categoria: " + categoria);
-                sb.append("categoria: ").append(categoria).append(", ");
+                String tipo = request.getParameter("tipo");
+                String categoria = null;
+                if (tipo.equalsIgnoreCase("existente")) {
+                    categoria = request.getParameter("categoria");
+                } else if (tipo.equalsIgnoreCase("nueva")) {
+                    categoria = request.getParameter("nuevacat");
+                }
                 String keys = request.getParameter("producto");
-                LOG.log(Level.INFO, "Parametro producto: " + keys);
-                sb.append("llaves: ").append("{");
                 StringTokenizer st = new StringTokenizer(keys, "[,]");
                 int ntokens = st.countTokens();
-                String [] temp = new String[ntokens];
+                Integer [] temp = new Integer[ntokens];
                 int i = 0;
                 while (st.hasMoreTokens()) {
-                    temp[i] = st.nextToken().replace("\"", "").replace("\\r\\n", "");
+                    temp[i] = Integer.parseInt(st.nextToken().replace("\"", "").replace("\\r\\n", ""));
                     i++;
                 }
-                for (String string : temp) {
-                    sb.append(string).append(",");
+                boolean created = false;
+                try {
+                    created = gdao.crearGrupo(nombre, categoria, temp);
+                } catch (SQLException ex) {
+                    LOG.log(Level.SEVERE, "ocurrio un error al crear el grupo: {0}", ex.getMessage());
                 }
-                sb.append("}");
-                sb.append("}");
-                out.println(sb.toString());
-            }
+                if (created) {
+                    out.print("OK");
+                } else if (!created) {
+                    out.print("ERROR");
+                } else {
+                    out.print("UNKNOWN");
+                }
+            }*/
         } finally {
             out.close();
         }

@@ -1,10 +1,12 @@
 package org.banxico.ds.sisal.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -51,6 +53,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         int page = 1;
         int recordsPerPage = 20;
         String nextJSP = "/admin/Index.html";
+        PrintWriter out = response.getWriter();
         //Instancia del request dispatcher
         RequestDispatcher view;
         //Instanciar el dao de fuentes y guardarlo en sesion
@@ -140,7 +143,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             Date now = new Date();
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             //Si las fechas son iguales la fuentes esta actualizada
-            LOG.log(Level.INFO, "Comparando las fechas: {0} y {1}", new Object[]{fmt.format(now), fmt.format(regDate)});
+            //LOG.log(Level.INFO, "Comparando las fechas: {0} y {1}", new Object[]{fmt.format(now), fmt.format(regDate)});
             //if (fmt.format(now).equals(fmt.format(regDate))) {
                 //response.getWriter().write("UPDATED");
                 //En otro caso se requiere actualizar
@@ -154,9 +157,40 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                     response.getWriter().write("ERROR");
                 }
             //}
+        } else if (action.equalsIgnoreCase("addGroup")) {
+            String nombre = request.getParameter("nombre");
+            String tipo = request.getParameter("tipo");
+            String categoria = null;
+            if (tipo.equalsIgnoreCase("existente")) {
+                categoria = request.getParameter("categoria");
+            } else if (tipo.equalsIgnoreCase("nueva")) {
+                categoria = request.getParameter("nuevacat");
+            }
+            String keys = request.getParameter("producto");
+            StringTokenizer st = new StringTokenizer(keys, "[,]");
+            int ntokens = st.countTokens();
+            Integer [] llaves = new Integer[ntokens];
+            int i = 0;
+            while (st.hasMoreTokens()) {
+                llaves[i] = Integer.parseInt(st.nextToken().replace("\"", "").replace("\\r\\n", ""));
+                i++;
+            }
+            boolean created = false;
+            try {
+                created = gdao.crearGrupo(nombre, categoria, llaves);
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "ConfigurationController#AddGroup - Ocurrio un error al crear el grupo: {0}", e.getMessage());
+            }
+            if (created) {
+                out.print("OK");
+            } else if (!created) {
+                out.print("ERROR");
+            } else {
+                out.print("UNKNOWN");
+            }
         }
     }
-
+    
     /**
      * Método doPost
      *

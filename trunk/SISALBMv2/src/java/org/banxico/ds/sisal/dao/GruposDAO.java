@@ -1,6 +1,7 @@
 package org.banxico.ds.sisal.dao;
 
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import org.banxico.ds.sisal.db.ConnectionFactory;
 import org.banxico.ds.sisal.entities.Grupo;
 import org.banxico.ds.sisal.entities.Software;
@@ -48,6 +50,9 @@ public class GruposDAO {
             + "AND g.idGrupo = x.idGrupo AND g.idGrupo = ?";
     private static final String retrieveGroupById = "SELECT * FROM Grupo WHERE idGrupo = ?";
     private static final String retrieveAllCategorias = "SELECT DISTINCT(categoria) FROM Grupo";
+    private static final String sqlInsertGroup = "INSERT INTO Grupo(nombre, categoria) VALUES(?,?);";
+    private static final String sqlInsertGroupSoftwareValue = "INSERT INTO Grupo_Software VALUES(?, ?);";
+    private static final String sqlInsertGroupTest = "INSERT INTO TestTable VALUES(?,?);"; //ELIMINAR
     
     /**
      * Constructor
@@ -369,6 +374,66 @@ public class GruposDAO {
             }
         }
         return cats;
+    }
+    
+    /**
+     * 
+     * @param nombre_grupo cadena con el nombre del grupo a crear
+     * @param categoria_grupo cadena con la categoria para registrar el grupo
+     * @param llaves arreglo de enteros con las llaves del software a registrar en el grupo
+     * @return bandera con el valor de la creación del grupo
+     * @throws java.sql.SQLException cuando no se puede ejecutar de forma correcta la transacción
+     */
+    public boolean crearGrupo(String nombre_grupo, String categoria_grupo, Integer [] llaves) throws SQLException {
+        boolean group_created = false;
+        int generated_key = 0;
+        try {
+            //Obtener la conexión a la base de datos y preparar la sentencia
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            pstmt = connection.prepareStatement(sqlInsertGroup, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, nombre_grupo);
+            pstmt.setString(2, categoria_grupo);
+            Integer num = pstmt.executeUpdate();
+            //LOG.log(Level.INFO, "GruposDAO#crearGrupo() retorna: {0}", num);
+            //OEjecutar la consulta para obtener la llave generada
+            ResultSet rs = pstmt.getGeneratedKeys();
+            while (rs.next()) {
+                generated_key = rs.getInt(1);
+            }
+            //LOG.log(Level.INFO, "GruposDAO#crearGrupo() La llave generada es: {0}", generated_key);
+            rs.close();
+            //Si la llave generada es diferente de cero, cambiar la bandera de grupo creado
+            if (generated_key != 0) {
+                group_created = true;
+            }
+            //EN este punto ya tenemos el id del grupo
+            //DO M/N INSERT
+            pstmt = connection.prepareStatement(sqlInsertGroupSoftwareValue);
+            Arrays.sort(llaves);
+            for (Integer key : llaves) {
+                pstmt.setInt(1, generated_key);
+                pstmt.setInt(2, key);
+                //LOG.log(Level.INFO, "GruposDAO#crearGrupo() Insertando registro ({0},{1})", new Object[]{generated_key, key});
+                Integer temp = pstmt.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "ocurrio un error de SQL: {0}", e.getMessage());
+            connection.rollback();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return group_created;
     }
 
 }
