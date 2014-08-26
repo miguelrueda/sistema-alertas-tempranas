@@ -348,42 +348,53 @@ public class SourcesDAO {
     
     private static final String SAVE_DIR = "FuentesDescargadas";
     
+    /**
+     * Método que se encarga de descargar las fuentes a un directorio especifico
+     *
+     * @param id llave de la fuente a descargar
+     * @param url direccion del recurso
+     * @param appPath path de la aplicación
+     * @return
+     */
     public boolean descargarFuente(String id, String url, String appPath) {
         boolean res = false;
+        //Crear ruta de guardado con el nombre del directorio
         String savePath = appPath + File.separator + SAVE_DIR;
-        LOG.log(Level.INFO, "Voy a guardar la fuente en: {0}", savePath);
         File saveDir = new File(savePath);
+        //Si el directorio no existe, crearlo
         if (!saveDir.exists()) {
             saveDir.mkdir();
         }
-        //doSave()
         try {
+            //Obtener la url, abrir una conexión y obtener su flujo de entrada.
             URL fileurl = new URL(url);
             URLConnection urlconn = fileurl.openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+            //Generar nombre del archivo y crearlo
             String fileName = savePath + File.separator + extraerNombre(url);
             File file = new File(fileName);
-            LOG.log(Level.INFO, "Archivo de Nombre: {0}", file.getName());
+            //Si el archivo no existe crearlo, en otro caso eliminarlo
             if (!file.exists()) {
-                LOG.log(Level.INFO, "Creando un archivo nuevo");
                 file.createNewFile();
             } else if (file.exists()) {
-                LOG.log(Level.INFO, "Eliminando el archivo existente");
                 file.delete();
             }
+            //Abrir los flujos de escritura
             PrintWriter pw  = new PrintWriter(file.getAbsolutePath());
             StringBuilder buffer = new StringBuilder();
             String inputLine = null;
+            //Iterar el flujo para obtener el contenido y almacenarlo en el buffer
             while ((inputLine = br.readLine()) != null) {
                 buffer.append(inputLine).append("\n");
             }
+            //Imprimir el buffer en el flujo y cerrar el flujo
             pw.print(buffer);
             pw.close();
-            LOG.log(Level.INFO, "Archivo({0}) guardado satisfactoriamente!!!", id);
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Archivo({0}) guardado satisfactoriamente!!!", id);
             res = true;
             actualizarFecha(id);
         } catch (IOException e) {
-            LOG.log(Level.INFO, "Ocurrio un problema al descargar el archivo: " + e.getMessage());
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Ocurrio un problema al descargar el archivo: {0}", e.getMessage());
         }
         return res;
     }

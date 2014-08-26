@@ -349,18 +349,27 @@ public class GruposDAO {
         return lista;
     }
 
+    /**
+     * Método que devuleve la lista de categorias registradas en la BD
+     *
+     * @return lista de cadenas con los nombre de las categorias
+     */
     public List<String> obtenerCategorias() {
+        //Instanciar lista para almacenar las categorias
         List<String> cats = new ArrayList<String>();
         try {
+            //Obtener la conexión, preparar la sentencia y ejecutar la consulta
             connection = getConnection();
             pstmt = connection.prepareStatement(retrieveAllCategorias);
             ResultSet rs = pstmt.executeQuery();
+            //Iterar el conjunto de resultados para almacenarlos en la lista
             while (rs.next()) {
                 cats.add(rs.getString(1));
             }
+            //Cerrar Conjunto
             rs.close();
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "ocurrio un error de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "GruposDAO#obtenerCategorias() - ocurrio un error de SQL: {0}", e.getMessage());
         } finally {
             try {
                 if (pstmt != null) {
@@ -370,13 +379,14 @@ public class GruposDAO {
                     connection.close();
                 }
             } catch (SQLException e) {
-                LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+                LOG.log(Level.INFO, "GruposDAO#obtenerCategorias() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
         return cats;
     }
     
     /**
+     * Método que registra un grupo en la bd a partir de los parametros recibidos
      * 
      * @param nombre_grupo cadena con el nombre del grupo a crear
      * @param categoria_grupo cadena con la categoria para registrar el grupo
@@ -385,6 +395,7 @@ public class GruposDAO {
      * @throws java.sql.SQLException cuando no se puede ejecutar de forma correcta la transacción
      */
     public boolean crearGrupo(String nombre_grupo, String categoria_grupo, Integer [] llaves) throws SQLException {
+        //Banderas de resultado
         boolean group_created = false;
         int generated_key = 0;
         try {
@@ -409,17 +420,23 @@ public class GruposDAO {
             }
             //EN este punto ya tenemos el id del grupo
             //DO M/N INSERT
+            //Prepara la nueva sentencia de inserción
             pstmt = connection.prepareStatement(sqlInsertGroupSoftwareValue);
+            //Ordernar las llaves
             Arrays.sort(llaves);
+            //Iterar el arreglo de llaves y establecer los parametros en la sentencia y posteriormente
+            //Ejecutar la sentencia
             for (Integer key : llaves) {
                 pstmt.setInt(1, generated_key);
                 pstmt.setInt(2, key);
                 //LOG.log(Level.INFO, "GruposDAO#crearGrupo() Insertando registro ({0},{1})", new Object[]{generated_key, key});
                 Integer temp = pstmt.executeUpdate();
             }
+            //Confirmar la transacción
             connection.commit();
         } catch (SQLException e) {
             LOG.log(Level.INFO, "ocurrio un error de SQL: {0}", e.getMessage());
+            //En caso de fallo de transacción, realizar un rollback
             connection.rollback();
         } finally {
             try {

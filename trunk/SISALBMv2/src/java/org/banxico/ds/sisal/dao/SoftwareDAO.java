@@ -524,6 +524,180 @@ public class SoftwareDAO {
         }
         return productos;
     }
+    
+    /**
+     * Método que realiza el autocompletado de fabricantes basado en una cadenade consulta
+     *
+     * @param query parametro de busqueda
+     * @return lista de cadenas con las incidencias de la busqueda
+     */
+    public List<String> completarFabricantes(String query) {
+        List<String> vendors = retrieveAllVendors();
+        List<String> filter = new ArrayList<String>();
+        for (String vendor : vendors) {
+            vendor = vendor.toLowerCase();
+            if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
+                filter.add(vendor);
+            }
+        }
+        return filter;
+    }
+
+    /**
+     * Método que se encarga de devolver una lista con todos los fabricantes
+     * 
+     * @return  lista de cadenas con el nombre de todos los fabricantes registrados
+     */
+    private List<String> retrieveAllVendors() {
+        List<String> vendors = new ArrayList<String>();
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (Software sw : softwareDisponible) {
+            if (diferentes.contains(sw.getFabricante())) {
+                duplicados.add(sw.getFabricante());
+            } else {
+                diferentes.add(sw.getFabricante());
+            }
+        }
+        vendors.addAll(diferentes);
+        return vendors;
+    }
+
+    /**
+     * Método que se encarga de autocompletar los productos de un fabricante determinado
+     *
+     * @param vendor nombre del fabricante a buscar la lista
+     * @return lista de cadenas con el nombre de los productos de un farbicante
+     */
+    public List<String> obtenerProductosPorFabricanteAC(String vendor) {
+        List<String> productos = new ArrayList<String>();
+        //Buscar los productos en la lista
+        for (Software sw : softwareDisponible) {
+            if (sw.getFabricante().equalsIgnoreCase(vendor)) {
+                productos.add(sw.getNombre());
+            }
+        }
+        //Eliminar los duplicados
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String prod : productos) {
+            if (diferentes.contains(prod)) {
+                duplicados.add(prod);
+            } else {
+                diferentes.add(prod);
+            }
+        }
+        //Agregar los diferentes en una nueva lista
+        List<String> result = new ArrayList<String>();
+        result.addAll(diferentes);
+        return result;
+    }
+
+    /**
+     * Métopdo que se encarga de obtener las versiones a partir del nombre de un producto
+     *
+     * @param product nombre del producto del cual se buscaran las versiones
+     * @return lista de cadenas con las versiones del producto
+     */
+    public List<String> obtenerVersionesdeProducto(String product) {
+        List<String> products = new ArrayList<String>();
+        List<String> versions = new ArrayList<String>();
+        //Buscar las versiones por software
+        for (Software sw : softwareDisponible) {
+            if (sw.getNombre().equalsIgnoreCase(product) && !"-".equals(sw.getNombre())) {
+                versions.add(sw.getVersion());
+            }
+        }
+        //Eliminar duplicados
+        Set<String> diferentes = new LinkedHashSet<String>();
+        Set<String> duplicados = new LinkedHashSet<String>();
+        for (String version : versions) {
+            if (diferentes.contains(version)) {
+                duplicados.add(version);
+            } else {
+                diferentes.add(version);
+            }
+        }
+        versions = new ArrayList<String>();
+        versions.addAll(diferentes);
+        return versions;
+    }
+
+    /**
+     * Método que se encarga de realizar el autocompletado de productos con la BD
+     *
+     * @param prodq clave a buscar dentro de la BD
+     * @return lista de cadenas con los productos similares
+     */
+    public List<String> completarProductos(String prodq) {
+        //Instanciar la lista
+        List<String> products = new ArrayList<String>();
+        try {
+            //Obtener la conexión, preparar la sentencia y establecer el parametro
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlRetrieveProductsLike);
+            pstmt.setString(1, "%" + prodq + "%");
+            //Ejecutar la consulta y agregar las incidencias a la lista
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                products.add(rs.getString(1));
+            }
+            //Cerrar
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#completarProductos() - Error al realizar la consulta: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#completarProductos() - Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return products;
+    }
+
+    /**
+     * Método que se encarga de obtener la llave de un producto seleccionado
+     *
+     * @param prodName clave del producto a buscar
+     * @return String con la llave del producto encontrado
+     */
+    public String buscarIdProducto(String prodName) {
+        int id = 0;
+        try {
+            //Obtener conexión, preparar el statement y establecer el parametro
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlRetrieveProductId);
+            pstmt.setString(1, prodName);
+            //Ejecutar la consulta y buscar el id retornado
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("idSoftware");
+            }
+            //Cerrar el conjunto
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#buscarIdProducto() - Error al realizar la consulta: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#buscarIdProducto() - Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        //LOG.log(Level.INFO, "Se encontro el ID: {0}", id);
+        return (id + "");
+    }
 
     /**
      * CODIGO BASURA
@@ -594,138 +768,7 @@ public class SoftwareDAO {
         }
         return result;
     }
-
-    public List<String> completarFabricantes(String query) {
-        //LOG.log(Level.INFO, "Buscar fabricantes like: {0}", query);
-        List<String> vendors = retrieveAllVendors();
-        List<String> filter = new ArrayList<String>();
-        for (String vendor : vendors) {
-            vendor = vendor.toLowerCase();
-            if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
-                filter.add(vendor);
-                //LOG.log(Level.INFO, "Agregado: {0}", vendor);
-            }
-        }
-        return filter;
-    }
-
-    private List<String> retrieveAllVendors() {
-        List<String> vendors = new ArrayList<String>();
-        Set<String> diferentes = new LinkedHashSet<String>();
-        Set<String> duplicados = new LinkedHashSet<String>();
-        for (Software sw : softwareDisponible) {
-            if (diferentes.contains(sw.getFabricante())) {
-                duplicados.add(sw.getFabricante());
-            } else {
-                diferentes.add(sw.getFabricante());
-            }
-        }
-        vendors.addAll(diferentes);
-        //LOG.log(Level.INFO, "Existen {0} fabricantes", diferentes.size());
-        return vendors;
-    }
-
-    public List<String> obtenerProductosPorFabricanteAC(String vendor) {
-        List<String> productos = new ArrayList<String>();
-        for (Software sw : softwareDisponible) {
-            if (sw.getFabricante().equalsIgnoreCase(vendor)) {
-                productos.add(sw.getNombre());
-            }
-        }
-        Set<String> diferentes = new LinkedHashSet<String>();
-        Set<String> duplicados = new LinkedHashSet<String>();
-        for (String prod : productos) {
-            if (diferentes.contains(prod)) {
-                duplicados.add(prod);
-            } else {
-                diferentes.add(prod);
-            }
-        }
-        List<String> result = new ArrayList<String>();
-        result.addAll(diferentes);
-        return result;
-    }
-
-    public List<String> obtenerVersionesdeProducto(String product) {
-        List<String> products = new ArrayList<String>();
-        List<String> versions = new ArrayList<String>();
-        for (Software sw : softwareDisponible) {
-            if (sw.getNombre().equalsIgnoreCase(product) && !"-".equals(sw.getNombre())) {
-                versions.add(sw.getVersion());
-            }
-        }
-        Set<String> diferentes = new LinkedHashSet<String>();
-        Set<String> duplicados = new LinkedHashSet<String>();
-        for (String version : versions) {
-            if (diferentes.contains(version)) {
-                duplicados.add(version);
-            } else {
-                diferentes.add(version);
-            }
-        }
-        versions = new ArrayList<String>();
-        versions.addAll(diferentes);
-        return versions;
-    }
-
-    public List<String> completarProductos(String prodq) {
-        List<String> products = new ArrayList<String>();
-        try {
-            connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveProductsLike);
-            pstmt.setString(1, "%" + prodq + "%");
-            LOG.log(Level.INFO, pstmt.toString());
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                products.add(rs.getString(1));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Error al realizar la consulta: {0}", e.getMessage());
-        } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
-            }
-        }
-        return products;
-    }
-
-    public String buscarIdProducto(String prodName) {
-        int id = 0;
-        try {
-            connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveProductId);
-            pstmt.setString(1, prodName);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                id = rs.getInt("idSoftware");
-            }
-            rs.close();
-        } catch (SQLException e) {
-            LOG.log(Level.INFO, "Error al realizar la consulta: {0}", e.getMessage());
-        } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
-            }
-        }
-        LOG.log(Level.INFO, "Se encontro el ID: {0}", id);
-        return (id + "");
-    }
-        
+    
     /**
      * Método que se encarga de iniciar la lista de Softwares apartir de un
      * archivo TODO: ELiminar esté método
