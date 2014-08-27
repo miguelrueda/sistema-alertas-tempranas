@@ -93,7 +93,7 @@ public class UpdateBean implements UpdateBeanLocal {
         List<FuenteApp> fuentes = sourcesdao.obtenerFuentes();
         for (FuenteApp fuente : fuentes) {
             LOG.log(Level.INFO, "UpdateBean#doUpdate() - Actualizando la fuente: {0} - Descargando: {1} - {2}", new Object[]{fuente.getId().toString(), fuente.getUrl(), new Date()});
-            //sourcesdao.descargarFuente(fuente.getId().toString(), fuente.getUrl());
+            sourcesdao.descargarFuente(fuente.getId().toString(), fuente.getUrl());
             long delay = 30000L;
             try {
                 Thread.sleep(delay);
