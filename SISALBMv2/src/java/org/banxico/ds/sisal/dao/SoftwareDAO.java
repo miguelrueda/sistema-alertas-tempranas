@@ -537,11 +537,24 @@ public class SoftwareDAO {
         for (String vendor : vendors) {
             vendor = vendor.toLowerCase();
             if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
-                vendor = vendor.substring(0, 1).toUpperCase() + vendor.substring(1);
-                filter.add(vendor);
+                String capVendor = aMayusculas(vendor);
+                //vendor = vendor.substring(0, 1).toUpperCase() + vendor.substring(1);
+                filter.add(capVendor);
             }
         }
         return filter;
+    }
+    
+    private String aMayusculas(String minword) {
+        StringBuilder sb = new StringBuilder();
+        String [] array = minword.split(" ");
+        for (String str : array) {
+            char [] temp = str.trim().toCharArray();
+            temp[0] = Character.toUpperCase(temp[0]);
+            str = new String(temp);
+            sb.append(str).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     /**
@@ -574,8 +587,9 @@ public class SoftwareDAO {
         List<String> productos = new ArrayList<String>();
         //Buscar los productos en la lista
         for (Software sw : softwareDisponible) {
-            if (sw.getFabricante().equalsIgnoreCase(vendor)) {
-                String temp = sw.getNombre().substring(0, 1).toUpperCase() + sw.getNombre().substring(1);
+            if (sw.getFabricante().equalsIgnoreCase(vendor.trim())) {
+                //String temp = sw.getNombre().substring(0, 1).toUpperCase() + sw.getNombre().substring(1);
+                String temp = aMayusculas(sw.getNombre());
                 productos.add(temp);
             }
         }
@@ -770,6 +784,8 @@ public class SoftwareDAO {
         }
         return result;
     }
+
+    
     
     /**
      * Método que se encarga de iniciar la lista de Softwares apartir de un
