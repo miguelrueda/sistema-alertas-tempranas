@@ -94,7 +94,7 @@
                 $(document).on("click", "#icon-minus", function() {
                     var $list = $("#listElements"), listValue = $(this).parent().data("value"), listKey = $(this).parent().data("key");
                     var keyindex = ikeys.indexOf(listKey);
-                    alert(listKey + "/" + keyindex);
+                    //alert(listKey + "/" + keyindex);
                     $list.find('li[data-value="' + listValue + '"]').slideUp("fast", function() {
                         $(this).remove();
                         if (keyindex > -1) {

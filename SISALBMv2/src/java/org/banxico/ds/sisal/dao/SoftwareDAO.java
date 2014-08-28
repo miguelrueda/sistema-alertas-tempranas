@@ -537,6 +537,7 @@ public class SoftwareDAO {
         for (String vendor : vendors) {
             vendor = vendor.toLowerCase();
             if (vendor.startsWith(query) || vendor.endsWith(query) || vendor.contains(query)) {
+                vendor = vendor.substring(0, 1).toUpperCase() + vendor.substring(1);
                 filter.add(vendor);
             }
         }
@@ -574,7 +575,8 @@ public class SoftwareDAO {
         //Buscar los productos en la lista
         for (Software sw : softwareDisponible) {
             if (sw.getFabricante().equalsIgnoreCase(vendor)) {
-                productos.add(sw.getNombre());
+                String temp = sw.getNombre().substring(0, 1).toUpperCase() + sw.getNombre().substring(1);
+                productos.add(temp);
             }
         }
         //Eliminar los duplicados
