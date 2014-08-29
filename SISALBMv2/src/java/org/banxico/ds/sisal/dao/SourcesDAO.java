@@ -1,5 +1,7 @@
 package org.banxico.ds.sisal.dao;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -55,19 +57,19 @@ public class SourcesDAO {
     private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=? WHERE idFuenteApp = ?";
     private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
     private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
-    
+
     /**
      * Constructor del dao
      */
     public SourcesDAO() {
         /*
-        urlconn = ConnectionFactory.getInstance().getConnection();
-        if (urlconn != null) {
-            LOG.log(Level.INFO, "Conexión con BD exitosa!");
-            iniciarFuentes();
-        } else {
-            iniciarFuentesTemp();
-        }*/
+         urlconn = ConnectionFactory.getInstance().getConnection();
+         if (urlconn != null) {
+         LOG.log(Level.INFO, "Conexión con BD exitosa!");
+         iniciarFuentes();
+         } else {
+         iniciarFuentesTemp();
+         }*/
         iniciarFuentes();
     }
 
@@ -112,7 +114,7 @@ public class SourcesDAO {
             }
         }
     }
-    
+
     /**
      * Método que se encarga de obtener la conexión de BD
      *
@@ -131,7 +133,7 @@ public class SourcesDAO {
     public int obtenerNumeroFuentes() {
         return noFuentes;
     }
-    
+
     /**
      * Método que se encarga de obtener la lista de fuentes
      *
@@ -143,7 +145,7 @@ public class SourcesDAO {
         }
         return new ArrayList<FuenteApp>();
     }
-    
+
     /**
      * Método que obtiene la referencia de una fuente a partir de su di
      *
@@ -158,9 +160,10 @@ public class SourcesDAO {
         }
         return new FuenteApp();
     }
-    
+
     /**
-     * Método que obtiene la fecha de actualización de una fuente a partir de su id
+     * Método que obtiene la fecha de actualización de una fuente a partir de su
+     * id
      *
      * @param id identificador de la fuente
      * @return fecha de actualización de la fuente
@@ -193,9 +196,8 @@ public class SourcesDAO {
         }
         return res;
     }
-    
-    //OPERACIONES CRUD
 
+    //OPERACIONES CRUD
     /**
      * Método que se encarga de crear una nueva fuente
      *
@@ -225,7 +227,7 @@ public class SourcesDAO {
      * @param id identificador de la fuente a actualizar
      * @param nombreN numero nombre ade la fuente
      * @param urlN nueva url de la fuente
-     * 
+     *
      * @return bandera con la ejecución del resultado
      */
     public boolean editarFuente(int id, String nombreN, String urlN) {
@@ -260,7 +262,7 @@ public class SourcesDAO {
      * Método que se encarga de la eliminación de las fuentes
      *
      * @param id identificador de la fuente
-     * 
+     *
      * @return bandera con el resultado de la ejecución
      */
     public boolean eliminarFuente(int id) {
@@ -306,18 +308,26 @@ public class SourcesDAO {
         String inputLine = null;
         String path = null;
         BufferedWriter bw = null;
+        String hardcodedPath = "D:\\devenv\\SISALBMv2\\vulnerabilidades";
         try {
             //Inicializar la variable con la URL y obtener una conexión
             fileurl = new URL(url);
             urlconn = fileurl.openConnection();
             br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
-            //Obtener el path y crear una ruta
-            path = SourcesDAO.class.getResource("/resources/").getPath();
-            File filepath = new File(path);
-            String fileName = path + extraerNombre(url);
-            File file = new File(fileName);
-            String nuevopath = file.getAbsolutePath();
-            LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
+            /**
+             * INICIO Prueba
+             */
+            Path temppath = Paths.get(hardcodedPath);
+            File file = new File(temppath + File.separator + extraerNombre(url));
+            /**
+             * FINPRUEBA
+             */
+            //D - path = SourcesDAO.class.getResource("/resources/").getPath();
+            //D - File filepath = new File(path);
+            //D - String fileName = path + extraerNombre(url);
+            //D - File file = new File(fileName);
+            //D - String nuevopath = file.getAbsolutePath();
+            //D - LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
             PrintWriter printWriter = null;
             //Comprobar existencia del archivo
             if (!file.exists()) {
@@ -326,7 +336,8 @@ public class SourcesDAO {
                 file.delete();
             }
             //Crear un escritor de flujo y un buffer
-            printWriter = new PrintWriter(new File(nuevopath));
+            //D - printWriter = new PrintWriter(new File(nuevopath));
+            printWriter = new PrintWriter(file.getAbsolutePath());
             StringBuilder buffer = new StringBuilder();
             while ((inputLine = br.readLine()) != null) {
                 buffer.append(inputLine).append("\n");
@@ -345,42 +356,44 @@ public class SourcesDAO {
         }
         return res;
     }
-    
+
     private static final String SAVE_DIR = "FuentesDescargadas";
-    
+
     /**
      * Método que se encarga de descargar las fuentes a un directorio especifico
      *
      * @param id llave de la fuente a descargar
      * @param url direccion del recurso
-     * @param appPath path de la aplicación
+     * @param savePath path de la aplicación
      * @return
      */
-    public boolean descargarFuente(String id, String url, String appPath) {
+    public boolean descargarFuente(String id, String url, String savePath) {
         boolean res = false;
         //Crear ruta de guardado con el nombre del directorio
-        String savePath = appPath + File.separator + SAVE_DIR;
-        File saveDir = new File(savePath);
+        //String savePath = appPath + File.separator + SAVE_DIR;
+        //File saveDir = new File(savePath);
         //Si el directorio no existe, crearlo
-        if (!saveDir.exists()) {
-            saveDir.mkdir();
-        }
+        //if (!saveDir.exists()) {
+        //saveDir.mkdir();
+        //}
+        LOG.log(Level.INFO, "Guardando archivo en: {0}", savePath + extraerNombre(url));
         try {
             //Obtener la url, abrir una conexión y obtener su flujo de entrada.
             URL fileurl = new URL(url);
             URLConnection urlconn = fileurl.openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
             //Generar nombre del archivo y crearlo
-            String fileName = savePath + File.separator + extraerNombre(url);
-            File file = new File(fileName);
+            //String fileName = savePath + File.separator + extraerNombre(url);
+            File file = new File(savePath + extraerNombre(url));
             //Si el archivo no existe crearlo, en otro caso eliminarlo
             if (!file.exists()) {
                 file.createNewFile();
             } else if (file.exists()) {
                 file.delete();
             }
+            LOG.log(Level.INFO, "Guardando archivo en: {0}", savePath);
             //Abrir los flujos de escritura
-            PrintWriter pw  = new PrintWriter(file.getAbsolutePath());
+            PrintWriter pw = new PrintWriter(file.getAbsolutePath());
             StringBuilder buffer = new StringBuilder();
             String inputLine = null;
             //Iterar el flujo para obtener el contenido y almacenarlo en el buffer
@@ -398,12 +411,18 @@ public class SourcesDAO {
         }
         return res;
     }
-    
+
+    /*
+     FileWriter fw = new FileWriter(file.getAbsoluteFile());
+     BufferedWriter bw = new BufferedWriter(fw);
+     bw.write(sb.toString());
+     bw.close();
+     */
     /**
      * Método para obtener el nombre del archivo a partir de una url
-     * 
+     *
      * @param url url a analizar
-     * 
+     *
      * @return cadena con el nombre del archivo
      */
     private String extraerNombre(String url) {
@@ -424,7 +443,7 @@ public class SourcesDAO {
 
     /**
      * Método que se encarga de actualizar el registro de la fecha
-     * 
+     *
      * @param id identificador de la fuente a actualizar
      */
     private void actualizarFecha(String id) {
@@ -453,11 +472,10 @@ public class SourcesDAO {
             }
         }
     }
-    
+
     /**
      * CODIGO BASURA
      */
-
     //TODO: Eliminar este método y la inicialización estática
     private static List<FuenteApp> testList;
 
@@ -479,7 +497,6 @@ public class SourcesDAO {
      return res;
      }
      */
-    
     /**
      * TODO: Eliminar esté metodo
      */

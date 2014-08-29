@@ -1,7 +1,10 @@
 package org.banxico.ds.sisal.servlets;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +63,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         //Instanciar el dao de fuentes y guardarlo en sesion
         SourcesDAO dao = new SourcesDAO();
         GruposDAO gdao = new GruposDAO();
+        ServletContext context = this.getServletContext();
         HttpSession sesion = request.getSession();
         sesion.setAttribute("sourcesdao", dao);
         sesion.setAttribute("gruposdao", gdao);
@@ -135,6 +140,18 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         } else if (action.equalsIgnoreCase("download")) {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
+            //Obtener el path real de la aplicación
+            String realPath = context.getRealPath(File.separator);
+            //Crear una instancia de path que apunte a la dirección obtenida
+            Path path = Paths.get(realPath);
+            LOG.log(Level.INFO, "El path real es: {0}", realPath);
+            //Obtener la raiz del directorio y el subdirectorio donde se guardara el archivo
+            String root = path.getRoot().toString();
+            LOG.log(Level.INFO, "El directorio raiz es: {0}", root);
+            String subdir = path.subpath(0, 2).toString();
+            LOG.log(Level.INFO, "El subdirectorio es: {0}", subdir);
+            LOG.log(Level.INFO, "El archivo se guardara en: {0}{1}{2}vulnerabilidades{3}nombredearchivo.xml", new Object[]{root, subdir, File.separator, File.separator});
+            String saveDir = root + subdir + File.separator + "vulnerabilidades" + File.separator;
             //Solicitar el parametro ID y url
             String id = (String) request.getParameter("id");
             String url = (String) request.getParameter("url");
@@ -149,7 +166,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 //En otro caso se requiere actualizar
             //} else {
                 //Descargar la fuente
-                boolean flag = dao.descargarFuente(id, url);
+                boolean flag = dao.descargarFuente(id, url, saveDir);
                 //boolean flag = dao.descargarFuente(id, url, request.getServletContext().getRealPath(""));
                 if (flag) {
                     response.getWriter().write("OK");
@@ -218,3 +235,4 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
     }
 
 }
+

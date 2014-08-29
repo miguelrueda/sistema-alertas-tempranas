@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
@@ -37,6 +38,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Resource
     TimerService timerService;
+    @Resource
+    SessionContext context;
     /**
      * Atributo Logger
      */
