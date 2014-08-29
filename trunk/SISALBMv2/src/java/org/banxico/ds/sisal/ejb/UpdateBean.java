@@ -1,5 +1,8 @@
 package org.banxico.ds.sisal.ejb;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.annotation.Resource;
@@ -8,7 +11,6 @@ import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Timeout;
