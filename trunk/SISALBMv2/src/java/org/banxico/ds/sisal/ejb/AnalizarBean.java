@@ -20,6 +20,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
@@ -148,6 +149,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
      * 
      * @param resultados conjunto de resultados para generar el cuerpo del correo
      */
+    /*
     private void enviarResultados(Set<Result> resultados) {
         //Instanciar un objeto de propiedades
         Properties props = new Properties();
@@ -161,13 +163,13 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //Establecer emisor
             msg.setFrom(new InternetAddress(from));
             //Establecer receptor o lista de receptores
-            /*
+            //>
             InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
             for (int i = 0; i < recipientsArray.length; i++) {
                 recipients[i] = new InternetAddress(recipientsArray[i]);
             }
             msg.setRecipients(Message.RecipientType.TO, recipients);
-            */
+            <//
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
             msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
@@ -222,6 +224,95 @@ public class AnalizarBean implements AnalizarBeanLocal {
             //cuerpo.append("Correo generado por Java - ").append(fmt.format(new Date()));
             //msg.setText(cuerpo.toString());
             msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
+            msg.setSentDate(new Date());
+            Transport.send(msg);
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - El mensaje fue enviado correctamente!");
+        } catch (MessagingException e) {
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - Ocurrio un error al enviar el correo: {0}", e.getMessage());
+        }
+    }*/
+    
+     private static void enviarResultados(Set<Result> resultados) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        try {
+            Session session = Session.getInstance(props, null);
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            Date regdate = new Date();
+            msg.setSubject(asunto + fmt.format(regdate));
+            StringBuilder cuerpo = new StringBuilder();
+            cuerpo.append("<h2 style='color=#FFF;background:#FF0'>")
+                    .append("Se encontraron: ")
+                    .append(resultados.size())
+                    .append(" posibles amenazas.")
+                    .append("</h2>");
+            cuerpo.append("<table style='width:100%;border-collapse:collapse;' >");
+            cuerpo.append("<thead style='border:1px solid #000;background:#797ca3;color:#FFF'>")
+                    .append("<td>Vulnerabilidad</td>")
+                    .append("<td>Publicación</td>")
+                    .append("<td>Gravedad</td>")
+                    .append("<td>Software Afectado</td>")
+                    .append("<td>Grupos Afectados</td>")
+                    .append("<td>Vector de Ataque</td>")
+                    .append("</thead>");
+            cuerpo.append("<tbody>");
+            for (Result result : resultados) {
+                String sev = result.getVulnerabilidad().getSeverity();
+                String es_sev = "";
+                if (sev.equalsIgnoreCase("high")) {
+                    es_sev = "Alta";
+                } else if (sev.equalsIgnoreCase("medium")) {
+                    es_sev = "Medium";
+                } else if (sev.equalsIgnoreCase("low")) {
+                    es_sev = "Baja";
+                } else {
+                    es_sev = "ND";
+                }
+                cuerpo.append("<tr>").append("<td style='border:1px solid #000'>").append(result.getVulnerabilidad().getName())
+                        .append("</td>").append("<td style='border:1px solid #000'>")
+                        .append(fmt.format(result.getVulnerabilidad().getPublished()))
+                        .append("</td>")
+                        .append("<td style='border:1px solid #000'>")
+                        .append(es_sev)
+                        .append("</td>")
+                        .append("<td style='border:1px solid #000'>")
+                        .append("<table style='border:none'>")
+                        .append("<tbody>");
+                //SOFTWARE
+                for (Software sw : result.getSwList()) {
+                    cuerpo.append("<tr>")
+                            .append("<td>")
+                            .append(sw.getNombre())
+                            .append("</td>")
+                            .append("</tr>");
+                }
+                cuerpo.append("</tbody>")
+                        .append("</table>")
+                        .append("</td>")
+                        .append("<td style='border:1px solid #000'>")
+                        .append("<table style='border:none'>")
+                        .append("<tbody>");
+                for (String group : result.getGruposList()) {
+                    cuerpo.append("<tr>").append("<td>").append(group).append("</td>").append("</tr>");
+                }
+                VulnerabilityDAO vulndao = new VulnerabilityDAO();
+                cuerpo.append("</tbody>").append("</table>").append("</td>")
+                        .append("<td style='border:1px solid #000'>")
+                        .append(vulndao.describirVector(result.getVulnerabilidad().getCVSS().vector))
+                        .append("</td>")
+                        .append("</tr>");
+                cuerpo.append("<tr>")
+                        .append("<td colspan='6' style='border:1px solid #000;text-align:left !important'>")
+                        .append(result.getVulnerabilidad().getDescription())
+                        .append("</td>")
+                        .append("</tr>");
+            }
+            cuerpo.append("</tbody>").append("</table>");
+            msg.setContent(cuerpo.toString(), "text/html;charset=utf-8");
             msg.setSentDate(new Date());
             Transport.send(msg);
             LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - El mensaje fue enviado correctamente!");
