@@ -25,7 +25,7 @@ import org.banxico.ds.sisal.entities.FuenteApp;
  */
 @Stateless(name = "UpdateBean", mappedName = "ejb/ds/sisalbm/UpdateBean")
 public class UpdateBean implements UpdateBeanLocal {
-    
+
     /**
      * Inyección del recurso del servicio de tiempo
      */
@@ -41,7 +41,7 @@ public class UpdateBean implements UpdateBeanLocal {
     private static final int START_HOUR = 10;
     private static final int START_MINUTES = 30;
     private static final int START_SECONDS = 0;
-    private static final int INTERVAL_IN_MINUTES = 1440; //1 dia
+    private static final int INTERVAL_IN_MINUTES = 1440; //1 dia 720 - 12 horas
     /**
      * Atributos del Bean
      */
@@ -81,7 +81,7 @@ public class UpdateBean implements UpdateBeanLocal {
             }
         }
     }
-    
+
     /**
      * Método que se encarga de realizar la actualización
      *
@@ -93,15 +93,25 @@ public class UpdateBean implements UpdateBeanLocal {
         this.setUltimaEjecucion(new Date());
         sourcesdao = new SourcesDAO();
         List<FuenteApp> fuentes = sourcesdao.obtenerFuentes();
+        Calendar recent = Calendar.getInstance();
+        Calendar back = Calendar.getInstance();
         for (FuenteApp fuente : fuentes) {
-            LOG.log(Level.INFO, "UpdateBean#doUpdate() - Actualizando la fuente: {0} - Descargando: {1} - {2}", new Object[]{fuente.getId().toString(), fuente.getUrl(), new Date()});
-            sourcesdao.descargarFuente(fuente.getId().toString(), fuente.getUrl());
-            long delay = 30000L;
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                LOG.log(Level.INFO, "UpdateBean#doUpdate() - Ocurrio un error al ejecutar la espera!!!");
+            Date last = sourcesdao.obtenerFechaActualizacion(fuente.getId().toString());
+            Date now = new Date();
+            recent.setTime(now);
+            back.setTime(last);
+            //Si son del mismo dia no actualizar
+            if (!(back.get(Calendar.DAY_OF_MONTH) == recent.get(Calendar.DAY_OF_MONTH))) {
+                LOG.log(Level.INFO, "UpdateBean#doUpdate() - Actualizando la fuente: {0} - Descargando: {1} - {2}", new Object[]{fuente.getId().toString(), fuente.getUrl(), new Date()});
+                sourcesdao.descargarFuente(fuente.getId().toString(), fuente.getUrl());
+                long delay = 30000L;
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    LOG.log(Level.INFO, "UpdateBean#doUpdate() - Ocurrio un error al ejecutar la espera!!!");
+                }
             }
+
         }
         LOG.log(Level.INFO, "UpdateBean#doUpdate() - La siguiente actualización se ejecutará el: {0}", timer.getNextTimeout());
     }
@@ -117,7 +127,8 @@ public class UpdateBean implements UpdateBeanLocal {
     }
 
     /**
-     * Método que se encarga de retornar información de la siguiente ejecución de la tarea
+     * Método que se encarga de retornar información de la siguiente ejecución
+     * de la tarea
      *
      * @return fecha de la siguiente ejecución
      */
@@ -152,5 +163,5 @@ public class UpdateBean implements UpdateBeanLocal {
     public void setUltimaEjecucion(Date ultimaEjecucion) {
         this.ultimaEjecucion = ultimaEjecucion;
     }
-   
+
 }

@@ -1,5 +1,6 @@
 package org.banxico.ds.sisal.dao;
 
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.BufferedReader;
@@ -290,6 +291,8 @@ public class SourcesDAO {
         }
         return res;
     }
+    
+    private static final String sqlDownloadSourceUpdateQuery = "UPDATE FuenteApp SET fecha_actualizacion = ?, contenido_xml = ? WHERE idFuenteApp = ?;";
 
     /**
      * Método que se encarga de descargar las actualizaciones de la fuente
@@ -300,64 +303,43 @@ public class SourcesDAO {
      */
     public boolean descargarFuente(String id, String url) {
         boolean res = false;
-        LOG.log(Level.INFO, "Se realizar\u00e1 la descarga de la Fuente: {0} - {1}", new Object[]{id, url});
-        //Variables para manejar la conexión y descarga del archivo
-        URL fileurl = null;
-        URLConnection urlconn = null;
-        BufferedReader br = null;
-        String inputLine = null;
-        String path = null;
-        BufferedWriter bw = null;
-        String hardcodedPath = "D:\\devenv\\SISALBMv2\\vulnerabilidades";
+        LOG.log(Level.INFO, "SourcesDAO#descargarFuente()Se realizara la descarga de la Fuente: {0} - {1}", new Object[]{id, url});
         try {
-            //Inicializar la variable con la URL y obtener una conexión
-            fileurl = new URL(url);
-            urlconn = fileurl.openConnection();
-            br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
-            /**
-             * INICIO Prueba
-             */
-            Path temppath = Paths.get(hardcodedPath);
-            File file = new File(temppath + File.separator + extraerNombre(url));
-            /**
-             * FINPRUEBA
-             */
-            //D - path = SourcesDAO.class.getResource("/resources/").getPath();
-            //D - File filepath = new File(path);
-            //D - String fileName = path + extraerNombre(url);
-            //D - File file = new File(fileName);
-            //D - String nuevopath = file.getAbsolutePath();
-            //D - LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
-            PrintWriter printWriter = null;
-            //Comprobar existencia del archivo
-            if (!file.exists()) {
-                file.createNewFile();
-            } else if (file.exists()) {
-                file.delete();
-            }
-            //Crear un escritor de flujo y un buffer
-            //D - printWriter = new PrintWriter(new File(nuevopath));
-            printWriter = new PrintWriter(file.getAbsolutePath());
-            StringBuilder buffer = new StringBuilder();
-            while ((inputLine = br.readLine()) != null) {
-                buffer.append(inputLine).append("\n");
-            }
-            //Escribir el flujo en el archivo
-            printWriter.print(buffer);
-            printWriter.close();
+            conn = getConnection();
+            URL fileurl = new URL(url);
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Obteniendo conexi\u00f3n de la url: {0}", url);
+            URLConnection urlconn = fileurl.openConnection();
+            InputStream is = urlconn.getInputStream();
+            pstmt = conn.prepareStatement(sqlDownloadSourceUpdateQuery);
+            pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
+            pstmt.setBinaryStream(2, is);
+            pstmt.setInt(3, Integer.parseInt(id));
+            int qres = pstmt.executeUpdate();
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Resultado de la descarga: {0}", qres);
             res = true;
-            LOG.log(Level.INFO, "Descarga de la fuente: {0}Completada", id);
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Descarga de la fuente: {0}Completada", id);
             //Actualizar el registro de la fecha
-            actualizarFecha(id);
+            //actualizarFecha(id);
         } catch (MalformedURLException e) {
-            LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
         } catch (IOException ex) {
-            LOG.log(Level.INFO, "Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
+        } catch (SQLException ex) {
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Ocurrio un error al ejecutar la consulta: {0}", ex.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Ocurrio una exceipci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
         return res;
     }
-
-    private static final String SAVE_DIR = "FuentesDescargadas";
 
     /**
      * Método que se encarga de descargar las fuentes a un directorio especifico
@@ -412,12 +394,6 @@ public class SourcesDAO {
         return res;
     }
 
-    /*
-     FileWriter fw = new FileWriter(file.getAbsoluteFile());
-     BufferedWriter bw = new BufferedWriter(fw);
-     bw.write(sb.toString());
-     bw.close();
-     */
     /**
      * Método para obtener el nombre del archivo a partir de una url
      *

@@ -111,7 +111,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
-            enviarResultados(resultados);
+            //enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }
