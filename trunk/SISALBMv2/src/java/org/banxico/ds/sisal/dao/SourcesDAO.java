@@ -1,10 +1,7 @@
 package org.banxico.ds.sisal.dao;
 
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,7 +27,7 @@ import org.banxico.ds.sisal.entities.FuenteApp;
  * Fuente
  *
  * @author t41507
- * @version 07.08.2014
+ * @version 01.09.2014
  */
 public class SourcesDAO {
 
@@ -496,4 +493,60 @@ public class SourcesDAO {
         }
     }
 
+    /**
+     * Version anterior del metodo de descargar fuente
+     * 
+     *  public boolean descargarFuente(String id, String url) {
+        boolean res = false;
+        LOG.log(Level.INFO, "Se realizara la descarga de la Fuente: {0} - {1}", new Object[]{id, url});
+        //Variables para manejar la conexión y descarga del archivo
+        URL fileurl = null;
+        URLConnection urlconn = null;
+        BufferedReader br = null;
+        String inputLine = null;
+        String path = null;
+        BufferedWriter bw = null;
+        String hardcodedPath = "D:\\devenv\\SISALBMv2\\vulnerabilidades";
+        try {
+            //Inicializar la variable con la URL y obtener una conexión
+            fileurl = new URL(url);
+            urlconn = fileurl.openConnection();
+            br = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+            Path temppath = Paths.get(hardcodedPath);
+            File file = new File(temppath + File.separator + extraerNombre(url));
+            //D - path = SourcesDAO.class.getResource("/resources/").getPath();
+            //D - File filepath = new File(path);
+            //D - String fileName = path + extraerNombre(url);
+            //D - File file = new File(fileName);
+            //D - String nuevopath = file.getAbsolutePath();
+            //D - LOG.log(Level.INFO, "Guardando archivo en: {0}", nuevopath);
+            PrintWriter printWriter = null;
+            //Comprobar existencia del archivo
+            if (!file.exists()) {
+                file.createNewFile();
+            } else if (file.exists()) {
+                file.delete();
+            }
+            //Crear un escritor de flujo y un buffer
+            //D - printWriter = new PrintWriter(new File(nuevopath));
+            printWriter = new PrintWriter(file.getAbsolutePath());
+            StringBuilder buffer = new StringBuilder();
+            while ((inputLine = br.readLine()) != null) {
+                buffer.append(inputLine).append("\n");
+            }
+            //Escribir el flujo en el archivo
+            printWriter.print(buffer);
+            printWriter.close();
+            res = true;
+            LOG.log(Level.INFO, "Descarga de la fuente: {0}Completada", id);
+            //Actualizar el registro de la fecha
+            actualizarFecha(id);
+        } catch (MalformedURLException e) {
+            LOG.log(Level.INFO, "La URL seleccionada no tiene un formato correcto: {0}", e.getMessage());
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Ocurrio un error al abrir la conexi\u00f3n: {0}", ex.getMessage());
+        }
+        return res;
+    }
+     */
 }
