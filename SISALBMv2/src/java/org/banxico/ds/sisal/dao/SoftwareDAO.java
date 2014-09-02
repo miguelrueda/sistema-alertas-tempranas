@@ -32,6 +32,7 @@ public class SoftwareDAO {
      */
     private Connection connection;
     private PreparedStatement pstmt;
+    private ResultSet rs;
     /**
      * Atributos del DAO
      */
@@ -47,6 +48,7 @@ public class SoftwareDAO {
     private static final String sqlInsert = "INSERT INTO Software "
             + "(fabricante, nombre, version, tipo, end_of_life, UAResponsable, AnalistaResponsable) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String sqlRetrieveAllSoftware = "SELECT * FROM Software";
     private static final String sqlRetrieveAll = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre \n"
             + "FROM Software s, Grupo g, Grupo_Software x \n"
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo \n"
@@ -60,6 +62,9 @@ public class SoftwareDAO {
             + "ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s, "
             + "Grupo_Software x, Grupo g WHERE s.idSoftware = x.idSoftware AND x.idGrupo = g.idGrupo) z "
             + "WHERE z.row > ? and z.row <= ?";
+    private static final String sqlRetrieveSWFromLimit = "SELECT * FROM (SELECT s.idSoftware, s.fabricante, s.nombre, "
+            + "s.version, s.tipo, s.end_of_life, ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s) z "
+            + "WHERE z.row > ? and z.row <= ?";
     private static final String sqlUpdate = "UPDATE Software "
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
             + "WHERE idSoftware = ?";
@@ -72,6 +77,7 @@ public class SoftwareDAO {
     private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
     private static final String sqlRetrieveProductId = "SELECT * FROM Software WHERE nombre = ?";
+    private static final String sqlRetrieveProductById = "SELECT * FROM Software WHERE idSoftware = ?;";
     /* La manera de realizar un LIMIT es diferente dependiendo el proveedor del DBMS:
      * SQL LIMIT
      * >> MySQL
@@ -99,7 +105,8 @@ public class SoftwareDAO {
         try {
             //Se obtiene la conexión, se prepara y ejecuta el Query
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveAll);
+            //pstmt = connection.prepareStatement(sqlRetrieveAll);
+            pstmt = connection.prepareStatement(sqlRetrieveAllSoftware);
             ResultSet rs = pstmt.executeQuery();
             int nr = 0;
             //Iterar los elementos del ResultSet e inicializar el objeto de tipo Software
@@ -174,7 +181,40 @@ public class SoftwareDAO {
      * @return referencia a un objeto de SW
      */
     public Software obtenerSoftwarePorId(int index) {
-        return swList.get(index);
+        //return swList.get(index);
+        Software s = new Software();
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlRetrieveProductById);
+            LOG.log(Level.INFO, "SoftwareDAO#obtenerSoftwarePorId() - Buscando el producto de id: {0}", index);
+            pstmt.setInt(1, index);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                s.setIdSoftware(rs.getInt("idSoftware"));
+                s.setFabricante(rs.getString("fabricante"));
+                s.setNombre(rs.getString("nombre"));
+                s.setVersion(rs.getString("version"));
+                s.setTipo(rs.getInt("tipo"));
+                s.setEndoflife(rs.getInt("end_of_life"));
+                s.setUAResponsable(rs.getString("UAResponsable"));
+                s.setAnalistaResponsable(rs.getString("AnalistaResponsable"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#obtenerSoftwarePorId() - Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#obtenerSoftwarePorId() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return s;
     }
 
     /**
@@ -342,9 +382,10 @@ public class SoftwareDAO {
         try {
             //Obtener conexión y preparar el Statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveFromLimit);
+            pstmt = connection.prepareStatement(sqlRetrieveSWFromLimit);
             pstmt.setInt(1, offset);
             pstmt.setInt(2, offset + noOfRecords);
+            LOG.log(Level.INFO, "Traera los registros entre: {0} y {1}", new Object[]{offset, noOfRecords});
             //Ejecutar la consulta, iterar los resultados y poblar la lista
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -355,8 +396,8 @@ public class SoftwareDAO {
                 sw.setVersion(rs.getString("version"));
                 sw.setTipo(rs.getInt("tipo"));
                 sw.setEndoflife(rs.getInt("end_of_life"));
-                sw.setUAResponsable(rs.getString("gnombre"));
-                sw.setAnalistaResponsable(rs.getString("gcategoria"));
+                //sw.setUAResponsable(rs.getString("gnombre"));
+                //sw.setAnalistaResponsable(rs.getString("gcategoria"));
                 temp.add(sw);
             }
             rs.close();

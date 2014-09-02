@@ -204,6 +204,20 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } else {
                 out.print("UNKNOWN");
             }
+        } else if (action.equalsIgnoreCase("addFuente")) {
+            String nombre = request.getParameter("nombre");
+            String url = request.getParameter("url");
+            boolean flag = validateURL(url);
+            if (flag) {
+                flag = dao.crearFuente(nombre, url);
+                if (flag) {
+                    out.print("OK");
+                } else {
+                    out.print("ERROR");
+                }
+            } else {
+                out.print("URL INVALIDA");
+            }
         }
     }
     
