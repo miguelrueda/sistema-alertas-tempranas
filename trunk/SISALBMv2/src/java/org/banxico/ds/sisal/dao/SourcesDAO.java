@@ -49,9 +49,9 @@ public class SourcesDAO {
     /**
      * Consultas SQL
      */
-    private static final String sqlRetrieveAll = "SELECT * FROM FuenteApp";
+    private static final String sqlRetrieveAll = "SELECT * FROM FuenteApp WHERE idFuenteApp != 5";
     private static final String sqlRetrieveDate = "SELECT fecha_actualizacion FROM FuenteApp WHERE idFuenteApp = ?";
-    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion) VALUES (?, ?, ?)";
+    
     private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=? WHERE idFuenteApp = ?";
     private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
     private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
@@ -196,6 +196,7 @@ public class SourcesDAO {
     }
 
     //OPERACIONES CRUD
+    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion, contenido_xml) VALUES (?, ?, ?, ?)";
     /**
      * Método que se encarga de crear una nueva fuente
      *
@@ -206,19 +207,40 @@ public class SourcesDAO {
     public boolean crearFuente(String nombre, String url) {
         boolean res = false;
         try {
+            conn = getConnection();
+            URL fileurl = new URL(url.trim());
+            URLConnection urlconn = fileurl.openConnection();
             pstmt = conn.prepareStatement(sqlInsert);
+            InputStream is = urlconn.getInputStream();
             pstmt.setString(1, nombre);
             pstmt.setString(2, url);
             pstmt.setDate(3, new java.sql.Date(new Date().getTime()));
-
-            pstmt.executeUpdate();
+            pstmt.setBinaryStream(4, is);
+            int qres = pstmt.executeUpdate();
+            //LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Ejecuci\u00f3n de la consulta retorno: {0}", qres);
             res = true;
+            //LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Descarga de la fuente {0} completada.", nombre);
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } catch (MalformedURLException ex) {
+            LOG.log(Level.INFO, "SourcesDAO#crearFuente() - La url est\u00e1 malformada: {0}", ex.getMessage());
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Ocurrio una excepci\u00f3n al obtener la conexi\u00f3n de la url: {0}", ex.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
         return res;
     }
-
+    
     /**
      * Método que se encarga de actualizar la fuente
      *

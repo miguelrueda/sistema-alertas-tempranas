@@ -147,7 +147,7 @@
                         <div id="content">
                             <div class="editForm">
                                 <br />
-                                <form id="form" name="editSrcForm" class="form" >
+                                <form id="form" name="editSrcForm" class="form" action="" >
                                     <fieldset>
                                         <legend>Edición de la fuente:</legend>
                                         <%

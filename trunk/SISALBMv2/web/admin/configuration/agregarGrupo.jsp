@@ -61,14 +61,14 @@
                             break;
                         }
                     }
-                    //No existe el elelemtno
+                    //No existe el elemento
                     if (!flag) {
                         ikeys[ikeys.length] = prodid;
                         var listElements = $("#listElements").html();
                         var selected = $("#producto").val();
                         listElements += "<li data-value='" + (i++) + "' data-key='" + prodid + "'>";
                         listElements += "<i id='icon-minus' class='icon-minus-sign'><img src='../../resources/images/remove.jpg' alt='#' class='li-img'/></i>";
-                        listElements += "<label class='itemvalue'>" + selected + " (" + prodid + ")</label><br/><br/>";
+                        listElements += "<label class='itemvalue'>" + selected + "</label><br/><br/>";
                         listElements += "</li>";
                         $("#listElements").html(listElements);
                     } else if (flag) {

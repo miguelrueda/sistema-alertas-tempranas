@@ -8,59 +8,6 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script>
-            $(document).ready(function() {
-                var dialog = $("#dialog-form");
-                $("#dialog-form").hide();
-                $("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
-                    /* Dialogo
-                    $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
-                        buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
-                });
-                $("#resultsdiv").hide();
-                $("#searchkey").val("");
-                $("#searchbutton").on("click", function() {
-                    var val = $("#searchkey").val();
-                    $.ajax({
-                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=swsearch',
-                        type: 'GET',
-                        data: "key=" + val,
-                        success: function(result) {
-                            $("#content").hide();
-                            $("#resultsdiv").show();
-                            if (result === '') {
-                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
-                                $("#resultbody").html(notResult);
-                                $("#dialog-message").attr("title", "Software No Encontrada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "No se encontro el software.</p>";
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Ok: function() {
-                                            $(this).dialog("close");
-                                        }
-                                    }
-                                });
-                            } else {
-                                $("#resultbody").html(result);
-                            }
-
-                        }
-                    });
-                });
-                $("#closesearch").on("click", function() {
-                    $("#content").show();
-                    $("#resultsdiv").hide();
-                    $("#searchkey").val("");
-                });
-            });
-
-
-        </script>
     </head>
     <body>
         <div id="page_container">
@@ -70,14 +17,14 @@
                         <td><img src="../resources/images/app_header.png" alt="BMLogo" /></td>
                     </tr>
                 </table>
-            </div>
+            </div><!-- page header-->
             <div id="page_content">
                 <div id="title">&nbsp;Versión Adminstrativa</div>
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Software Soportado</div>
+                        <div id="page_title">Software Registrado</div>
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
@@ -124,7 +71,8 @@
                                     <th>Fabricante</th>
                                     <th>Software</th>
                                     <th>Version</th>
-                                    <th>Grupo</th>
+                                    <th>Fin de Vida</th>
+                                    <th colspan="2">Opciones</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
@@ -139,7 +87,27 @@
                                                         <td style="width: 80px; text-align: center">${supSW.version}</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <td style="width: 200px">${supSW.UAResponsable}</td>
+                                                <c:choose>
+                                                    <c:when test="${supSW.endoflife eq '1'}">
+                                                        <td style="width: 80px; text-align: center">Si</td>
+                                                    </c:when>
+                                                    <c:when test="${supSW.endoflife eq '0'}">
+                                                        <td style="width: 80px; text-align: center">No</td>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <td style="width: 80px; text-align: center">ND</td>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <td>
+                                                    <a href="configuration/editarSW.jsp?id=${supSW.idSoftware}">
+                                                        <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="id=${supSW.idSoftware}" class="view">
+                                                        <img src="../resources/images/trash.png" alt="id=${supSW.idSoftware}" id="tableicon" class="delbtn" />
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -177,9 +145,83 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
-            </div>
-        </div>
+            </div><!--page content-->
+            <div id="dialog-message"></div>
+        </div><!--page container -->
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function() {
+                var dialog = $("#dialog-form");
+                $("#dialog-form").hide();
+                $("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                    /* Dialogo
+                     $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
+                     buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
+                });
+                $(".view").click(function() {
+                    var ids = $(this).attr("href");
+                    var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "¿Desea eliminar el artículo: " + ids + "?.</p>";
+                    $("#dialog-message").attr("title", "Confirmar Eliminación");
+                    $("#dialog-message").html(content);
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        buttons: {
+                            Eliminar: function() {
+                                $(this).dialog("close");
+                            },
+                            Cancelar: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
+                });
+                $("#resultsdiv").hide();
+                $("#searchkey").val("");
+                $("#searchbutton").on("click", function() {
+                    var val = $("#searchkey").val();
+                    $.ajax({
+                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=swsearch',
+                        type: 'GET',
+                        data: "key=" + val,
+                        success: function(result) {
+                            $("#content").hide();
+                            $("#resultsdiv").show();
+                            if (result === '') {
+                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                $("#resultbody").html(notResult);
+                                $("#dialog-message").attr("title", "Software No Encontrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro el software.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#resultbody").html(result);
+                            }
+
+                        }
+                    });
+                });
+                $("#closesearch").on("click", function() {
+                    $("#content").show();
+                    $("#resultsdiv").hide();
+                    $("#searchkey").val("");
+                });
+            });
+
+
+        </script>
+
     </body>
 </html>
