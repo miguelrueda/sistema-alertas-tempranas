@@ -7,93 +7,6 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $("#dialog-message").hide();
-                var vendor = $("#fabricante");
-                var vendorval = $("#fabricante").val();
-                $.get("/sisalbm/autocomplete?action=getvendor&vendorq=" + vendorval, function(data) {
-                    var items = data.split("\n");
-                    vendor.autocomplete({
-                        source: items, minLength: 3,
-                        select: function(event, ui) {
-                            cargarProductos(ui.item.value);
-                        }
-                    });
-                });
-                function cargarProductos(vendor) {
-                    $("#nombre").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
-                }
-                $("#nombre").on("change", function() {
-                    $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})
-                });
-                $.validator.addMethod("valProduct", function(value) {
-                    return (value !== '0')
-                }, "Seleccionar un Producto");
-                $.validator.addMethod("valVersion", function(value) {
-                    return (value !== '0')
-                }, "Seleccionar una versión");
-                $.validator.addMethod("valTipo", function(value) {
-                    return (value !== '0');
-                }, 'Seleccionar un tipo del SW');
-                $.validator.addMethod("valEOL", function(value) {
-                    return (value !== '0');
-                }, 'Seleccionar Fin de Vida');
-                $("#addSWForm").validate({
-                    rules: {
-                        fabricante: "required",
-                        nombre: {
-                            valProduct: true
-                        },
-                        version: {
-                            valVersion: true
-                        },
-                        tipo: {
-                            valTipo: true
-                        },
-                        eol: {
-                            valEOL: true
-                        }
-                    },
-                    messages: {
-                        fabricante: "Ingresar el nombre del fabricante"
-                    },
-                    submitHandler: function(form) {
-                        //alert($(form).serialize());
-                        $.ajax({
-                            type: 'POST',
-                            url: "/sisalbm/admin/vulnerability.controller?action=add&tipo=2",
-                            data: $(form).serialize(),
-                            success: function(response) {
-                                $("#dialog-message").attr('title', 'Agregar Software');
-                                var content = '';
-                                if (response === 'OK') {
-                                    content = 'El Software ha sido agregado exitosamente.';
-                                } else if (response === 'NOT') {
-                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo más tarde.';
-                                } else {
-                                    content = 'Ocurrio un error inesperado.';
-                                }
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Ok: function() {
-                                            $(this).dialog("close");
-                                        }
-                                    }
-                                });
-                                $("#addSWForm")[0].reset();
-                            }
-                        });
-                        return false;
-                    }
-                });
-            });
-        </script>        
     </head>
     <body>
         <div id="page_container">
@@ -105,43 +18,9 @@
                 </table>
             </div>
             <div id="page_content">
-                <div id="title">&nbsp;Versión Adminstrativa</div>
+                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
-                    <div id="cssmenu">
-                        <ul>
-                            <li><a href="../../AppIndex.html"><span>AppIndex</span></a></li>
-                            <li class="has-sub"><a href="#"><span>Configuración</span></a>
-                                <ul>
-                                    <li class="has-sub"><a href="#"><span>Fuentes</span></a>
-                                        <ul>
-                                            <li><a href="../configuration.controller?action=view&tipo=1"><span>Administrar</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#"><span>Grupos</span></a>
-                                        <ul>
-                                            <li><a href="../configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
-                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Ver Grupos</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#"><span>Software</span></a>
-                                        <ul>
-                                            <li><a href="../vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
-                                            <li><a href="../vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="last"><a href="/sisalbm/JobServlet"><span>Tareas Programadas</span></a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><span>Vulnerabilidades</span></a>
-                                <ul>
-                                    <li><a href="../vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
-                                    <li><a href="../vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
-                                </ul>
-                            </li>
-                            <li><a href="../scanner/scan.jsp"><span>Escaneo</span></a></li>
-                            <li><a href="../help.jsp"><span>Ayuda</span></a></li>
-                        </ul>
-                    </div>
+                    <%@include file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Agregar Software</div>
@@ -231,6 +110,92 @@
                 <div id="dialog-message"><p>Content</p></div>
             </div>
         </div>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#dialog-message").hide();
+                var vendor = $("#fabricante");
+                var vendorval = $("#fabricante").val();
+                $.get("/sisalbm/autocomplete?action=getvendor&vendorq=" + vendorval, function(data) {
+                    var items = data.split("\n");
+                    vendor.autocomplete({
+                        source: items, minLength: 3,
+                        select: function(event, ui) {
+                            cargarProductos(ui.item.value);
+                        }
+                    });
+                });
+                function cargarProductos(vendor) {
+                    $("#nombre").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
+                }
+                $("#nombre").on("change", function() {
+                    $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})
+                });
+                $.validator.addMethod("valProduct", function(value) {
+                    return (value !== '0')
+                }, "Seleccionar un Producto");
+                $.validator.addMethod("valVersion", function(value) {
+                    return (value !== '0')
+                }, "Seleccionar una versión");
+                $.validator.addMethod("valTipo", function(value) {
+                    return (value !== '0');
+                }, 'Seleccionar un tipo del SW');
+                $.validator.addMethod("valEOL", function(value) {
+                    return (value !== '0');
+                }, 'Seleccionar Fin de Vida');
+                $("#addSWForm").validate({
+                    rules: {
+                        fabricante: "required",
+                        nombre: {
+                            valProduct: true
+                        },
+                        version: {
+                            valVersion: true
+                        },
+                        tipo: {
+                            valTipo: true
+                        },
+                        eol: {
+                            valEOL: true
+                        }
+                    },
+                    messages: {
+                        fabricante: "Ingresar el nombre del fabricante"
+                    },
+                    submitHandler: function(form) {
+                        //alert($(form).serialize());
+                        $.ajax({
+                            type: 'POST',
+                            url: "/sisalbm/admin/vulnerability.controller?action=add&tipo=2",
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                $("#dialog-message").attr('title', 'Agregar Software');
+                                var content = '';
+                                if (response === 'OK') {
+                                    content = 'El Software ha sido agregado exitosamente.';
+                                } else if (response === 'NOT') {
+                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo más tarde.';
+                                } else {
+                                    content = 'Ocurrio un error inesperado.';
+                                }
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                                $("#addSWForm")[0].reset();
+                            }
+                        });
+                        return false;
+                    }
+                });
+            });
+        </script>        
     </body>
-
 </html>

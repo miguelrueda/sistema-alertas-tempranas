@@ -78,7 +78,7 @@ public class JobServlet extends HttpServlet {
         out.println("</table>");
         out.println("</div>");
         out.println("<div id=\"page_content\">");
-        out.println("<div id=\"title\">&nbsp;App Index</div>");
+        //out.println("<div id=\"title\">&nbsp;App Index</div>");
         out.println("<div id=\"workarea\">");
         out.println("<div id=\"cssmenu\">");
         out.println("<ul>");
@@ -86,13 +86,14 @@ public class JobServlet extends HttpServlet {
         out.println("<ul style=\"z-index: 999\">");
         out.println("<li class=\"has-sub\"><a href=\"#\"><span>Fuentes</span></a>");
         out.println("<ul>");
-        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=1\"><span>Administrar</span></a></li>");
+        out.println("<li><a href='/sisalbm/admin/configuration/agregarFuente.jsp'><span>Agregar Fuente</span></a></li>");
+        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=1\"><span>Fuentes Registradas</span></a></li>");
         out.println("</ul>");
         out.println("</li>");
         out.println("<li class=\"has-sub\"><a href=\"#\"><span>Grupos</span></a>");
         out.println("<ul>");
         out.println("<li><a href=\"/sisalbm/admin/configuration/agregarGrupo.jsp\"><span>Agregar Grupo</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=2\"><span>Administrar</span></a></li>");
+        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=2\"><span>Grupos Registrados</span></a></li>");
         out.println("</ul>");
         out.println("</li>");
         out.println("<li class=\"has-sub\"><a href=\"#\"><span>Software</span></a>");

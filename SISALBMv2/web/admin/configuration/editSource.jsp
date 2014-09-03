@@ -12,6 +12,87 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
+    </head>
+    <%
+        String srcId = request.getParameter("id");
+        int id = Integer.parseInt(srcId);
+    %>
+    <body>
+        <div id="page_container">
+            <div id="page_header">
+                <table id="header">
+                    <tr>
+                        <td><img src="../../resources/images/app_header.png" alt="BMLogo" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="page_content">
+                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
+                <div id="workarea">
+                    <%@include file="../incfiles/menu.jsp" %>
+                    <div id="content_wrap">
+                        <div id="content">
+                            <div class="editForm">
+                                <br />
+                                <form id="form" name="editSrcForm" class="form" action="" >
+                                    <fieldset>
+                                        <legend>Edición de la fuente:</legend>
+                                        <%
+                                            FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
+                                        %>
+                                        <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <label for="idf">Id:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" class="src" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Nombre:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" class="src" />
+                                                    </td>
+                                                    <td>
+                                                        <label for="namef" id="namevalidation"></label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Url:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" class="src" />
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="datef">Ultima Actualización:</label>
+                                                    </td>
+                                                    <td>
+                                                        <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" class="src" /><br />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
+                                    <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dialog-message">
+            </div>
+        </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
@@ -19,8 +100,7 @@
                 $("#dialog-message").hide();
                 /*
                  $("#namef").on("input", function() {
-                 var input = $(this);
-                 var isname = input.val();
+                 var input = $(this); var isname = input.val();
                  if (isname) {
                  $("#namevalidation").hide();
                  $("#actualizar").attr("disabled", false);
@@ -91,37 +171,24 @@
                 });
             });
         </script>
-    </head>
-    <%
-        String srcId = request.getParameter("id");
-        int id = Integer.parseInt(srcId);
-    %>
-    <body>
-        <div id="page_container">
-            <div id="page_header">
-                <table id="header">
-                    <tr>
-                        <td><img src="../../resources/images/app_header.png" alt="BMLogo" /></td>
-                    </tr>
-                </table>
-            </div>
-            <div id="page_content">
-                <div id="title">&nbsp;Versión Adminstrativa</div>
-                <div id="workarea">
+    </body>
+</html>
+<!--
                     <div id="cssmenu">
                         <ul>
-                            <li><a href="../../AppIndex.html"><span>AppIndex</span></a></li>
+                            < ! - - <li><a href="../../AppIndex.html"><span>AppIndex</span></a></li> - - >
                             <li class="has-sub"><a href="#"><span>Configuración</span></a>
                                 <ul>
                                     <li class="has-sub"><a href="#"><span>Fuentes</span></a>
                                         <ul>
-                                            <li><a href="../configuration.controller?action=view&tipo=1"><span>Administrar</span></a></li>
+                                            <li><a href="../configuration/agregarFuente.jsp"><span>Agregar Fuente</span></a></li>
+                                            <li><a href="../configuration.controller?action=view&tipo=1"><span>Fuentes Registradas</span></a></li>
                                         </ul>
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Grupos</span></a>
                                         <ul>
                                             <li><a href="../configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
-                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Ver Grupos</span></a></li>
+                                            <li><a href="../configuration.controller?action=view&tipo=2"><span>Grupos Registrados</span></a></li>
                                         </ul>
                                     </li>
                                     <li class="has-sub"><a href="#"><span>Software</span></a>
@@ -142,70 +209,4 @@
                             <li><a href="../scanner/scan.jsp"><span>Escaneo</span></a></li>
                             <li><a href="../help.jsp"><span>Ayuda</span></a></li>
                         </ul>
-                    </div>
-                    <div id="content_wrap">
-                        <div id="content">
-                            <div class="editForm">
-                                <br />
-                                <form id="form" name="editSrcForm" class="form" action="" >
-                                    <fieldset>
-                                        <legend>Edición de la fuente:</legend>
-                                        <%
-                                            FuenteApp fuente = ((SourcesDAO) session.getAttribute("sourcesdao")).obtenerFuentePorId(id);
-                                        %>
-                                        <fmt:formatDate value="<%= fuente.getFechaActualizacion()%>" var="parsedDate" dateStyle="long" />
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <label for="idf">Id:</label>
-                                                    </td>
-                                                    <td>
-                                                        <input name="idf" id="idf" type="text" value="<%= fuente.getId()%>" disabled="true" class="src" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label>Nombre:</label>
-                                                    </td>
-                                                    <td>
-                                                        <input name="namef" id="namef" type="text" value="<%= fuente.getNombre()%>" class="src" />
-                                                    </td>
-                                                    <td>
-                                                        <label for="namef" id="namevalidation"></label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label>Url:</label>
-                                                    </td>
-                                                    <td>
-                                                        <input name="urlf" id="urlf" type="text" value="<%= fuente.getUrl()%>" class="src" />
-                                                    </td>
-                                                    <td>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label for="datef">Ultima Actualización:</label>
-                                                    </td>
-                                                    <td>
-                                                        <input name="datef" id="datef" type="text" value="${parsedDate}" disabled="true" class="src" /><br />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </fieldset>
-                                    <input id="actualizar" type="button" value="Actualizar Fuente" name="submit" />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="dialog-message">
-            </div>
-        </div>
-
-    </body>
-</html>
+                    </div>-->

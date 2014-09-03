@@ -8,31 +8,7 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" /> 
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
         <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />        
-        <script>
-            $(document).ready(function() {
-               $(".view").click(function() {
-                   $("#dialog").attr('src', $(this).attr("href"));
-                   $("#dialogdiv").dialog({
-                       width: 800,
-                       height: 800,
-                       modal: true,
-                       resizable: false,
-                       draggable: false,
-                       open: function() {
-                           $(".ui-widget-overlay").addClass('custom-overlay');
-                       }, 
-                       close: function() {
-                           $("#dialog").attr("src", "about:blank");                       
-                       }
-                   });
-                   return false;
-               }); 
-            });            
-        </script>        
     </head>
     <body>
         <div id="page_container">
@@ -44,7 +20,7 @@
                 </table>
             </div>
             <div id="page_content">
-                <div id="title">&nbsp;Versión Adminstrativa</div>
+                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -110,5 +86,29 @@
                 </div>
             </div>
         </div>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
+        <script>
+            $(document).ready(function() {
+                $(".view").click(function() {
+                    $("#dialog").attr('src', $(this).attr("href"));
+                    $("#dialogdiv").dialog({
+                        width: 800,
+                        height: 800,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $(".ui-widget-overlay").addClass('custom-overlay');
+                        },
+                        close: function() {
+                            $("#dialog").attr("src", "about:blank");
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>        
     </body>
 </html>
