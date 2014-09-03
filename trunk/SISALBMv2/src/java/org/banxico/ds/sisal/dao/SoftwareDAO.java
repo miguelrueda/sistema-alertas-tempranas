@@ -65,10 +65,10 @@ public class SoftwareDAO {
     private static final String sqlRetrieveSWFromLimit = "SELECT * FROM (SELECT s.idSoftware, s.fabricante, s.nombre, "
             + "s.version, s.tipo, s.end_of_life, ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s) z "
             + "WHERE z.row > ? and z.row <= ?";
-    private static final String sqlUpdate = "UPDATE Software "
+    private static final String sqlUpdateSoftware = "UPDATE Software "
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
             + "WHERE idSoftware = ?";
-    private static final String sqlDelete = "DELETE FROM Software WHERE idSoftware = ?";
+    private static final String sqlDeleteSoftware = "DELETE FROM Software WHERE idSoftware = ?";
     private static final String searchQry = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre, g.categoria "
             + "FROM Software s, Grupo g, Grupo_Software x "
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo "
@@ -431,19 +431,32 @@ public class SoftwareDAO {
     public boolean editarSoftware(Software sw) {
         boolean res = false;
         try {
-            pstmt = connection.prepareStatement(sqlUpdate);
+            pstmt = connection.prepareStatement(sqlUpdateSoftware);
+            LOG.log(Level.INFO, "SoftwareDAO#editarSoftware() - Editando el SW: {0}", sw.getIdSoftware());
             pstmt.setString(1, sw.getFabricante());
             pstmt.setString(2, sw.getNombre());
             pstmt.setString(3, sw.getVersion());
             pstmt.setInt(4, sw.getTipo());
             pstmt.setInt(5, sw.getEndoflife());
-            pstmt.setString(6, sw.getUAResponsable());
-            pstmt.setString(7, sw.getAnalistaResponsable());
+            pstmt.setString(6, "ND");
+            pstmt.setString(7, "ND");
             pstmt.setInt(8, sw.getIdSoftware());
             pstmt.executeUpdate();
             res = true;
+            LOG.log(Level.INFO, "SoftwareDAO#editarSoftware() - Software eliminado correctamente");
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "SoftwareDAO#editarSoftware() - Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#editarSoftware() - Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
         }
         return res;
     }
@@ -458,12 +471,14 @@ public class SoftwareDAO {
         boolean res = false;
         try {
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlDelete);
+            pstmt = connection.prepareStatement(sqlDeleteSoftware);
+            LOG.log(Level.INFO, "SoftwareDAO#eliminarSoftware() - Eliminando el Software: {0}", id);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             res = true;
+            LOG.log(Level.INFO, "SoftwareDAO#eliminarSoftware() - Software eliminado correctamente");
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+            LOG.log(Level.INFO, "SoftwareDAO#eliminarSoftware() - Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
         } finally {
             try {
                 if (pstmt != null) {
@@ -473,7 +488,7 @@ public class SoftwareDAO {
                     connection.close();
                 }
             } catch (SQLException e) {
-                LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+                LOG.log(Level.INFO, "SoftwareDAO#eliminarSoftware() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
         return res;
