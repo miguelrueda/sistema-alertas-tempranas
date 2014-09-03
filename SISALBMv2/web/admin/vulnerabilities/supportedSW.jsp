@@ -28,17 +28,10 @@
                         <br />
                         <div class="searchdiv">
                             <form class="searchform">
-                                <!--
-                                <button type="submit" id="addButton" class="addbutton">
-                                    Agregar Software
-                                </button>
-                                <a href="vulnerabilities/addSW.jsp" id="add" class="addbutton">
-                                    Agregar Software
-                                </a>
-                                -->
-                                <span class="espaciado" style="padding-left: 440px;">
-                                </span>
-                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW o de Grupo" />
+                                <!--<button type="submit" id="addButton" class="addbutton">Agregar Software</button>
+                                <a href="vulnerabilities/addSW.jsp" id="add" class="addbutton">Agregar Software</a>-->
+                                <span class="espaciado" style="padding-left: 440px;"></span>
+                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
                         </div>
@@ -53,7 +46,7 @@
                                             <th>Fabricante</th>
                                             <th>Software</th>
                                             <th>Versión</th>
-                                            <th>Grupo</th>
+                                            <th>Fin de Vida</th>
                                         </tr>
                                     </thead>
                                     <tbody id="resultbody">
@@ -104,7 +97,7 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="id=${supSW.idSoftware}" class="view">
+                                                    <a href="id=${supSW.idSoftware}&nombre=${supSW.nombre}" class="view">
                                                         <img src="../resources/images/trash.png" alt="id=${supSW.idSoftware}" id="tableicon" class="delbtn" />
                                                     </a>
                                                 </td>
@@ -161,25 +154,9 @@
                      $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
                      buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
                 });
-                $(".view").click(function() {
-                    var ids = $(this).attr("href");
-                    var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "¿Desea eliminar el artículo: " + ids + "?.</p>";
-                    $("#dialog-message").attr("title", "Confirmar Eliminación");
-                    $("#dialog-message").html(content);
-                    $("#dialog-message").dialog({
-                        modal: true,
-                        buttons: {
-                            Eliminar: function() {
-                                $(this).dialog("close");
-                            },
-                            Cancelar: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    });
-                    return false;
-                });
+                /**
+                 *  Código para la busqueda de SW
+                 */
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");
                 $("#searchbutton").on("click", function() {
@@ -217,6 +194,51 @@
                     $("#content").show();
                     $("#resultsdiv").hide();
                     $("#searchkey").val("");
+                });
+                /**
+                 * Código para elimiinar un SW
+                 */
+                $(".view").on("click", function() {
+                    var id_name = $(this).attr("href");
+                    var res = id_name.split("&");
+                    var res0 = res[0].split("=");
+                    var swid = res0[1];
+                    var res1 = res[1].split("=");
+                    var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "¿Desea eliminar el artículo:<br /> " + res1[1] + "?</p>";
+                    $("#dialog-message").attr("title", "Confirmar Eliminación");
+                    $("#dialog-message").html(content);
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        buttons: {
+                            Eliminar: function() {
+                                $(this).dialog("close");
+                                $.ajax({
+                                    url: '/sisalbm/test?action=deleteSW',
+                                    type: 'POST',
+                                    data: 'swid=' + swid,
+                                    success: function(result) {
+                                        var content = "";
+                                        $("#dialog-message").attr("title", "Software Eliminado");
+                                        $("#dialog-message").html(result);
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                    location.reload();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            Cancelar: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
                 });
             });
         </script>

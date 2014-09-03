@@ -32,6 +32,7 @@ public class GruposDAO {
      */
     private Connection connection;
     private PreparedStatement pstmt;
+    private ResultSet rs;
     /**
      * Atributos del DAO
      */
@@ -308,7 +309,7 @@ public class GruposDAO {
      * @param idGrupo identificador del grupo a buscar
      * @return lista de software con los elementos asociados a ese grupo
      */
-    private List<Software> obtenerSoftwaredeGrupo(int idGrupo) {
+    public List<Software> obtenerSoftwaredeGrupo(int idGrupo) {
         //Crear una nueva lista y un software para la iteración
         ArrayList<Software> lista = new ArrayList<Software>();
         Software temp;
@@ -451,6 +452,41 @@ public class GruposDAO {
             }
         }
         return group_created;
+    }
+    
+    private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
+
+    public List<Grupo> buscarGrupo(String key) {
+        List<Grupo> found = new ArrayList<Grupo>();
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlSearchGroupsQuery);
+            pstmt.setString(1, "%" + key + "%");
+            pstmt.setString(2, "%" + key + "%");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Grupo g = new Grupo();
+                g.setIdGrupo(rs.getInt("idGrupo"));
+                g.setNombre(rs.getString("nombre"));
+                g.setCategoria(rs.getString("categoria"));
+                found.add(g);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "GruposDAO#buscarGrupo() - Ocurrio una excepci\u00f3n de SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "GruposDAO#buscarGrupo() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return found;
     }
 
 }

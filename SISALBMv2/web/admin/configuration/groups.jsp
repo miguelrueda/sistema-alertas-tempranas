@@ -25,8 +25,32 @@
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Grupos de SW</div>
+                        <div id="page_title">Grupos de Software</div>
                         <br />
+                        <div class="searchdiv">
+                            <form class="searchform">
+                                <span class="espaciado" style="padding-left: 440px"></span>
+                                <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del Grupo" />
+                                <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
+                            </form>
+                        </div><!--search div-->
+                        <br /><br /><br />
+                        <div id="resultsdiv">
+                            <div class="datagrid">
+                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre del Grupo</th>
+                                            <th colspan="2">Categoría</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultbody"></tbody>
+                                </table>   
+                                <br />
+                                <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
+                                <br />
+                            </div><!-- data grid -->
+                        </div><!--results div-->
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" id="tablestyle">
@@ -85,6 +109,7 @@
                     </div>
                 </div>
             </div>
+            <div id="dialog-message"></div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -107,6 +132,46 @@
                         }
                     });
                     return false;
+                });
+                /**
+                 * Código para realizar la búsqueda de grupos
+                 */
+                $("#resultsdiv").hide();
+                $("#searchkey").val("");
+                $("#searchbutton").on("click", function() {
+                    var val = $("#searchkey").val();
+                    $.ajax({
+                        url: '/sisalbm/admin/configuration.controller?action=searchGroup',
+                        type: 'GET',
+                        data: "key=" + val,
+                        success: function(result) {
+                            $("#content").hide();
+                            $("#resultsdiv").show();
+                            if(result === 'NOT_FOUND') {
+                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                $("#resultbody").html(notResult);
+                                $("#dialog-message").attr("title", "Grupo No Encontrado");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro información del grupo solicitado.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        OK: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#resultbody").html(result);
+                            }
+                        }
+                    });
+                });
+                $("#closesearch").on("click", function() {
+                    $("#content").show();
+                    $("#resultsdiv").hide();
+                    $("#searchkey").val("");
                 });
             });
         </script>        
