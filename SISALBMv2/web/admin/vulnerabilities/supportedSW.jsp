@@ -219,8 +219,17 @@
                                     data: 'swid=' + swid,
                                     success: function(result) {
                                         var content = "";
-                                        $("#dialog-message").attr("title", "Software Eliminado");
-                                        $("#dialog-message").html(result);
+                                        if(result === 'OK') {
+                                            $("#dialog-message").attr("title", "Software Eliminado");
+                                            content = "Eliminado";
+                                        } else if(result === 'ERROR') {
+                                            $("#dialog-message").attr("title", "Software No Eliminado");
+                                            content = "No Eliminado";
+                                        } else {
+                                            $("#dialog-message").attr("title", "Software No Eliminado");
+                                            content = "Error";
+                                        }
+                                        $("#dialog-message").html(content);
                                         $("#dialog-message").dialog({
                                             modal: true,
                                             buttons: {

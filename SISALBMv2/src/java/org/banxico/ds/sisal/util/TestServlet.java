@@ -1,6 +1,5 @@
 package org.banxico.ds.sisal.util;
 
-import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,13 +58,11 @@ public class TestServlet extends HttpServlet {
             } else if (action.equalsIgnoreCase("deleteSW")) {
                 String swkey = request.getParameter("swid");
                 SoftwareDAO swdao = new SoftwareDAO();
-                out.print("Eliminar el Software: " + swkey);
-                Software s = swdao.obtenerSoftwarePorId(Integer.parseInt(swkey));
-                boolean flag = swdao.eliminarSoftware(s.getIdSoftware()); //>omitir 1 paso
+                boolean flag = swdao.eliminarSoftware(Integer.parseInt(swkey));
                 if (flag) {
-                    out.print("SW ELIMINADO");
+                    out.print("OK");
                 } else {
-                    out.print("PROBLEMA AL ELIMINAR");
+                    out.print("ERROR");
                 }
             }
         }
