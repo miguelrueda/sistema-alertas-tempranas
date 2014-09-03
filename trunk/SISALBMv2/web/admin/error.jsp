@@ -23,7 +23,7 @@
                     <div id="menu">
                         <nav>
                             <ul>
-                                <li><a href="AppIndex.html">AppIndex</a></li>
+                                <li><a href="/admin/scanner/scan.jsp">Inicio</a></li>
                             </ul>
                         </nav>
                         <!--

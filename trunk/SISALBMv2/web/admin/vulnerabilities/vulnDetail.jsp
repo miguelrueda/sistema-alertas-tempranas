@@ -7,6 +7,19 @@
         <title>JSP Page</title>
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+    </head>
+    <%
+        String name = request.getParameter("name");
+        String tipo = request.getParameter("tipo");
+        int type = Integer.parseInt(tipo);
+    %>
+    <body>
+        <div class="datagrid" id="dataexport">
+            <%
+                out.print(((VulnerabilityDAO) session.getAttribute("vulndao")).describirCVE(type, name));
+            %>
+        </div>
+        <div id="res"></div>
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jspdf.min.js"></script>
@@ -119,20 +132,5 @@
                 doc.save(title + '.pdf');
             }
         </script>
-    </head>
-    <%
-        String name = request.getParameter("name");
-        String tipo = request.getParameter("tipo");
-        int type = Integer.parseInt(tipo);
-    %>
-    <body>
-        <div class="datagrid" id="dataexport">
-            <%
-                out.print(((VulnerabilityDAO) session.getAttribute("vulndao")).describirCVE(type, name));
-            %>
-        </div>
-        <div id="res">
-
-        </div>
     </body>
 </html>

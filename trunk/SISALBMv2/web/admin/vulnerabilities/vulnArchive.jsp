@@ -11,71 +11,6 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script>
-            $(document).ready(function() {
-                $("#resultsdiv").hide();
-                $("#searchkey").val("");
-                $(".view").click(function() {
-                    $("#thedialog").attr('src', $(this).attr("href"));
-                    $("#dialogdiv").dialog({
-                        width: 800,
-                        height: 800,
-                        modal: true,
-                        resizable: false,
-                        draggable: false,
-                        open: function() {
-                            $('.ui-widget-overlay').addClass('custom-overlay');
-                        },
-                        close: function() {
-                            $("#thedialog").attr("src", "about:blank");
-                        }
-                    });
-                    return false;
-                });
-                /*
-                 $("#searchkey").autocomplete({ source: function(request, response) {
-                 $.ajax({ url: '/sisalbm/admin/vulnerability.controller?action=search', type: 'GET', data: { term: request.term },
-                 dataType: "json", success: function(data) { response(data); } }); }});*/
-                $("#searchbutton").on("click", function() {
-                    var val = $("#searchkey").val();
-                    $.ajax({
-                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=vulnsearch',
-                        type: 'GET',
-                        data: "key=" + val,
-                        success: function(result) {
-                            $("#content").hide();
-                            $("#resultsdiv").show();
-                            if (result === 'notfound') {
-                                var notResult = "<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
-                                $("#resultbody").html(notResult);
-                                $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "No se encontro la vulnerabilidad.</p>";
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Ok: function() {
-                                            $(this).dialog("close");
-                                        }
-                                    }
-                                });
-                            } else {
-                                $("#resultbody").html(result);
-                            }
-
-                        }
-                    });
-                });
-                $("#closesearch").on("click", function() {
-                    $("#content").show();
-                    $("#resultsdiv").hide();
-                    $("#searchkey").val("");
-                });
-            });
-        </script>
     </head>
     <body>
         <div id="page_container">
@@ -230,5 +165,70 @@
             <div id="dialog-message">
             </div>
         </div>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#resultsdiv").hide();
+                $("#searchkey").val("");
+                $(".view").click(function() {
+                    $("#thedialog").attr('src', $(this).attr("href"));
+                    $("#dialogdiv").dialog({
+                        width: 800,
+                        height: 800,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $('.ui-widget-overlay').addClass('custom-overlay');
+                        },
+                        close: function() {
+                            $("#thedialog").attr("src", "about:blank");
+                        }
+                    });
+                    return false;
+                });
+                /*
+                 $("#searchkey").autocomplete({ source: function(request, response) {
+                 $.ajax({ url: '/sisalbm/admin/vulnerability.controller?action=search', type: 'GET', data: { term: request.term },
+                 dataType: "json", success: function(data) { response(data); } }); }});*/
+                $("#searchbutton").on("click", function() {
+                    var val = $("#searchkey").val();
+                    $.ajax({
+                        url: '/sisalbm/admin/vulnerability.controller?action=search&type=vulnsearch',
+                        type: 'GET',
+                        data: "key=" + val,
+                        success: function(result) {
+                            $("#content").hide();
+                            $("#resultsdiv").show();
+                            if (result === 'notfound') {
+                                var notResult = "<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
+                                $("#resultbody").html(notResult);
+                                $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
+                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro la vulnerabilidad.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Ok: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                $("#resultbody").html(result);
+                            }
+
+                        }
+                    });
+                });
+                $("#closesearch").on("click", function() {
+                    $("#content").show();
+                    $("#resultsdiv").hide();
+                    $("#searchkey").val("");
+                });
+            });
+        </script>
     </body>
 </html>

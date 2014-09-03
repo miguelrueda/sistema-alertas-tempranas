@@ -12,36 +12,6 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
-        <!--
-        <script type="text/css" src="../resources/js/jquery-2.1.1.js"></script>
-        <script type="text/css" src="../resources/js/jquery-ui-1.10.4.custom.js"></script>
-        -->
-        <!--
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        -->
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>        
-        <script>
-            $(document).ready(function() {
-                $(".view").click(function() {
-                    $("#thedialog").attr('src', $(this).attr("href"));
-                    $("#dialogdiv").dialog({
-                        width: 800,
-                        height: 800,
-                        modal: true,
-                        resizable: false,
-                        draggable: false,
-                        open: function() {
-                            $('.ui-widget-overlay').addClass('custom-overlay');
-                        },
-                        close: function() {
-                            $("#thedialog").attr("src", "about:blank");
-                        }
-                    });
-                    return false;
-                });
-            });
-        </script>
     </head>
     <body>
         <div id="page_container">
@@ -152,5 +122,28 @@
                 </div>
             </div>
         </div>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>        
+        <script>
+            $(document).ready(function() {
+                $(".view").click(function() {
+                    $("#thedialog").attr('src', $(this).attr("href"));
+                    $("#dialogdiv").dialog({
+                        width: 800,
+                        height: 800,
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        open: function() {
+                            $('.ui-widget-overlay').addClass('custom-overlay');
+                        },
+                        close: function() {
+                            $("#thedialog").attr("src", "about:blank");
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
     </body>
 </html>

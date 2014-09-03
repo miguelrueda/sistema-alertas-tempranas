@@ -30,6 +30,8 @@
             <div id="page_content">
                 <div id="title">&nbsp;Versión Adminstrativa</div>
                 <div id="workarea">
+                    <%@include file="../incfiles/menu.jsp" %>
+                    <!--
                     <div id="cssmenu">
                         <ul>
                             <li><a href="../AppIndex.html"><span>AppIndex</span></a></li>
@@ -63,7 +65,7 @@
                             <li><a href="scanner/scan.jsp"><span>Escaneo</span></a></li>
                             <li><a href="#"><span>Ayuda</span></a></li>
                         </ul>
-                    </div>
+                    </div>-->
                     <!--
                     <div id="menu">
                         <nav>

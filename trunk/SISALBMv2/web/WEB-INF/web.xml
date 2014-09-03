@@ -63,6 +63,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>AppIndex.html</welcome-file>
+        <welcome-file>/admin/scanner/scan.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

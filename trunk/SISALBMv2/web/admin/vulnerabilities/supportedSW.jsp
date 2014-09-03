@@ -19,7 +19,7 @@
                 </table>
             </div><!-- page header-->
             <div id="page_content">
-                <div id="title">&nbsp;Versión Adminstrativa</div>
+                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -163,7 +163,7 @@
                 });
                 $(".view").click(function() {
                     var ids = $(this).attr("href");
-                    var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                    var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "¿Desea eliminar el artículo: " + ids + "?.</p>";
                     $("#dialog-message").attr("title", "Confirmar Eliminación");
                     $("#dialog-message").html(content);
@@ -219,8 +219,6 @@
                     $("#searchkey").val("");
                 });
             });
-
-
         </script>
 
     </body>
