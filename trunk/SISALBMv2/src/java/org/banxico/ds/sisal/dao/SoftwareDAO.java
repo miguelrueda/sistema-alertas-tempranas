@@ -74,6 +74,10 @@ public class SoftwareDAO {
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo "
             + "AND (s.fabricante LIKE ? OR s.nombre LIKE ? OR g.nombre LIKE ?) "
             + " ORDER BY g.nombre";
+    private static final String searchSwQuery = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life "
+            + "FROM Software s "
+            + "WHERE (s.fabricante LIKE ? OR s.nombre LIKE ?) " 
+            + "ORDER BY s.nombre";
     private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
     private static final String sqlRetrieveProductId = "SELECT * FROM Software WHERE nombre = ?";
@@ -488,23 +492,23 @@ public class SoftwareDAO {
         try {
             //Obtener conexión y preparar el statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(searchQry);
+            pstmt = connection.prepareStatement(searchSwQuery);
             pstmt.setString(1, "%" + key + "%");
             pstmt.setString(2, "%" + key + "%");
-            pstmt.setString(3, "%" + key + "%");
+            //pstmt.setString(3, "%" + key + "%");
             //Ejecutar la consulta
             ResultSet rs = pstmt.executeQuery();
             //Iterar los resultados y poblar la lista de software
             while (rs.next()) {
                 Software nuevo = new Software();
-                nuevo.setIdSoftware(rs.getInt(1));
-                nuevo.setFabricante(rs.getString(2));
-                nuevo.setNombre(rs.getString(3));
-                nuevo.setVersion(rs.getString(4));
-                nuevo.setTipo(Integer.parseInt(rs.getString(5)));
-                nuevo.setEndoflife(Integer.parseInt(rs.getString(6)));
-                nuevo.setUAResponsable(rs.getString(7));
-                nuevo.setAnalistaResponsable(rs.getString(8));
+                nuevo.setIdSoftware(rs.getInt("idSoftware"));
+                nuevo.setFabricante(rs.getString("fabricante"));
+                nuevo.setNombre(rs.getString("nombre"));
+                nuevo.setVersion(rs.getString("version"));
+                nuevo.setTipo(Integer.parseInt(rs.getString("tipo")));
+                nuevo.setEndoflife(Integer.parseInt(rs.getString("end_of_life")));
+                nuevo.setUAResponsable("ND");
+                nuevo.setAnalistaResponsable("ND");
                 found.add(nuevo);
             }
             rs.close();

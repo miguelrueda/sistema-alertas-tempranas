@@ -25,6 +25,7 @@ import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.SourcesDAO;
 import org.banxico.ds.sisal.entities.FuenteApp;
 import org.banxico.ds.sisal.entities.Grupo;
+import org.banxico.ds.sisal.entities.Software;
 
 /**
  * Controlador para las fuentes y listas de sw
@@ -185,7 +186,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             String keys = request.getParameter("producto");
             StringTokenizer st = new StringTokenizer(keys, "[,]");
             int ntokens = st.countTokens();
-            Integer [] llaves = new Integer[ntokens];
+            Integer[] llaves = new Integer[ntokens];
             int i = 0;
             while (st.hasMoreTokens()) {
                 llaves[i] = Integer.parseInt(st.nextToken().replace("\"", "").replace("\\r\\n", ""));
@@ -218,9 +219,36 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } else {
                 out.print("URL INVALIDA");
             }
+        } else if (action.equalsIgnoreCase("searchGroup")) {
+            String key = request.getParameter("key");
+            List<Grupo> listaGrupos = gdao.buscarGrupo(key);
+            if (listaGrupos.size() >= 1) {
+                StringBuilder sb = new StringBuilder();
+                for (Grupo grupo : listaGrupos) {
+                    sb.append("<tr>");
+                    sb.append("<td>")
+                            .append(grupo.getNombre())
+                            .append("</td>");
+                    sb.append("<td colspan='2'>")
+                            .append(grupo.getCategoria())
+                            .append("</td>");
+                    sb.append("</tr>");
+                    sb.append("<tr>").append("<td colspan='3' style='text-align:center'>").append("Software Registrado en el Grupo").append("</td>").append("</tr>");
+                    for (Software sw : gdao.obtenerSoftwaredeGrupo(grupo.getIdGrupo())) {
+                        sb.append("<tr>");
+                        sb.append("<td>").append(sw.getFabricante()).append("</td>");
+                        sb.append("<td>").append(sw.getNombre()).append("</td>");
+                        sb.append("<td>").append(sw.getVersion()).append("</td>");
+                        sb.append("</tr>");
+                    }
+                }
+                out.print(sb.toString());
+            } else {
+                out.print("NOT_FOUND");
+            }
         }
     }
-    
+
     /**
      * Método doPost
      *
@@ -248,4 +276,3 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
     }
 
 }
-

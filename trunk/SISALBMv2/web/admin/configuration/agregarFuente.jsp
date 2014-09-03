@@ -85,9 +85,15 @@
                         var formserialized = $(form).serialize();
                         alert(formserialized);
                         $.ajax({
-                            //cambiar esta url
                             url: '/sisalbm/admin/configuration.controller?action=addFuente',
                             type: 'POST',
+                            beforeSend: function() {
+                                jQuery.noticeAdd({
+                                    text: "Procesando Solicitud: <br /><center><img src='../resources/images/ajax-loader.gif' alt='loading' />></center>",
+                                    stay: true,
+                                    type: info
+                                });
+                            },
                             data: formserialized,
                             success: function(response) {
                                 var content = '';
@@ -105,6 +111,19 @@
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                     "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
                                 }
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        OK: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            }, error: function() {
+                                $("#dialog-message").attr("title", "Fuente No Agregada");
+                                var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,
