@@ -512,11 +512,13 @@ public class ScannerBean implements java.io.Serializable {
                                     if (sws.get(i).getNombre().toLowerCase().contains(name)) {
                                         //Si hay incidencia obtener la version del elemento 'i' y compararla con la version del SW de la Vulnerabilidad
                                         //Primera Caso Ej. 8.x contiene a 8.2.x
-                                        if (sws.get(i).getVersion().contains(version.getNumber())) {
+                                        //>if (sws.get(i).getVersion().contains(version.getNumber())) {
+                                        if (sws.get(i).getVersion().startsWith(version.getNumber())) {
                                             Result nres = new Result(vuln, sws.get(i));
                                             res.add(nres);
                                             //Segundo Caso Ej. 8.x = 8.x
                                         } else if (sws.get(i).getVersion().equals(version.getNumber())) {
+                                            //LOG.log(Level.INFO, "ScannerBean#doScan() - Caso1");
                                             Result nres = new Result(vuln, sws.get(i));
                                             res.add(nres);
                                             //Filtro especifico para windows 8 y windows server 2012 - SOLO AQUI FUNCIONA
@@ -544,7 +546,9 @@ public class ScannerBean implements java.io.Serializable {
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
                                         //2do caso si la version del SW de la vulnerabilidad contiene a la versiond el SW de la lista
-                                    } else if (version.getNumber().contains(sws.get(i).getVersion().replace("x", ""))) {
+                                    //} else if (version.getNumber().contains(sws.get(i).getVersion().replace("x", ""))) {
+                                    } else if (version.getNumber().startsWith(sws.get(i).getVersion().replace("x", ""))) {
+                                        //LOG.log(Level.INFO, "ScannerBean#doScan() - Caso2");
                                         Result nres = new Result(vuln, sws.get(i));
                                         res.add(nres);
                                     }

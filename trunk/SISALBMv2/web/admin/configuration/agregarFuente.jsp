@@ -115,7 +115,7 @@
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
-                                        OK: function() {
+                                        Aceptar: function() {
                                             $(this).dialog("close");
                                         }
                                     }
@@ -128,7 +128,7 @@
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
-                                        OK: function() {
+                                        Aceptar: function() {
                                             $(this).dialog("close");
                                         }
                                     }

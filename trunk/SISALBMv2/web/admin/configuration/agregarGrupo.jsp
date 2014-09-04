@@ -274,7 +274,20 @@
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
-                                        Ok: function() {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            }, error: function() {
+                                $("#dialog-message").attr("title", "Grupo No Agregado");
+                                var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
                                             $(this).dialog("close");
                                         }
                                     }

@@ -57,7 +57,7 @@
                                     <thead>
                                     <th>Nombre</th>
                                     <th>Categoría</th>
-                                    <th>Opciones</th>
+                                    <th colspan='2'>Opciones</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="grupo" items="${listaGrupos}">
@@ -67,6 +67,11 @@
                                                 <td>
                                                     <a href="configuration/detalleGrupo.jsp?action=view&tipo=grupo&id=${grupo.idGrupo}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="id=${grupo.idGrupo}&nombre=${grupo.nombre}" class="del">
+                                                        <img src="../resources/images/trash.png" alt="id=${grupo.idGrupo}" id="tableicon" class="delgrp" />
                                                     </a>
                                                 </td>
                                             </tr>
@@ -147,7 +152,7 @@
                         success: function(result) {
                             $("#content").hide();
                             $("#resultsdiv").show();
-                            if(result === 'NOT_FOUND') {
+                            if (result === 'NOT_FOUND') {
                                 var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
                                 $("#resultbody").html(notResult);
                                 $("#dialog-message").attr("title", "Grupo No Encontrado");
@@ -157,7 +162,7 @@
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
-                                        OK: function() {
+                                        Aceptar: function() {
                                             $(this).dialog("close");
                                         }
                                     }
@@ -165,6 +170,19 @@
                             } else {
                                 $("#resultbody").html(result);
                             }
+                        }, error: function() {
+                            $("#dialog-message").attr("title", "Petición Incompleta");
+                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                            $("#dialog-message").html(content);
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Aceptar: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
                         }
                     });
                 });
@@ -172,6 +190,74 @@
                     $("#content").show();
                     $("#resultsdiv").hide();
                     $("#searchkey").val("");
+                });
+                /**
+                 * Código para eliminar grupo
+                 */
+                $(".del").on("click", function() {
+                    var id_name = $(this).attr("href");
+                    var res = id_name.split("&");
+                    var idsplit = res[0].split("=");
+                    var namesplit = res[1].split("=");
+                    var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>¿Desea eliminar el grupo:<br /> '" + namesplit[1] + "'?</p>";
+                    $("#dialog-message").attr("title", "Confirmar Eliminación");
+                    $("#dialog-message").html(content);
+                    $("#dialog-message").dialog({
+                        modal: true,
+                        buttons: {
+                            Eliminar: function() {
+                                $(this).dialog("close");
+                                $.ajax({
+                                    url: '/sisalbm/admin/configuration.controller?action=deleteGroup',
+                                    type: 'POST',
+                                    data: 'gid=' + idsplit[1],
+                                    success: function(result) {
+                                        var content = "";
+                                        if (result === 'OK') {
+                                            $("#dialog-message").attr("title", "Grupo Eliminado");
+                                            content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "El grupo '" + namesplit[1] + "' ha sido eliminado exitosamente.</p>";
+                                        } else if (result === 'ERROR') {
+                                            $("#dialog-message").attr("title", "Grupo No Eliminado");
+                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error al eliminar el grupo. Por favor, intentarlo nuevamente.</p>";
+                                        } else {
+                                            $("#dialog-message").attr("title", "Grupo No Eliminado");
+                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
+                                        }
+                                        $("#dialog-message").html(content);
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                    location.reload();
+                                                }
+                                            }
+                                        });
+                                    }, error: function() {
+                                        $("#dialog-message").attr("title", "Petición Incompleta");
+                                        var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        $("#dialog-message").html(content);
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            },
+                            Cancelar: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    return false;
                 });
             });
         </script>        
