@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.banxico.ds.sisal.dao.GruposDAO;
+import org.banxico.ds.sisal.dao.SoftwareDAO;
 import org.banxico.ds.sisal.dao.SourcesDAO;
 import org.banxico.ds.sisal.entities.FuenteApp;
 import org.banxico.ds.sisal.entities.Grupo;
@@ -64,6 +65,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
         //Instanciar el dao de fuentes y guardarlo en sesion
         SourcesDAO dao = new SourcesDAO();
         GruposDAO gdao = new GruposDAO();
+        SoftwareDAO sdao = new SoftwareDAO();
         ServletContext context = this.getServletContext();
         HttpSession sesion = request.getSession();
         sesion.setAttribute("sourcesdao", dao);
@@ -246,9 +248,25 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } else {
                 out.print("NOT_FOUND");
             }
+        } else if (action.equalsIgnoreCase("deleteSW")) {
+            String swkey = request.getParameter("swid");
+            boolean flag = sdao.eliminarSoftware(Integer.parseInt(swkey));
+            if (flag) {
+                out.print("OK");
+            } else {
+                out.print("ERROR");
+            }
+        } else if (action.equalsIgnoreCase("deleteGroup")) {
+            String groupkey = request.getParameter("gid");
+            boolean flag = gdao.eliminarGrupo(Integer.parseInt(groupkey));
+            if (flag) {
+                out.print("OK");
+            } else {
+                out.print("ERROR");
+            }
         }
     }
-
+    
     /**
      * Método doPost
      *

@@ -488,5 +488,34 @@ public class GruposDAO {
         }
         return found;
     }
+    
+    private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
+    
+    public boolean eliminarGrupo(int id) {
+        boolean res = false;
+        try {
+            
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlDeleteGroupWithId);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            LOG.log(Level.INFO, "GruposDAO#eliminarGrupo() - Grupo Eliminado Correctamente: {0}", id);
+            res = true;
+        } catch (SQLException ex) {
+            LOG.log(Level.INFO, "GruposDAO#eliminarGrupo() - Ocurrio un problema con la sentencia SQL: {0}", ex.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "GruposDAO#eliminarGrupo() - Ocurrio un problema al cerrar la conexión: {0}", e.getMessage());
+            }
+        }
+        return res;
+    }
 
 }

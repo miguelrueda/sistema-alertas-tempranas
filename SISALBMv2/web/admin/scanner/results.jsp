@@ -149,11 +149,10 @@
                         modal: true,
                         width: 800,
                         height: 800,
-                        modal: true,
-                                draggable: false,
+                        draggable: false,
                         resizable: false,
                         buttons: {
-                            Ok: function() {
+                            Aceptar: function() {
                                 $(this).dialog("close");
                             }
                         }

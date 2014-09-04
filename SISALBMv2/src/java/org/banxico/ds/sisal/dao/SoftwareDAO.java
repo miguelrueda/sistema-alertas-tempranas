@@ -110,7 +110,7 @@ public class SoftwareDAO {
             //Se obtiene la conexión, se prepara y ejecuta el Query
             connection = getConnection();
             //pstmt = connection.prepareStatement(sqlRetrieveAll);
-            pstmt = connection.prepareStatement(sqlRetrieveAllSoftware);
+            pstmt = connection.prepareStatement(sqlRetrieveAll);
             ResultSet rs = pstmt.executeQuery();
             int nr = 0;
             //Iterar los elementos del ResultSet e inicializar el objeto de tipo Software
@@ -159,6 +159,8 @@ public class SoftwareDAO {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         return nConn;
     }
+    
+    private static final String sqlObtenerNumeroRegistros = "SELECT COUNT(*) as cuenta FROM Software s";
 
     /**
      * Getter
@@ -166,7 +168,31 @@ public class SoftwareDAO {
      * @return numero de registros encontrados
      */
     public int obtenerNumeroRegistros() {
-        return noOfRecords;
+        //return noOfRecords;
+        int nr = 0;
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlObtenerNumeroRegistros);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                nr = rs.getInt("cuenta");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al preparar la sentencia SQL: {0}", e.getMessage()); 
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage()); 
+            }
+        }
+        return nr;
     }
 
     /**

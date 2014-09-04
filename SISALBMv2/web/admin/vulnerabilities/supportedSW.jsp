@@ -178,7 +178,7 @@
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
-                                        Ok: function() {
+                                        Aceptar: function() {
                                             $(this).dialog("close");
                                         }
                                     }
@@ -187,6 +187,19 @@
                                 $("#resultbody").html(result);
                             }
 
+                        }, error: function() {
+                            $("#dialog-message").attr("title", "Petición Incompleta");
+                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                            $("#dialog-message").html(content);
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Aceptar: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
                         }
                     });
                 });
@@ -205,7 +218,7 @@
                     var swid = res0[1];
                     var res1 = res[1].split("=");
                     var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "¿Desea eliminar el artículo:<br /> " + res1[1] + "?</p>";
+                            "¿Desea eliminar el software:<br /> '" + res1[1] + "'?</p>";
                     $("#dialog-message").attr("title", "Confirmar Eliminación");
                     $("#dialog-message").html(content);
                     $("#dialog-message").dialog({
@@ -214,20 +227,23 @@
                             Eliminar: function() {
                                 $(this).dialog("close");
                                 $.ajax({
-                                    url: '/sisalbm/test?action=deleteSW',
+                                    url: '/sisalbm/admin/configuration.controller?action=deleteSW',
                                     type: 'POST',
                                     data: 'swid=' + swid,
                                     success: function(result) {
                                         var content = "";
-                                        if(result === 'OK') {
+                                        if (result === 'OK') {
                                             $("#dialog-message").attr("title", "Software Eliminado");
-                                            content = "Eliminado";
-                                        } else if(result === 'ERROR') {
+                                            content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "El software '" + res1[1] + "' ha sido eliminado exitosamente.</p>";
+                                        } else if (result === 'ERROR') {
                                             $("#dialog-message").attr("title", "Software No Eliminado");
-                                            content = "No Eliminado";
+                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>";
                                         } else {
                                             $("#dialog-message").attr("title", "Software No Eliminado");
-                                            content = "Error";
+                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
                                         }
                                         $("#dialog-message").html(content);
                                         $("#dialog-message").dialog({
@@ -236,6 +252,19 @@
                                                 Aceptar: function() {
                                                     $(this).dialog("close");
                                                     location.reload();
+                                                }
+                                            }
+                                        });
+                                    }, error: function() {
+                                        $("#dialog-message").attr("title", "Petición Incompleta");
+                                        var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        $("#dialog-message").html(content);
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
                                                 }
                                             }
                                         });
@@ -249,6 +278,9 @@
                     });
                     return false;
                 });
+                /**
+                 * Fin de codigo para eliminar
+                 */
             });
         </script>
 

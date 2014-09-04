@@ -64,6 +64,14 @@ public class TestServlet extends HttpServlet {
                 } else {
                     out.print("ERROR");
                 }
+            } else if (action.equalsIgnoreCase("deleteGroup")) {
+                String gid = request.getParameter("gid");
+                boolean flag = true;
+                if (flag) {
+                    out.print("OK");
+                } else {
+                    out.print("ERROR");
+                }
             }
         }
     }
