@@ -36,7 +36,6 @@
                                                         <label>Ingresar Fabricante</label>
                                                     </td>
                                                     <td>
-                                                        <!--<select name="fabricante" id="fabricante"></select>-->
                                                         <input type="text" name="fabricante" id="fabricante" style="width: 185px"/>
                                                     </td>
                                                     <td>
