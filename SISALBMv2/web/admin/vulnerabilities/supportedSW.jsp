@@ -65,7 +65,7 @@
                                     <th>Software</th>
                                     <th>Version</th>
                                     <th>Fin de Vida</th>
-                                    <th colspan="2">Opciones</th>
+                                    <th>Opciones</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="supSW" items="${swList}">
@@ -91,11 +91,13 @@
                                                         <td style="width: 80px; text-align: center">ND</td>
                                                     </c:otherwise>
                                                 </c:choose>
+                                                        <!--
                                                 <td>
-                                                    <a href="configuration/editarSW.jsp?id=${supSW.idSoftware}">
+                                                    <a href="configuration/editarSW.jsp?id=$ {supSW.idSoftware}">
                                                         <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
                                                     </a>
                                                 </td>
+                                                        -->
                                                 <td>
                                                     <a href="id=${supSW.idSoftware}&nombre=${supSW.nombre}" class="view">
                                                         <img src="../resources/images/trash.png" alt="id=${supSW.idSoftware}" id="tableicon" class="delbtn" />
@@ -171,7 +173,7 @@
                             if (result === '') {
                                 var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
                                 $("#resultbody").html(notResult);
-                                $("#dialog-message").attr("title", "Software No Encontrada");
+                                $("#dialog-message").attr("title", "Software No Encontrado");
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "No se encontro el software.</p>";
                                 $("#dialog-message").html(content);

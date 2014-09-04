@@ -44,7 +44,7 @@
                                                     <label>Ingresar Fabricante</label>
                                                 </td>
                                                 <td>
-                                                    <input name="fabricante" id="fabricante" type="text" value="<%= s.getFabricante() %>" />
+                                                    <input type="text" name="fabricante" id="fabricante"  value="<%= s.getFabricante() %>" style="width: 185px" />
                                                 </td>
                                                 <td>
                                                     <label for="fabricante" class="error"></label>
@@ -112,6 +112,7 @@
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
             $(document).ready(function() {
+                $("#fabricante").attr("disabled", "true");
                 $("#editSW").validate({
                     rules: {
                         fabricante: "required",
