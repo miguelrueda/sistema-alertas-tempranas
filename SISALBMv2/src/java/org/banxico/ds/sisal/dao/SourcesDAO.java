@@ -1,5 +1,7 @@
 package org.banxico.ds.sisal.dao;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -215,7 +217,8 @@ public class SourcesDAO {
             pstmt.setString(1, nombre);
             pstmt.setString(2, url);
             pstmt.setDate(3, new java.sql.Date(new Date().getTime()));
-            pstmt.setBinaryStream(4, is);
+            //pstmt.setBinaryStream(4, is);
+            pstmt.setBinaryStream(4, is, urlconn.getContentLength());
             int qres = pstmt.executeUpdate();
             //LOG.log(Level.INFO, "SourcesDAO#crearFuente() - Ejecuci\u00f3n de la consulta retorno: {0}", qres);
             res = true;
@@ -328,10 +331,13 @@ public class SourcesDAO {
             URL fileurl = new URL(url);
             LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Obteniendo conexi\u00f3n de la url: {0}", url);
             URLConnection urlconn = fileurl.openConnection();
+            int contentLength = urlconn.getContentLength();
             InputStream is = urlconn.getInputStream();
             pstmt = conn.prepareStatement(sqlDownloadSourceUpdateQuery);
             pstmt.setDate(1, new java.sql.Date(new Date().getTime()));
-            pstmt.setBinaryStream(2, is);
+            //pstmt.setBinaryStream(2, is);
+            pstmt.setBinaryStream(2, is, contentLength);
+            LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Tama\u00f1o del flujo: {0}", contentLength);
             pstmt.setInt(3, Integer.parseInt(id));
             int qres = pstmt.executeUpdate();
             LOG.log(Level.INFO, "SourcesDAO#descargarFuente() - Resultado de la descarga: {0}", qres);
@@ -358,6 +364,25 @@ public class SourcesDAO {
             }
         }
         return res;
+    }
+    
+    private byte[] getBytes(InputStream is) throws IOException {
+        int len;
+        int size = 1024;
+        byte [] buf;
+        if (is instanceof ByteArrayInputStream) {
+            size = is.available();
+            buf = new byte[size];
+            len = is.read(buf, 0, size);
+        } else {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            buf = new byte[size];
+            while ((len = is.read(buf, 0, size)) != -1) {
+                bos.write(buf, 0, len);
+            }
+            buf = bos.toByteArray();
+        }
+        return buf;
     }
 
     /**

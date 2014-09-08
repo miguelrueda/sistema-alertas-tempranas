@@ -28,9 +28,11 @@
                         <div id="content">
                             <form class="form" id="scanForm" >
                                 <label for="tipo">Tipo de Escaneo:</label>
-                                <input type="radio" name="tipo" value="completo" id="tipo" class="required" />Completo
+                                <input type="radio" name="tipo" value="completo" id="tipo" class="required" 
+                                       title="Se realiza una búsqueda con todos los registros de vulnerabilidades existentes." />Completo
                                 <br/>
-                                <input type="radio" name="tipo" value="custom" id="tipo" />Personalizado
+                                <input type="radio" name="tipo" value="custom" id="tipo" 
+                                       title="Se realiza una búsqueda solo con vulnerabilidades de un periodo no mayor a 8 días."/>Personalizado
                                 <br />
                                 <br />
                             </form>
@@ -48,9 +50,11 @@
                                                         <label>Periodo</label>
                                                     </td>
                                                     <td style="width: 200px">
-                                                        <input type="radio" name="fechaF" value="full" id="date" />Completo
+                                                        <input type="radio" name="fechaF" value="full" id="date" 
+                                                               title="Contempla búscar en todo el periodo desde 2013 hasta la fecha actual."/>Completo
                                                         <br />
-                                                        <input type="radio" name="fechaF" value="partial" id="date" />Específico
+                                                        <input type="radio" name="fechaF" value="partial" id="date" 
+                                                               title="Contempla un periodo seleccionado entre 2013 y la fecha actual."/>Específico
                                                         <br />
                                                     </td>
                                                     <td>
@@ -97,9 +101,11 @@
                                                         <label>Tipo de Vulnerabilidades:</label>
                                                     </td>
                                                     <td style="width: 200px">
-                                                        <input type="radio" name="vulnt" value="recent" id="vulnt" />Solo Recientes
+                                                        <input type="radio" name="vulnt" value="recent" id="vulnt" 
+                                                               title="Periodo no mayor a 8 días"/>Solo Recientes
                                                         <br />
-                                                        <input type="radio" name="vulnt" value="todas" id="vulnt" />Archivo
+                                                        <input type="radio" name="vulnt" value="todas" id="vulnt"
+                                                               title="Periodo mayor a 8 días"/>Archivo
                                                         <br />
                                                     </td>
                                                     <td>
@@ -173,9 +179,11 @@
                                                         <label>Periodo de Escaneo: </label>
                                                     </td>
                                                     <td>
-                                                        <input type="radio" name="fechaC" value="full" id="date" />Periodo Completo
+                                                        <input type="radio" name="fechaC" value="full" id="date" 
+                                                               title="Contempla búscar en todo el periodo desde 2013 hasta la fecha actual."/>Periodo Completo
                                                         <br />
-                                                        <input type="radio" name="fechaC" value="partial" id="date" />Periodo Específico
+                                                        <input type="radio" name="fechaC" value="partial" id="date" 
+                                                               title="Contempla un periodo seleccionado entre 2013 y la fecha actual."/>Periodo Específico
                                                         <br />
                                                     </td>
                                                     <td>
@@ -209,7 +217,9 @@
                                                         <label></label>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" name="onlypub" value="onlypub" />Buscar en Modificadas
+                                                        <input type="checkbox" name="onlypub" value="onlypub" 
+                                                               title="Se realiza la búsqueda tomando en cuenta vulnerabilidades 
+                                                               que han sido modificadas durante el periodo seleccionado." />Buscar en Modificadas
                                                     </td>
                                                     <td>
                                                         <label for="" class="error"></label>
@@ -231,6 +241,9 @@
         <script type="text/javascript" src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script type="text/javascript">
+            $(function() {
+                $(document).tooltip();
+            });
             $(document).ready(function() {
                 $(function() {
                     $.datepicker.setDefaults($.datepicker.regional['es']);

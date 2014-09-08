@@ -21,10 +21,6 @@
         <servlet-name>AutocompleteServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.util.AutocompleteServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>TestServlet</servlet-name>
-        <servlet-class>org.banxico.ds.sisal.util.TestServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -53,16 +49,12 @@
         <servlet-name>AutocompleteServlet</servlet-name>
         <url-pattern>/autocomplete</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TestServlet</servlet-name>
-        <url-pattern>/test</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>/admin/scanner/scan.jsp</welcome-file>
+        <welcome-file>/sisalbm/admin/scanner/scan.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

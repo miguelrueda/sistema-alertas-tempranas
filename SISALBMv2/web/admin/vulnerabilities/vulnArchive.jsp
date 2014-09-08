@@ -22,7 +22,7 @@
                 </table>
             </div>
             <div id="page_content">
-                <div id="title">&nbsp;Versión Adminstrativa</div>
+                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">

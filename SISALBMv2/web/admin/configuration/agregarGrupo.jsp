@@ -51,9 +51,10 @@
                                                     <label>Nombre del Grupo</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="nombre" id="nombre" style="width: 185px" />
+                                                    <input type="text" name="nombre" id="nombre" style="width: 185px" 
+                                                           title="El nombre se utilizará para identificar al grupo."/>
                                                 </td>
-                                                <td><label for="nombre" class="error"></label></td>
+                                                <td><label id="nombrewrn" for="nombre" class="error"></label></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -84,7 +85,8 @@
                                             <tr>
                                                 <td>Buscar Producto</td>
                                                 <td>
-                                                    <input type="text" name="producto" id="producto" style="width: 185px" />
+                                                    <input type="text" name="producto" id="producto" style="width: 185px" 
+                                                           title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda."/>
                                                 </td>
                                                 <td>
                                                     <input type="button" value="Añadir" id="addtolist" />
@@ -94,7 +96,7 @@
                                     </table>
                                 </fieldset>
                                 <fieldset id="selectedList">
-                                    <legend>Productos Seleccionados</legend>
+                                    <legend title="En está sección se iran agregando los elementos seleccionados">Productos Seleccionados</legend>
                                     <ul id="listElements" class="listaSeleccionados"></ul>
                                 </fieldset>
                                 <input type="submit" class="inputsubmit" value="Agregar" id="addButton" />
@@ -111,6 +113,9 @@
         <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
+            $(function() {
+                $(document).tooltip();
+            });
             $(document).ready(function() {
                 $("#categoria").load("/sisalbm/autocomplete?action=getcats");
                 $("#dialog-message").hide();
@@ -200,6 +205,25 @@
                         }
                     });
                 });
+                /*
+                 * VALIDAR EL NOMBRE DEL GRUPO INGRESADO 
+                 */
+                var $nombrewrn = $("#nombrewrn");
+                $("#nombre").focusout(function() {
+                    var q = this;
+                    $.ajax({
+                        url: '/sisalbm/autocomplete?action=validarNombreGrupo',
+                        type: 'POST',
+                        data: 'nombregrupo=' + q.value,
+                        success: function(result) {
+                            if(result === 'INVALIDO') {
+                                $nombrewrn.text("Ya existe un grupo con esté nombre.");
+                                $nombrewrn.show();
+                            }
+                        }
+                    });
+                });
+                //Fin validar nombre
                 $.validator.addMethod("valCategoria", function(value) {
                     return (value !== '0')
                 }, "Seleccionar una categoría");
@@ -232,7 +256,7 @@
                             var sdata = formserialized + jkeys;
                             //alert(sdata);
                         } else {
-                            $("#dialog-message").attr("title", "Error");
+                            $("#dialog-message").attr("title", "Lista Incompleta");
                             var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                     "La lista debe contener al menos un elemento seleccionado</p>";
                             $("#dialog-message").html(content);
@@ -266,23 +290,32 @@
                                     $("#cat-existente").hide();
                                     $("#cat-nueva").hide();
                                 } else if (response === 'ERROR') {
-                                    $("#dialog-message").attr("title", "Error");
+                                    $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar registrar el grupo.</p>";
+                                } else if (response === 'NOMBRE_INVALIDO') {
+                                    $("#dialog-message").attr("title", "Nombre de Grupo Existente");
+                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>";
+                                } else {
+                                    $("#dialog-message").attr("title", "Error al agregar el grupo");
+                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>";
                                 }
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
                                         Aceptar: function() {
+                                            $("#dialog-message").attr("title", "");
                                             $(this).dialog("close");
                                         }
                                     }
                                 });
                             }, error: function() {
-                                $("#dialog-message").attr("title", "Grupo No Agregado");
+                                $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,

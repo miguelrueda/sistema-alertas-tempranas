@@ -1,10 +1,7 @@
 package org.banxico.ds.sisal.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -195,17 +192,26 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 i++;
             }
             boolean created = false;
+            boolean valid = false;
             try {
-                created = gdao.crearGrupo(nombre, categoria, llaves);
+                if (valid) {
+                    created = gdao.crearGrupo(nombre, categoria, llaves);
+                    if (created) {
+                        //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: OK");
+                        out.print("OK");
+                    } else if (!created) {
+                        //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: ERROR");
+                        out.print("ERROR");
+                    } else {
+                        //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: UNKNOWN");
+                        out.print("UNKNOWN");
+                    }
+                } else {
+                    //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: NOMBRE_INVALIDO");
+                    out.print("NOMBRE_INVALIDO");
+                }
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "ConfigurationController#AddGroup - Ocurrio un error al crear el grupo: {0}", e.getMessage());
-            }
-            if (created) {
-                out.print("OK");
-            } else if (!created) {
-                out.print("ERROR");
-            } else {
-                out.print("UNKNOWN");
             }
         } else if (action.equalsIgnoreCase("addFuente")) {
             String nombre = request.getParameter("nombre");

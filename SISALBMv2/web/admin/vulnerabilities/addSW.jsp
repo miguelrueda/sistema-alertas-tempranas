@@ -7,6 +7,30 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <style type="text/css">
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                float: left;
+                background: rgba(255, 255, 255, .8)
+                     url('http://sampsonresume.com/labs/pIkfp.gif') 
+                     50% 50% 
+                     no-repeat 
+            }
+            
+            body.loading {
+                overflow: hidden;
+            }
+            
+            body.loading .modal {
+                display: block
+            }
+        </style>
     </head>
     <body>
         <div id="page_container">
@@ -36,7 +60,8 @@
                                                         <label>Ingresar Fabricante</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="fabricante" id="fabricante" style="width: 185px"/>
+                                                        <input type="text" name="fabricante" id="fabricante" style="width: 185px"
+                                                               title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda."/>
                                                     </td>
                                                     <td>
                                                         <label for="fabricante" class="error"></label>
@@ -106,13 +131,17 @@
                         </div>
                     </div>
                 </div>
-                <div id="dialog-message"><p>Content</p></div>
+                <div id="dialog-message"><p></p></div>
+                <div class="modal"></div>
             </div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script type="text/javascript">
+            $(function() {
+                $(document).tooltip();
+            });
             $(document).ready(function() {
                 $("#dialog-message").hide();
                 var vendor = $("#fabricante");
@@ -127,7 +156,9 @@
                     });
                 });
                 function cargarProductos(vendor) {
+                    //$("body").addClass("loading");
                     $("#nombre").load("/sisalbm/autocomplete?action=getproduct&vendorq=" + vendor);
+                    //$("body").removeClass("loading"); 
                 }
                 $("#nombre").on("change", function() {
                     $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})

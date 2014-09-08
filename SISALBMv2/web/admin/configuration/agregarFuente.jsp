@@ -37,7 +37,8 @@
                                                     <label>Nombre de la Fuente</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="nombre" id="nombre" style="width: 200px" />
+                                                    <input type="text" name="nombre" id="nombre" style="width: 200px" 
+                                                           title="El nombre se utilizará para identificar a la fuente ej. Vulnerabilidades de 201X."/>
                                                 </td>
                                                 <td>
                                                     <label for="nombre" class="error"></label>
@@ -48,7 +49,8 @@
                                                     <label>URL de la Fuente</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="url" id="url" style="width: 200px" />
+                                                    <input type="text" name="url" id="url" style="width: 200px" 
+                                                           title="La url del sitio nvd.nist que contiene la información de vulnerabilidades deseadas."/>
                                                 </td>
                                                 <td>
                                                     <label for="url" class="error"></label>
@@ -72,16 +74,19 @@
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
             $(document).ready(function() {
+                $(function() {
+                    $(document).tooltip();
+                });
                 $("#addFuente").validate({
                     rules: {
                         nombre: "required",
                         url: "required"
-                    }, 
+                    },
                     messages: {
                         nombre: 'Ingresar el nombre de la fuente',
                         url: 'Ingresar la url de la fuente'
                     },
-                    submitHandler: function (form) {
+                    submitHandler: function(form) {
                         var formserialized = $(form).serialize();
                         alert(formserialized);
                         $.ajax({
@@ -98,18 +103,18 @@
                             success: function(response) {
                                 var content = '';
                                 if (response === 'URL INVALIDA') {
-                                    $("#dialog-message").attr("title", "Fuente No Agregada");
+                                    $("#dialog-message").attr("title", "Url Invalida");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "La URL es incorrecta o el formato no es válido.</p>";
+                                            "La URL es incorrecta o el formato no es válido.</p>";
                                 } else if (response === 'OK') {
                                     $("#dialog-message").attr("title", "Fuente Agregada");
                                     $("#addFuente")[0].reset();
                                     var content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "La fuente de información fue agregada exitosamente.</p>";
-                                } else if(response === 'ERROR') {
-                                    $("#dialog-message").attr("title", "Fuente No Agregada");
+                                            "La fuente de información fue agregada exitosamente.</p>";
+                                } else if (response === 'ERROR') {
+                                    $("#dialog-message").attr("title", "Error al crear fuente");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
+                                            "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
                                 }
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
@@ -121,9 +126,9 @@
                                     }
                                 });
                             }, error: function() {
-                                $("#dialog-message").attr("title", "Fuente No Agregada");
+                                $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,
