@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.SoftwareDAO;
+import org.banxico.ds.sisal.entities.Grupo;
 
 /**
  * Servlet que sirve como utilidad para realizar los autocompletados que se encuentren en la aplicación
@@ -85,6 +87,23 @@ public class AutocompleteServlet extends HttpServlet {
                 String prodName = request.getParameter("prodName");
                 String prodid = swdao.buscarIdProducto(prodName);
                 out.println(prodid);
+            } else if(action.equalsIgnoreCase("validarNombreGrupo")) {
+                String nombregrupo = request.getParameter("nombregrupo");
+                LOG.log(Level.INFO, "El grupo recibido es: " + nombregrupo);
+                List<Grupo> listaGrupos = gdao.getListaGrupos();
+                boolean flag = false;
+                for (Grupo grupo : listaGrupos) {
+                    if (grupo.getNombre().toLowerCase().equals(nombregrupo.toLowerCase())) {
+                        LOG.log(Level.INFO, "Se encontro el grupo: " + grupo.getNombre());
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) {
+                    out.print("INVALIDO");
+                } else {
+                    out.print("VALIDO");
+                }
             } 
             /*
             else if (action.equalsIgnoreCase("test")) {

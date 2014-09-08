@@ -218,11 +218,11 @@
                                             content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "El grupo '" + namesplit[1] + "' ha sido eliminado exitosamente.</p>";
                                         } else if (result === 'ERROR') {
-                                            $("#dialog-message").attr("title", "Grupo No Eliminado");
+                                            $("#dialog-message").attr("title", "Error de Eliminación");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "Ocurrio un error al eliminar el grupo. Por favor, intentarlo nuevamente.</p>";
                                         } else {
-                                            $("#dialog-message").attr("title", "Grupo No Eliminado");
+                                            $("#dialog-message").attr("title", "Error del Servidor");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
                                         }
