@@ -12,6 +12,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <%
+            String url = "/sisalbm/admin/scanner/scan.jsp";
+            response.sendRedirect(url);
+        %>
     </body>
 </html>

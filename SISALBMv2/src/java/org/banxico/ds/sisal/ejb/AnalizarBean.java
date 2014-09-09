@@ -1,5 +1,6 @@
 package org.banxico.ds.sisal.ejb;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -31,9 +32,9 @@ import org.banxico.ds.sisal.scanner.ScannerBean;
  * @author t41507
  * @version 07.08.2014
  */
-@Stateless(name="AnalizarBean", mappedName = "ejb/ds/sisalbm/AnalizarBean")
+@Stateless(name = "AnalizarBean", mappedName = "ejb/ds/sisalbm/AnalizarBean")
 public class AnalizarBean implements AnalizarBeanLocal {
-    
+
     /**
      * Inyección del recurso del servicio de tiempo
      */
@@ -66,9 +67,9 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String from = "termometro_OSI@correobm.org.mx";
     private static final String to = "jamaya@banxico.org.mx";
     private static final String CCss = "T41507@correobm.org.mx";
-    private static final String to1  = "";
+    private static final String to1 = "";
     private static final String asunto = "+ Resultados ";
-    private static final String [] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
+    private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
 
     /**
      * Método que se encarga de establecer el tiempo para el analisis
@@ -96,9 +97,10 @@ public class AnalizarBean implements AnalizarBeanLocal {
             LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Timer: {0} cancelado.", timer.getInfo());
         }
     }
-    
+
     /**
-     * Método que se encarga de realizar el escaneo de vulnerabilidades recientes
+     * Método que se encarga de realizar el escaneo de vulnerabilidades
+     * recientes
      *
      * @param timer objeto de tipo Timer
      */
@@ -113,13 +115,13 @@ public class AnalizarBean implements AnalizarBeanLocal {
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
             enviarResultados(resultados);
-            //doPersist(resultados);
+            boolean flag = doPersist(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }
         LOG.log(Level.INFO, "AnalizarBean#doScan() - El siguiente analisis se ejecutar\u00e1: {0}", timer.getNextTimeout());
     }
-    
+
     /**
      * Método que se encarga de retornar la descripción de la tarea
      *
@@ -131,7 +133,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
     }
 
     /**
-     * Método que se encarga de retornar información de la siguiente ejecución de la tarea
+     * Método que se encarga de retornar información de la siguiente ejecución
+     * de la tarea
      *
      * @return fecha de la siguiente ejecución
      */
@@ -144,96 +147,15 @@ public class AnalizarBean implements AnalizarBeanLocal {
         }
         return next;
     }
-    
+
     /**
-     * Método que se encarga de enviar los resultados por correo, usando javaMail
-     * 
-     * @param resultados conjunto de resultados para generar el cuerpo del correo
+     * Método que se encarga de enviar los resultados por correo, usando
+     * javaMail
+     *
+     * @param resultados conjunto de resultados para generar el cuerpo del
+     * correo
      */
-    /*
-    private void enviarResultados(Set<Result> resultados) {
-        //Instanciar un objeto de propiedades
-        Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        //props.put("mail.debug", "true");
-        try {
-            //Obtener una sesión de correo
-            Session session = Session.getInstance(props, null);
-            //Crear una instancia del mensaje
-            Message msg = new MimeMessage(session);
-            //Establecer emisor
-            msg.setFrom(new InternetAddress(from));
-            //Establecer receptor o lista de receptores
-            //>
-            InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
-            for (int i = 0; i < recipientsArray.length; i++) {
-                recipients[i] = new InternetAddress(recipientsArray[i]);
-            }
-            msg.setRecipients(Message.RecipientType.TO, recipients);
-            <//
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
-            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-            Date regdate = new Date();
-            //Asunto del correo
-            msg.setSubject(asunto + fmt.format(regdate));
-            //Buffer para el cuerpo del correo
-            StringBuilder cuerpo = new StringBuilder();
-            cuerpo.append("Se encontraron: ").append(resultados.size()).append(" posibles amenazas.");
-            //Para cada resultado
-            for (Result result : resultados) {
-                cuerpo.append("<p>");
-                String sev = result.getVulnerabilidad().getSeverity();
-                //Traducir gravedad
-                String es_sev = "";
-                if (sev.equalsIgnoreCase("high")) {
-                    es_sev = "Alta";
-                } else if (sev.equalsIgnoreCase("medium")) {
-                    es_sev = "Medium";
-                } else if (sev.equalsIgnoreCase("low")) {
-                    es_sev = "Baja";
-                } else {
-                    es_sev = "ND";
-                }
-                //Cuerpo del mensaje
-                cuerpo.append("La vulnerabilidad <u style='background: #FD0; color: #02F; text-decoration:none; font-size:18px'>")
-                        .append(result.getVulnerabilidad().getName())
-                        .append("</u> publicada el: ")
-                        .append(fmt.format(result.getVulnerabilidad().getPublished()))
-                        .append(" de gravedad: ")
-                        .append(es_sev)
-                        .append(" puede afectar al Software: ");
-                cuerpo.append("<ul>");
-                for (Software sw : result.getSwList()) {
-                    cuerpo.append("<li>")
-                            .append(sw.getNombre())
-                            .append("</li>");
-                }
-                cuerpo.append("</ul>");
-                cuerpo.append("<br /> Descripción: ")
-                        .append(result.getVulnerabilidad().getDescription());
-                cuerpo.append("<br /> Los grupos afectados son: ");
-                cuerpo.append("<ul>");
-                for (String grupo : result.getGruposList()) {
-                    cuerpo.append("<li>")
-                            .append(grupo)
-                            .append("</li>");
-                }
-                cuerpo.append("</ul>");
-                cuerpo.append("</p>");
-            }
-            //cuerpo.append("Correo generado por Java - ").append(fmt.format(new Date()));
-            //msg.setText(cuerpo.toString());
-            msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
-            msg.setSentDate(new Date());
-            Transport.send(msg);
-            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - El mensaje fue enviado correctamente!");
-        } catch (MessagingException e) {
-            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - Ocurrio un error al enviar el correo: {0}", e.getMessage());
-        }
-    }*/
-    
-     private static void enviarResultados(Set<Result> resultados) {
+    private static void enviarResultados(Set<Result> resultados) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         try {
@@ -331,7 +253,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     public Date getUltimaEjecucion() {
         if (ultimaEjecucion != null) {
             return this.ultimaEjecucion;
-        } 
+        }
         return null;
     }
 
@@ -343,6 +265,100 @@ public class AnalizarBean implements AnalizarBeanLocal {
     public void setUltimaEjecucion(Date ultimaEjecucion) {
         this.ultimaEjecucion = ultimaEjecucion;
     }
-    
-    
+
+    private boolean doPersist(Set<Result> resultados) {
+        boolean flag = false;
+        VulnerabilityDAO vdao = new VulnerabilityDAO();
+        for (Result result : resultados) {
+            try {
+                flag = vdao.crearVulnerabilidad(result);
+            } catch (SQLException ex) {
+                LOG.log(Level.SEVERE, "AnalizarBean#doPersist() - Ocurrio un error al registrar la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+            }
+        }
+        return flag;
+    }
 }
+
+ /*
+    private void enviarResultados(Set<Result> resultados) {
+        //Instanciar un objeto de propiedades
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        //props.put("mail.debug", "true");
+        try {
+            //Obtener una sesión de correo
+            Session session = Session.getInstance(props, null);
+            //Crear una instancia del mensaje
+            Message msg = new MimeMessage(session);
+            //Establecer emisor
+            msg.setFrom(new InternetAddress(from));
+            //Establecer receptor o lista de receptores
+            //>
+            InternetAddress [] recipients = new InternetAddress[recipientsArray.length];
+            for (int i = 0; i < recipientsArray.length; i++) {
+                recipients[i] = new InternetAddress(recipientsArray[i]);
+            }
+            msg.setRecipients(Message.RecipientType.TO, recipients);
+            <//
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            Date regdate = new Date();
+            //Asunto del correo
+            msg.setSubject(asunto + fmt.format(regdate));
+            //Buffer para el cuerpo del correo
+            StringBuilder cuerpo = new StringBuilder();
+            cuerpo.append("Se encontraron: ").append(resultados.size()).append(" posibles amenazas.");
+            //Para cada resultado
+            for (Result result : resultados) {
+                cuerpo.append("<p>");
+                String sev = result.getVulnerabilidad().getSeverity();
+                //Traducir gravedad
+                String es_sev = "";
+                if (sev.equalsIgnoreCase("high")) {
+                    es_sev = "Alta";
+                } else if (sev.equalsIgnoreCase("medium")) {
+                    es_sev = "Medium";
+                } else if (sev.equalsIgnoreCase("low")) {
+                    es_sev = "Baja";
+                } else {
+                    es_sev = "ND";
+                }
+                //Cuerpo del mensaje
+                cuerpo.append("La vulnerabilidad <u style='background: #FD0; color: #02F; text-decoration:none; font-size:18px'>")
+                        .append(result.getVulnerabilidad().getName())
+                        .append("</u> publicada el: ")
+                        .append(fmt.format(result.getVulnerabilidad().getPublished()))
+                        .append(" de gravedad: ")
+                        .append(es_sev)
+                        .append(" puede afectar al Software: ");
+                cuerpo.append("<ul>");
+                for (Software sw : result.getSwList()) {
+                    cuerpo.append("<li>")
+                            .append(sw.getNombre())
+                            .append("</li>");
+                }
+                cuerpo.append("</ul>");
+                cuerpo.append("<br /> Descripción: ")
+                        .append(result.getVulnerabilidad().getDescription());
+                cuerpo.append("<br /> Los grupos afectados son: ");
+                cuerpo.append("<ul>");
+                for (String grupo : result.getGruposList()) {
+                    cuerpo.append("<li>")
+                            .append(grupo)
+                            .append("</li>");
+                }
+                cuerpo.append("</ul>");
+                cuerpo.append("</p>");
+            }
+            //cuerpo.append("Correo generado por Java - ").append(fmt.format(new Date()));
+            //msg.setText(cuerpo.toString());
+            msg.setContent(cuerpo.toString(), "text/html; charset=utf-8");
+            msg.setSentDate(new Date());
+            Transport.send(msg);
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - El mensaje fue enviado correctamente!");
+        } catch (MessagingException e) {
+            LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - Ocurrio un error al enviar el correo: {0}", e.getMessage());
+        }
+    }*/

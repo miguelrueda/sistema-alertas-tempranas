@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.banxico.ds.sisal.db.ConnectionFactory;
 import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.parser.CPEParser;
+import org.banxico.ds.sisal.parser.entidades.Version;
 
 /**
  * Clase que se encarga de manejar el acceso a datos relacionados con la entidad
@@ -869,6 +870,10 @@ public class SoftwareDAO {
             }
         }
         return result;
+    }
+
+    public int buscarIdProducto(String vendor, String name, List<Version> version) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
