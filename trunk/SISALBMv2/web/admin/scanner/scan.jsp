@@ -180,7 +180,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="radio" name="fechaC" value="full" id="date" 
-                                                               title="Contempla búscar en todo el periodo desde 2013 hasta la fecha actual."/>Periodo Completo
+                                                               title="Contempla búscar en todo el periodo reciente(8 días)."/>Periodo Completo
                                                         <br />
                                                         <input type="radio" name="fechaC" value="partial" id="date" 
                                                                title="Contempla un periodo seleccionado entre 2013 y la fecha actual."/>Periodo Específico

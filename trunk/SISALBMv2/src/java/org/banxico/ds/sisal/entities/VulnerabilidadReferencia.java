@@ -40,6 +40,12 @@ public class VulnerabilidadReferencia implements java.io.Serializable {
         this.fuente = fuente;
         this.url = url;
     }
+    
+    public VulnerabilidadReferencia(String idVulnerabilidad, String fuente, String url) {
+        this.idVulnerabilidad = idVulnerabilidad;
+        this.fuente = fuente;
+        this.url = url;
+    }
 
     /**
      * Getter

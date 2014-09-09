@@ -23,7 +23,7 @@
                     <div id="menu">
                         <nav>
                             <ul>
-                                <li><a href="/sisalbm/AppIndex.html">AppIndex</a></li>
+                                <li><a href="/sisalbm/admin/scanner/scan.jsp">Volver al Inicio</a></li>
                             </ul>
                         </nav>
                     </div>
