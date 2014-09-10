@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+<web-app version="3.0" 
+         xmlns="http://java.sun.com/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <!-- Configuración de la Aplicación -->
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <!-- Configuración para autenticación -->
+    <context-param>
+        <param-name>nombreWebApp</param-name>
+        <param-value>dgti/sisalbm</param-value>
+    </context-param>
+    <context-param>
+        <param-name>passwordWebApp</param-name>
+        <param-value>73RMoM37r0x2</param-value>
+    </context-param>
+    <!-- Configuración para validación de parámetros -->
+    <filter>
+        <filter-name>filtrovalidacion</filter-name>
+        <filter-class>org.banxico.ds.inputvalidation.InputValidationFilter</filter-class>
+        <init-param>
+            <param-name>nombreWebApp</param-name>
+            <param-value>dgti/sisalbm</param-value>
+        </init-param>
+        <init-param>
+            <param-name>passwordWebApp</param-name>
+            <param-value>73RMoM37r0x2</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>filtrovalidacion</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- Archivos de bienvenida -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/sisalbm/admin/scanner/scan.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- Declaración de Servlets de la Aplicación -->
     <servlet>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.servlets.VulnerabilityServlet</servlet-class>
@@ -21,6 +62,7 @@
         <servlet-name>AutocompleteServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.util.AutocompleteServlet</servlet-class>
     </servlet>
+    <!-- Mapeo de URL para realizar las peticiones a los Servlets -->
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
         <url-pattern>/admin/vulnerability.controller</url-pattern>
@@ -37,6 +79,11 @@
         <servlet-name>JobServlet</servlet-name>
         <url-pattern>/JobServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AutocompleteServlet</servlet-name>
+        <url-pattern>/autocomplete</url-pattern>
+    </servlet-mapping>
+    <!-- Redirecciones a la página de error por código o excepción -->
     <error-page>
         <error-code>404</error-code>
         <location>/error.jsp</location>
@@ -45,17 +92,4 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error.jsp</location>
     </error-page>
-    <servlet-mapping>
-        <servlet-name>AutocompleteServlet</servlet-name>
-        <url-pattern>/autocomplete</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-        <welcome-file>/sisalbm/admin/scanner/scan.jsp</welcome-file>
-    </welcome-file-list>
 </web-app>
