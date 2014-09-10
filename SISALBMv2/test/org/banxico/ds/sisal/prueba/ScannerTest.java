@@ -1,8 +1,6 @@
 package org.banxico.ds.sisal.prueba;
 
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +40,7 @@ public class ScannerTest {
             System.out.println(result);
         }
                 */
-        Set<Result> resultados = scanner.doCompleteScan("05/07/2014", "01/08/2014");
+        Set<Result> resultados = scanner.doCompleteScan("15/07/2014", "01/08/2014");
         if (!resultados.isEmpty()) {
             doPersist(resultados);
         } else {

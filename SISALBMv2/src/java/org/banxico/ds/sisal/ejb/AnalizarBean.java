@@ -224,9 +224,14 @@ public class AnalizarBean implements AnalizarBeanLocal {
                 }
                 VulnerabilityDAO vulndao = new VulnerabilityDAO();
                 cuerpo.append("</tbody>").append("</table>").append("</td>")
-                        .append("<td style='border:1px solid #000'>")
-                        .append(vulndao.describirVector(result.getVulnerabilidad().getCVSS().vector))
-                        .append("</td>")
+                        .append("<td style='border:1px solid #000'>");
+                String vector = result.getVulnerabilidad().getCVSS().getVector();
+                if (!vector.equals("") && !vector.equalsIgnoreCase("ND")) {
+                    cuerpo.append(vulndao.describirVector(vector));
+                } else {
+                    cuerpo.append("Vector No Disponible");
+                }
+                cuerpo.append("</td>")
                         .append("</tr>");
                 cuerpo.append("<tr>")
                         .append("<td colspan='6' style='border:1px solid #000;text-align:left !important'>")
