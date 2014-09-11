@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.EJBException;
 import javax.ejb.Timeout;
 import org.banxico.ds.sisal.dao.SourcesDAO;
 import org.banxico.ds.sisal.entities.FuenteApp;
@@ -54,18 +55,26 @@ public class UpdateBean implements UpdateBeanLocal {
      */
     @Override
     public void setTimer() {
-        stopTimer();
-        Calendar initialExpiration = Calendar.getInstance();
-        initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
-        initialExpiration.set(Calendar.MINUTE, START_MINUTES);
-        initialExpiration.set(Calendar.SECOND, START_SECONDS);
-        long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
-        LOG.log(Level.INFO, "UpdateBean#setTimer() - Timer de actualizaci\u00f3n creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
-        Collection<Timer> timers = timerService.getTimers();
-        if (timers.size() > 0) {
-            return;
+        try {
+            stopTimer();
+            Calendar initialExpiration = Calendar.getInstance();
+            initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
+            initialExpiration.set(Calendar.MINUTE, START_MINUTES);
+            initialExpiration.set(Calendar.SECOND, START_SECONDS);
+            long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
+            LOG.log(Level.INFO, "UpdateBean#setTimer() - Timer de actualizaci\u00f3n creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
+            Collection<Timer> timers = timerService.getTimers();
+            if (timers.size() > 0) {
+                return;
+            }
+            timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.INFO, "UpdateBean#setTimer() - Ocurrio un error al establecer los argumentos del Timer: {0}", e.getMessage());
+        } catch (IllegalStateException e) {
+            LOG.log(Level.INFO, "UpdateBean#setTimer() - Ocurrio un error, estado ilegal del Timer: {0}", e.getMessage());
+        } catch (EJBException e) {
+            LOG.log(Level.INFO, "UpdateBean#setTimer() - Ocurrio un error con el EJB: {0}", e.getMessage());
         }
-        timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
     }
 
     /**
@@ -73,12 +82,18 @@ public class UpdateBean implements UpdateBeanLocal {
      */
     @Override
     public void stopTimer() {
-        Collection<Timer> timers = timerService.getTimers();
-        if (timers != null) {
-            for (Timer t : timers) {
-                t.cancel();
-                LOG.log(Level.INFO, "UpdateBean#stopTimer() - Timer: {0} cancelado.", t);
+        try {
+            Collection<Timer> timers = timerService.getTimers();
+            if (timers != null) {
+                for (Timer t : timers) {
+                    t.cancel();
+                    LOG.log(Level.INFO, "UpdateBean#stopTimer() - Timer: {0} cancelado.", t);
+                }
             }
+        } catch (IllegalStateException e) {
+            LOG.log(Level.INFO, "UpdateBean#stopTimer() - Ocurrio un error, estado ilegal del Timer: {0}", e.getMessage());
+        } catch (EJBException e) {
+            LOG.log(Level.INFO, "UpdateBean#stopTimer() - Ocurrio un error con el EJB: {0}", e.getMessage());
         }
     }
 

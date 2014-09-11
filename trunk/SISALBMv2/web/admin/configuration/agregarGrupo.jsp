@@ -276,7 +276,6 @@
                             type: "POST",
                             data: sdata,
                             success: function(response) {
-                                //alert(response);
                                 var content = '';
                                 if (response === 'OK') {
                                     $("#dialog-message").attr("title", "Grupo Agregado");

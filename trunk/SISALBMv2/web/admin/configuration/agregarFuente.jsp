@@ -70,13 +70,10 @@
         </div><!--page container-->
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
+        <script type="text/javascript" src="../../resources/js/jquery.notice.js" ></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
             $(document).ready(function() {
-                $(function() {
-                    $(document).tooltip();
-                });
                 $("#addFuente").validate({
                     rules: {
                         nombre: "required",
@@ -88,19 +85,20 @@
                     },
                     submitHandler: function(form) {
                         var formserialized = $(form).serialize();
-                        alert(formserialized);
                         $.ajax({
                             url: '/sisalbm/admin/configuration.controller?action=addFuente',
                             type: 'POST',
-                            beforeSend: function() {
-                                jQuery.noticeAdd({
-                                    text: "Procesando Solicitud: <br /><center><img src='../resources/images/ajax-loader.gif' alt='loading' />></center>",
-                                    stay: true,
-                                    type: info
-                                });
-                            },
                             data: formserialized,
-                            success: function(response) {
+                            
+                             beforeSend: function() {
+                                jQuery.noticeAdd({
+                                    text: "Procesando Solicitud: " + 
+                                            "<br /><center><img src='../../resources/images/ajax-loader.gif' alt='loading' /></center>",
+                                    stay: true,
+                                    type: 'info'
+                                });
+                            }, 
+                           success: function(response) {
                                 var content = '';
                                 if (response === 'URL INVALIDA') {
                                     $("#dialog-message").attr("title", "Url Invalida");
@@ -175,6 +173,13 @@
                                     <li class="last"><a href="/sisalbm/JobServlet"><span>Tareas Programadas</span></a></li>
                                 </ul>
                             </li>
+
+
+                $(function() {
+                    $(document).tooltip();
+                });
+
+
                             <li><a href="#"><span>Vulnerabilidades</span></a>
                                 <ul>
                                     <li><a href="../vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>

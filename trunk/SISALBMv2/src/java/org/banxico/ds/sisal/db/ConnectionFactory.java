@@ -10,7 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Clase que implementa el patron singleton para devolver una instancia de la conexión a BD
+ * Clase que implementa el patron singleton para devolver una instancia de la
+ * conexión a BD
  *
  * @author t41507
  * @version 07.08.2014
@@ -28,6 +29,7 @@ public class ConnectionFactory {
 
     /**
      * Constructor de la clase que se encarga de inicializar el driver 
+     *
      */
     private ConnectionFactory() {
         try {
@@ -59,8 +61,8 @@ public class ConnectionFactory {
     }
 
     /**
-     * Método que se encarga de obtener la conexión con la BD, obteniendo la url de la BD de un 
-     * archivo de propiedades localizado en el mismo paquete
+     * Método que se encarga de obtener la conexión con la BD, obteniendo la url
+     * de la BD de un archivo de propiedades localizado en el mismo paquete
      *
      * @return objeto de tipo connection que hace referncia a la conexión
      */
@@ -73,16 +75,15 @@ public class ConnectionFactory {
             prop.load(is);
             String connUrl = prop.getProperty("url");
             connection = DriverManager.getConnection(connUrl);
-            //LOG.log(Level.INFO, "BD - Conexión establecida correctamente");
         } catch (SQLException ex) {
-            LOG.log(Level.INFO, "Ocurrio una excepci\u00f3n al iniciar la conexi\u00f3n SQL: {0}", ex.getMessage());
-        } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Ocurrio un error al abrir el archivo de propiedades: {0}", ex.getMessage());
+            LOG.log(Level.INFO, "ConnectionFactory#getConnection() - Ocurrio una excepci\u00f3n al iniciar la conexi\u00f3n SQL: {0}", ex.getMessage());
         } catch (SecurityException ex) {
-            LOG.log(Level.SEVERE, "Ocurrio una excepci\u00f3n de seguridad: {0}", ex.getMessage());
+            LOG.log(Level.SEVERE, "ConnectionFactory#getConnection() - Ocurrio una excepci\u00f3n de seguridad: {0}", ex.getMessage());
         } catch (IllegalArgumentException ex) {
-            LOG.log(Level.SEVERE, "Ocurrio una excepci\u00f3n de argumento invalido: {0}", ex.getMessage());
-        } 
+            LOG.log(Level.SEVERE, "ConnectionFactory#getConnection() - Ocurrio una excepci\u00f3n de argumento invalido: {0}", ex.getMessage());
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "ConnectionFactory#getConnection() -  Ocurrio un error al abrir el archivo de propiedades: {0}", ex.getMessage());
+        }
         return connection;
     }
 
