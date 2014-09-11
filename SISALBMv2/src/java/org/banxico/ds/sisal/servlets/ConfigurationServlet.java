@@ -194,7 +194,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             boolean created = false;
             boolean valid = false;
             try {
-                if (valid) {
+                if (!valid) {
                     created = gdao.crearGrupo(nombre, categoria, llaves);
                     if (created) {
                         //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: OK");

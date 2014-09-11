@@ -7,6 +7,7 @@ import javax.ejb.EJB;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.NoSuchEJBException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +43,13 @@ public class JobServlet extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        //Iniciar los timers
-        updateBean.setTimer();
-        analizarBean.setTimer();
+        try {
+            //Iniciar los timers
+            updateBean.setTimer();
+            analizarBean.setTimer();
+        } catch (Exception e) {
+            LOG.log(Level.INFO, "JobServlet#init() - Ocurrio un error al establecer los timers: {0}", e.getMessage());
+        }
     }
 
     /**

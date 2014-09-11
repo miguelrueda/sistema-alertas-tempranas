@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.Resource;
+import javax.ejb.EJBException;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.Timeout;
@@ -49,7 +50,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     /**
      * Atributos que definen la hora de la actualización
      */
-    private static final int START_HOUR = 11;
+    private static final int START_HOUR = 14;
     private static final int START_MINUTES = 0;
     private static final int START_SECONDS = 0;
     private static final int INTERVAL_IN_MINUTES = 1440;
@@ -76,14 +77,23 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Override
     public void setTimer() {
-        stopTimer();
-        Calendar initialExpiration = Calendar.getInstance();
-        initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
-        initialExpiration.set(Calendar.MINUTE, START_MINUTES);
-        initialExpiration.set(Calendar.SECOND, START_SECONDS);
-        long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
-        LOG.log(Level.INFO, "AnalizarBean#setTimer() - Timer de analisis creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
-        timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
+        try {
+            stopTimer();
+            Calendar initialExpiration = Calendar.getInstance();
+            initialExpiration.set(Calendar.HOUR_OF_DAY, START_HOUR);
+            initialExpiration.set(Calendar.MINUTE, START_MINUTES);
+            initialExpiration.set(Calendar.SECOND, START_SECONDS);
+            long duration = new Integer(INTERVAL_IN_MINUTES).longValue() * 60 * 1000;
+            LOG.log(Level.INFO, "AnalizarBean#setTimer() - Timer de analisis creado: {0} con un intervalo de: {1}", new Object[]{initialExpiration.getTime(), INTERVAL_IN_MINUTES});
+            timerService.createTimer(initialExpiration.getTime(), duration, descripcion);
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.INFO, "AnalizarBean#setTimer() - Ocurrio un error al establecer los argumentos del Timer: {0}", e.getMessage());
+        } catch (IllegalStateException e) {
+            LOG.log(Level.INFO, "AnalizarBean#setTimer() - Ocurrio un error, estado ilegal del Timer: {0}", e.getMessage());
+        } catch (EJBException e) {
+            LOG.log(Level.INFO, "AnalizarBean#setTimer() - Ocurrio un error con el EJB: {0}", e.getMessage());
+        }
+        
     }
 
     /**
@@ -91,10 +101,16 @@ public class AnalizarBean implements AnalizarBeanLocal {
      */
     @Override
     public void stopTimer() {
-        Collection<Timer> timers = timerService.getTimers();
-        for (Timer timer : timers) {
-            timer.cancel();
-            LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Timer: {0} cancelado.", timer.getInfo());
+        try {
+            Collection<Timer> timers = timerService.getTimers();
+            for (Timer timer : timers) {
+                timer.cancel();
+                LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Timer: {0} cancelado.", timer.getInfo());
+            }
+        } catch (IllegalStateException e) {
+            LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Ocurrio un error, estado ilegal del Timer: {0}", e.getMessage());
+        } catch (EJBException e) {
+            LOG.log(Level.INFO, "AnalizarBean#stopTimer() - Ocurrio un error con el EJB: {0}", e.getMessage());
         }
     }
 
@@ -114,8 +130,14 @@ public class AnalizarBean implements AnalizarBeanLocal {
         LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
+            doPersist(resultados);
+            long delay = 60000L;
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                LOG.log(Level.INFO, "AnalizarBean#doScan() - Ocurrio un error al ejecutar la espera!!!");
+            }
             enviarResultados(resultados);
-            boolean flag = doPersist(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }
@@ -273,16 +295,21 @@ public class AnalizarBean implements AnalizarBeanLocal {
 
     private boolean doPersist(Set<Result> resultados) {
         boolean flag = false;
+        int res = 0;
         VulnerabilityDAO vdao = new VulnerabilityDAO();
         for (Result result : resultados) {
             try {
-                flag = vdao.crearVulnerabilidad(result);
+                res = vdao.comprobarExistenciaVulnerabilidad(result.getVulnerabilidad().getName());
+                if (res == 0) { //No existe
+                    vdao.crearVulnerabilidad(result);
+                }
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, "AnalizarBean#doPersist() - Ocurrio un error al registrar la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
             }
         }
         return flag;
     }
+
 }
 
  /*

@@ -89,12 +89,12 @@ public class AutocompleteServlet extends HttpServlet {
                 out.println(prodid);
             } else if(action.equalsIgnoreCase("validarNombreGrupo")) {
                 String nombregrupo = request.getParameter("nombregrupo");
-                LOG.log(Level.INFO, "El grupo recibido es: " + nombregrupo);
+                LOG.log(Level.INFO, "Buscando el grupo: {0}", nombregrupo);
                 List<Grupo> listaGrupos = gdao.getListaGrupos();
                 boolean flag = false;
                 for (Grupo grupo : listaGrupos) {
                     if (grupo.getNombre().toLowerCase().equals(nombregrupo.toLowerCase())) {
-                        LOG.log(Level.INFO, "Se encontro el grupo: " + grupo.getNombre());
+                        LOG.log(Level.INFO, "Se encontro el grupo: {0}", grupo.getNombre());
                         flag = true;
                         break;
                     }
@@ -102,6 +102,7 @@ public class AutocompleteServlet extends HttpServlet {
                 if (flag) {
                     out.print("INVALIDO");
                 } else {
+                    LOG.log(Level.INFO, "No se encontro el grupo, registrarlo");
                     out.print("VALIDO");
                 }
             } 

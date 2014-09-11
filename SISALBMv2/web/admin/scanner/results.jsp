@@ -117,33 +117,11 @@
                 $("#dialog-message").hide();
                 $("#export").hide();
                 $("#okButton").hide();
-                /*
-                 $("#exportButton").click(function(e){
-                 var link = document.getElementById("downloadlink");
-                 link.href = crearArchivo("ABCDEF");
-                 link.style.display = 'block';
-                 });
-                 */
                 $("#okButton").click(function(e) {
                     $("#okButton").hide();
                     $("#export").hide();
                 });
-                /*
-                 var textFile = null;
-                 function crearArchivo(texto) {
-                 var data = new Blob([texto], {type: 'text/plain'}); 
-                 if (textFile !== null) {
-                 window.URL.revokeObjectURL(textFile);
-                 }
-                 textFile = window.URL.createObjectURL(data);
-                 return textFile;
-                 }
-                 */
                 $("#exportButton").click(function(e) {
-                    //$("#okButton").show();
-                    //$("#export").show();
-                    //var content = $("#testdiv").html();
-                    //alert(content);
                     $("#dialog-message").attr("title", "Resultados");
                     $("#dialog-message").dialog({
                         modal: true,
@@ -158,65 +136,7 @@
                         }
                     });
                 });
-                //$.ajax({
-                //url: '/sisalbm/scanner?action=export',
-                //type: 'GET',
-                //success: function(result) {
-                //alert(result);
-                //$("#export").show();
-                //$("#export").html(result);
-                /*
-                 $("#dialog-message").attr("title", "Información");
-                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left;margin0 7px 50px 0;'> </span>Descarga</p>";
-                 $("#dialog-message").html(content);
-                 $("#dialog-message").dialog({
-                 modal: true,
-                 buttons: {
-                 Ok: function() {
-                 $(this).dialog("close");
-                 }
-                 }
-                 });*/
-                //}
-                //});
-                //});
             });
         </script>
     </body>
 </html>
-<!--
-                    <div id="cssmenu">
-                        <ul>
-                            <li class="has-sub"><a href="#"><span>Configuración</span></a>
-                                <ul>
-                                    <li class="has-sub"><a href="#"><span>Fuentes</span></a>
-                                        <ul>
-                                            <li><a href="/sisalbm/admin/configuration/agregarFuente.jsp"><span>Agregar Fuente</span></a></li>
-                                            <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=1"><span>Fuentes Registradas</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#"><span>Grupos</span></a>
-                                        <ul>
-                                            <li><a href="/sisalbm/admin/configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
-                                            <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=2"><span>Grupos Registrados</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="has-sub"><a href="#"><span>Software</span></a>
-                                        <ul>
-                                            <li><a href="/sisalbm/admin/vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
-                                            <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="last"><a href="/sisalbm/JobServlet"><span>Tareas Programadas</span></a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><span>Vulnerabilidades</span></a>
-                                <ul>
-                                    <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
-                                    <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
-                                </ul>
-                            </li>
-                            <li><a href="/sisalbm/admin/scanner/scan.jsp"><span>Escaneo</span></a></li>
-                            <li><a href="/sisalbm/admin/help.jsp"><span>Ayuda</span></a></li>
-                        </ul>
-                    </div>-->
