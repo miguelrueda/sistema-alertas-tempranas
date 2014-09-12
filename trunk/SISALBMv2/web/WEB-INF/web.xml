@@ -15,7 +15,7 @@
         <param-name>passwordWebApp</param-name>
         <param-value>73RMoM37r0x2</param-value>
     </context-param>
-    <!-- Configuración para validación de parámetros  -->
+    <!-- Configuración para validación de parámetros -->
     <filter>
         <filter-name>filtrovalidacion</filter-name>
         <filter-class>org.banxico.ds.inputvalidation.InputValidationFilter</filter-class>

@@ -137,6 +137,14 @@
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "La Fuente ha sido actualizada de forma exitosa.</p>";
                                 $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                                 $("#namef").attr("disabled", true);
                                 $("#urlf").attr("disabled", true);
                                 $("#actualizar").attr("disabled", true);
@@ -145,11 +153,27 @@
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "El nombre ingresado no es válido</p>";
                                 $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                             } else if (result === 'url') {
                                 $("#dialog-message").attr("title", "Error de entrada");
                                 var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "La URL ingresada no es válida.<br />La URL debe cumplir con el prefijo: ([http|https]://)</p>";
                                 $("#dialog-message").html(content);
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                             }
                             else {
                                 //alert("Edición Incompleta");
@@ -157,15 +181,15 @@
                                 var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
                                         "Ocurrio un error al realizar la actualización. Favor de intentarlo nuevamente.</p>";
                                 $("#dialog-message").html(content);
-                            }
-                            $("#dialog-message").dialog({
-                                modal: true,
-                                buttons: {
-                                    Aceptar: function() {
-                                        $(this).dialog("close");
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }, error: function() {
                             $("#dialog-message").attr("title", "Edición Incompleta");
                             var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +

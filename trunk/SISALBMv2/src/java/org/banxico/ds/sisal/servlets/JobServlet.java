@@ -7,7 +7,6 @@ import javax.ejb.EJB;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.NoSuchEJBException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -134,6 +133,12 @@ public class JobServlet extends HttpServlet {
         out.println("Tarea");
         out.println("</th>");
         out.println("<th>");
+        out.println("Descripción");
+        out.println("</th>");
+        out.println("<th>");
+        out.println("Periodo De Ejecución");
+        out.println("</th>");
+        out.println("<th>");
         out.println("Ultima Ejecución");
         out.println("</th>");
         out.println("<th>");
@@ -147,6 +152,12 @@ public class JobServlet extends HttpServlet {
         out.println("<td>");
         //Descripción de la tarea
         out.println(updateBean.getDescripcion());
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Se descargan de actualizaciones de vulnerabilidades a partir de las fuentes de información registradas.");
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Ejecución Diaria");
         out.println("</td>");
         out.println("<td>");
         if (updateBean.getUltimaEjecucion() != null) {
@@ -164,6 +175,12 @@ public class JobServlet extends HttpServlet {
         out.println("<td>");
         //Descripción de la tarea
         out.println(analizarBean.getDescripcion());
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Se ejecuta una búsqueda de vulnerabilidades sobre los grupos registrados en el sistema.");
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Ejecución Diaria");
         out.println("</td>");
         out.println("<td>");
         if (analizarBean.getUltimaEjecucion() != null) {

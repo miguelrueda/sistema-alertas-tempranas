@@ -20,6 +20,17 @@
                 height: 20px;
                 float: left;
             }
+            .ui-autocomplete {
+                font-size: 90%;
+                max-width: 400px;
+                max-height: 200px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
+            html .ui-autocomplete {
+                height: 100px;
+            }
         </style>
     </head>
     <body>
@@ -38,7 +49,7 @@
 
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Agregar Grupo</div>
+                        <div id="page_title">Agregar Nuevo Grupo</div>
                         <br />
                         <div id="content">
                             <form class="form" id="addGroupSW" name="addGroupSW" action="" method="get">
@@ -85,11 +96,11 @@
                                             <tr>
                                                 <td>Buscar Producto</td>
                                                 <td>
-                                                    <input type="text" name="producto" id="producto" style="width: 185px" 
-                                                           title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda."/>
+                                                    <input type="text" name="producto" id="producto" style="width: 185px" />
                                                 </td>
                                                 <td>
-                                                    <input type="button" value="Añadir" id="addtolist" />
+                                                    <input type="button" value="Añadir" id="addtolist" 
+                                                           title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda."/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -216,7 +227,7 @@
                         type: 'POST',
                         data: 'nombregrupo=' + q.value,
                         success: function(result) {
-                            if(result === 'INVALIDO') {
+                            if (result === 'INVALIDO') {
                                 $nombrewrn.text("Ya existe un grupo con esté nombre.");
                                 $nombrewrn.show();
                             }
@@ -278,9 +289,20 @@
                             success: function(response) {
                                 var content = '';
                                 if (response === 'OK') {
+                                    $("#dialog-message").attr("title", "");
+                                    $("#dialog-message").html("");
                                     $("#dialog-message").attr("title", "Grupo Agregado");
                                     content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "El grupo fue agregado exitosamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                     ikeys = [];
                                     $("#addGroupSW")[0].reset();
                                     $("#listElements").html("");
@@ -292,25 +314,43 @@
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar registrar el grupo.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                 } else if (response === 'NOMBRE_INVALIDO') {
                                     $("#dialog-message").attr("title", "Nombre de Grupo Existente");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $("#dialog-message").attr("title", "");
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                 } else {
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>";
-                                }
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Aceptar: function() {
-                                            $("#dialog-message").attr("title", "");
-                                            $(this).dialog("close");
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +

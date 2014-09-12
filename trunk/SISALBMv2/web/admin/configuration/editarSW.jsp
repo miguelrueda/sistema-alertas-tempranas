@@ -36,7 +36,7 @@
                             <form class="form" id="editSW" name="editSW">
                                 <fieldset>
                                     <legend>Información del Software</legend>
-                                    <% Software s = ((SoftwareDAO) session.getAttribute("swdao")).obtenerSoftwarePorId(id); %>
+                                    <% Software s = ((SoftwareDAO) session.getAttribute("swdao")).obtenerSoftwarePorId(id);%>
                                     <table>
                                         <tbody>
                                             <tr>
@@ -44,7 +44,7 @@
                                                     <label>Ingresar Fabricante</label>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="fabricante" id="fabricante"  value="<%= s.getFabricante() %>" style="width: 185px" />
+                                                    <input type="text" name="fabricante" id="fabricante"  value="<%= s.getFabricante()%>" style="width: 185px" />
                                                 </td>
                                                 <td>
                                                     <label for="fabricante" class="error"></label>
@@ -55,7 +55,7 @@
                                                     <label>Seleccionar Producto</label>
                                                 </td>
                                                 <td>
-                                                    <input name="nombre" id="nombre" type="text" value="<%= s.getNombre() %>"  />
+                                                    <input name="nombre" id="nombre" type="text" value="<%= s.getNombre()%>"  />
                                                 </td>
                                                 <td>
                                                     <label for="nombre" class="error"></label>
@@ -66,7 +66,7 @@
                                                     <label>Seleccionar Versión</label>
                                                 </td>
                                                 <td>
-                                                    <input name="version" id="version" type="text" value="<%= s.getVersion() %>" />
+                                                    <input name="version" id="version" type="text" value="<%= s.getVersion()%>" />
                                                 </td>
                                                 <td>
                                                     <label for="version" class="error"></label>
@@ -77,7 +77,7 @@
                                                     <label>Seleccionar Tipo</label>
                                                 </td>
                                                 <td>
-                                                    <input name="tipo" id="tipo" type="text" value="<%= s.getTipo() %>" />
+                                                    <input name="tipo" id="tipo" type="text" value="<%= s.getTipo()%>" />
                                                 </td>
                                                 <td>
                                                     <label for="tipo" class="error"></label>
@@ -88,7 +88,7 @@
                                                     <label>Seleccionar Fin de Vida</label>
                                                 </td>
                                                 <td>
-                                                    <input name="eol" id="eol" type="text" value="<%= s.getEndoflife() %>" />
+                                                    <input name="eol" id="eol" type="text" value="<%= s.getEndoflife()%>" />
                                                 </td>
                                                 <td>
                                                     <label for="eol" class="error"></label>
@@ -100,7 +100,7 @@
                                 <input type="submit" class="inputsubmit" value="Guardar Cambios" id="addButton" />
                                 <br />
                             </form>
-                         </div><!--content-->
+                        </div><!--content-->
                     </div>
                 </div><!--work area-->
             </div><!--page content-->
@@ -141,26 +141,35 @@
                                 if (response === 'OK') {
                                     $("#dialog-message").attr("title", "Edición Completa");
                                     content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "La información del Software fue modificada correctamente.</p>";
-                                } else if(response === 'ERROR') {
+                                            "La información del Software fue modificada correctamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                } else if (response === 'ERROR') {
                                     $("#dialog-message").attr("title", "Edición No Completada");
                                     $("#addFuente")[0].reset();
                                     var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "La información del Software no pudo ser modificada.</p>";
-                                }
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Aceptar: function() {
-                                            $(this).dialog("close");
+                                            "La información del Software no pudo ser modificada.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Software No Editado");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,
