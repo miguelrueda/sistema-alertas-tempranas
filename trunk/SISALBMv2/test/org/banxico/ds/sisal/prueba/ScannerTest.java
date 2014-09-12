@@ -43,17 +43,25 @@ public class ScannerTest {
         Set<Result> resultados = scanner.doCompleteScan("01/07/2014", "12/09/2014");
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
-            //doPersist(resultados);
+            doPersist(resultados);
         } else {
             System.out.println("Sin Resultados");
         }
     }
-
+    
     private static void doPersist(Set<Result> resultados) {
+        int res = 0;
         VulnerabilityDAO vdao = new VulnerabilityDAO();
         for (Result result : resultados) {
             try {
-                boolean flag = vdao.crearVulnerabilidad(result);
+                //boolean flag = vdao.crearVulnerabilidad(result);
+                res = vdao.comprobarExistenciaVulnerabilidad(result.getVulnerabilidad().getName());
+                if (res == 0) {
+                    System.out.println("Creando la vulnerabilidad: " + result.getVulnerabilidad().getName());
+                    vdao.crearVulnerabilidad(result);
+                } else {
+                    System.out.println("Ya existe la vulnerabilidad: " + result.getVulnerabilidad().getName());
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(ScannerTest.class.getName()).log(Level.SEVERE, null, ex);
             }
