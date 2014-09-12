@@ -293,6 +293,11 @@ public class AnalizarBean implements AnalizarBeanLocal {
         this.ultimaEjecucion = ultimaEjecucion;
     }
 
+    /**
+     * 
+     * @param resultados
+     * @return 
+     */
     private boolean doPersist(Set<Result> resultados) {
         boolean flag = false;
         int res = 0;
