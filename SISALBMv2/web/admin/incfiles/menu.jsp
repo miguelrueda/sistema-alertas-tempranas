@@ -4,21 +4,21 @@
         <!--<li><a href="../AppIndex.html"><span>AppIndex</span></a></li>-->
         <li class="has-sub"><a href="#"><span>Configuración</span></a>
             <ul>
-                <li class="has-sub"><a href="#"><span>Fuentes</span></a>
+                <li class="has-sub"><a href="#"><span>Fuentes de Vulnerabilidades</span></a>
                     <ul>
-                        <li><a href="/sisalbm/admin/configuration/agregarFuente.jsp"><span>Agregar Fuente</span></a></li>
+                        <li><a href="/sisalbm/admin/configuration/agregarFuente.jsp"><span>Agregar Nueva Fuente</span></a></li>
                         <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=1"><span>Fuentes Registradas</span></a></li>
                     </ul>
                 </li>
-                <li class="has-sub"><a href="#"><span>Grupos</span></a>
+                <li class="has-sub"><a href="#"><span>Grupos de Software</span></a>
                     <ul>
-                        <li><a href="/sisalbm/admin/configuration/agregarGrupo.jsp"><span>Agregar Grupo</span></a></li>
+                        <li><a href="/sisalbm/admin/configuration/agregarGrupo.jsp"><span>Agregar Nuevo Grupo</span></a></li>
                         <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=2"><span>Grupos Registrados</span></a></li>
                     </ul>
                 </li>
-                <li class="has-sub"><a href="#"><span>Software</span></a>
+                <li class="has-sub"><a href="#"><span>Software Disponible</span></a>
                     <ul>
-                        <li><a href="/sisalbm/admin/vulnerabilities/addSW.jsp"><span>Agregar Software</span></a></li>
+                        <li><a href="/sisalbm/admin/vulnerabilities/addSW.jsp"><span>Agregar Nuevo Software</span></a></li>
                         <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=3"><span>Software Registrado</span></a></li>
                     </ul>
                 </li>

@@ -18,15 +18,15 @@
                 width: 100%;
                 float: left;
                 background: rgba(255, 255, 255, .8)
-                     url('http://sampsonresume.com/labs/pIkfp.gif') 
-                     50% 50% 
-                     no-repeat 
+                    url('http://sampsonresume.com/labs/pIkfp.gif') 
+                    50% 50% 
+                    no-repeat 
             }
-            
+
             body.loading {
                 overflow: hidden;
             }
-            
+
             body.loading .modal {
                 display: block
             }
@@ -47,7 +47,7 @@
                     <%@include file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Agregar Software</div>
+                        <div id="page_title">Agregar Nuevo Software</div>
                         <div id="content">
                             <div id="full">
                                 <form class="form" id="addSWForm" name="addSWForm" action="" method="get">
@@ -93,10 +93,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>Tipo</label>
+                                                        <label  title="Seleccionar si el software es un Sistema operativo o una aplicación">Tipo</label>
                                                     </td>
                                                     <td>
-                                                        <select name="tipo" id="tipo" style=" width: 195px">
+                                                        <select name="tipo" id="tipo" style=" width: 195px"> 
                                                             <option value="0">Seleccionar tipo</option>
                                                             <option value="1">Sistema Operativo</option>
                                                             <option value="2">Software</option>
@@ -108,7 +108,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>Fin de Vida</label>
+                                                        <label title="Este campo es para conocer si el software todavía tiene soporte.">Fin de Vida</label>
                                                     </td>
                                                     <td>
                                                         <select name="eol" id="eol" style=" width: 195px">
@@ -201,24 +201,48 @@
                             url: "/sisalbm/admin/vulnerability.controller?action=add&tipo=2",
                             data: $(form).serialize(),
                             success: function(response) {
-                                $("#dialog-message").attr('title', 'Agregar Software');
                                 var content = '';
                                 if (response === 'OK') {
-                                    content = 'El Software ha sido agregado exitosamente.';
-                                } else if (response === 'NOT') {
-                                    content = 'Ocurrio un error al intentar agregar el Software, Intentelo más tarde.';
-                                } else {
-                                    content = 'Ocurrio un error inesperado.';
-                                }
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Aceptar: function() {
-                                            $(this).dialog("close");
+                                    $("#dialog-message").attr('title', 'Software Agregado');
+                                    $("#addSWForm")[0].reset();
+                                    var content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "El software fue registrado exitosamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                } else if (response === 'NOT') {
+                                    $("#dialog-message").attr("title", "Software No Agregado");
+                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "El Software no pudo ser agregado, debido a un error de la petición. Por favor, intentarlo nuevamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    $("#dialog-message").attr("title", "Error de Inserción");
+                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error inesperado. Por favor, intentarlo nuevamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                }
                                 $("#addSWForm")[0].reset();
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Petición Incompleta");

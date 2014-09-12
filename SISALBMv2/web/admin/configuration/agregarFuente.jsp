@@ -24,7 +24,7 @@
                     <%@include file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Agregar Fuente</div>
+                        <div id="page_title">Agregar Nueva Fuente</div>
                         <br />
                         <div id="content">
                             <form class="form" id="addFuente" name="addFuente" action="">
@@ -89,31 +89,58 @@
                             url: '/sisalbm/admin/configuration.controller?action=addFuente',
                             type: 'POST',
                             data: formserialized,
-                            
-                             beforeSend: function() {
+                            beforeSend: function() {
                                 jQuery.noticeAdd({
-                                    text: "Procesando Solicitud: " + 
+                                    text: "Procesando Solicitud: " +
                                             "<br /><center><img src='../../resources/images/ajax-loader.gif' alt='loading' /></center>",
                                     stay: true,
                                     type: 'info'
                                 });
-                            }, 
-                           success: function(response) {
+                            },
+                            success: function(response) {
                                 var content = '';
                                 if (response === 'URL INVALIDA') {
                                     $("#dialog-message").attr("title", "Url Invalida");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "La URL es incorrecta o el formato no es válido.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                 } else if (response === 'OK') {
                                     $("#dialog-message").attr("title", "Fuente Agregada");
                                     $("#addFuente")[0].reset();
                                     var content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "La fuente de información fue agregada exitosamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                 } else if (response === 'ERROR') {
                                     $("#dialog-message").attr("title", "Error al crear fuente");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
+                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
                                 }
+                                /*
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,
@@ -123,6 +150,7 @@
                                         }
                                     }
                                 });
+                                */
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +

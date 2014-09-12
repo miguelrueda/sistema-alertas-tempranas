@@ -29,17 +29,18 @@
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Vulnerabilidades Más Recientes</div>
+                        <center><h5>Se incluyen vulnerabilidades de un periodo no mayor a 8 días.</h5></center>
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>Afecta a:</th>
+                                            <th>Identificador</th>
+                                            <th>Posible Software Afectado</th>
                                             <th>Fecha de Publicación</th>
                                             <!--<th>Calificación**</th>-->
                                             <th>Gravedad</th>
-                                            <th>Opciones</th>
+                                            <th>Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody>

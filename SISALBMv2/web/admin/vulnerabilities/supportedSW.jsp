@@ -91,13 +91,13 @@
                                                         <td style="width: 80px; text-align: center">ND</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                        <!--
-                                                <td>
-                                                    <a href="configuration/editarSW.jsp?id=$ {supSW.idSoftware}">
-                                                        <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
-                                                    </a>
-                                                </td>
-                                                        -->
+                                                <!--
+                                        <td>
+                                            <a href="configuration/editarSW.jsp?id=$ {supSW.idSoftware}">
+                                                <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
+                                            </a>
+                                        </td>
+                                                -->
                                                 <td>
                                                     <a href="id=${supSW.idSoftware}&nombre=${supSW.nombre}" class="view">
                                                         <img src="../resources/images/trash.png" alt="id=${supSW.idSoftware}" id="tableicon" class="delbtn" />
@@ -238,25 +238,43 @@
                                             $("#dialog-message").attr("title", "Software Eliminado");
                                             content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "El software '" + res1[1] + "' ha sido eliminado exitosamente.</p>";
+                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                        location.reload();
+                                                    }
+                                                }
+                                            });
                                         } else if (result === 'ERROR') {
                                             $("#dialog-message").attr("title", "Software No Eliminado");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>";
+                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                    }
+                                                }
+                                            });
                                         } else {
                                             $("#dialog-message").attr("title", "Software No Eliminado");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                     "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
-                                        }
-                                        $("#dialog-message").html(content);
-                                        $("#dialog-message").dialog({
-                                            modal: true,
-                                            buttons: {
-                                                Aceptar: function() {
-                                                    $(this).dialog("close");
-                                                    location.reload();
+                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }, error: function() {
                                         $("#dialog-message").attr("title", "Petición Incompleta");
                                         var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +

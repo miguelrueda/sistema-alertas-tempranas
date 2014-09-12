@@ -28,7 +28,7 @@
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Archivo de Vulnerabilidades</div>
-                        <br />
+                        <center><h5>Vulnerabilidades disponibles desde 1 de Enero de 2013 hasta la fecha actual.</h5></center>
                         <div class="searchdiv">
                             <form class="searchform">
                                 <span style="padding-left: 440px"></span>
@@ -44,10 +44,10 @@
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                     <thead>
                                         <tr>
-                                            <th style="width: 130px">Nombre</th>
+                                            <th style="width: 130px">Identificador</th>
                                             <th>Fecha de Publicación</th>
                                             <th>Ultima Modificación</th>
-                                            <th>Calificación</th>
+                                            <th>Calificación</th>>
                                             <th>Gravedad</th>
                                         </tr>
                                     </thead>
@@ -64,12 +64,11 @@
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>Afecta a</th>
+                                            <th>Identificador</th>
+                                            <th>Posible Software Afectado</th>
                                             <th>Fecha de Publicación</th>
-                                            <!--<th>Calificación**</th>-->
                                             <th>Gravedad</th>
-                                            <th>Opciones</th>
+                                            <th>Detalles</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -153,7 +152,7 @@
                             </div>
                             <br />
                             <p style="text-align: center">
-                                Existen: ${total} vulnerabilidades.
+                                Existen: ${total} vulnerabilidades en ${arnoOfPages} páginas.
                             </p>
                             <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none; z-index: 999;">
                                 <iframe id="thedialog" width="750" height="700"></iframe>
