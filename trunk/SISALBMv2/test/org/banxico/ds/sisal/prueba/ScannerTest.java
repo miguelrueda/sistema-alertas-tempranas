@@ -40,7 +40,7 @@ public class ScannerTest {
             System.out.println(result);
         }
                 */
-        Set<Result> resultados = scanner.doCompleteScan("01/07/2014", "12/09/2014");
+        Set<Result> resultados = scanner.doCompleteScan("01/01/2014", "15/09/2014");
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
             doPersist(resultados);

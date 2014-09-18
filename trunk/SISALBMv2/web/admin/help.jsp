@@ -30,7 +30,23 @@
             <div id="page_content">
                 <div id="workarea">
                     <%@include file="incfiles/menu.jsp" %>
-                    <!--
+                    <div id="content_wrap">
+                        <div id="content">
+                            <br />
+                            <br />
+                            <div id="pdf" style=" z-index: 100">
+                                <object data="../resources/pdf/manual.pdf"
+                                        type="application/pdf" width="100%" height="100%"></object>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+ <!--
                     <div id="cssmenu">
                         <ul>
                             <li><a href="../AppIndex.html"><span>AppIndex</span></a></li>
@@ -94,18 +110,3 @@
                         </nav>
                     </div>
                     -->
-                    <div id="content_wrap">
-                        <div id="content">
-                            <br />
-                            <br />
-                            <div id="pdf" style=" z-index: 100">
-                                <object data="../resources/pdf/manual.pdf"
-                                        type="application/pdf" width="100%" height="100%"></object>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>

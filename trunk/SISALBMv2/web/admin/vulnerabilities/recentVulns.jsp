@@ -159,6 +159,7 @@
         <script>
             $(document).ready(function() {
                 $(".view").click(function() {
+                    //var tmp = $(this).attr("href");
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
                         width: 800,

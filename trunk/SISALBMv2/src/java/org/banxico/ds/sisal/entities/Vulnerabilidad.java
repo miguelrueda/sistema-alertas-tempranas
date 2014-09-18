@@ -1,6 +1,7 @@
 package org.banxico.ds.sisal.entities;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Entidad que representa a una vulnerabilidad
@@ -9,7 +10,7 @@ import java.util.Date;
  * @version 04072014
  */
 public class Vulnerabilidad implements java.io.Serializable {
-    
+
     /**
      * Atributo de serialización
      */
@@ -24,6 +25,7 @@ public class Vulnerabilidad implements java.io.Serializable {
     private String descripcion;
     private Double calificacionCVSS;
     private String vectorCVSS;
+    private List<Software> listaSoftware;
 
     /**
      * Constructor
@@ -40,7 +42,7 @@ public class Vulnerabilidad implements java.io.Serializable {
      * @param fechaModificacion fecha de modificación
      * @param descripcion cadena que tiene la descripción de la vulnerabilidad
      * @param calificacionCVSS valor con la calificación de la vulnerabilidad
-     * @param vectorCVSS cadena con el vector 
+     * @param vectorCVSS cadena con el vector
      */
     public Vulnerabilidad(String idVulnerabilidad, String severidad, Date fechaPublicacion, Date fechaModificacion, String descripcion, Double calificacionCVSS, String vectorCVSS) {
         this.idVulnerabilidad = idVulnerabilidad;
@@ -172,10 +174,19 @@ public class Vulnerabilidad implements java.io.Serializable {
     /**
      * Setter
      *
-     * @param calificacionCVSS valor doble con la calificación de la vulnerabilidad
+     * @param calificacionCVSS valor doble con la calificación de la
+     * vulnerabilidad
      */
     public void setCalificacionCVSS(Double calificacionCVSS) {
         this.calificacionCVSS = calificacionCVSS;
+    }
+
+    public List<Software> getListaSoftware() {
+        return listaSoftware;
+    }
+
+    public void setListaSoftware(List<Software> listaSoftware) {
+        this.listaSoftware = listaSoftware;
     }
 
     @Override
