@@ -129,7 +129,6 @@ public class AnalizarBean implements AnalizarBeanLocal {
         Set<Result> resultados = scanner.doRecentScan(reg);
         LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
-            LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
             doPersist(resultados);
             long delay = 60000L;
             try {
@@ -137,6 +136,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
             } catch (InterruptedException e) {
                 LOG.log(Level.INFO, "AnalizarBean#doScan() - Ocurrio un error al ejecutar la espera!!!");
             }
+            LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
             enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");

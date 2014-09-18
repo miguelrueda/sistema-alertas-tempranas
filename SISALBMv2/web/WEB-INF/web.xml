@@ -15,7 +15,7 @@
         <param-name>passwordWebApp</param-name>
         <param-value>73RMoM37r0x2</param-value>
     </context-param>
-    <!-- Configuración para validación de parámetros -->
+    <!-- Configuración para validación de parámetros-->
     <filter>
         <filter-name>filtrovalidacion</filter-name>
         <filter-class>org.banxico.ds.inputvalidation.InputValidationFilter</filter-class>
@@ -59,6 +59,10 @@
         <servlet-name>AutocompleteServlet</servlet-name>
         <servlet-class>org.banxico.ds.sisal.util.AutocompleteServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DashboardServlet</servlet-name>
+        <servlet-class>org.banxico.ds.sisal.test.DashboardServlet</servlet-class>
+    </servlet>
     <!-- Mapeo de URL para realizar las peticiones a los Servlets -->
     <servlet-mapping>
         <servlet-name>VulnerabilityServlet</servlet-name>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>AutocompleteServlet</servlet-name>
         <url-pattern>/autocomplete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DashboardServlet</servlet-name>
+        <url-pattern>/dash</url-pattern>
     </servlet-mapping>
     <!-- Redirecciones a la página de error por código o excepción -->
     <error-page>
