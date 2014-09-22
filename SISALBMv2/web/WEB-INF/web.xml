@@ -6,7 +6,7 @@
             30
         </session-timeout>
     </session-config>
-    <!-- Configuración para autenticación -->
+    <!-- Configuración para autenticación
     <context-param>
         <param-name>nombreWebApp</param-name>
         <param-value>dgti/sisalbm</param-value>
@@ -14,8 +14,8 @@
     <context-param>
         <param-name>passwordWebApp</param-name>
         <param-value>73RMoM37r0x2</param-value>
-    </context-param>
-    <!-- Configuración para validación de parámetros-->
+    </context-param>-->
+    <!-- Configuración para validación de parámetros
     <filter>
         <filter-name>filtrovalidacion</filter-name>
         <filter-class>org.banxico.ds.inputvalidation.InputValidationFilter</filter-class>
@@ -31,11 +31,11 @@
     <filter-mapping>
         <filter-name>filtrovalidacion</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
     <!-- Archivos de bienvenida -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
-        <welcome-file>/sisalbm/admin/scanner/scan.jsp</welcome-file>
+        <welcome-file>/sisalbm/admin/scanner/dashboard.jsp</welcome-file>
     </welcome-file-list>
     <!-- Declaración de Servlets de la Aplicación -->
     <servlet>

@@ -270,7 +270,8 @@
                             $("#dialog-message").attr("title", "Lista Incompleta");
                             var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                     "La lista debe contener al menos un elemento seleccionado</p>";
-                            $("#dialog-message").html(content);
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "La lista debe contener al menos un elemento seleccionado</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -289,12 +290,9 @@
                             success: function(response) {
                                 var content = '';
                                 if (response === 'OK') {
-                                    $("#dialog-message").attr("title", "");
-                                    $("#dialog-message").html("");
                                     $("#dialog-message").attr("title", "Grupo Agregado");
-                                    content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "El grupo fue agregado exitosamente.</p>";
-                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "El grupo fue agregado exitosamente.</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -306,15 +304,14 @@
                                     ikeys = [];
                                     $("#addGroupSW")[0].reset();
                                     $("#listElements").html("");
-                                    $("#dialog-message").hide();
+                                    //$("#dialog-message").hide();
                                     $("#selectedList").hide();
                                     $("#cat-existente").hide();
                                     $("#cat-nueva").hide();
                                 } else if (response === 'ERROR') {
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
-                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error al intentar registrar el grupo.</p>";
-                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo.</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -325,9 +322,8 @@
                                     });
                                 } else if (response === 'NOMBRE_INVALIDO') {
                                     $("#dialog-message").attr("title", "Nombre de Grupo Existente");
-                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>";
-                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -339,9 +335,8 @@
                                     });
                                 } else {
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
-                                    content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>";
-                                    $("#dialog-message").html(content);
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -353,9 +348,8 @@
                                 }
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Petición Incompleta");
-                                var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {

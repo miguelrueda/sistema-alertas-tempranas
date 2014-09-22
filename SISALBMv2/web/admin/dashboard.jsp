@@ -78,6 +78,15 @@
                 border-collapse: collapse;
                 border: 1px solid #FFF;
             }
+            #canvas {
+                border: 1px solid #444444;
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                width: 800px;
+            }
         </style>
     </head>
     <body>
@@ -111,10 +120,18 @@
                                     <p class="tabtitle">
                                         Vulnerabilidades por Fabricante
                                     </p>
+                                    <h5>Algo extra</h5>
                                     <div id="vulnsPfab"></div>
                                 </div>
                                 <div id="tabs-3">
-                                    <p>Estadisticas por gravedad o tipo de ataque o vulnerabilidades más graves</p>
+                                    <p class="tabtitle">Vulnerabilidades por Fabricante</p>
+                                    <div id="chartdiv" style="margin: 0px auto 0px auto;">
+                                        <canvas id="canvas" width="800" height="600"></canvas> 
+                                    </div>
+                                    <p class="tabtitle">Gravedad de Vulnerabilidades</p>
+                                    <div id="severitydiv">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,12 +139,51 @@
                 </div>
                 <!-- Frame para desplegar los detalles -->
                 <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style="display: none">
-                    <iframe id="thedialog" width="750" height="700"></iframe>
                 </div>
             </div><!-- Contenido de la pagina -->
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js" ></script>
         <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js" ></script>
+        <script src="/sisalbm/resources/js/Chart.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                /*
+                 ctx.fillStyle = "#000";
+                 ctx.fillRect(0, 0, 600, 400);
+                 ctx.fillStyle = "#fff";
+                 ctx.font = "bold 20px sans-serif";
+                 ctx.fillText('Example', 20, 20);
+                 */
+                var labels;
+                 $.ajax({
+                    type: 'POST',
+                    url: '/sisalbm/dash?action=genchart',
+                    cache: false,
+                    success: function(data) {
+                        alert(data);
+                    }
+                 });
+                //var array = labels.split(" ");
+                //alert(array);
+                var data = {
+                    labels: ["apr", "may", "jun", "jul", "aug", "sep"],
+                    datasets: [{
+                            fillColor: "rgba(0, 135, 190, 1)",
+                            strokeColor: "rgba(0, 135, 190, 1)",
+                            data: [456, 479, 324, 569, 202, 600]
+                        }, {
+                            fillColor: "rgba(0,26,255,1)",
+                            strokeColor: "rgba(0,26,255,1)",
+                            data: [364, 504, 80, 400, 345, 320]
+                        }
+                    ]
+                };
+                var cvs = document.getElementById('canvas');
+                var ctx = cvs.getContext('2d');
+                var chart = new Chart(ctx).Bar(data);
+
+            });
+        </script>
         <script>
             $(function() {
                 $("#tabs").tabs();
@@ -138,6 +194,29 @@
             $(function() {
                 $("#recientes").load("/sisalbm/dash?action=recientes");
             });
+            function verDetalle(nombre) {
+                var content = "";
+                $.ajax({
+                    url: '/sisalbm/dash?action=retrieveby',
+                    type: 'GET',
+                    data: 'nombre=' + nombre,
+                    success: function(result) {
+                        content = result;
+                        $("#dialogdiv").html(content);
+                        $("#dialogdiv").dialog({
+                            width: 800,
+                            height: 800,
+                            resizable: false,
+                            draggable: false,
+                            buttons: {
+                                Aceptar: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     </body>
 </html>

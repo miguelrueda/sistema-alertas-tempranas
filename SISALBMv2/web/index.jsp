@@ -13,7 +13,7 @@
     </head>
     <body>
         <%
-            String url = "/sisalbm/admin/scanner/scan.jsp";
+            String url = "/sisalbm/admin/dashboard.jsp";
             response.sendRedirect(url);
         %>
     </body>

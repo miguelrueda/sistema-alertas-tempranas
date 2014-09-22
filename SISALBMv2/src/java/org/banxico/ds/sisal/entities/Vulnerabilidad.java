@@ -9,7 +9,7 @@ import java.util.List;
  * @author t41507
  * @version 04072014
  */
-public class Vulnerabilidad implements java.io.Serializable {
+public class Vulnerabilidad implements java.io.Serializable, java.lang.Comparable {
 
     /**
      * Atributo de serialización
@@ -31,6 +31,10 @@ public class Vulnerabilidad implements java.io.Serializable {
      * Constructor
      */
     public Vulnerabilidad() {
+    }
+
+    public Vulnerabilidad(String idVulnerabilidad) {
+        this.idVulnerabilidad = idVulnerabilidad;
     }
 
     /**
@@ -181,6 +185,38 @@ public class Vulnerabilidad implements java.io.Serializable {
         this.calificacionCVSS = calificacionCVSS;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.idVulnerabilidad != null ? this.idVulnerabilidad.hashCode() : 0);
+        hash = 47 * hash + (this.severidad != null ? this.severidad.hashCode() : 0);
+        hash = 47 * hash + (this.fechaPublicacion != null ? this.fechaPublicacion.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vulnerabilidad other = (Vulnerabilidad) obj;
+        if ((this.idVulnerabilidad == null) ? (other.idVulnerabilidad != null) : !this.idVulnerabilidad.equals(other.idVulnerabilidad)) {
+            return false;
+        }
+        if ((this.severidad == null) ? (other.severidad != null) : !this.severidad.equals(other.severidad)) {
+            return false;
+        }
+        if (this.fechaPublicacion != other.fechaPublicacion && (this.fechaPublicacion == null || !this.fechaPublicacion.equals(other.fechaPublicacion))) {
+            return false;
+        }
+        return true;
+    }
+
+
+
     public List<Software> getListaSoftware() {
         return listaSoftware;
     }
@@ -192,5 +228,15 @@ public class Vulnerabilidad implements java.io.Serializable {
     @Override
     public String toString() {
         return "Vulnerabilidad{" + "idVulnerabilidad=" + idVulnerabilidad + ", severidad=" + severidad + ", fechaPublicacion=" + fechaPublicacion + ", fechaModificacion=" + fechaModificacion + ", descripcion=" + descripcion + ", calificacionCVSS=" + calificacionCVSS + ", vectorCVSS=" + vectorCVSS + '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Date thisdate = this.fechaPublicacion;
+        Date otra = ((Vulnerabilidad) o).getFechaPublicacion();
+        if (thisdate == null || otra == null) {
+            return 0;
+        }
+        return thisdate.compareTo(otra);
     }
 }

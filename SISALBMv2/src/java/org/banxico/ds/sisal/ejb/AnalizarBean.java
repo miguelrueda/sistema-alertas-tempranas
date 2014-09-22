@@ -129,7 +129,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         Set<Result> resultados = scanner.doRecentScan(reg);
         LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
-            doPersist(resultados);
+            //doPersist(resultados);
             long delay = 60000L;
             try {
                 Thread.sleep(delay);
@@ -137,7 +137,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
                 LOG.log(Level.INFO, "AnalizarBean#doScan() - Ocurrio un error al ejecutar la espera!!!");
             }
             LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
-            enviarResultados(resultados);
+            //enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }
