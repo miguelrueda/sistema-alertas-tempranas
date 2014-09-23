@@ -1,5 +1,7 @@
 package org.banxico.ds.sisal.test;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Set;
+import java.text.DecimalFormat;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -134,21 +137,56 @@ public class DashboardServlet extends HttpServlet {
                     sb = new StringBuilder();
                     generarRespuesta(vdao, nombre, sb);
                     out.print(sb.toString());
-                } else if (action.equalsIgnoreCase("genchart")) {
-                    HashMap<String, Integer> datos = vdao.obtenerEstadisticasFabricantes();
-                    TreeMap sorted = new TreeMap(datos);
-                    String json = "";
-                    int res = 0;
-                    Iterator<String> iterator = sorted.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        String key = iterator.next();
-                        if (datos.get(key) > 50) {
-                            res += datos.get(key);
+                } else if (action.equalsIgnoreCase("getchart")) {
+                    String type = request.getParameter("type");
+                    if (type.equalsIgnoreCase("bar")) {
+                        HashMap<String, Integer> datos = vdao.obtenerEstadisticasFabricantes();
+                        TreeMap sorted = new TreeMap(datos);
+                        Iterator<String> iterator = sorted.keySet().iterator();
+                        List<Object> barDataSet = new ArrayList<Object>();
+                        while (iterator.hasNext()) {
+                            String key = iterator.next();
+                            if (datos.get(key) > 50) {
+                                JsonObject temp = new JsonObject();
+                                temp.addProperty("fabricante", key);
+                                temp.addProperty("cuenta", datos.get(key));
+                                barDataSet.add(temp);
+                            }
                         }
-                        json += "{}";
+                        //Gson gson = new Gson();
+                        //String json = gson.toJson(barDataSet);
+                        //response.setContentType("application/json");
+                        //response.getWriter().write(json.toString());
+                        out.println(barDataSet.toString());
+                    } else if (type.equalsIgnoreCase("pie")) {
+                        HashMap<String, Integer> datos = vdao.obtenerGravedadVulnerabilidades();
+                        int total = 0;
+                        Iterator<String> keysetIterator = datos.keySet().iterator();
+                        while (keysetIterator.hasNext()) {
+                            String llave = keysetIterator.next();
+                            total += datos.get(llave);
+                        }
+                        HashMap<String, Double> piedata = calcularPorcentajes(datos, total);
+                        ArrayList<Object> pieDataSet = new ArrayList<Object>();
+                        keysetIterator = piedata.keySet().iterator();
+                        while (keysetIterator.hasNext()) {
+                            JsonObject temp = new JsonObject();
+                            String key = keysetIterator.next();
+                            temp.addProperty("value", piedata.get(key));
+                            if (key.equalsIgnoreCase("altas")) {
+                                temp.addProperty("color", "#FF4545");
+                                temp.addProperty("title", "Vulnerabilidades Graves " + piedata.get(key) + "%");
+                            } else if (key.equalsIgnoreCase("medias")) {
+                                temp.addProperty("color", "#FFFF45");
+                                temp.addProperty("title", "Vulnerabilidades Moderadas " + piedata.get(key) + "%");
+                            } else if (key.equalsIgnoreCase("bajas")) {
+                                temp.addProperty("color", "#69A469");
+                                temp.addProperty("title", "Vulnerabilidades Bajas " + piedata.get(key) + "%");   
+                            }
+                            pieDataSet.add(temp);
+                        }
+                        out.println(pieDataSet.toString());
                     }
-                    response.setContentType("application/json");
-                    response.getWriter().write(json.toString());
                 }
             }
         } finally {
@@ -280,6 +318,18 @@ public class DashboardServlet extends HttpServlet {
         sb.append("</tbody>");
         sb.append("</table>");
         sb.append("</div>");
+    }
+
+    private HashMap<String, Double> calcularPorcentajes(HashMap<String, Integer> datos, int total) {
+        HashMap<String, Double> data = new HashMap<String, Double>();
+        Iterator<String> keysetIterator = datos.keySet().iterator();
+        while (keysetIterator.hasNext()) {
+            String key = keysetIterator.next();
+            Double porcentaje = ((datos.get(key).doubleValue() / total) * 100);
+            DecimalFormat df = new DecimalFormat("#.##");
+            data.put(key, Double.valueOf(df.format(porcentaje)));
+        }
+        return data;
     }
 
 }

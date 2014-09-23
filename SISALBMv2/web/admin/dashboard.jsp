@@ -78,7 +78,7 @@
                 border-collapse: collapse;
                 border: 1px solid #FFF;
             }
-            #canvas {
+            #canvas, #piecanvas {
                 border: 1px solid #444444;
                 padding-left: 0;
                 padding-right: 0;
@@ -86,6 +86,25 @@
                 margin-right: auto;
                 display: block;
                 width: 800px;
+            }
+            .legend {
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                width: 800px;
+            }
+            .legend span {
+                text-align: center;
+                border: 5px solid #FFFF00;
+                font-size: 10pt;
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                width: 400px;
             }
         </style>
     </head>
@@ -106,8 +125,8 @@
                             <div id="tabs">
                                 <ul>
                                     <li><a href="#tabs-1">Ultimas Vulnerabilidades</a></li>
-                                    <li><a href="#tabs-2">Vulnerabilidades por Fabricante</a></li>
-                                    <li><a href="#tabs-3">Estadística 3</a></li>
+                                    <li><a href="#tabs-2">Estadisticas</a></li>
+                                    <li><a href="#tabs-3">TAB3</a></li>
                                 </ul>
                                 <div id="tabs-1">
                                     <p class="tabtitle">
@@ -117,21 +136,22 @@
                                     <div id="recientes" class="grid"></div>
                                 </div>
                                 <div id="tabs-2">
+                                    <p class="tabtitle">Top Fabricantes con mas Vulnerabilidades en 2014</p>
+                                    <div id="chartdiv" style="margin: 0px auto 0px auto;">
+                                        <canvas id="canvas" width="800" height="400"></canvas> 
+                                    </div>
+                                    <p class="tabtitle">Gravedad de Vulnerabilidades</p>
+                                    <div id="severitydiv">
+                                        <canvas id="piecanvas" height="400" width="800"></canvas>
+                                        <div id="pielegend"></div>
+                                    </div>
+                                </div>
+                                <div id="tabs-3">
                                     <p class="tabtitle">
                                         Vulnerabilidades por Fabricante
                                     </p>
                                     <h5>Algo extra</h5>
                                     <div id="vulnsPfab"></div>
-                                </div>
-                                <div id="tabs-3">
-                                    <p class="tabtitle">Vulnerabilidades por Fabricante</p>
-                                    <div id="chartdiv" style="margin: 0px auto 0px auto;">
-                                        <canvas id="canvas" width="800" height="600"></canvas> 
-                                    </div>
-                                    <p class="tabtitle">Gravedad de Vulnerabilidades</p>
-                                    <div id="severitydiv">
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -145,6 +165,7 @@
         <script src="//code.jquery.com/jquery-1.10.2.js" ></script>
         <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js" ></script>
         <script src="/sisalbm/resources/js/Chart.min.js"></script>
+        <script src="/sisalbm/resources/js/legend.js"></script>
         <script>
             $(document).ready(function() {
                 /*
@@ -154,34 +175,66 @@
                  ctx.font = "bold 20px sans-serif";
                  ctx.fillText('Example', 20, 20);
                  */
-                var labels;
-                 $.ajax({
-                    type: 'POST',
-                    url: '/sisalbm/dash?action=genchart',
+                //GRAFICA DE BARRAS
+                var njson = [];
+                var mjson = [];
+                var ntags = [];
+                var i;
+                $.ajax({
+                    type: 'GET',
+                    url: '/sisalbm/dash?action=getchart&type=bar',
                     cache: false,
-                    success: function(data) {
-                        alert(data);
-                    }
-                 });
-                //var array = labels.split(" ");
-                //alert(array);
-                var data = {
-                    labels: ["apr", "may", "jun", "jul", "aug", "sep"],
-                    datasets: [{
-                            fillColor: "rgba(0, 135, 190, 1)",
-                            strokeColor: "rgba(0, 135, 190, 1)",
-                            data: [456, 479, 324, 569, 202, 600]
-                        }, {
-                            fillColor: "rgba(0,26,255,1)",
-                            strokeColor: "rgba(0,26,255,1)",
-                            data: [364, 504, 80, 400, 345, 320]
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response) {
+                        //alert(JSON.stringify(data));
+                        //njson = JSON.stringify(data);
+                        //alert(njson);
+                        //mjson = JSON.parse(njson);
+                        //for (i = 0; i < mjson.length; i++) {
+                        //tags.push("" + mjson[i].fabricante + "");
+                        //values.push(mjson[i].cuenta);
+                        //}
+                        var responseBAR = jQuery.parseJSON(response);
+                        var tags = [];
+                        var values = [];
+                        for (i = 0; i < responseBAR.length; i++) {
+                            tags.push("" + responseBAR[i].fabricante + "");
+                            values.push(responseBAR[i].cuenta);
                         }
-                    ]
-                };
-                var cvs = document.getElementById('canvas');
-                var ctx = cvs.getContext('2d');
-                var chart = new Chart(ctx).Bar(data);
+                        var data = {
+                            labels: tags,
+                            datasets: [{
+                                    fillColor: "rgba(0, 135, 190, 1)",
+                                    strokeColor: "rgba(0, 135, 190, 1)",
+                                    data: values
+                                }]
+                        };
+                        var cvs = document.getElementById('canvas');
+                        var ctx = cvs.getContext('2d');
+                        var chart = new Chart(ctx).Bar(data);
+                    }
+                });
 
+                //["apr", "may", "jun", "jul", "aug", "sep"]
+                //[456, 479, 324, 569, 202, 600]
+                //GRAFICA DE PIE
+                var pieOptions = {
+                    segmentShowStroke: false,
+                    animateScale: true
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/sisalbm/dash?action=getchart&type=pie',
+                    cache: false,
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(response) {
+                        var responsePIE = jQuery.parseJSON(response);
+                        var myPieChart = new Chart(document.getElementById('piecanvas').getContext("2d")).Pie(responsePIE, pieOptions);
+                        legend(document.getElementById('pielegend'), responsePIE);
+                    }, error: function(response) {
+                        alert("Error al procesar la solicitud . . .");
+                    }
+                });
             });
         </script>
         <script>
