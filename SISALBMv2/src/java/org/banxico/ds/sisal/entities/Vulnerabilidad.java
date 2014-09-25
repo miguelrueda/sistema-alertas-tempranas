@@ -33,6 +33,11 @@ public class Vulnerabilidad implements java.io.Serializable, java.lang.Comparabl
     public Vulnerabilidad() {
     }
 
+    /**
+     * Constructor con parámetros
+     *
+     * @param idVulnerabilidad nombre de la vulnerabilidad
+     */
     public Vulnerabilidad(String idVulnerabilidad) {
         this.idVulnerabilidad = idVulnerabilidad;
     }
@@ -215,12 +220,20 @@ public class Vulnerabilidad implements java.io.Serializable, java.lang.Comparabl
         return true;
     }
 
-
-
+    /**
+     * Método que se encarga de retornar la lista de software vulnerable
+     *
+     * @return Lista de software vulnerable
+     */
     public List<Software> getListaSoftware() {
         return listaSoftware;
     }
 
+    /**
+     * SETTER
+     *
+     * @param listaSoftware
+     */
     public void setListaSoftware(List<Software> listaSoftware) {
         this.listaSoftware = listaSoftware;
     }

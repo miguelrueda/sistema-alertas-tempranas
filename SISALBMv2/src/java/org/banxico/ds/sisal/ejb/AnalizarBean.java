@@ -184,8 +184,8 @@ public class AnalizarBean implements AnalizarBeanLocal {
             Session session = Session.getInstance(props, null);
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(CCss)); //Servicio Social
+            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));  //JAMAYA
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(CCss)); //Servicio Social
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
             Date regdate = new Date();
             msg.setSubject(asunto + fmt.format(regdate));

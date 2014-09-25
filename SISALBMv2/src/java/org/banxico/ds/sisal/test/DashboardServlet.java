@@ -1,6 +1,5 @@
 package org.banxico.ds.sisal.test;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,10 +27,29 @@ import org.banxico.ds.sisal.entities.Vulnerabilidad;
 import org.banxico.ds.sisal.entities.VulnerabilidadReferencia;
 import org.banxico.ds.sisal.scanner.ScannerBean;
 
+/**
+ * Servlet que se encarga de manejar todas las peticiones que se realizan sobre
+ * el dashboard
+ *
+ * @author t41507
+ * @version 24.09.2014
+ */
 public class DashboardServlet extends HttpServlet {
 
+    /**
+     * Atributo de Serialización
+     */
     private static final Logger LOG = Logger.getLogger(DashboardServlet.class.getName());
 
+    /**
+     * Método que se encarga de procesar las peticiones GET Y POST sobre el 
+     * dashboard
+     *
+     * @param request referencia de la solicitud
+     * @param response referencia de la respuesta
+     * @throws ServletException excepción de servlet
+     * @throws IOException excepción de flujos de entrada salida
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -194,16 +212,39 @@ public class DashboardServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Método doGet
+     *
+     * @param req referencia de la solicitud
+     * @param resp referencia de la respuesta
+     * @throws ServletException excepción de servlet
+     * @throws IOException excepción de flujos de entrada salida
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequest(req, resp);
     }
 
+    /**
+     * Método doPost
+     *
+     * @param req referencia de la solicitud
+     * @param resp referencia de la respuesta
+     * @throws ServletException excepción de servlet
+     * @throws IOException excepción de flujos de entrada salida
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         processRequest(req, resp);
     }
 
+    /**
+     * Método que se encarga de generar el contenido HTML para la vista del dashboard
+     * 
+     * @param vdao Referencia del dao de vulnerabilidades
+     * @param nombre identificador de a vulnerabilidad
+     * @param sb referencia del buffer
+     */
     private void generarRespuesta(VulnerabilityDAO vdao, String nombre, StringBuilder sb) {
         Vulnerabilidad v = vdao.obtenerVulnerabilidadPorNombre(nombre);
         sb.append("<div class='datagrid' id='dataexport'>");
@@ -320,6 +361,14 @@ public class DashboardServlet extends HttpServlet {
         sb.append("</div>");
     }
 
+    /**
+     * Método que se encarga de retornar un mapa con los porcentajes de la gravedad
+     * de las vulnerabilidades
+     * 
+     * @param datos Mapa con los datos para calcular los porcentajes
+     * @param total Total de vulnerabilidades existentes
+     * @return Mapa con los porcentajes calculados
+     */
     private HashMap<String, Double> calcularPorcentajes(HashMap<String, Integer> datos, int total) {
         HashMap<String, Double> data = new HashMap<String, Double>();
         Iterator<String> keysetIterator = datos.keySet().iterator();

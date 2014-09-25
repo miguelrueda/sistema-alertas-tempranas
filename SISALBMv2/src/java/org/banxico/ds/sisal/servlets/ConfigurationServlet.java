@@ -1,9 +1,11 @@
 package org.banxico.ds.sisal.servlets;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -270,6 +272,20 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } else {
                 out.print("ERROR");
             }
+        } else if (action.equalsIgnoreCase("getSWengpo")) {
+            String groupkey = request.getParameter("gid");
+            int key = Integer.parseInt(groupkey);
+            List<Software> swgrupo = gdao.obtenerSoftwaredeGrupo(key);
+            List<Object> data = new ArrayList<Object>();
+            for (Software elem : swgrupo) {
+                JsonObject temp = new JsonObject();
+                temp.addProperty("id", elem.getIdSoftware());
+                temp.addProperty("fabricante", elem.getFabricante());
+                temp.addProperty("nombre", elem.getNombre());
+                temp.addProperty("version", elem.getVersion());
+                data.add(temp);
+            }
+            out.println(data.toString());
         }
     }
     

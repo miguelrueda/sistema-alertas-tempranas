@@ -298,9 +298,12 @@ public class ScannerBean implements java.io.Serializable {
         swdao = new SoftwareDAO();
         //Instanciar un calendario y establecer como tiempo la fecha actual
         Calendar cal = Calendar.getInstance();
+        Calendar cfin = Calendar.getInstance();
         cal.setTime(actual);
+        cfin.setTime(actual);
         //Instanciar una fecha para el inicio
         Date inicio = new Date();
+        Date fin = new Date();
         //Obtener el numero de dia de la semana
         int ndia = cal.get(Calendar.DAY_OF_WEEK);
         //Comparar el numero de dia para filtrar la lista
@@ -329,9 +332,10 @@ public class ScannerBean implements java.io.Serializable {
         cal.set(Calendar.HOUR_OF_DAY, 1);
         //cal.add(Calendar.HOUR_OF_DAY, -8);
         inicio = cal.getTime();
+        fin = cfin.getTime();
         //Obtener la lista de vulnerabilidades
-        LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{inicio, actual});
-        List<CVE> filtrada = this.filtrarListaPorFecha(vulndao.obtenerListaRecientes(), inicio, actual);
+        LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{inicio, fin});
+        List<CVE> filtrada = this.filtrarListaPorFecha(vulndao.obtenerListaRecientes(), inicio, fin);
         Set<Result> totales = doScan(filtrada, swdao.obtenerListadeSoftware());
         return totales;
     }
@@ -460,7 +464,10 @@ public class ScannerBean implements java.io.Serializable {
             Calendar cal = Calendar.getInstance();
             cal.setTime(inicio);
             cal.set(Calendar.HOUR_OF_DAY, 1);
-            LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{cal.getTime(), fin});
+            Calendar cfin = Calendar.getInstance();
+            cfin.setTime(fin);
+            cfin.set(Calendar.HOUR_OF_DAY, 12);
+            LOG.log(Level.INFO, "Buscando vulnerabilidades entre: {0} y {1}", new Object[]{cal.getTime(), cfin.getTime()});
             vulns = filtrarListaPorFecha(vulns, cal.getTime(), fin);
         }
         //Si la UA o el grupo es '0' ejecutar escaneo en toda la lista

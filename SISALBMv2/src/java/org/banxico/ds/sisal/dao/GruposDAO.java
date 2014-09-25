@@ -269,7 +269,7 @@ public class GruposDAO {
      * @param id identificador del grupo a buscar
      * @return referencia del objeto grupo
      */
-    private Grupo obtenerGrupoPorId(int id) {
+    public Grupo obtenerGrupoPorId(int id) {
         Grupo gp = null;
         try {
             //Inicializar el grupo
@@ -456,6 +456,13 @@ public class GruposDAO {
     
     private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
 
+    /**
+     * Métod que se encarga de buscar la información de un grupo a partir de su
+     * llave
+     *
+     * @param key parametro de búsqueda
+     * @return Lista con los grupos que coinciden con la llave
+     */
     public List<Grupo> buscarGrupo(String key) {
         List<Grupo> found = new ArrayList<Grupo>();
         try {
@@ -491,6 +498,12 @@ public class GruposDAO {
     
     private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
     
+    /**
+     * Método que se encarga de eliminar un grupo en base a su identifiacador
+     *
+     * @param id identificador del grupo
+     * @return bandar con el resultado de la opreación true para eliminado, false para error
+     */
     public boolean eliminarGrupo(int id) {
         boolean res = false;
         try {
