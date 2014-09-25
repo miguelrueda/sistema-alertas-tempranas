@@ -107,7 +107,7 @@
                                     </table>
                                 </fieldset>
                                 <fieldset id="selectedList">
-                                    <legend title="En está sección se iran agregando los elementos seleccionados">Productos Seleccionados</legend>
+                                    <legend title="En está sección se agregarán los elementos seleccionados">Productos Seleccionados</legend>
                                     <ul id="listElements" class="listaSeleccionados"></ul>
                                 </fieldset>
                                 <input type="submit" class="inputsubmit" value="Agregar" id="addButton" />

@@ -106,6 +106,11 @@
                 display: block;
                 width: 400px;
             }
+            .scrollable {
+                width: 100%;
+                height: 800px;
+                overflow-y: scroll;
+            }
         </style>
     </head>
     <body>
@@ -133,7 +138,7 @@
                                         Vulnerabilidades Encontradas
                                     </p>
                                     <center><h5>Se incluyen vulnerabilidades de un periodo no mayor a 8 días.</h5></center>
-                                    <div id="recientes" class="grid"></div>
+                                    <div id="recientes" class="grid scrollable"></div>
                                 </div>
                                 <div id="tabs-2">
                                     <p class="tabtitle">Top Fabricantes con mas Vulnerabilidades en 2014</p>

@@ -260,7 +260,7 @@ public class SoftwareDAO {
             //obtener la conexión y preparar el statement.
             connection = getConnection();
             pstmt = connection.prepareStatement(sqlRetrieveUAs);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 uas.add(rs.getString(1));
             }
@@ -872,6 +872,15 @@ public class SoftwareDAO {
         return result;
     }
 
+    /**
+     * Obtener la llave de un producto a partir de su información: fabricante,
+     * nombre y version
+     *
+     * @param vendor fabricante del software
+     * @param name nombre del software
+     * @param version lista de posibles versiones
+     * @return entero con el identificador del producto
+     */
     public int buscarIdProducto(String vendor, String name, List<Version> version) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

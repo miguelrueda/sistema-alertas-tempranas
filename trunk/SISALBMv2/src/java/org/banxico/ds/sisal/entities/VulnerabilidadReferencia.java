@@ -27,7 +27,7 @@ public class VulnerabilidadReferencia implements java.io.Serializable {
     }
 
     /**
-     * Constructor con párametros
+     * Constructor con parámetros
      *
      * @param idVulnerabilidad cadena con el nombre de la vulnerabilidad
      * @param idReferencia entero con el id de la referencia
@@ -41,6 +41,13 @@ public class VulnerabilidadReferencia implements java.io.Serializable {
         this.url = url;
     }
     
+    /**
+     * Constructor con parámetros
+     *
+     * @param idVulnerabilidad cadena con el nombre de la vulnerabilidad
+     * @param fuente cadena con la fuente de la referencia
+     * @param url cadena con la url de la referencia
+     */
     public VulnerabilidadReferencia(String idVulnerabilidad, String fuente, String url) {
         this.idVulnerabilidad = idVulnerabilidad;
         this.fuente = fuente;

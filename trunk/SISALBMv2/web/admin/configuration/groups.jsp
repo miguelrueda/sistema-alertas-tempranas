@@ -57,7 +57,7 @@
                                     <thead>
                                     <th>Nombre</th>
                                     <th>Categoría</th>
-                                    <th colspan='2'>Opciones</th>
+                                    <th colspan='3'>Opciones</th>
                                     </thead>
                                     <tbody>
                                         <c:forEach var="grupo" items="${listaGrupos}">
@@ -67,6 +67,11 @@
                                                 <td>
                                                     <a href="configuration/detalleGrupo.jsp?action=view&tipo=grupo&id=${grupo.idGrupo}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="configuration/editarGrupo.jsp?id=${grupo.idGrupo}">
+                                                        <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
                                                     </a>
                                                 </td>
                                                 <td>
