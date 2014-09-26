@@ -86,7 +86,7 @@
                                             </tbody>
                                         </table>
                                     </fieldset>
-                                    <input type="submit" class="inputsubmit" value="Escanear" id="fullButton" />
+                                    <input type="submit" class="inputsubmit" value="Buscar Vulnerabilidades" id="fullButton" />
                                     <br />
                                 </form>
                             </div>
@@ -105,7 +105,7 @@
                                                                title="Periodo no mayor a 8 días"/>Solo Recientes
                                                         <br />
                                                         <input type="radio" name="vulnt" value="todas" id="vulnt"
-                                                               title="Periodo mayor a 8 días"/>Archivo
+                                                               title="Vulnerabilidades desde 1 de Enero de 2013"/>Archivo
                                                         <br />
                                                     </td>
                                                     <td>
@@ -122,7 +122,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>Tipo de Fabricante: </label>
+                                                        <label>Fabricantes del Grupo: </label>
                                                     </td>
                                                     <td>
                                                         <input type="radio" name="fab" value="multi" id="fab" />Todos los Fabricantes
@@ -228,7 +228,7 @@
                                             </tbody>
                                         </table>
                                     </fieldset>
-                                    <input type="submit" value="Escanear" id="customButton" />
+                                    <input type="submit" value="Buscar Vulnerabilidades" id="customButton" />
                                 </form>
                             </div>
                         </div>

@@ -216,7 +216,14 @@
                                     url: '/sisalbm/admin/configuration.controller?action=deleteGroup',
                                     type: 'POST',
                                     data: 'gid=' + idsplit[1],
-                                    success: function(result) {
+                                    beforeSend: function() {
+                                        jQuery.noticeAdd({
+                                            text: "Procesando la petición:" + //+ tk[1] + + 
+                                                    "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                            stay: false,
+                                            type: 'info'
+                                        });
+                                    },  success: function(result) {
                                         var content = "";
                                         if (result === 'OK') {
                                             $("#dialog-message").attr("title", "Grupo Eliminado");

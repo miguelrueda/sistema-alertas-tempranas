@@ -7,6 +7,7 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />        
         <style type="text/css">
             .modal {
                 display: none;
@@ -139,9 +140,8 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script type="text/javascript">
-            $(function() {
-                $(document).tooltip();
-            });
+            
+                //$(function() {$(document).tooltip();});
             $(document).ready(function() {
                 $("#dialog-message").hide();
                 var vendor = $("#fabricante");

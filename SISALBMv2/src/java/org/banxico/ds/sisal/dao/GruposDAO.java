@@ -530,5 +530,36 @@ public class GruposDAO {
         }
         return res;
     }
+    
+    private static final String sqlEditarGrupoPorId = "";
 
+    public boolean editarGrupo(int idgrupo, String nombre, String categoria, Integer[] llaves) throws SQLException {
+        boolean res = false;
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            pstmt = connection.prepareStatement(sqlEditarGrupoPorId);
+            pstmt.setInt(1, idgrupo);
+            pstmt.executeUpdate();
+            res = false;
+            //sqlInsertGroupSoftwareValue
+            //Arrays.sort(llaves);
+            connection.commit();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "GruposDAO#editarGrupo() - Ocurrio un problema con la sentencia de SQL: {0}", e.getMessage());
+            connection.rollback();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "GruposDAO#editarGrupo() - Ocurrio un problema al cerrar la conexión: {0}", e.getMessage());
+            }
+        }
+        return res;
+    }
 }

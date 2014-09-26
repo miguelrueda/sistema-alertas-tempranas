@@ -215,6 +215,39 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } catch (SQLException e) {
                 LOG.log(Level.INFO, "ConfigurationController#AddGroup - Ocurrio un error al crear el grupo: {0}", e.getMessage());
             }
+        }  else if (action.equalsIgnoreCase("editGroup")) {
+            String idgrupo = request.getParameter("idgrupo");
+            String nombre = request.getParameter("nombre");
+            String categoria = request.getParameter("categoria");
+            String keys = request.getParameter("producto");
+            StringTokenizer st = new StringTokenizer(keys, "[,]");
+            int ntokens = st.countTokens();
+            Integer [] llaves = new Integer[ntokens];
+            int i = 0;
+            while (st.hasMoreTokens()) {
+                llaves[i] = Integer.parseInt(st.nextToken().replace("\"", "").replace("\\r\\n", ""));
+                i++;
+            }
+            boolean created = false;
+            boolean valid = false;
+            try {
+                if (!valid) {
+                    created = gdao.editarGrupo(Integer.parseInt(idgrupo), nombre, categoria, llaves);
+                    if (created) {
+                        out.print("OK");
+                    } else if (!created) {
+                        out.print("ERROR");
+                    } else {
+                        out.print("UNKNOWN");
+                    }
+                } else {
+                    out.print("NOMBRE_INVALIDO");
+                }
+            } catch (NumberFormatException e) {
+                LOG.log(Level.INFO, "ConfigurationController#editGroup - El formato del n\u00famero es incorrecto: {0}", e.getMessage());
+            } catch (SQLException ex) {
+                LOG.log(Level.INFO, "ConfigurationController#editGroup - Ocurrio un error al realizar la transacci\u00f3n: {0}", ex.getMessage());
+            }
         } else if (action.equalsIgnoreCase("addFuente")) {
             String nombre = request.getParameter("nombre");
             String url = request.getParameter("url");

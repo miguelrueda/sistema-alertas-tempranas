@@ -96,11 +96,11 @@
                                             <tr>
                                                 <td>Buscar Producto</td>
                                                 <td>
-                                                    <input type="text" name="producto" id="producto" style="width: 185px" />
+                                                    <input type="text" name="producto" id="producto" style="width: 185px" 
+                                                           title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda." />
                                                 </td>
                                                 <td>
-                                                    <input type="button" value="Añadir" id="addtolist" 
-                                                           title="Se deben ingresar al menos 3 caracteres para desplegar la ayuda."/>
+                                                    <input type="button" value="Añadir" id="addtolist" />
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -124,9 +124,7 @@
         <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
-            $(function() {
-                $(document).tooltip();
-            });
+            //$(function() {$(document).tooltip();});
             $(document).ready(function() {
                 $("#categoria").load("/sisalbm/autocomplete?action=getcats");
                 $("#dialog-message").hide();
