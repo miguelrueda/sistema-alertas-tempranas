@@ -55,7 +55,7 @@
                                     <fieldset>
                                         <legend>Información del Software: </legend>
                                         <table>
-                                            <tbody>
+                                            <tbody id="cuerpotabla">
                                                 <tr>
                                                     <td>
                                                         <label>Ingresar Fabricante</label>
@@ -100,7 +100,7 @@
                                                         <select name="tipo" id="tipo" style=" width: 195px"> 
                                                             <option value="0">Seleccionar tipo</option>
                                                             <option value="1">Sistema Operativo</option>
-                                                            <option value="2">Software</option>
+                                                            <option value="2">Aplicación</option>
                                                         </select>
                                                     </td>
                                                     <td>
@@ -125,6 +125,9 @@
                                             </tbody>
                                         </table>
                                     </fieldset>
+                                    <fieldset>
+                                        <legend>Grupos</legend>
+                                    </fieldset>
                                     <input type="submit" class="inputsubmit" value="Agregar" id="addButton" />
                                     <br />
                                 </form>
@@ -140,10 +143,11 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script type="text/javascript">
-            
-                //$(function() {$(document).tooltip();});
+
+            //$(function() {$(document).tooltip();});
             $(document).ready(function() {
                 $("#dialog-message").hide();
+                $(".agregarAGrupo").hide();
                 var vendor = $("#fabricante");
                 var vendorval = $("#fabricante").val();
                 $.get("/sisalbm/autocomplete?action=getvendor&vendorq=" + vendorval, function(data) {
@@ -162,6 +166,40 @@
                 }
                 $("#nombre").on("change", function() {
                     $("#version").load("/sisalbm/autocomplete?action=getversion", {product: this.value})
+                });
+
+                $("input:radio[name=add2grp]").on("click", function() {
+                    var opcion = $("input:radio[name=add2grp]:checked").val();
+                    if (opcion === 'si') {
+                        $(".agregarAGrupo").show();
+                        $("#addgrpBtn").on("click", function() {
+                            var content = "<tr class='agregarAGrupo'>"
+                                    + "<td>"
+                                    + "<label>Seleccionar Grupo: </label>"
+                                    + "</td>"
+                                    + "<td>"
+                                    + "<select name='grpsel' id='grpsel'>"
+                                    + "<option value='grp1'>Grupo 1</option>"
+                                    + "<option value='grp2'>Grupo 2</option>"
+                                    + "</select>"
+                                    + "</td>"
+                                    + "<td></td>"
+                                    + "</tr>";
+                            $("<tr class='agregarAGrupo'>"
+                                    + "<td>"
+                                    + "<label>Seleccionar Grupo: </label>"
+                                    + "</td>"
+                                    + "<td>"
+                                    + "<select name='grpsel' id='grpsel'>"
+                                    + "<option value='grp1'>Grupo 1</option>"
+                                    + "<option value='grp2'>Grupo 2</option>"
+                                    + "</select>"
+                                    + "</td>"
+                                    + "<td></td>"
+                                    + "</tr>").appendTo('cuerpotabla');
+                            content = '';
+                        });
+                    }
                 });
                 $.validator.addMethod("valProduct", function(value) {
                     return (value !== '0')
