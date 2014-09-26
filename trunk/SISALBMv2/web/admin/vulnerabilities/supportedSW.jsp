@@ -8,6 +8,7 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         <div id="page_container">

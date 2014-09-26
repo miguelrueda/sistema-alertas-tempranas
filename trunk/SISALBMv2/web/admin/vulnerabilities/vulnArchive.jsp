@@ -82,7 +82,7 @@
                                                             <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
                                                                 <tr>
                                                                     <td>
-                                                                        ${vulnsw.name}
+                                                                        ${vulnsw.vendor} ${vulnsw.name}
                                                                     </td>
                                                                 </tr>
                                                             </c:forEach>

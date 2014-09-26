@@ -130,8 +130,10 @@
                             <div id="tabs">
                                 <ul>
                                     <li><a href="#tabs-1">Ultimas Vulnerabilidades</a></li>
+                                    <!--
                                     <li><a href="#tabs-2">Estadisticas</a></li>
                                     <li><a href="#tabs-3">TAB3</a></li>
+                                    -->
                                 </ul>
                                 <div id="tabs-1">
                                     <p class="tabtitle">
@@ -140,6 +142,7 @@
                                     <center><h5>Se incluyen vulnerabilidades de un periodo no mayor a 8 días.</h5></center>
                                     <div id="recientes" class="grid scrollable"></div>
                                 </div>
+                                <!--
                                 <div id="tabs-2">
                                     <p class="tabtitle">Top Fabricantes con mas Vulnerabilidades en 2014</p>
                                     <div id="chartdiv" style="margin: 0px auto 0px auto;">
@@ -158,6 +161,7 @@
                                     <h5>Algo extra</h5>
                                     <div id="vulnsPfab"></div>
                                 </div>
+                                -->
                             </div>
                         </div>
                     </div>

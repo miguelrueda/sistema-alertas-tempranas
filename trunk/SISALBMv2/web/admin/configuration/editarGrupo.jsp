@@ -235,7 +235,7 @@
                             listValue = $(this).parent().data("value"),
                             listKey = $(this).parent().data("key");
                     var keyindex = array.indexOf(listKey);
-                    alert("listValue: " + listValue + " - listKey: " + listKey);
+                    //alert("listValue: " + listValue + " - listKey: " + listKey);
                     $list.find('li[data-value="' + listValue + '"]').slideUp("fast", function() {
                         $(this).remove();
                         if (keyindex > -1) {
@@ -245,6 +245,8 @@
                 });
                 $("#addButton").on("click", function() {
                     alert(array);
+                    //Procesar formulario
+                    //enviar datos del grupo y arreglo de llaves
                     return false;
                 });
                 //alert($categoculto);
