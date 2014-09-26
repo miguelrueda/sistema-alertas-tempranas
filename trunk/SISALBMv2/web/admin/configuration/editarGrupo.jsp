@@ -94,7 +94,8 @@
                             </form>
                             <div class="grid grid-pad">
                                 <div class="col-1-3 mobile-col-1-3">
-                                    Agregar productos a la lista
+                                    <div class="subtitle">Agregar productos a la lista</div>
+                                    <br />
                                     <form id="swform">
                                         <div class="gridcontent">
                                             <table>
@@ -115,7 +116,8 @@
                                     </form>
                                 </div>
                                 <div class="col-1-2 mobile-col-1-2 scrollable">
-                                    Software del Grupo
+                                    <div class="subtitle">Software del Grupo</div>
+                                    <br />
                                     <div class="gridcontent">
                                         <ul id="listElements" class="listaSeleccionados"></ul>
                                     </div>
@@ -139,6 +141,7 @@
                 $nombreoculto = $("#nombreoculto").val();
                 $categoculto = $("#categoculto").val();
                 var array = [];
+                var group_modified = false;
                 $.ajax({
                     type: 'GET',
                     url: '/sisalbm/admin/configuration.controller?action=getSWengpo&gid=' + $idoculto,
@@ -199,6 +202,7 @@
                     }
                     //No existe el elemento
                     if (!flag) {
+                        group_modified = true;
                         array[array.length] = prodid;
                         var listElements = $("#listElements").html();
                         var selected = $("#producto").val();
@@ -228,8 +232,6 @@
                     $("#addtolist").attr("disabled", true);
                 });
 
-
-
                 $(document).on("click", "#icon-minus", function() {
                     var $list = $("#listElements"),
                             listValue = $(this).parent().data("value"),
@@ -238,15 +240,102 @@
                     //alert("listValue: " + listValue + " - listKey: " + listKey);
                     $list.find('li[data-value="' + listValue + '"]').slideUp("fast", function() {
                         $(this).remove();
+                        group_modified = true;
                         if (keyindex > -1) {
                             array.splice(keyindex, 1);
                         }
                     });
                 });
+
                 $("#addButton").on("click", function() {
-                    alert(array);
-                    //Procesar formulario
-                    //enviar datos del grupo y arreglo de llaves
+                    if (group_modified) {
+                        var $nuevonombre = $("#nombre").val();
+                        var $nuevacat = $("#categoria").val();
+                        var jkeys = JSON.stringify(array);
+                        var sdata = "id=" + $idoculto + "&nombre=" + $nuevonombre + "&categoria=" + $nuevacat + "&productos=";
+                        //alert(sdata + jkeys);
+                        $.ajax({
+                            type: "POST",
+                            url: "/sisalbm/admin/configuration.controller?action=editGroup",
+                            data: sdata + jkeys,
+                            cache: false,
+                            beforeSend: function() {
+                                jQuery.noticeAdd({
+                                    text: "Procesando la petición:" + //+ tk[1] + + 
+                                            "<br /><center><img src='../../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                    stay: false,
+                                    type: 'info'
+                                });
+                            }, success: function(response) {
+                                if (response === "OK") {
+                                    $("#dialog-message").attr("title", "Grupo Modificado");
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "La información del Grupo fue modificada exitosamente.</p>");
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                } else if (response === "ERROR") {
+                                    $("#dialog-message").attr("title", "Error al agregar el grupo");
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo.</p>");
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                } else if (response === "NOMBRE_INVÁLIDO") {
+                                    $("#dialog-message").attr("title", "Nombre de Grupo Existente");
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>");
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $("#dialog-message").attr("title", "");
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    $("#dialog-message").attr("title", "Error al agregar el grupo");
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>");
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                }
+                            }, error: function() {
+                                $("#dialog-message").attr("title", "Petición Incompleta");
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        //Procesar formulario
+                        //enviar datos del grupo y arreglo de llaves
+                    } else {
+                        alert("El grupo no fue modificado, no se guardaran cambios");
+                    }
                     return false;
                 });
                 //alert($categoculto);

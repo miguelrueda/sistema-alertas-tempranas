@@ -233,6 +233,18 @@ nav ul ul li a:hover {
     text-align: center;
 }
 
+.subtitle {
+    height: 30px;
+    padding: 5px 0 0 0;
+    font-size: 13px;
+    color: #3b7878;
+    text-transform: uppercase;
+    font-weight: lighter;
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+
 #tableicon {
     display: block;
     margin-left: auto;

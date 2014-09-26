@@ -454,8 +454,6 @@ public class GruposDAO {
         return group_created;
     }
     
-    private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
-
     /**
      * Métod que se encarga de buscar la información de un grupo a partir de su
      * llave
@@ -496,8 +494,6 @@ public class GruposDAO {
         return found;
     }
     
-    private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
-    
     /**
      * Método que se encarga de eliminar un grupo en base a su identifiacador
      *
@@ -531,19 +527,32 @@ public class GruposDAO {
         return res;
     }
     
-    private static final String sqlEditarGrupoPorId = "";
-
+    private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
+    private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
+    private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ? WHERE idGrupo = ?";
+    private static final String sqlEliminarInfoGrupoSoftware = "DELETE FROM Grupo_Software WHERE idGrupo = ?";
+    
     public boolean editarGrupo(int idgrupo, String nombre, String categoria, Integer[] llaves) throws SQLException {
         boolean res = false;
         try {
             connection = getConnection();
             connection.setAutoCommit(false);
             pstmt = connection.prepareStatement(sqlEditarGrupoPorId);
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, categoria);
+            pstmt.setInt(3, idgrupo);
+            Integer updated = pstmt.executeUpdate();
+            pstmt = connection.prepareStatement(sqlEliminarInfoGrupoSoftware);
             pstmt.setInt(1, idgrupo);
-            pstmt.executeUpdate();
-            res = false;
-            //sqlInsertGroupSoftwareValue
-            //Arrays.sort(llaves);
+            Integer deleted = pstmt.executeUpdate();
+            pstmt = connection.prepareStatement(sqlInsertGroupSoftwareValue);
+            Arrays.sort(llaves);
+            for (Integer key : llaves) {
+                pstmt.setInt(1, idgrupo);
+                pstmt.setInt(2, key);
+                Integer insert = pstmt.executeUpdate();
+            }
+            res = true;
             connection.commit();
         } catch (SQLException e) {
             LOG.log(Level.INFO, "GruposDAO#editarGrupo() - Ocurrio un problema con la sentencia de SQL: {0}", e.getMessage());

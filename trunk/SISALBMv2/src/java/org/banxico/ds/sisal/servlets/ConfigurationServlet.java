@@ -216,10 +216,10 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
                 LOG.log(Level.INFO, "ConfigurationController#AddGroup - Ocurrio un error al crear el grupo: {0}", e.getMessage());
             }
         }  else if (action.equalsIgnoreCase("editGroup")) {
-            String idgrupo = request.getParameter("idgrupo");
+            String idgrupo = request.getParameter("id");
             String nombre = request.getParameter("nombre");
             String categoria = request.getParameter("categoria");
-            String keys = request.getParameter("producto");
+            String keys = request.getParameter("productos");
             StringTokenizer st = new StringTokenizer(keys, "[,]");
             int ntokens = st.countTokens();
             Integer [] llaves = new Integer[ntokens];
