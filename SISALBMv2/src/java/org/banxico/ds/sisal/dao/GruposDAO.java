@@ -41,7 +41,7 @@ public class GruposDAO {
     /**
      * Statements de SQL
      */
-    private static final String retrieveAllGroups = "SELECT * FROM Grupo";
+    private static final String sqlObtenerTodoslosGrupos = "SELECT * FROM Grupo g ORDER BY g.nombre";
     private static final String retrieveGroupsFromLimit = "SELECT * FROM ( "
             + "SELECT g.idGrupo, g.nombre, g.categoria, ROW_NUMBER() OVER(ORDER BY g.idGrupo) as row "
             + "FROM Grupo g ) z "
@@ -74,9 +74,9 @@ public class GruposDAO {
         try {
             //OBtener conexión y preparar el statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(retrieveAllGroups);
+            pstmt = connection.prepareStatement(sqlObtenerTodoslosGrupos);
             //Ejecutar query e iterar los resultados para poblar la lista 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             int nr = 0;
             while (rs.next()) {
                 gp = new Grupo();

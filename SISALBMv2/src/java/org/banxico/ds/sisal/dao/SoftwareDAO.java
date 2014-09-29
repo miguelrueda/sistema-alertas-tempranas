@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,39 +47,40 @@ public class SoftwareDAO {
     /**
      * Consultas SQL
      */
-    private static final String sqlInsert = "INSERT INTO Software "
+    private static final String sqlInsertarNuevoSoftware = "INSERT INTO Software "
             + "(fabricante, nombre, version, tipo, end_of_life, UAResponsable, AnalistaResponsable) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String sqlRetrieveAllSoftware = "SELECT * FROM Software";
-    private static final String sqlRetrieveAll = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre \n"
+    private static final String sqlObtenerTodoelSoftware = "SELECT * FROM Software";
+    private static final String sqlObtenerTodoElSoftwareCompleto = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre \n"
             + "FROM Software s, Grupo g, Grupo_Software x \n"
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo \n"
             + "ORDER BY g.nombre";
-    private static final String sqlRetrieveUAs = "SELECT DISTINCT nombre FROM Grupo g ORDER BY g.nombre";
-    private static final String sqlRetrieveVendors = "SELECT DISTINCT fabricante FROM Software ORDER BY fabricante";
-    private static final String sqlRetrieveVendorsByGroup = "SELECT DISTINCT s.fabricante FROM Software s, Grupo g, Grupo_Software x "
+    private static final String sqlObtenerUAsGrupos = "SELECT DISTINCT nombre FROM Grupo g ORDER BY g.nombre";
+    private static final String sqlObtenerFabricantes = "SELECT DISTINCT fabricante FROM Software ORDER BY fabricante";
+    private static final String sqlObtenerFabricantesPorGrupo = "SELECT DISTINCT s.fabricante FROM Software s, Grupo g, Grupo_Software x "
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo AND g.nombre LIKE ? ORDER BY s.fabricante ";
-    private static final String sqlRetrieveFromLimit = "SELECT * FROM ( SELECT s.idSoftware, s.fabricante, s.nombre, "
+    private static final String sqlObtenerSoftwareconLimite = "SELECT * FROM ( SELECT s.idSoftware, s.fabricante, s.nombre, "
             + "s.version, s.tipo, s.end_of_life, g.nombre as gnombre, g.categoria as gcategoria, "
             + "ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s, "
             + "Grupo_Software x, Grupo g WHERE s.idSoftware = x.idSoftware AND x.idGrupo = g.idGrupo) z "
             + "WHERE z.row > ? and z.row <= ?";
-    private static final String sqlRetrieveSWFromLimit = "SELECT * FROM (SELECT s.idSoftware, s.fabricante, s.nombre, "
+    private static final String sqlObtenerSoloSoftwareconLimite = "SELECT * FROM (SELECT s.idSoftware, s.fabricante, s.nombre, "
             + "s.version, s.tipo, s.end_of_life, ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s) z "
             + "WHERE z.row > ? and z.row <= ?";
-    private static final String sqlUpdateSoftware = "UPDATE Software "
+    private static final String sqlActualizarSoftware = "UPDATE Software "
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
             + "WHERE idSoftware = ?";
-    private static final String sqlDeleteSoftware = "DELETE FROM Software WHERE idSoftware = ?";
-    private static final String searchQry = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre, g.categoria "
+    private static final String sqlEliminarSoftware = "DELETE FROM Software WHERE idSoftware = ?";
+    private static final String sqlBuscar = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life, g.nombre, g.categoria "
             + "FROM Software s, Grupo g, Grupo_Software x "
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo "
             + "AND (s.fabricante LIKE ? OR s.nombre LIKE ? OR g.nombre LIKE ?) "
             + " ORDER BY g.nombre";
-    private static final String searchSwQuery = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life "
+    private static final String sqlBuscarSoftware = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.tipo, s.end_of_life "
             + "FROM Software s "
-            + "WHERE (s.fabricante LIKE ? OR s.nombre LIKE ?) " 
+            + "WHERE (s.fabricante LIKE ? OR s.nombre LIKE ?) "
             + "ORDER BY s.nombre";
+    private static final String sqlInsertarSoftwareEnGrupo = "INSERT INTO Grupo_Software VALUES(?, ?);";
     private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
     private static final String sqlRetrieveProductId = "SELECT * FROM Software WHERE nombre = ?";
@@ -111,7 +113,7 @@ public class SoftwareDAO {
             //Se obtiene la conexión, se prepara y ejecuta el Query
             connection = getConnection();
             //pstmt = connection.prepareStatement(sqlRetrieveAll);
-            pstmt = connection.prepareStatement(sqlRetrieveAll);
+            pstmt = connection.prepareStatement(sqlObtenerTodoElSoftwareCompleto);
             ResultSet rs = pstmt.executeQuery();
             int nr = 0;
             //Iterar los elementos del ResultSet e inicializar el objeto de tipo Software
@@ -160,7 +162,7 @@ public class SoftwareDAO {
         Connection nConn = ConnectionFactory.getInstance().getConnection();
         return nConn;
     }
-    
+
     private static final String sqlObtenerNumeroRegistros = "SELECT COUNT(*) as cuenta FROM Software s";
 
     /**
@@ -180,7 +182,7 @@ public class SoftwareDAO {
             }
             rs.close();
         } catch (SQLException e) {
-            LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al preparar la sentencia SQL: {0}", e.getMessage()); 
+            LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al preparar la sentencia SQL: {0}", e.getMessage());
         } finally {
             try {
                 if (pstmt != null) {
@@ -190,7 +192,7 @@ public class SoftwareDAO {
                     connection.close();
                 }
             } catch (SQLException e) {
-                LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage()); 
+                LOG.log(Level.INFO, "SoftwareDAO#obtenerNumeroRegistros() - Ocurrio una excepci\u00f3n al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
         return nr;
@@ -259,7 +261,7 @@ public class SoftwareDAO {
         try {
             //obtener la conexión y preparar el statement.
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveUAs);
+            pstmt = connection.prepareStatement(sqlObtenerUAsGrupos);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 uas.add(rs.getString(1));
@@ -290,7 +292,7 @@ public class SoftwareDAO {
         try {
             //Obtener la conexión y preparar el statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveVendors);
+            pstmt = connection.prepareStatement(sqlObtenerFabricantes);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 vendors.add(rs.getString(1));
@@ -325,7 +327,7 @@ public class SoftwareDAO {
         try {
             //Obtener la conexión y preparar el statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveVendorsByGroup);
+            pstmt = connection.prepareStatement(sqlObtenerFabricantesPorGrupo);
             pstmt.setString(1, "%" + vendor + "%");
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -362,7 +364,7 @@ public class SoftwareDAO {
         try {
             //Se obtiene la conexión y se prepara el Statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlInsert);
+            pstmt = connection.prepareStatement(sqlInsertarNuevoSoftware);
             pstmt.setString(1, sw.getFabricante());
             pstmt.setString(2, sw.getNombre());
             pstmt.setString(3, sw.getVersion());
@@ -392,7 +394,7 @@ public class SoftwareDAO {
 
     /**
      * Método que se encarga de devolver los elelemtnso de SW para ser
-     * presentados por el paginador Simula un LIMIT X, Y de MySQL
+     * psw_agregadoentados por el paginador Simula un LIMIT X, Y de MySQL
      *
      * @param offset no. desde el que inicia la consulta
      * @param noOfRecords limite a buscar de registros
@@ -413,7 +415,7 @@ public class SoftwareDAO {
         try {
             //Obtener conexión y preparar el Statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlRetrieveSWFromLimit);
+            pstmt = connection.prepareStatement(sqlObtenerSoloSoftwareconLimite);
             pstmt.setInt(1, offset);
             pstmt.setInt(2, offset + noOfRecords);
             LOG.log(Level.INFO, "Traera los registros entre: {0} y {1}", new Object[]{offset, noOfRecords});
@@ -453,12 +455,12 @@ public class SoftwareDAO {
      * Método que se encarga de editar un SW a partir de la referncia del mismo
      *
      * @param sw referencia del SW a editar
-     * @return bandera con el resultado de la operación
+     * @return bandera con el sw_agregadoultado de la operación
      */
     public boolean editarSoftware(Software sw) {
         boolean res = false;
         try {
-            pstmt = connection.prepareStatement(sqlUpdateSoftware);
+            pstmt = connection.prepareStatement(sqlActualizarSoftware);
             LOG.log(Level.INFO, "SoftwareDAO#editarSoftware() - Editando el SW: {0}", sw.getIdSoftware());
             pstmt.setString(1, sw.getFabricante());
             pstmt.setString(2, sw.getNombre());
@@ -492,13 +494,13 @@ public class SoftwareDAO {
      * Método que se encarga de eliminar un elemento de SW por su clave
      *
      * @param id clave del SW
-     * @return bandera con el resultado de la operación
+     * @return bandera con el sw_agregadoultado de la operación
      */
     public boolean eliminarSoftware(int id) {
         boolean res = false;
         try {
             connection = getConnection();
-            pstmt = connection.prepareStatement(sqlDeleteSoftware);
+            pstmt = connection.prepareStatement(sqlEliminarSoftware);
             LOG.log(Level.INFO, "SoftwareDAO#eliminarSoftware() - Eliminando el Software: {0}", id);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
@@ -534,7 +536,7 @@ public class SoftwareDAO {
         try {
             //Obtener conexión y preparar el statement
             connection = getConnection();
-            pstmt = connection.prepareStatement(searchSwQuery);
+            pstmt = connection.prepareStatement(sqlBuscarSoftware);
             pstmt.setString(1, "%" + key + "%");
             pstmt.setString(2, "%" + key + "%");
             //pstmt.setString(3, "%" + key + "%");
@@ -611,9 +613,10 @@ public class SoftwareDAO {
         }
         return productos;
     }
-    
+
     /**
-     * Método que realiza el autocompletado de fabricantes basado en una cadenade consulta
+     * Método que realiza el autocompletado de fabricantes basado en una
+     * cadenade consulta
      *
      * @param query parametro de busqueda
      * @return lista de cadenas con las incidencias de la busqueda
@@ -631,12 +634,12 @@ public class SoftwareDAO {
         }
         return filter;
     }
-    
+
     private String aMayusculas(String minword) {
         StringBuilder sb = new StringBuilder();
-        String [] array = minword.split(" ");
+        String[] array = minword.split(" ");
         for (String str : array) {
-            char [] temp = str.trim().toCharArray();
+            char[] temp = str.trim().toCharArray();
             temp[0] = Character.toUpperCase(temp[0]);
             str = new String(temp);
             sb.append(str).append(" ");
@@ -646,8 +649,9 @@ public class SoftwareDAO {
 
     /**
      * Método que se encarga de devolver una lista con todos los fabricantes
-     * 
-     * @return  lista de cadenas con el nombre de todos los fabricantes registrados
+     *
+     * @return lista de cadenas con el nombre de todos los fabricantes
+     * registrados
      */
     private List<String> retrieveAllVendors() {
         List<String> vendors = new ArrayList<String>();
@@ -665,7 +669,8 @@ public class SoftwareDAO {
     }
 
     /**
-     * Método que se encarga de autocompletar los productos de un fabricante determinado
+     * Método que se encarga de autocompletar los productos de un fabricante
+     * determinado
      *
      * @param vendor nombre del fabricante a buscar la lista
      * @return lista de cadenas con el nombre de los productos de un farbicante
@@ -697,7 +702,8 @@ public class SoftwareDAO {
     }
 
     /**
-     * Métopdo que se encarga de obtener las versiones a partir del nombre de un producto
+     * Métopdo que se encarga de obtener las versiones a partir del nombre de un
+     * producto
      *
      * @param product nombre del producto del cual se buscaran las versiones
      * @return lista de cadenas con las versiones del producto
@@ -727,10 +733,11 @@ public class SoftwareDAO {
     }
 
     /**
-     * Método que se encarga de realizar el autocompletado de productos con la BD
+     * Método que se encarga de realizar el autocompletado de productos con la
+     * BD
      *
      * @param prodq clave a buscar dentro de la BD
-     * @return lista de cadenas con los productos similares
+     * @return lista de cadenas con los productos similasw_agregado
      */
     public List<String> completarProductos(String prodq) {
         //Instanciar la lista
@@ -885,8 +892,85 @@ public class SoftwareDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
+    public boolean agregarSoftware_enGrupos(Software sw, int[] llavegrupos) throws SQLException {
+        boolean sw_agregado = false;
+        int llavesw_generada = 0;
+        try {
+            connection = getConnection();
+            connection.setAutoCommit(false);
+            boolean existencia = validarExistencia(sw);
+            if (!existencia) {
+                pstmt = connection.prepareStatement(sqlInsertarNuevoSoftware, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, sw.getFabricante());
+                pstmt.setString(2, sw.getNombre());
+                pstmt.setString(3, sw.getVersion());
+                pstmt.setInt(4, sw.getTipo());
+                pstmt.setInt(5, sw.getEndoflife());
+                pstmt.setString(6, sw.getUAResponsable());
+                pstmt.setString(7, sw.getAnalistaResponsable());
+                int insercion = pstmt.executeUpdate();
+                ResultSet keyrs = pstmt.getGeneratedKeys();
+                while (keyrs.next()) {
+                    llavesw_generada = keyrs.getInt(1);
+                }
+                keyrs.close();
+                if (llavesw_generada != 0) {
+                    sw_agregado = true;
+                    LOG.log(Level.INFO, "SoftwareDAO#agregarSoftware_enGrupos() - Software agregado correctamente!!");
+                }
+                pstmt = connection.prepareStatement(sqlInsertarSoftwareEnGrupo);
+                for (int idgrupo : llavegrupos) {
+                    pstmt.setInt(1, idgrupo);
+                    pstmt.setInt(2, llavesw_generada);
+                    int temp = pstmt.executeUpdate();
+                    LOG.log(Level.INFO, "SoftwareDAO#agregarSoftware_enGrupos() - Software Agregado al grupo: {0}", idgrupo);
+                }
+                connection.commit();
+            }
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#agregarSoftware_enGrupos() - Error al preparar la sentencia SQL: {0}", e.getMessage());
+            connection.rollback();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SoftwareDAO#agregarSoftware_enGrupos() - Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return sw_agregado;
+    }
+
+    private static final String sqlBuscarExistencia = "SELECT * FROM Software s "
+            + "WHERE s.fabricante LIKE ? AND s.nombre LIKE ? AND s.version LIKE ?";
+
+    public boolean validarExistencia(Software sw) {
+        boolean existencia = false;
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlBuscarExistencia);
+            pstmt.setString(1, "%" + sw.getFabricante() + "%");
+            pstmt.setString(2, "%" + sw.getNombre() + "%");
+            pstmt.setString(3, "%" + sw.getVersion() + "%");
+            rs = pstmt.executeQuery();
+            int cuenta = 0;
+            while (rs.next()) {
+                cuenta++;
+            }
+            if (cuenta > 0) {
+                existencia = true;
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SoftwareDAO#validarExistencia() - Ocurrio un error al preparar la sentencia SQL: {0}", e.getMessage());
+        } 
+        return existencia;
+    }
+
     /**
      * Método que se encarga de iniciar la lista de Softwares apartir de un
      * archivo TODO: ELiminar esté método

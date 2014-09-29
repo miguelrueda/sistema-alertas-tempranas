@@ -105,7 +105,19 @@ public class AutocompleteServlet extends HttpServlet {
                     LOG.log(Level.INFO, "No se encontro el grupo, registrarlo");
                     out.print("VALIDO");
                 }
-            } 
+            } else if(action.equalsIgnoreCase("getgrupos")) {
+                StringBuilder sb = new StringBuilder();
+                List<Grupo> grupos = gdao.getListaGrupos();
+                sb.append("<option value='0'>Seleccionar Grupo</option>");
+                for (Grupo grupo : grupos) {
+                    sb.append("<option value='")
+                            .append(grupo.getIdGrupo())
+                            .append("'>")
+                            .append(grupo.getNombre())
+                            .append("</option>");
+                }
+                out.print(sb.toString());
+            }
             /*
             else if (action.equalsIgnoreCase("test")) {
                 String nombre = request.getParameter("nombre");
