@@ -571,4 +571,38 @@ public class GruposDAO {
         }
         return res;
     }
+    
+    private static final String sqlBuscarGrupoPorNombre = "SELECT g.idGrupo, g.nombre, g.categoria FROM Grupo g WHERE g.nombre LIKE ?";
+
+    public Grupo obtenerGrupoPorNombre(String nombre) {
+        Grupo encontrado = null;
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sqlBuscarGrupoPorNombre);
+            pstmt.setString(1, nombre);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                encontrado = new Grupo();
+                encontrado.setIdGrupo(rs.getInt("idGrupo"));
+                encontrado.setNombre(rs.getString("nombre"));
+                encontrado.setCategoria(rs.getString("categoria"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "Ocurrio un error al preparar la sentencia: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
+            }
+        }
+        return encontrado;
+    }
+
 }

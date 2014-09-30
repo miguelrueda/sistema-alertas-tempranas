@@ -3,9 +3,11 @@ package org.banxico.ds.sisal.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import org.banxico.ds.sisal.dao.SoftwareDAO;
 import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
+import org.banxico.ds.sisal.util.MailBean;
 
 /**
  * Controlador para las peticiones del escaner
@@ -29,7 +32,12 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      */
     private static final long serialVersionUID = -1L;
     private static final Logger LOG = Logger.getLogger(ScannerServlet.class.getName());
+    /**
+     * Variables globales de Buffer y almacenamiento de Resultados
+     */
     private StringBuilder exportBuffer;
+    private Set<Result> resultadosEnvio = null;
+    private MailBean mailService;
     
     /**
      * Método que se encarga de procesar las solicituds
@@ -42,21 +50,22 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
         //Instanciar dao y bean de escaneo
         SoftwareDAO swdao = new SoftwareDAO();
         ScannerBean scannerService = new ScannerBean();
-        PrintWriter out = response.getWriter();
+        mailService = new MailBean();
         try {
             //Solicitar el parametro action
             String action = (String) request.getParameter("action");
             //Atributos de paginador
             int page = 1; int recordsPerPage = 20;
-            //Si el parametro es retrieve
+            //Si el parametro es retrieve completar los campos del formulario
             if (action.equalsIgnoreCase("retrieve")) {
                 response.setContentType("text/html;charset=UTF-8");
                 //Obtener el parametro val 
                 String val = (String) request.getParameter("val");
-                //Buscar por UA
+                //Buscar por UA/Grupo
                 if (val.equalsIgnoreCase("ua")) {
                     List<String> uasList = swdao.obtenerUAs();
                     out.println("<option value='0'>Todos los Grupos/Todas las UA</option>");
@@ -90,13 +99,15 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         }
                     }
                 }
-                //Si el parametro es scan
+                //Si el parametro es scan, realizar el escaneo correspondiente
             } else if (action.equalsIgnoreCase("scan")) {
                 response.setContentType("text/html;charset=UTF-8");
                 //Solicitar el parametro tipo
                 String tipo = (String) request.getParameter("tipo");
+                //Inicializar las variables globales
                 exportBuffer = new StringBuilder();
-                //Tipo completo = analisis profundo
+                //Tipo completo realizar analisis en todos los registros existentes 
+                // o por fecha especifica
                 if (tipo.equalsIgnoreCase("completo")) {
                     String fecha = (String) request.getParameter("fechaF");
                     Set<Result> resultados = null;
@@ -108,7 +119,9 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         String edate = (String) request.getParameter("edateF");
                         resultados = scannerService.doCompleteScan(sdate, edate);
                     }
+                    //Agregar resultados al buffer de exportacion
                     for (Result result : resultados) {
+                        //Traducir la gravedad
                         String sev = result.getVulnerabilidad().getSeverity();
                         String es_sev = "";
                         if (sev.equalsIgnoreCase("high")) {
@@ -137,16 +150,19 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         exportBuffer.append("</p><br />");
                     }
                     request.setAttribute("resultados", resultados);
+                    prepararEnvio(resultados);
                     request.setAttribute("noOfResults", resultados.size());
                     request.setAttribute("exportBuffer", exportBuffer);
-                    //Tipo custom = analisis parcial
                 } else if (tipo.equalsIgnoreCase("custom")) {
+                    //En este tipo de analisis se parametrizan todas las opciones
                     String vulnt = (String) request.getParameter("vulnt");
+                    //Realizar por vulnerabilidades recientes o archivo
                     if (vulnt.equalsIgnoreCase("recent")) {
                         scannerService.setPartialType(1);
                     } else if (vulnt.equalsIgnoreCase("todas")) {
                         scannerService.setPartialType(2);
                     }
+                    //Realizar analisis en todos los grupos o en grupo especifico
                     String UA = (String) request.getParameter("UA");
                     if (UA.equalsIgnoreCase("0")) {
                         scannerService.setUA("0");
@@ -154,14 +170,18 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                     } else {
                         scannerService.setUA(UA);
                         request.setAttribute("grupo", UA);
-                        exportBuffer.append("<p>Resultado del Grupo: <u>").append(UA).append("</u>");
+                        exportBuffer.append("<p>Resultado del Grupo: <u>")
+                                .append(UA)
+                                .append("</u>");
                     }
+                    //Realizar analisis en vulnerabilidades que han sido publicadas o modificadas
                     String onlyPublished = request.getParameter("onlypub");
                     if (onlyPublished != null && onlyPublished.equalsIgnoreCase("onlypub")) {
                         scannerService.setModificadas(true);
                     } else if (onlyPublished == null) {
                         scannerService.setModificadas(false);
                     }
+                    //Realizar analisis por fabricante unico o por todos
                     String fab = (String) request.getParameter("fab");
                     if (fab.equalsIgnoreCase("single")) {
                         scannerService.setVendorType(1);
@@ -169,6 +189,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         scannerService.setVendor(vendor);
                         exportBuffer.append("<br/> Resultados del Fabricante: <u>").append(vendor).append("</u><br />");
                     }
+                    //Realizar analisis por tipo de criticidad baja media o alta
                     String critic = (String) request.getParameter("critic");
                     switch (Integer.parseInt(critic)) {
                         case 0:
@@ -184,6 +205,7 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                             scannerService.setSeverity("high");
                             break;
                     }
+                    //Realizar analisis por fecha especifica o por periodo completo
                     String fecha = (String) request.getParameter("fechaC");
                     String sdate = null;
                     String edate = null;
@@ -196,7 +218,9 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         scannerService.setSdate(sdate);
                         scannerService.setEdate(edate);
                     }
+                    //LLamar al servicio para realizar el analisis
                     Set<Result> resultados = scannerService.doPartialScan();
+                    //Añadir resultados al buffer de exportacion
                     for (Result result : resultados) {
                         String sev = result.getVulnerabilidad().getSeverity();
                         String es_sev = "";
@@ -210,7 +234,13 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                             es_sev = "ND";
                         }
                         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-                        exportBuffer.append("La vulnerabilidad <u>").append(result.getVulnerabilidad().getName()).append("</u> " + "publicada el ").append(fmt.format(result.getVulnerabilidad().getPublished())).append(" de gravedad: ").append(es_sev).append(" ");
+                        exportBuffer.append("La vulnerabilidad <u>")
+                                .append(result.getVulnerabilidad().getName())
+                                .append("</u> " + "publicada el ")
+                                .append(fmt.format(result.getVulnerabilidad().getPublished()))
+                                .append(" de gravedad: ")
+                                .append(es_sev)
+                                .append(" ");
                         exportBuffer.append("puede afectar al Software: ");
                         for (Software sw : result.getSwList()) {
                             exportBuffer.append("<br /> + ").append(sw.getNombre());
@@ -223,10 +253,12 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                         exportBuffer.append("</p><br />");
                     }
                     request.setAttribute("resultados", resultados);
+                    prepararEnvio(resultados);
                     request.setAttribute("noOfResults", resultados.size());
                     request.setAttribute("exportBuffer", exportBuffer);
                     //Error
                 } else {
+                    //Cuando la peticion no es conocida se lanza un error
                     response.getWriter().write("Error desconocido");
                 }
                 //Redirección a resultados
@@ -234,6 +266,17 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
                 RequestDispatcher view = this.getServletContext().getRequestDispatcher(nextJSP);
                 view.forward(request, response);
             } else if (action.equalsIgnoreCase("export")) {
+            } else if (action.equalsIgnoreCase("sendResults")) {
+                response.setContentType("text/html;charset=UTF-8");
+                LOG.log(Level.INFO, "Se recibio una petición de tipo sendResults");
+                boolean enviado = enviarCorreo();
+                if (enviado) {
+                    out.println("ENVIADO");
+                } else if (!enviado) {
+                    out.println("NOENVIADO");
+                } else {
+                    out.println("ERROR");
+                }
             }
         } finally {
             out.close();
@@ -268,4 +311,24 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
         processRequest(request, response);
     }
 
+    private void prepararEnvio(Set<Result> resultados) {
+        LOG.log(Level.INFO, "ScannerServlet() - Preparando contenido del correo");
+        resultadosEnvio = new LinkedHashSet<Result>();
+        resultadosEnvio.addAll(resultados);
+    }
+
+    private boolean enviarCorreo() {
+        boolean flag = false;
+        flag = mailService.enviarCorreodeResultados("Resultados del Análisis Personalizado", resultadosEnvio);
+        if (flag) {
+            LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Los resultados fueron enviados al administrador");
+        } else if (!flag) {
+            LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Ocurrio un error al enviar los resultados");
+        } else {
+            LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Ocurrio un problema al realizar la petición");
+        }
+        return flag;
+    }
+
+    
 }

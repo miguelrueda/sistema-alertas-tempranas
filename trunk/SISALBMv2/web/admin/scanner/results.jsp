@@ -9,6 +9,20 @@
         <link href="resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <style type="text/css">
+            .botonesjuntos {
+                border: 1px solid #FFF;
+                width: 400px;
+                height: 60px;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            .boton {
+                margin: 10px;
+                float: left;
+            }
+        </style>
     </head>
     <body>
         <div id="page_container">
@@ -89,10 +103,14 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <p>
-                                        <input type="submit" class="exportButton" id="exportButton" value="Versión Texto" /><br/>
+                                    <br />
+                                    <div class="botonesjuntos">
+                                        <input type="button" class="mailButton boton" id="mailButton" value="Enviar Resultados por Correo"
+                                               title="Los resultados serán enviados al administrador."/>
+                                        <input type="submit" class="exportButton boton" id="exportButton" value="Versión Texto"/><br/>
                                         <input type="submit" class="exportButton" id="okButton" value="Cerrar" />
-                                    </p>
+                                    </div>
+                                    
                                     <div id="export" style="max-width: 800px; display: block; margin-left: auto; margin-right: auto;">
                                         <div id="export-content">
                                         </div>    
@@ -133,6 +151,67 @@
                             Aceptar: function() {
                                 $(this).dialog("close");
                             }
+                        }
+                    });
+                });
+                $("#mailButton").on("click", function() {
+                    $.ajax({
+                        url: '/sisalbm/scanner?action=sendResults',
+                        type: 'POST',
+                        success: function(response) {
+                            if(response === 'ENVIADO') {
+                                $("#dialog-message").attr("title", "Correo Enviado");
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>"
+                                        + "El correo fue enviado exitosamente. Los resultados fueron enviados al administrador.</p>");
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                            $("#dialog-message").attr("title", "");
+                                        }
+                                    }
+                                });
+                            } else if(response === 'NOENVIADO') {
+                                $("#dialog-message").attr("title", "Correo No Enviado");
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                                        + "El correo no pudo ser enviado, favor de intentarlo nuevamente.</p>");
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                            $("#dialog-message").attr("title", "");
+                                        }
+                                    }
+                                });
+                            } else if(response === 'ERROR') {
+                                $("#dialog-message").attr("title", "Error del Sistema");
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                                        + "Ocurrio un error en la aplicación, favor de intentarlo nuevamente.</p>");
+                                $("#dialog-message").dialog({
+                                    modal: true,
+                                    buttons: {
+                                        Aceptar: function() {
+                                            $(this).dialog("close");
+                                            $("#dialog-message").attr("title", "");
+                                        }
+                                    }
+                                });
+                            }
+                        }, error: function() {
+                            $("#dialog-message").attr("title", "Petición Incompleta");
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                                    + "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                            $("#dialog-message").dialog({
+                                modal: true,
+                                buttons: {
+                                    Aceptar: function() {
+                                        $(this).dialog("close");
+                                        $("#dialog-message").attr("title", "");
+                                    }
+                                }
+                            });
                         }
                     });
                 });

@@ -26,6 +26,7 @@ import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
+import org.banxico.ds.sisal.util.MailBean;
 
 /**
  * Bean que realiza la tarea del analisis de vulnerabilidades
@@ -60,6 +61,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String descripcion = "Analisis";
     private ScannerBean scanner;
     private Date ultimaEjecucion;
+    private MailBean mailService;
     /**
      * Atributos de Envio de correo
      */
@@ -129,15 +131,24 @@ public class AnalizarBean implements AnalizarBeanLocal {
         Set<Result> resultados = scanner.doRecentScan(reg);
         LOG.log(Level.INFO, "AnalizarBean#doScan() - Se encontraron: {0} Posibles amenzas", resultados.size());
         if (!resultados.isEmpty()) {
-            doPersist(resultados);
-            long delay = 60000L;
+            boolean guardados = doPersist(resultados);
+            long delay = 30000L;
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
                 LOG.log(Level.INFO, "AnalizarBean#doScan() - Ocurrio un error al ejecutar la espera!!!");
             }
             LOG.log(Level.INFO, "AnalizarBean#doScan() - Enviando resultados por correo . . .");
-            enviarResultados(resultados);
+            mailService = new MailBean();
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            Date regdate = new Date();
+            boolean enviado = mailService.enviarCorreodeResultados(asunto + fmt.format(regdate), resultados);
+            if (enviado) {
+                LOG.log(Level.INFO, "AnalizarBean#doScan() - Los resultados fueron enviados de manera exitosa");
+            } else if (!enviado) {
+                LOG.log(Level.INFO, "AnalizarBean#doScan() - Los resultados no fueron enviados");
+            }
+            //enviarResultados(resultados);
         } else {
             LOG.log(Level.INFO, "AnalizarBean#doScan() - No se encontraron incidencias; los resultados no fueron enviados. . . ");
         }

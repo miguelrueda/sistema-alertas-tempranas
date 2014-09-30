@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.VulnerabilityDAO;
+import org.banxico.ds.sisal.entities.Grupo;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
 
@@ -20,6 +22,7 @@ public class ScannerTest {
      * Bean de Escanner
      */
     private final static ScannerBean scanner = new ScannerBean();
+    private final static GruposDAO gdao = new GruposDAO();
     
     /**
      * Método que realiza la prueba
@@ -41,10 +44,18 @@ public class ScannerTest {
         }
                 */
         //Set<Result> resultados = scanner.doCompleteScan("21/09/2014", "25/09/2014");
-        Set<Result> resultados = scanner.doRecentScan();
+        Set<Result> resultados = //scanner.doRecentScan();
+        scanner.doMonthlyScan();
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
-            doPersist(resultados);
+            //doPersist(resultados);
+            for (Result result : resultados) {
+                System.out.println("Vulnerabilidad: " + result.getVulnerabilidad().getName());
+                for (String grupo : result.getGruposList()) {
+                    Grupo found = gdao.obtenerGrupoPorNombre(grupo);
+                    System.out.println("> (" + found.getIdGrupo() + ") en grupo: " + grupo + "/" + found.getNombre() + " responsable.responsable");
+                }
+            }
         } else {
             System.out.println("Sin Resultados");
         }
