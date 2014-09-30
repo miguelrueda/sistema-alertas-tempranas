@@ -389,8 +389,8 @@ public class ScannerBean implements java.io.Serializable {
         //Establecer el tiempo como el fin de mes
         cal.setTime(now);
         cal.add(Calendar.MONTH, 1);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.add(Calendar.DATE, -1);
         //Establecer la referncia como el fin de mes
