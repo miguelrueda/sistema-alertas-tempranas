@@ -80,8 +80,8 @@ public class MailBean implements java.io.Serializable {
             Session session = Session.getInstance(props, null);
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(administrador));
-            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(serviciosocial));
+            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(administrador));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(serviciosocial));
             msg.setSubject("+ " + asunto);
             StringBuilder  cuerpo = new StringBuilder();
             cuerpo.append("<h2>")

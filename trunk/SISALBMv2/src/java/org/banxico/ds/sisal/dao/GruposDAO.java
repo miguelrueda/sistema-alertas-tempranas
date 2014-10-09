@@ -54,6 +54,11 @@ public class GruposDAO {
     private static final String sqlInsertGroup = "INSERT INTO Grupo(nombre, categoria) VALUES(?,?);";
     private static final String sqlInsertGroupSoftwareValue = "INSERT INTO Grupo_Software VALUES(?, ?);";
     private static final String sqlInsertGroupTest = "INSERT INTO TestTable VALUES(?,?);"; //ELIMINAR
+    private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
+    private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
+    private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ? WHERE idGrupo = ?";
+    private static final String sqlEliminarInfoGrupoSoftware = "DELETE FROM Grupo_Software WHERE idGrupo = ?";
+    private static final String sqlBuscarGrupoPorNombre = "SELECT g.idGrupo, g.nombre, g.categoria FROM Grupo g WHERE g.nombre LIKE ?";
     
     /**
      * Constructor
@@ -319,7 +324,7 @@ public class GruposDAO {
             pstmt = connection.prepareStatement(retrieveAllSoftwareFromGroup);
             pstmt.setInt(1, idGrupo);
             //Ejecutar el query
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             //Iterar los resultados y establecer los parametros en la referencia del objeto
             while (rs.next()) {
                 temp = new Software();
@@ -362,7 +367,7 @@ public class GruposDAO {
             //Obtener la conexión, preparar la sentencia y ejecutar la consulta
             connection = getConnection();
             pstmt = connection.prepareStatement(retrieveAllCategorias);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             //Iterar el conjunto de resultados para almacenarlos en la lista
             while (rs.next()) {
                 cats.add(rs.getString(1));
@@ -409,7 +414,7 @@ public class GruposDAO {
             Integer num = pstmt.executeUpdate();
             //LOG.log(Level.INFO, "GruposDAO#crearGrupo() retorna: {0}", num);
             //OEjecutar la consulta para obtener la llave generada
-            ResultSet rs = pstmt.getGeneratedKeys();
+            rs = pstmt.getGeneratedKeys();
             while (rs.next()) {
                 generated_key = rs.getInt(1);
             }
@@ -527,10 +532,7 @@ public class GruposDAO {
         return res;
     }
     
-    private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
-    private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
-    private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ? WHERE idGrupo = ?";
-    private static final String sqlEliminarInfoGrupoSoftware = "DELETE FROM Grupo_Software WHERE idGrupo = ?";
+    
     
     public boolean editarGrupo(int idgrupo, String nombre, String categoria, Integer[] llaves) throws SQLException {
         boolean res = false;
@@ -572,7 +574,7 @@ public class GruposDAO {
         return res;
     }
     
-    private static final String sqlBuscarGrupoPorNombre = "SELECT g.idGrupo, g.nombre, g.categoria FROM Grupo g WHERE g.nombre LIKE ?";
+    
 
     public Grupo obtenerGrupoPorNombre(String nombre) {
         Grupo encontrado = null;

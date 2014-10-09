@@ -84,6 +84,7 @@ public class SoftwareDAO {
     private static final String sqlRetrieveProductsLike = "SELECT nombre FROM Software WHERE nombre LIKE ?";
     private static final String sqlRetrieveProductsByVendor = "SELECT DISTINCT s.nombre FROM Software s WHERE s.fabricante LIKE ?";
     private static final String sqlRetrieveProductId = "SELECT * FROM Software WHERE nombre = ?";
+    
     private static final String sqlRetrieveProductById = "SELECT * FROM Software WHERE idSoftware = ?;";
     /* La manera de realizar un LIMIT es diferente dependiendo el proveedor del DBMS:
      * SQL LIMIT

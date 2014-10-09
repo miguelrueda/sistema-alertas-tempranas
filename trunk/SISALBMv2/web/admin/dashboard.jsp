@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -135,7 +136,7 @@
                                     <li><a href="#tabs-3">TAB3</a></li>
                                     -->
                                 </ul>
-                                <div id="tabs-1">
+                                    <div id="tabs-1">
                                     <p class="tabtitle">
                                         Vulnerabilidades Encontradas
                                     </p>

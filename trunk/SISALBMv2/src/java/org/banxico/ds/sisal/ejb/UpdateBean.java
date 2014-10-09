@@ -1,8 +1,5 @@
 package org.banxico.ds.sisal.ejb;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.annotation.Resource;
