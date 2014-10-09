@@ -44,17 +44,18 @@ public class ScannerTest {
         }
                 */
         //Set<Result> resultados = scanner.doCompleteScan("21/09/2014", "25/09/2014");
-        Set<Result> resultados = //scanner.doRecentScan();
-        scanner.doMonthlyScan();
+        //Set<Result> resultados = //scanner.doRecentScan();
+        //scanner.doMonthlyScan();
+        Set<Result> resultados = scanner.doCompleteScan("25/09/2014", "09/10/2014");
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
-            //doPersist(resultados);
+            doPersist(resultados);
             for (Result result : resultados) {
                 System.out.println("Vulnerabilidad: " + result.getVulnerabilidad().getName());
-                for (String grupo : result.getGruposList()) {
-                    Grupo found = gdao.obtenerGrupoPorNombre(grupo);
-                    System.out.println("> (" + found.getIdGrupo() + ") en grupo: " + grupo + "/" + found.getNombre() + " responsable.responsable");
-                }
+                //for (String grupo : result.getGruposList()) {
+                    //Grupo found = gdao.obtenerGrupoPorNombre(grupo);
+                    //System.out.println("> (" + found.getIdGrupo() + ") en grupo: " + grupo + "/" + found.getNombre() + " responsable.responsable");
+                //}
             }
         } else {
             System.out.println("Sin Resultados");

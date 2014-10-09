@@ -11,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.banxico.ds.sisal.ejb.ActualizarCPE;
+import org.banxico.ds.sisal.ejb.ActualizarCPELocal;
 import org.banxico.ds.sisal.ejb.AnalizarBeanLocal;
 import org.banxico.ds.sisal.ejb.UpdateBeanLocal;
 
@@ -21,7 +23,7 @@ import org.banxico.ds.sisal.ejb.UpdateBeanLocal;
  * @version 07.08.2014
  */
 public class JobServlet extends HttpServlet {
-    
+
     /**
      * Inyección de los enterprise beans
      */
@@ -29,6 +31,8 @@ public class JobServlet extends HttpServlet {
     private AnalizarBeanLocal analizarBean;
     @EJB
     private UpdateBeanLocal updateBean;
+    @EJB
+    private ActualizarCPELocal actualizarCpe;
     /**
      * Atributo LOGGER
      */
@@ -46,6 +50,8 @@ public class JobServlet extends HttpServlet {
             //Iniciar los timers
             updateBean.setTimer();
             analizarBean.setTimer();
+            actualizarCpe.setTimer();
+            
         } catch (Exception e) {
             LOG.log(Level.INFO, "JobServlet#init() - Ocurrio un error al establecer los timers: {0}", e.getMessage());
         }
@@ -168,7 +174,11 @@ public class JobServlet extends HttpServlet {
         out.println("</td>");
         out.println("<td>");
         //Siguiente ejecución
-        out.println(formater.format(updateBean.getNextFireTime()));
+        if (updateBean.getNextFireTime() != null) {
+            out.println(formater.format(updateBean.getNextFireTime()));
+        } else {
+            out.println("No disponible");
+        }
         out.println("</td>");
         out.println("</tr>");
         out.println("<tr>");
@@ -191,9 +201,44 @@ public class JobServlet extends HttpServlet {
         out.println("</td>");
         out.println("<td>");
         //Siguiente ejecución
-        out.println(formater.format(analizarBean.getNextFireTime()));
+        
+        if (analizarBean.getNextFireTime() != null) {
+            out.println(formater.format(analizarBean.getNextFireTime()));
+        } else {
+            out.println("No disponible");
+        }
         out.println("</td>");
         out.println("</tr>");
+        
+        out.println("<tr>");
+        out.println("<td>");
+        //Descripción de la tarea
+        out.println(actualizarCpe.getDescripcion());
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Se actualiza el catalogo de productos que se pueden registrar en el sistema.");
+        out.println("</td>");
+        out.println("<td>");
+        out.println("Ejecución Quincenal");
+        out.println("</td>");
+        out.println("<td>");
+        if (actualizarCpe.getUltimaEjecucion() != null) {
+            out.println(formater.format(actualizarCpe.getUltimaEjecucion()));
+        } else {
+            out.println("No ejecutada");
+        }
+        out.println("</td>");
+        out.println("<td>");
+        //Siguiente ejecución
+        
+        if (actualizarCpe.getNextFireTime() != null) {
+            out.println(formater.format(actualizarCpe.getNextFireTime()));
+        } else {
+            out.println("No disponible");
+        }
+        out.println("</td>");
+        out.println("</tr>");
+        
         out.println("</tbody>");
         out.println("</table>");
         out.println("</div>");

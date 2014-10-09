@@ -52,11 +52,13 @@ public class SourcesDAO {
      * Consultas SQL
      */
     private static final String sqlRetrieveAll = "SELECT * FROM FuenteApp WHERE idFuenteApp != 5";
+    private static final String sqlObtenerFuentePorId = "SELECT * FROM FuenteApp WHERE idFuenteApp = ?";
     private static final String sqlRetrieveDate = "SELECT fecha_actualizacion FROM FuenteApp WHERE idFuenteApp = ?";
-    
+    private static final String sqlDownloadSourceUpdateQuery = "UPDATE FuenteApp SET fecha_actualizacion = ?, contenido_xml = ? WHERE idFuenteApp = ?;";
     private static final String sqlUpdate = "UPDATE FuenteApp SET nombre=?, url=? WHERE idFuenteApp = ?";
     private static final String sqlUpdateDate = "UPDATE FuenteApp SET fecha_actualizacion = ? WHERE idFuenteApp = ?";
     private static final String sqlDelete = "DELETE FROM FuenteApp WHERE idFuenteApp = ?";
+    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion, contenido_xml) VALUES (?, ?, ?, ?)";
 
     /**
      * Constructor del dao
@@ -147,18 +149,37 @@ public class SourcesDAO {
     }
 
     /**
-     * Método que obtiene la referencia de una fuente a partir de su di
+     * Método que obtiene la referencia de una fuente a partir de su id
      *
      * @param id identificador de la fuente
      * @return referencia de la fuente
      */
     public FuenteApp obtenerFuentePorId(int id) {
-        for (FuenteApp src : fuentes) {
-            if (src.getId() == id) {
-                return src;
+        FuenteApp fuente = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sqlObtenerFuentePorId);
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                fuente = new FuenteApp(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            LOG.log(Level.INFO, "SourcesDAO#obtenerFuentePorId() - Ocurrio un error al preparar la sentencia SQL: {0}", e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "SourcesDAO#obtenerFuentePorId() - Ocurrio un error al cerrar la conexi\u00f3n: {0}", e.getMessage());
             }
         }
-        return new FuenteApp();
+        return fuente;
     }
 
     /**
@@ -175,7 +196,7 @@ public class SourcesDAO {
             conn = getConnection();
             pstmt = conn.prepareStatement(sqlRetrieveDate);
             pstmt.setInt(1, Integer.parseInt(id));
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 res = rs.getDate(1);
             }
@@ -198,7 +219,7 @@ public class SourcesDAO {
     }
 
     //OPERACIONES CRUD
-    private static final String sqlInsert = "INSERT INTO FuenteApp(nombre, url, fecha_actualizacion, contenido_xml) VALUES (?, ?, ?, ?)";
+    
     /**
      * Método que se encarga de crear una nueva fuente
      *
@@ -314,7 +335,7 @@ public class SourcesDAO {
         return res;
     }
     
-    private static final String sqlDownloadSourceUpdateQuery = "UPDATE FuenteApp SET fecha_actualizacion = ?, contenido_xml = ? WHERE idFuenteApp = ?;";
+    
 
     /**
      * Método que se encarga de descargar las actualizaciones de la fuente

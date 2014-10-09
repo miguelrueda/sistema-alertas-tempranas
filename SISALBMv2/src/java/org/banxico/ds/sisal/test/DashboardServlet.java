@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Grupo;
 import org.banxico.ds.sisal.entities.Software;
@@ -42,7 +43,7 @@ public class DashboardServlet extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(DashboardServlet.class.getName());
 
     /**
-     * Método que se encarga de procesar las peticiones GET Y POST sobre el 
+     * Método que se encarga de procesar las peticiones GET Y POST sobre el
      * dashboard
      *
      * @param request referencia de la solicitud
@@ -59,6 +60,7 @@ public class DashboardServlet extends HttpServlet {
             StringBuilder sb = new StringBuilder();
             ScannerBean scanner = new ScannerBean();
             String action = request.getParameter("action");
+            HttpSession session = request.getSession();
             if (action != null && !"".equals(action)) {
                 if (action.equalsIgnoreCase("cuentaFabs")) {
 
@@ -79,7 +81,6 @@ public class DashboardServlet extends HttpServlet {
                     resultados = new ArrayList<Vulnerabilidad>();
                     resultados.addAll(order);
                     LOG.log(Level.INFO, "DashboardServlet#processRequest() - Encontre {0} resultados.", resultados.size());
-                    //<table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                     sb.append("<table class='center' border='1' cellpadding='5' cellspacing='5'>");
                     sb.append("<thead>");
                     sb.append("<td>")
@@ -102,46 +103,57 @@ public class DashboardServlet extends HttpServlet {
                             .append("</td>");
                     sb.append("</thead>");
                     sb.append("<tbody>");
-                    for (Vulnerabilidad vuln : resultados) {
-                        sb.append("<tr>");
-                        sb.append("<td>")
-                                .append(vuln.getIdVulnerabilidad())
-                                .append("</td>");
-                        sb.append("<td>")
-                                .append(vuln.getSeveridad())
-                                .append("</td>");
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        sb.append("<td>")
-                                .append(sdf.format(vuln.getFechaPublicacion()))
-                                .append("</td>");
-                        sb.append("<td>");
-                        sb.append("<table class='innergrid'>");
-                        for (Software sw : vuln.getListaSoftware()) {
+                    if (resultados.size() > 0) {
+                        //<table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+
+                        for (Vulnerabilidad vuln : resultados) {
                             sb.append("<tr>");
-                            sb.append("<td>").append(sw.getNombre()).append("<td>");
+                            sb.append("<td>")
+                                    .append(vuln.getIdVulnerabilidad())
+                                    .append("</td>");
+                            sb.append("<td>")
+                                    .append(vuln.getSeveridad())
+                                    .append("</td>");
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            sb.append("<td>")
+                                    .append(sdf.format(vuln.getFechaPublicacion()))
+                                    .append("</td>");
+                            sb.append("<td>");
+                            sb.append("<table class='innergrid'>");
+                            for (Software sw : vuln.getListaSoftware()) {
+                                sb.append("<tr>");
+                                sb.append("<td>").append(sw.getNombre()).append("<td>");
+                                sb.append("</tr>");
+                            }
+                            sb.append("</table>");
+                            sb.append("</td>");
+                            sb.append("<td>");
+                            sb.append("<table class='innergrid'>");
+                            List<Software> afectado = vuln.getListaSoftware();
+                            List<Grupo> grupos = vdao.obtenerGruposPorVulnerabilidad(vuln.getIdVulnerabilidad());//.obtenerGrupos(afectado);
+                            for (Grupo grupo : grupos) {
+                                sb.append("<tr>");
+                                sb.append("<td>").append(grupo.getNombre()).append("<td>");
+                                sb.append("</tr>");
+                            }
+                            sb.append("</table>");
+                            sb.append("</td>");
+                            sb.append("<td>");
+                            sb.append("<a href='#' class='view' onclick='verDetalle(\"")
+                                    .append(vuln.getIdVulnerabilidad())
+                                    .append("\");'>")
+                                    .append("<img src='../resources/images/search.png' alt='magni' id='tableicon' />")
+                                    .append("</a>");
+                            sb.append("</td>");
                             sb.append("</tr>");
                         }
-                        sb.append("</table>");
-                        sb.append("</td>");
-                        sb.append("<td>");
-                        sb.append("<table class='innergrid'>");
-                        List<Software> afectado = vuln.getListaSoftware();
-                        List<Grupo> grupos = vdao.obtenerGruposPorVulnerabilidad(vuln.getIdVulnerabilidad());//.obtenerGrupos(afectado);
-                        for (Grupo grupo : grupos) {
-                            sb.append("<tr>");
-                            sb.append("<td>").append(grupo.getNombre()).append("<td>");
-                            sb.append("</tr>");
-                        }
-                        sb.append("</table>");
-                        sb.append("</td>");
-                        sb.append("<td>");
-                        sb.append("<a href='#' class='view' onclick='verDetalle(\"")
-                                .append(vuln.getIdVulnerabilidad())
-                                .append("\");'>")
-                                .append("<img src='../resources/images/search.png' alt='magni' id='tableicon' />")
-                                .append("</a>");
-                        sb.append("</td>");
-                        sb.append("</tr>");
+
+                    } else {
+                        sb.append("<tr>")
+                                .append("<td colspan='6' style='text-align:center'>")
+                                .append("No se encontraron resultados recientes")
+                                .append("</td>")
+                                .append("</tr>");
                     }
                     sb.append("</tbody>");
                     sb.append("</table>");
@@ -199,7 +211,7 @@ public class DashboardServlet extends HttpServlet {
                                 temp.addProperty("title", "Vulnerabilidades Moderadas " + piedata.get(key) + "%");
                             } else if (key.equalsIgnoreCase("bajas")) {
                                 temp.addProperty("color", "#69A469");
-                                temp.addProperty("title", "Vulnerabilidades Bajas " + piedata.get(key) + "%");   
+                                temp.addProperty("title", "Vulnerabilidades Bajas " + piedata.get(key) + "%");
                             }
                             pieDataSet.add(temp);
                         }
@@ -239,8 +251,9 @@ public class DashboardServlet extends HttpServlet {
     }
 
     /**
-     * Método que se encarga de generar el contenido HTML para la vista del dashboard
-     * 
+     * Método que se encarga de generar el contenido HTML para la vista del
+     * dashboard
+     *
      * @param vdao Referencia del dao de vulnerabilidades
      * @param nombre identificador de a vulnerabilidad
      * @param sb referencia del buffer
@@ -362,9 +375,9 @@ public class DashboardServlet extends HttpServlet {
     }
 
     /**
-     * Método que se encarga de retornar un mapa con los porcentajes de la gravedad
-     * de las vulnerabilidades
-     * 
+     * Método que se encarga de retornar un mapa con los porcentajes de la
+     * gravedad de las vulnerabilidades
+     *
      * @param datos Mapa con los datos para calcular los porcentajes
      * @param total Total de vulnerabilidades existentes
      * @return Mapa con los porcentajes calculados
