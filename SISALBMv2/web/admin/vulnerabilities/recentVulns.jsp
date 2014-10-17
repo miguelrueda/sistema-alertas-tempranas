@@ -97,47 +97,63 @@
                             <div class="pagination">
                                 <table style="width: 100%; text-align: center">
                                     <tr>
-                                        <c:if test="${noOfPages gt 10}">
-                                            <c:if test="${currentPage != 1}">
-                                                <td><a href="vulnerability.controller?action=view&tipo=1&page=1" class="page">Inicio</a></td>
-                                                <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a></td>
-                                            </c:if>
-                                            <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
-                                                <c:choose>
-                                                    <c:when test="${currentPage lt noOfPages}">
-                                                        <c:choose>
-                                                            <c:when test="${currentPage eq i}">
-                                                                <td class="page active">${i}</td>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </c:when>
-                                                </c:choose>
-                                            </c:forEach>
-                                            <c:if test="${currentPage lt noOfPages}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a></td>
-                                            </c:if>
-                                            <c:if test="${currentPage ne noOfPages}">                                                
-                                            <td><a href="vulnerability.controller?action=view&tipo=1&page=${noOfPages}" class="page">Fin</a></td>
-                                            </c:if>
-                                        </c:if>
-                                            <c:if test="${noOfPages lt 9}">
-                                            <c:if test="${currentPage != 1}">
-                                                <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a></td>
-                                            </c:if>
-                                            <c:forEach begin="1" end="${noOfPages}" var="i">
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq i}">
-                                                        <td class="page active">${i}</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td><a href="vulnerability.controller?action=view&tipo=1&page=${i}" class="page">${i}</a></td>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:forEach>
-                                            <c:if test="${currentPage lt noOfPages}">
-                                                <td><a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a></td>
-                                            </c:if>
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${noOfPages <= 10}"><!--Caso 1 existen menos 10 o menos paginas-->
+                                                <c:if test="${currentPage != 1}">
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
+                                                    </td>
+                                                </c:if>
+                                                <c:forEach begin="1" end="${noOfPages}" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${currentPage eq i}">
+                                                            <td class="page active">${i}</td>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${i}" class="page">${i}</a>
+                                                            </td>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:forEach>
+                                                <c:if test="${currentPage lt noOfPages}">
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
+                                                    </td>
+                                                </c:if>
+                                            </c:when>
+                                            <c:when test="${noOfPages > 10}"><!--Caso 2 existen mas de 10 paginas-->
+                                                <c:if test="${currentPage != 1}">
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=1" class="page">Inicio</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
+                                                    </td>
+                                                </c:if>
+                                                <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
+                                                    <c:choose>
+                                                        <c:when test="${currentPage lt noOfPages}">
+                                                            <c:choose>
+                                                                <c:when test="${currentPage eq i}">
+                                                                    <td class="page active">${i}</td>
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:forEach>
+                                                <c:if test="${currentPage lt noOfPages}">
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
+                                                    </td>
+                                                </c:if>
+                                                <c:if test="${currentPage ne noOfPages}">                                                
+                                                    <td>
+                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${noOfPages}" class="page">Fin</a>
+                                                    </td>
+                                                </c:if>
+                                            </c:when>
+                                        </c:choose>
                                     </tr>
                                 </table>
                             </div>

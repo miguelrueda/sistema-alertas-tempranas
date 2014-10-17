@@ -85,8 +85,9 @@ public class MailBean implements java.io.Serializable {
             msg.setSubject("+ " + asunto);
             StringBuilder  cuerpo = new StringBuilder();
             cuerpo.append("<h2>")
-                    .append("Total de Vulnerabilidades: ")
+                    .append("Se encontraron: ")
                     .append(resultados.size())
+                    .append(" posibles amenazas.")
                     .append("</h2>");
             cuerpo.append("<table style='width:100%;border-collapse:collapse;'>");
             cuerpo.append("<thead style='border:1px solid #000;background:#797ca3;color:#FFF'>")

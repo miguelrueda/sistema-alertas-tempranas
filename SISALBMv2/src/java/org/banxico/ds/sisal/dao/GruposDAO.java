@@ -51,7 +51,7 @@ public class GruposDAO {
             + "AND g.idGrupo = x.idGrupo AND g.idGrupo = ?";
     private static final String retrieveGroupById = "SELECT * FROM Grupo WHERE idGrupo = ?";
     private static final String retrieveAllCategorias = "SELECT DISTINCT(categoria) FROM Grupo";
-    private static final String sqlInsertGroup = "INSERT INTO Grupo(nombre, categoria) VALUES(?,?);";
+    private static final String sqlInsertarGrupo = "INSERT INTO Grupo(nombre, categoria, se_reporta) VALUES(?,?, ?);";
     private static final String sqlInsertGroupSoftwareValue = "INSERT INTO Grupo_Software VALUES(?, ?);";
     private static final String sqlInsertGroupTest = "INSERT INTO TestTable VALUES(?,?);"; //ELIMINAR
     private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
@@ -408,9 +408,10 @@ public class GruposDAO {
             //Obtener la conexión a la base de datos y preparar la sentencia
             connection = getConnection();
             connection.setAutoCommit(false);
-            pstmt = connection.prepareStatement(sqlInsertGroup, Statement.RETURN_GENERATED_KEYS);
+            pstmt = connection.prepareStatement(sqlInsertarGrupo, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, nombre_grupo);
             pstmt.setString(2, categoria_grupo);
+            pstmt.setInt(3, 1);
             Integer num = pstmt.executeUpdate();
             //LOG.log(Level.INFO, "GruposDAO#crearGrupo() retorna: {0}", num);
             //OEjecutar la consulta para obtener la llave generada
