@@ -71,7 +71,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String to = "jamaya@banxico.org.mx";
     private static final String CCss = "T41507@correobm.org.mx";
     private static final String to1 = "";
-    private static final String asunto = "+ Resultados ";
+    private static final String asunto = "Resultados ";
     private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
 
     /**
@@ -187,7 +187,6 @@ public class AnalizarBean implements AnalizarBeanLocal {
      *
      * @param resultados conjunto de resultados para generar el cuerpo del
      * correo
-     */
     private static void enviarResultados(Set<Result> resultados) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -281,6 +280,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
             LOG.log(Level.INFO, "AnalizarBean#enviarResultados() - Ocurrio un error al enviar el correo: {0}", e.getMessage());
         }
     }
+    * */
 
     /**
      * Getter

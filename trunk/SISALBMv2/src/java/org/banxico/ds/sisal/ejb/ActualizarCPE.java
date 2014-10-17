@@ -166,11 +166,4 @@ public class ActualizarCPE implements ActualizarCPELocal {
         this.ultimaEjecucion = ultimaEjecucion;
     }
     
-    @Schedule(dayOfMonth = "9", hour = "14", minute = "21", second = "0")
-    public void ejecutar() {
-        LOG.log(Level.INFO, "Ejecuci\u00f3n de tarea: {0}", (new java.util.Random(10).nextInt() + new java.util.Random(10).nextInt()));
-    }
-    
-    
-
 }

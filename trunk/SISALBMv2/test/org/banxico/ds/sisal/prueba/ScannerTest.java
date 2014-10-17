@@ -1,9 +1,11 @@
 package org.banxico.ds.sisal.prueba;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.banxico.ds.sisal.dao.GrupoVulnerabilidadDAO;
 import org.banxico.ds.sisal.dao.GruposDAO;
 import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Grupo;
@@ -46,17 +48,18 @@ public class ScannerTest {
         //Set<Result> resultados = scanner.doCompleteScan("21/09/2014", "25/09/2014");
         //Set<Result> resultados = //scanner.doRecentScan();
         //scanner.doMonthlyScan();
-        Set<Result> resultados = scanner.doCompleteScan("25/09/2014", "09/10/2014");
+        Set<Result> resultados = scanner.doCompleteScan("01/10/2014", "16/10/2014");
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
-            doPersist(resultados);
-            for (Result result : resultados) {
-                System.out.println("Vulnerabilidad: " + result.getVulnerabilidad().getName());
+            //doPersist(resultados);
+            registrarGrupoVulnerabilidad(resultados);
+            //for (Result result : resultados) {
+                //System.out.println("Vulnerabilidad: " + result.getVulnerabilidad().getName());
                 //for (String grupo : result.getGruposList()) {
                     //Grupo found = gdao.obtenerGrupoPorNombre(grupo);
                     //System.out.println("> (" + found.getIdGrupo() + ") en grupo: " + grupo + "/" + found.getNombre() + " responsable.responsable");
                 //}
-            }
+            //}
         } else {
             System.out.println("Sin Resultados");
         }
@@ -77,6 +80,24 @@ public class ScannerTest {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ScannerTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private static void registrarGrupoVulnerabilidad(Set<Result> resultados) {
+        GruposDAO gdao = new GruposDAO();
+        GrupoVulnerabilidadDAO gvdao = new GrupoVulnerabilidadDAO();
+        for (Result result : resultados) {
+            List<String> grupos = result.getGruposList();
+            for (String grupo : grupos) {
+                Grupo g = gdao.obtenerGrupoPorNombre(grupo);
+                System.out.println("(" + g.getIdGrupo() + "," + result.getVulnerabilidad().getName() + ")");
+                boolean flag = gvdao.registrarVulnerabilidadesEnGrupo(g.getIdGrupo(), result.getVulnerabilidad().getName());
+                if (flag) {
+                    System.out.println("Registro guardado");
+                } else {
+                    System.out.println("Registro no guardado");
+                }
             }
         }
     }

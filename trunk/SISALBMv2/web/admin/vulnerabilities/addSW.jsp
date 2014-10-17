@@ -236,7 +236,7 @@
                     var ng = $(".extraGrupo").length;
                     var formser = $(form).serialize();
                     formser += "&total=" + ng;
-                    alert(formser);
+                    //alert(formser);
                     $.ajax({
                         type: 'POST',
                         url: '/sisalbm/admin/vulnerability.controller?action=add&tipo=2',
