@@ -90,6 +90,7 @@ public class GrupoVulnerabilidadDAO {
         boolean res = false;
         try {
             conexion = obtenerConexion();
+            System.out.println("Registrar vulnerabilidades en grupo: conexion obtenida");
             pstmt = conexion.prepareStatement(InsertarGrupoVulnerabilidad);
             pstmt.setInt(1, idGrupo);
             pstmt.setString(2, idVulnerabilidad);
@@ -99,6 +100,7 @@ public class GrupoVulnerabilidadDAO {
             pstmt.setInt(6, 0);
             LOG.log(Level.INFO, "GrupoVulnerabilidadDAO#registrarVulnerabilidadesEnGrupo() - Registrando en Grupo Vulnerabilidad ({0}, {1})", new Object[]{idGrupo, idVulnerabilidad});
             int guardado = pstmt.executeUpdate();
+            LOG.log(Level.INFO, "GrupoVulnerabilidadDAO#registrarVulnerabilidadesEnGrupo() - Resultado: {0}", guardado);
             if (guardado > 0) {
                 res = true;
             }

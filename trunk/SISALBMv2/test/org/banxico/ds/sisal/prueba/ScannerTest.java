@@ -19,13 +19,13 @@ import org.banxico.ds.sisal.scanner.ScannerBean;
  * @version 18-08-2014
  */
 public class ScannerTest {
-    
+
     /**
      * Bean de Escanner
      */
     private final static ScannerBean scanner = new ScannerBean();
     private final static GruposDAO gdao = new GruposDAO();
-    
+
     /**
      * Método que realiza la prueba
      *
@@ -33,53 +33,44 @@ public class ScannerTest {
      */
     public static void main(String[] args) {
         /*
-        //Obtener una instancia del calendario, establecer el tiempo y restar un dia
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DAY_OF_WEEK, -1);
-        //Realizar el analisis a travez del bean de escaneo
-        Set<Result> resultados = scanner.doRecentScan(cal.getTime());
-        //Mostrar los resultados encontraados
-        System.out.println("Se encontraron: " + resultados.size() + " resultados.");
-        for (Result result : resultados) {
-            System.out.println(result);
-        }
-                */
+         //Obtener una instancia del calendario, establecer el tiempo y restar un dia
+         Calendar cal = Calendar.getInstance();
+         cal.setTime(new Date());
+         cal.add(Calendar.DAY_OF_WEEK, -1);
+         //Realizar el analisis a travez del bean de escaneo
+         Set<Result> resultados = scanner.doRecentScan(cal.getTime());
+         //Mostrar los resultados encontraados
+         System.out.println("Se encontraron: " + resultados.size() + " resultados.");
+         for (Result result : resultados) {
+         System.out.println(result);
+         }
+         */
         //Set<Result> resultados = scanner.doCompleteScan("21/09/2014", "25/09/2014");
         //Set<Result> resultados = //scanner.doRecentScan();
         //scanner.doMonthlyScan();
-        Set<Result> resultados = scanner.doCompleteScan("01/10/2014", "16/10/2014");
+        Set<Result> resultados = scanner.doCompleteScan("01/10/2014", "20/10/2014");
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
-            //doPersist(resultados);
-            registrarGrupoVulnerabilidad(resultados);
-            //for (Result result : resultados) {
-                //System.out.println("Vulnerabilidad: " + result.getVulnerabilidad().getName());
-                //for (String grupo : result.getGruposList()) {
-                    //Grupo found = gdao.obtenerGrupoPorNombre(grupo);
-                    //System.out.println("> (" + found.getIdGrupo() + ") en grupo: " + grupo + "/" + found.getNombre() + " responsable.responsable");
-                //}
-            //}
+            System.out.println("Guardando resultados");
+            doPersist(resultados);
+            //registrarGrupoVulnerabilidad(resultados);
         } else {
             System.out.println("Sin Resultados");
         }
     }
-    
+
     private static void doPersist(Set<Result> resultados) {
         int res = 0;
         VulnerabilityDAO vdao = new VulnerabilityDAO();
         for (Result result : resultados) {
             try {
-                //boolean flag = vdao.crearVulnerabilidad(result);
                 res = vdao.comprobarExistenciaVulnerabilidad(result.getVulnerabilidad().getName());
                 if (res == 0) {
-                    System.out.println("Creando la vulnerabilidad: " + result.getVulnerabilidad().getName());
-                    vdao.crearVulnerabilidad(result);
-                } else {
-                    System.out.println("Ya existe la vulnerabilidad: " + result.getVulnerabilidad().getName());
+                    boolean flag = vdao.crearVulnerabilidad(result);
+                    System.out.println(flag);
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(ScannerTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ScannerTest.class.getName()).log(Level.SEVERE, "Excepci\u00f3n encontrada: {0}", ex.getMessage());
             }
         }
     }
@@ -101,5 +92,5 @@ public class ScannerTest {
             }
         }
     }
-    
+
 }
