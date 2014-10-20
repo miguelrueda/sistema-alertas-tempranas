@@ -317,7 +317,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
             try {
                 res = vdao.comprobarExistenciaVulnerabilidad(result.getVulnerabilidad().getName());
                 if (res == 0) { //No existe
-                    vdao.crearVulnerabilidad(result);
+                    boolean temp = vdao.crearVulnerabilidad(result);
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.SEVERE, "AnalizarBean#doPersist() - Ocurrio un error al registrar la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
@@ -325,7 +325,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
         }
         return flag;
     }
-
+    
 }
 
  /*
