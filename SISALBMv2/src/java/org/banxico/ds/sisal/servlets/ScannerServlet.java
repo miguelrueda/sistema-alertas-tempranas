@@ -2,6 +2,7 @@ package org.banxico.ds.sisal.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.banxico.ds.sisal.dao.SoftwareDAO;
+import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Software;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
@@ -318,14 +320,47 @@ public class ScannerServlet extends HttpServlet implements java.io.Serializable 
     }
 
     private boolean enviarCorreo() {
+        //Bandera de envio del correo
         boolean flag = false;
+        //Llamar al servicio de correo, pasandole asunto y los resultados
         flag = mailService.enviarCorreodeResultados("Resultados del Análisis Personalizado", resultadosEnvio);
         if (flag) {
+            //Si retorna true el correo se envio correctamente, se persisten los resultados en caso de que no existan
             LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Los resultados fueron enviados al administrador");
+            boolean temp = guardarResultados(resultadosEnvio);
         } else if (!flag) {
+            //Si retorna false, ocurrio un error de envio
             LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Ocurrio un error al enviar los resultados");
         } else {
+            //Error desconocido
             LOG.log(Level.INFO, "ScannerServlet#enviarCorreo() - Ocurrio un problema al realizar la petición");
+        }
+        return flag;
+    }
+
+    private boolean guardarResultados(Set<Result> resultadosEnvio) {
+        boolean flag = false;
+        int res = 0;
+        VulnerabilityDAO vdao = new VulnerabilityDAO();
+        for (Result result : resultadosEnvio) {
+            try {
+                LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Verificando existencia de vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+                res = vdao.comprobarExistenciaVulnerabilidad(result.getVulnerabilidad().getName());
+                if (res == 0) {
+                    LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Creando la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+                    boolean temp = vdao.crearVulnerabilidad(result);
+                    LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Se creo la vulnerabildad con resultado: {0}", temp);
+                    if (temp) {
+                        LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Se creo la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+                    } else {
+                        LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Ocurrio un error al crear la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+                    }
+                } else {
+                    LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Ya existe la vulnerabilidad: {0}", result.getVulnerabilidad().getName());
+                }
+            } catch (SQLException e) {
+                LOG.log(Level.INFO, "ScannerServlet#guardarResultados() - Ocurrio un error al crear la vulnerabilidad: {0}", e.getMessage());
+            }
         }
         return flag;
     }
