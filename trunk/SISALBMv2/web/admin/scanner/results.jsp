@@ -9,6 +9,7 @@
         <link href="resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="/sisalbm/resources/css/jquery.notice.css" type="text/css" rel="stylesheet"/>
         <style type="text/css">
             .botonesjuntos {
                 border: 1px solid #FFF;
@@ -121,6 +122,7 @@
                             <div id="dialog-message">
                                 ${exportBuffer}
                             </div>
+                            <div id="mensaje-correo"></div>
                             <br />
                         </div>
                     </div>
@@ -130,9 +132,11 @@
         <br />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script>
             $(document).ready(function() {
                 $("#dialog-message").hide();
+                $("#mensaje-correo").hide();
                 $("#export").hide();
                 $("#okButton").hide();
                 $("#okButton").click(function(e) {
@@ -154,64 +158,70 @@
                         }
                     });
                 });
-                $("#mailButton").on("click", function() {
+                $("#mailButton").on("click", function(){
                     $.ajax({
                         url: '/sisalbm/scanner?action=sendResults',
                         type: 'POST',
-                        success: function(response) {
-                            if(response === 'ENVIADO') {
-                                $("#dialog-message").attr("title", "Correo Enviado");
-                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>"
-                                        + "El correo fue enviado exitosamente. Los resultados fueron enviados al administrador.</p>");
-                                $("#dialog-message").dialog({
+                        beforeSend: function() {
+                            jQuery.noticeAdd({
+                                text: "Preparando correo <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                stay: true,
+                                type: 'info'
+                            });
+                        }, success: function(respuesta) {
+                            if(respuesta.trim() === "ENVIADO") {
+                                $("#mensaje-correo").attr("title", "Correo Enviado");
+                                $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-check' style='float:left; margin:0 7px 50px 0;'>" + 
+                                        "</span>El correo fue enviado exitosamente.<br /> Los resultados fueron enviados al administrador.</p>");
+                                $("#mensaje-correo").dialog({
                                     modal: true,
                                     buttons: {
                                         Aceptar: function() {
                                             $(this).dialog("close");
-                                            $("#dialog-message").attr("title", "");
                                         }
                                     }
                                 });
-                            } else if(response === 'NOENVIADO') {
-                                $("#dialog-message").attr("title", "Correo No Enviado");
-                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                            } else if(respuesta.trim() === 'NOENVIADO') {
+                                $("#mensaje-correo").attr("title", "Correo No Enviado");
+                                $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                         + "El correo no pudo ser enviado, favor de intentarlo nuevamente.</p>");
-                                $("#dialog-message").dialog({
+                                $("#mensaje-correo").dialog({
                                     modal: true,
                                     buttons: {
                                         Aceptar: function() {
                                             $(this).dialog("close");
-                                            $("#dialog-message").attr("title", "");
                                         }
                                     }
                                 });
-                            } else if(response === 'ERROR') {
-                                $("#dialog-message").attr("title", "Error del Sistema");
-                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                            } else if(respuesta.trim() === "ERROR") {
+                                $("#mensaje-correo").attr("title", "Error del Sistema");
+                                $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                         + "Ocurrio un error en la aplicación, favor de intentarlo nuevamente.</p>");
-                                $("#dialog-message").dialog({
+                                $("#mensaje-correo").dialog({
                                     modal: true,
                                     buttons: {
                                         Aceptar: function() {
                                             $(this).dialog("close");
-                                            $("#dialog-message").attr("title", "");
                                         }
                                     }
                                 });
                             }
                         }, error: function() {
-                            $("#dialog-message").attr("title", "Petición Incompleta");
-                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
+                            $("#mensaje-correo").attr("title", "Petición Incompleta");
+                            $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                     + "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
-                            $("#dialog-message").dialog({
+                            $("#mensaje-correo").dialog({
                                 modal: true,
                                 buttons: {
                                     Aceptar: function() {
                                         $(this).dialog("close");
-                                        $("#dialog-message").attr("title", "");
                                     }
                                 }
                             });
+                        }, complete: function(data) {
+                            setInterval(function() {
+                                jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+                            }, 5000);
                         }
                     });
                 });
