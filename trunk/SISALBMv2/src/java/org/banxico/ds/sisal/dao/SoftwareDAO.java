@@ -637,8 +637,9 @@ public class SoftwareDAO {
     }
 
     private String aMayusculas(String minword) {
+        minword = minword.replace("%2f", "");  //filtro
         StringBuilder sb = new StringBuilder();
-        String[] array = minword.split(" ");
+        String[] array = minword.split("\\s+");
         for (String str : array) {
             char[] temp = str.trim().toCharArray();
             temp[0] = Character.toUpperCase(temp[0]);
@@ -686,9 +687,11 @@ public class SoftwareDAO {
                 productos.add(temp);
             }
         }
+        System.out.println("La lista tiene: " + productos.size() + " elementos");
         //Eliminar los duplicados
         Set<String> diferentes = new LinkedHashSet<String>();
         Set<String> duplicados = new LinkedHashSet<String>();
+        System.out.println("filtrando");
         for (String prod : productos) {
             if (diferentes.contains(prod)) {
                 duplicados.add(prod);
@@ -696,9 +699,11 @@ public class SoftwareDAO {
                 diferentes.add(prod);
             }
         }
+        System.out.println("filtrados");
         //Agregar los diferentes en una nueva lista
         List<String> result = new ArrayList<String>();
         result.addAll(diferentes);
+        System.out.println("retornando");
         return result;
     }
 

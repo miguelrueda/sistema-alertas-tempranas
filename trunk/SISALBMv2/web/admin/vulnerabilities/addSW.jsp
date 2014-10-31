@@ -169,7 +169,7 @@
                     var items = data.split("\n");
                     vendor.autocomplete({
                         source: items,
-                        minLength: 3,
+                        minLength: 2,
                         select: function(event, ui) {
                             cargarProductos(ui.item.value);
                         }
