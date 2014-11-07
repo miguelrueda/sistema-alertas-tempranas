@@ -1,3 +1,6 @@
+<%-- 
+    JSP no utilizado dentro de la aplicación
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

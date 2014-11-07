@@ -18,6 +18,8 @@ public class Grupo implements java.io.Serializable {
     private int idGrupo;
     private String nombre;
     private String categoria;
+    private int reporta;
+    private String correo;
 
     /**
      * Constructor
@@ -36,6 +38,23 @@ public class Grupo implements java.io.Serializable {
         this.idGrupo = idGrupo;
         this.nombre = nombre;
         this.categoria = categoria;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param idGrupo identificador del grupo
+     * @param nombre nombre del grupo
+     * @param categoria categoria del grupo
+     * @param reporta indica si el grupo se reporta para seguimiento
+     * @param correo correo electronico del grupo al cual pertenece
+     */
+    public Grupo(int idGrupo, String nombre, String categoria, int reporta, String correo) {
+        this.idGrupo = idGrupo;
+        this.nombre = nombre;
+        this.categoria = categoria;
+        this.reporta = reporta;
+        this.correo = correo;
     }
 
     /**
@@ -66,7 +85,7 @@ public class Grupo implements java.io.Serializable {
     }
 
     /**
-     * Setter 
+     * Setter
      *
      * @param idGrupo entero con el identificador del grupo
      */
@@ -90,6 +109,42 @@ public class Grupo implements java.io.Serializable {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    /**
+     * Getter
+     * 
+     * @return  indica si el grupo se reporta o no
+     */
+    public int getReporta() {
+        return reporta;
+    }
+
+    /**
+     * Setter
+     * 
+     * @param reporta entero con el valor de la bandera
+     */
+    public void setReporta(int reporta) {
+        this.reporta = reporta;
+    }
+
+    /**
+     * Getter
+     * 
+     * @return Correo electronico de la oficina a la que pertenece el grupo
+     */
+    public String getCorreo() {
+        return correo;
+    }
+
+    /**
+     * Setter
+     * 
+     * @param correo cadena con el correo electronico de la oficina a la cual pertenece el grupo
+     */
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     @Override
@@ -120,7 +175,7 @@ public class Grupo implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Grupo{" + "idGrupo=" + idGrupo + ", nombre=" + nombre + ", categoria=" + categoria + '}';
+        return "Grupo{id=" + idGrupo + ", nombre=" + nombre + ", categoria=" + categoria + ", reporta=" + reporta + ", correo=" + correo + "}";
     }
 
 }

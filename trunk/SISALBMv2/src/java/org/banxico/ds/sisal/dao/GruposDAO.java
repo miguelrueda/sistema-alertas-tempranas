@@ -51,12 +51,12 @@ public class GruposDAO {
             + "AND g.idGrupo = x.idGrupo AND g.idGrupo = ?";
     private static final String retrieveGroupById = "SELECT * FROM Grupo WHERE idGrupo = ?";
     private static final String retrieveAllCategorias = "SELECT DISTINCT(categoria) FROM Grupo";
-    private static final String sqlInsertarGrupo = "INSERT INTO Grupo(nombre, categoria, se_reporta) VALUES(?,?, ?);";
+    private static final String sqlInsertarGrupo = "INSERT INTO Grupo(nombre, categoria, se_reporta, correo) VALUES(?, ?, ?, ?);";
     private static final String sqlInsertGroupSoftwareValue = "INSERT INTO Grupo_Software VALUES(?, ?);";
     private static final String sqlInsertGroupTest = "INSERT INTO TestTable VALUES(?,?);"; //ELIMINAR
     private static final String sqlSearchGroupsQuery = "SELECT * FROM Grupo g WHERE (g.nombre LIKE ? OR g.categoria LIKE ?)";
     private static final String sqlDeleteGroupWithId = "DELETE FROM Grupo WHERE idGrupo = ?;";
-    private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ? WHERE idGrupo = ?";
+    private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ?, se_reporta = ?, correo = ? WHERE idGrupo = ?";
     private static final String sqlEliminarInfoGrupoSoftware = "DELETE FROM Grupo_Software WHERE idGrupo = ?";
     private static final String sqlBuscarGrupoPorNombre = "SELECT g.idGrupo, g.nombre, g.categoria FROM Grupo g WHERE g.nombre LIKE ?";
     
@@ -289,6 +289,8 @@ public class GruposDAO {
                 gp.setIdGrupo(rs.getInt(1));
                 gp.setNombre(rs.getString(2));
                 gp.setCategoria(rs.getString(3));
+                gp.setReporta(rs.getInt(4));
+                gp.setCorreo(rs.getString(5));
             }
             rs.close();
         } catch (SQLException e) {
@@ -400,7 +402,7 @@ public class GruposDAO {
      * @return bandera con el valor de la creación del grupo
      * @throws java.sql.SQLException cuando no se puede ejecutar de forma correcta la transacción
      */
-    public boolean crearGrupo(String nombre_grupo, String categoria_grupo, Integer [] llaves) throws SQLException {
+    public boolean crearGrupo(String nombre_grupo, String categoria_grupo, int reportable, String correo, Integer [] llaves) throws SQLException {
         //Banderas de resultado
         boolean group_created = false;
         int generated_key = 0;
@@ -411,7 +413,8 @@ public class GruposDAO {
             pstmt = connection.prepareStatement(sqlInsertarGrupo, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, nombre_grupo);
             pstmt.setString(2, categoria_grupo);
-            pstmt.setInt(3, 1);
+            pstmt.setInt(3, reportable);
+            pstmt.setString(4, correo);
             Integer num = pstmt.executeUpdate();
             //LOG.log(Level.INFO, "GruposDAO#crearGrupo() retorna: {0}", num);
             //OEjecutar la consulta para obtener la llave generada
@@ -535,7 +538,7 @@ public class GruposDAO {
     
     
     
-    public boolean editarGrupo(int idgrupo, String nombre, String categoria, Integer[] llaves) throws SQLException {
+    public boolean editarGrupo(int idgrupo, String nombre, String categoria, int reportable, String correo, Integer[] llaves) throws SQLException {
         boolean res = false;
         try {
             connection = getConnection();
@@ -543,7 +546,9 @@ public class GruposDAO {
             pstmt = connection.prepareStatement(sqlEditarGrupoPorId);
             pstmt.setString(1, nombre);
             pstmt.setString(2, categoria);
-            pstmt.setInt(3, idgrupo);
+            pstmt.setInt(3, reportable);
+            pstmt.setString(4, correo);
+            pstmt.setInt(5, idgrupo);
             Integer updated = pstmt.executeUpdate();
             pstmt = connection.prepareStatement(sqlEliminarInfoGrupoSoftware);
             pstmt.setInt(1, idgrupo);

@@ -1,3 +1,6 @@
+<%-- 
+    JSP De la aplicación para integrar el menu de la aplicación, lee el pdf que se encuentra dentro de los recursos
+--%>
 <!DOCTYPE html>
 <html>
     <head>

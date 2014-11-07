@@ -1,9 +1,12 @@
+<%-- 
+    JSP para indicar que el recurso al que se trata de acceder esta prohibido
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Prohibido</title>
+        <title>Recurso Prohibido</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link href="/sisalbm/resources/css/general.css" type="text/css" rel="stylesheet" /> 

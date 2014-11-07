@@ -1,9 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : 18/06/2014, 09:51:10 AM
-    Author     : t41507
+    INDEX de la aplicación, se encarga de hacer la redirección hacia el jsp de dashboard
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

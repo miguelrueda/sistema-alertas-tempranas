@@ -1,3 +1,6 @@
+<%-- 
+    JSP para indicar que el recurso al que se trata de acceder esta prohibido
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

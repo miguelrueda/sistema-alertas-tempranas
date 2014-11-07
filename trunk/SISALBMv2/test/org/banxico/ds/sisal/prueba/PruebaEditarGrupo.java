@@ -1,12 +1,9 @@
 package org.banxico.ds.sisal.prueba;
 
-import java.util.Arrays;
-import java.sql.SQLException;
-import org.banxico.ds.sisal.dao.GruposDAO;
-
 public class PruebaEditarGrupo {
     
     public static void main(String[] args) {
+        /*
         try {
             System.out.println("creando instancia");
             GruposDAO gdao = new GruposDAO();
@@ -21,6 +18,7 @@ public class PruebaEditarGrupo {
         } catch (SQLException ex) {
             System.out.println("Excepción de SQL: " + ex.getMessage());
         }
+                */
     }
     
 }

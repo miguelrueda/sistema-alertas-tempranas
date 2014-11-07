@@ -1,3 +1,6 @@
+/**
+    CSS que tiene los estilos para las notificaciones que semuestran dentro de la aplicación
+**/
 .notice-wrap{
     position: fixed;
     bottom: 20px;
