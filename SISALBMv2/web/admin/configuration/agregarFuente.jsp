@@ -1,3 +1,7 @@
+<%-- 
+    JSP que muestra un formulario para registrar una fuente de la cual se obtiene la
+    información de las vulnerabilidades y a partir de la cual se generará el contenido
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -74,32 +78,39 @@
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
             $(document).ready(function() {
+                /**
+                 * Función que genera las reglas de validación para el formulario de agregar fuente
+                 */
                 $("#addFuente").validate({
                     rules: {
                         nombre: "required",
                         url: "required"
-                    },
-                    messages: {
+                    }, messages: {
                         nombre: 'Ingresar el nombre de la fuente',
                         url: 'Ingresar la url de la fuente'
-                    },
-                    submitHandler: function(form) {
+                    }, submitHandler: function(form) {
+                        /*
+                         * Procesamiento del formulario, se obtiene una referencia del formulario serializado
+                         * que se envia a un servlet para su procesamiento
+                         */
                         var formserialized = $(form).serialize();
                         $.ajax({
                             url: '/sisalbm/admin/configuration.controller?action=addFuente',
                             type: 'POST',
                             data: formserialized,
                             beforeSend: function() {
+                                //Función que muestra una notificación para indicazr que la solicitud esta siendo procesada
                                 jQuery.noticeAdd({
                                     text: "Procesando Solicitud: " +
                                             "<br /><center><img src='../../resources/images/ajax-loader.gif' alt='loading' /></center>",
                                     stay: true,
                                     type: 'info'
                                 });
-                            },
-                            success: function(response) {
+                            }, success: function(response) {
+                                //Ejecutar este codigo cuando la petición fue exitosa
                                 var content = '';
                                 if (response === 'URL INVALIDA') {
+                                    //Se muestra este mensaje cuando la url ingresada es invalida
                                     $("#dialog-message").attr("title", "Url Invalida");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "La URL es incorrecta o el formato no es válido.</p>";
@@ -113,6 +124,7 @@
                                         }
                                     });
                                 } else if (response === 'OK') {
+                                    //Se muestra este mensaje cuando la petición se procesa de manera correcta
                                     $("#dialog-message").attr("title", "Fuente Agregada");
                                     $("#addFuente")[0].reset();
                                     var content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
@@ -127,6 +139,7 @@
                                         }
                                     });
                                 } else if (response === 'ERROR') {
+                                    //Se muestra este mensaje cuando ocurre un error al procesar la petición
                                     $("#dialog-message").attr("title", "Error al crear fuente");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
@@ -140,18 +153,8 @@
                                         }
                                     });
                                 }
-                                /*
-                                $("#dialog-message").html(content);
-                                $("#dialog-message").dialog({
-                                    modal: true,
-                                    buttons: {
-                                        Aceptar: function() {
-                                            $(this).dialog("close");
-                                        }
-                                    }
-                                });
-                                */
                             }, error: function() {
+                                //Se ejecuta este codigo cuando la petición no se completa por algun error del servidor
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                         "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
@@ -164,6 +167,11 @@
                                         }
                                     }
                                 });
+                            }, complete: function(data) {
+                                //Se ejecuta este codigo cuando la petición se completa, desaparece la notificación mostrada
+                                setInterval(function() {
+                                    jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+                                }, 5000);
                             }
                         });
                         return false;

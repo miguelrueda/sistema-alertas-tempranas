@@ -36,8 +36,8 @@ public class MailBean implements java.io.Serializable {
     private static final String administrador = "jamaya@banxico.org.mx";
     private static final String serviciosocial = "T41507@correobm.org.mx";
     private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
-    
-    private String [] receptores;
+
+    private String[] receptores;
 
     public MailBean() {
     }
@@ -49,7 +49,7 @@ public class MailBean implements java.io.Serializable {
     public void setReceptores(String[] receptores) {
         this.receptores = receptores;
     }
-    
+
     public boolean enviarCorreodePrueba(String asunto) {
         boolean enviado = false;
         Properties props = new Properties();
@@ -83,13 +83,14 @@ public class MailBean implements java.io.Serializable {
             //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(administrador));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(serviciosocial));
             msg.setSubject("+ " + asunto);
-            StringBuilder  cuerpo = new StringBuilder();
-            cuerpo.append("<h2>")
+            StringBuilder cuerpo = new StringBuilder();
+            cuerpo.append("<h3>")
                     .append("Se encontraron: ")
                     .append(resultados.size())
-                    .append(" posibles amenazas.")
-                    .append("</h2>");
-            cuerpo.append("<table style='width:100%;border-collapse:collapse;'>");
+                    .append(" posible(s) amenaza(s).")
+                    .append("</h3>");
+            cuerpo.append("<div style='font-family:calibri !important;font-size:9pt !important'>");
+            cuerpo.append("<table style='width:100%;border-collapse:collapse;font-size:9pt'>");
             cuerpo.append("<thead style='border:1px solid #000;background:#797ca3;color:#FFF'>")
                     .append("<td>Vulnerabilidad</td>")
                     .append("<td>Publicación</td>")
@@ -106,21 +107,24 @@ public class MailBean implements java.io.Serializable {
                 if (sev.equalsIgnoreCase("high")) {
                     es_sev = "Alta";
                 } else if (sev.equalsIgnoreCase("medium")) {
-                    es_sev = "Medium";
+                    es_sev = "Media";
                 } else if (sev.equalsIgnoreCase("low")) {
                     es_sev = "Baja";
                 } else {
                     es_sev = "ND";
                 }
-                cuerpo.append("<tr>").append("<td style='border:1px solid #000'>").append(result.getVulnerabilidad().getName())
-                        .append("</td>").append("<td style='border:1px solid #000'>")
+                cuerpo.append("<tr>")
+                        .append("<td style='border:1px solid #000;text-align:center'>")
+                        .append(result.getVulnerabilidad().getName())
+                        .append("</td>")
+                        .append("<td style='border:1px solid #000;text-align:center'>")
                         .append(fmt.format(result.getVulnerabilidad().getPublished()))
                         .append("</td>")
-                        .append("<td style='border:1px solid #000'>")
+                        .append("<td style='border:1px solid #000;text-align:center'>")
                         .append(es_sev)
                         .append("</td>")
                         .append("<td style='border:1px solid #000'>")
-                        .append("<table style='border:none'>")
+                        .append("<table style='border:none;font-size:9pt'>")
                         .append("<tbody>");
                 for (Software sw : result.getSwList()) {
                     cuerpo.append("<tr>")
@@ -133,13 +137,19 @@ public class MailBean implements java.io.Serializable {
                         .append("</table>")
                         .append("</td>")
                         .append("<td style='border:1px solid #000'>")
-                        .append("<table style='border:none'>")
+                        .append("<table style='border:none;font-size:9pt;'>")
                         .append("<tbody>");
                 for (String group : result.getGruposList()) {
-                    cuerpo.append("<tr>").append("<td>").append(group).append("</td>").append("</tr>");
+                    cuerpo.append("<tr>")
+                            .append("<td>")
+                            .append(group)
+                            .append("</td>")
+                            .append("</tr>");
                 }
                 VulnerabilityDAO vulndao = new VulnerabilityDAO();
-                cuerpo.append("</tbody>").append("</table>").append("</td>")
+                cuerpo.append("</tbody>")
+                        .append("</table>")
+                        .append("</td>")
                         .append("<td style='border:1px solid #000'>");
                 String vector = result.getVulnerabilidad().getCVSS().getVector();
                 if (!vector.equals("") && !vector.equalsIgnoreCase("ND")) {
@@ -157,6 +167,7 @@ public class MailBean implements java.io.Serializable {
             }
             cuerpo.append("</tbody>")
                     .append("</table>");
+            cuerpo.append("</div>");
             msg.setContent(cuerpo.toString(), "text/html;charset=utf8");
             msg.setSentDate(new Date());
             Transport.send(msg);
@@ -166,7 +177,5 @@ public class MailBean implements java.io.Serializable {
         }
         return enviado;
     }
-    
-    
 
 }

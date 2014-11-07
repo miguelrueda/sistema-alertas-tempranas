@@ -1,19 +1,16 @@
 package org.banxico.ds.sisal.prueba;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
-import org.banxico.ds.sisal.dao.VulnerabilityDAO;
-import java.util.List;
 import java.util.ArrayList;
 import java.text.DecimalFormat;
 
 public class RecentsTest {
 
     public static void main(String[] args) {
-        VulnerabilityDAO vdao = new VulnerabilityDAO();
+        //VulnerabilityDAO vdao = new VulnerabilityDAO();
         /*
         Ejemplo de obtener todas las vulnerabilidades recientes
          List<Vulnerabilidad> recientes = vdao.obtenerVulnerabilidadesRecientes();
@@ -71,6 +68,9 @@ public class RecentsTest {
         System.out.println(json);
         System.out.println("Resultado = " + res);
         */
+        
+        
+        /*
         HashMap<String, Integer> datos = vdao.obtenerEstadisticasFabricantes();
         TreeMap sorted = new TreeMap(datos);
         Iterator<String> keysetIt = sorted.keySet().iterator();
@@ -85,6 +85,7 @@ public class RecentsTest {
             }
         }
         System.out.println(chartDataSet.toString());
+                */
     }
 
     private static HashMap<String, Double> calcularPorcentajes(HashMap<String, Integer> datos, int total) {

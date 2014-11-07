@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.banxico.ds.sisal.dao.GrupoVulnerabilidadDAO;
-import org.banxico.ds.sisal.dao.GruposDAO;
-import org.banxico.ds.sisal.dao.VulnerabilityDAO;
 import org.banxico.ds.sisal.entities.Grupo;
 import org.banxico.ds.sisal.scanner.Result;
 import org.banxico.ds.sisal.scanner.ScannerBean;
@@ -24,7 +21,7 @@ public class ScannerTest {
      * Bean de Escanner
      */
     private final static ScannerBean scanner = new ScannerBean();
-    private final static GruposDAO gdao = new GruposDAO();
+    //private final static GruposDAO gdao = new GruposDAO();
 
     /**
      * Método que realiza la prueba
@@ -52,13 +49,13 @@ public class ScannerTest {
         System.out.println("Se encontraron: " + resultados.size() + " resultados");
         if (!resultados.isEmpty()) {
             System.out.println("Guardando resultados");
-            doPersist(resultados);
+            //doPersist(resultados);
             //registrarGrupoVulnerabilidad(resultados);
         } else {
             System.out.println("Sin Resultados");
         }
     }
-
+/*
     private static void doPersist(Set<Result> resultados) {
         int res = 0;
         VulnerabilityDAO vdao = new VulnerabilityDAO();
@@ -92,5 +89,6 @@ public class ScannerTest {
             }
         }
     }
+    */
 
 }

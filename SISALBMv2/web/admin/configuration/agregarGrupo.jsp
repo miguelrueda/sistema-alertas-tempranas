@@ -1,3 +1,7 @@
+<%-- 
+    JSP que muestra un formulario para registrar una fuente de la cual se obtiene la
+    información de las vulnerabilidades y a partir de la cual se generará el contenido
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -7,7 +11,7 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" /> 
-        <link href="../../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
+        <link href="/sisalbm/resources/css/jquery.notice.css" type="text/css" rel="stylesheet"/>
         <style type="text/css">
             .listaSeleccionados {
                 max-width: 600px;
@@ -94,6 +98,32 @@
                                                 <td><label for="nuevacat" class="error"></label></td>
                                             </tr>
                                             <tr>
+                                                <td>
+                                                    <label>Se reporta:</label>
+                                                </td>
+                                                <td>
+                                                    <select id="reportable" name="reportable" style="width: 195px">
+                                                        <option value="-">Seleccionar opción</option>
+                                                        <option value="0">No</option>
+                                                        <option value="1">Sí</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <label for="reportable" class="error"></label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Correo del grupo</label>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="correogrupo" id="correogrupo" style="width: 185px" />
+                                                </td>
+                                                <td>
+                                                    <label for="correogrupo" class="error"></label>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td>Buscar Producto</td>
                                                 <td>
                                                     <input type="text" name="producto" id="producto" style="width: 185px" 
@@ -121,16 +151,18 @@
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
+        <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script> 
         <script type="text/javascript">
-            //$(function() {$(document).tooltip();});
             $(document).ready(function() {
+                //Función que se encarga de poblar el select con las categorias existentes de la base de daatos
                 $("#categoria").load("/sisalbm/autocomplete?action=getcats");
+                //Se ocultan algunos elementos de la vista principal
                 $("#dialog-message").hide();
                 $("#selectedList").hide();
                 $("#cat-existente").hide();
                 $("#cat-nueva").hide();
+                //Aquí comienza el procesamiento del formulario para el autocompletado del producto
                 var prod = $("#producto");
                 var prodval = $("#producto").val();
                 var prodid = 0;
@@ -139,6 +171,7 @@
                 var flag = false;
                 var i = 0;
                 $("#addtolist").attr("disabled", true);
+                //Filtro para seleccion de categoria
                 $("input[name=tipo]").on("click", function() {
                     var tipo = $("input:radio[name=tipo]:checked").val();
                     if (tipo === 'nueva') {
@@ -149,11 +182,12 @@
                         $("#cat-nueva").hide();
                     }
                 });
+                //Función que realiza el autocompletado de productos
                 $.get("/sisalbm/autocomplete?action=acproduct&prodq=" + prodval, function(data) {
                     var items = data.split("\n");
                     prod.autocomplete({
                         source: items,
-                        minLength: 3,
+                        minLength: 2,
                         select: function(event, ui) {
                             $.get("/sisalbm/autocomplete?action=getProdId&prodName=" + ui.item.value, function(ret) {
                                 prodid = Number(ret);
@@ -162,6 +196,10 @@
                         }
                     });
                 });
+                /**
+                 * Función que se encarga de agregar un producto seleccionado a la lista de preselecciíon
+                 * de prodctos a registrar con el grupo
+                 */
                 $("#addtolist").click(function() {
                     //Mostrar la lista de elementos
                     $("#selectedList").show();
@@ -203,6 +241,9 @@
                     $("#producto").val("");
                     $("#addtolist").attr("disabled", true);
                 });
+                /**
+                 * Función que se encarga de eliminar un producto de la lista en caso de que ya no se desee registrarlo
+                 */
                 $(document).on("click", "#icon-minus", function() {
                     var $list = $("#listElements"), listValue = $(this).parent().data("value"), listKey = $(this).parent().data("key");
                     var keyindex = ikeys.indexOf(listKey);
@@ -236,6 +277,13 @@
                 $.validator.addMethod("valCategoria", function(value) {
                     return (value !== '0')
                 }, "Seleccionar una categoría");
+                //Validar campo reportable
+                $.validator.addMethod("valReportable", function(value) {
+                    return (value !== '-')
+                }, "Indicar si se reporta el grupo");
+                /**
+                 * Comienza la validación del formulario
+                 */
                 $("#addGroupSW").validate({
                     rules: {
                         nombre: "required",
@@ -243,28 +291,33 @@
                         nuevacat: "required",
                         categoria: {
                             valCategoria: true
-                        }
-                    },
-                    messages: {
+                        }, reportable: {
+                            valReportable: true
+                        }, correogrupo: "required"
+                    }, messages: {
                         nombre: "Ingresar el nombre del grupo",
                         tipo: "Seleccionar un tipo de categoría",
-                        nuevacat: "Ingresar una categoría"
+                        nuevacat: "Ingresar una categoría",
+                        correogrupo: "Ingresar el correo del grupo"
                     },
                     submitHandler: function(form) {
+                        //Procesamiento del formulario
                         $("#producto").val("");
                         var tipo = $("input:radio[name=tipo]:checked").val();
+                        //Establecer valores en blanco para evitar campos nulos
                         if (tipo === 'nueva') {
                             $("#categoria").val("");
                         } else if (tipo === 'existente') {
                             $("#nuevacat").val("");
                         }
-
+                        //Serializar el arreglo de llaves para agregarlo al formulario
                         if (ikeys.length > 0) {
                             var formserialized = $(form).serialize();
                             var jkeys = JSON.stringify(ikeys);
                             var sdata = formserialized + jkeys;
                             //alert(sdata);
                         } else {
+                            //Si la lista esta vacia mostrar un mensaje de aviso
                             $("#dialog-message").attr("title", "Lista Incompleta");
                             var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                     "La lista debe contener al menos un elemento seleccionado</p>";
@@ -281,11 +334,21 @@
                             return false;
                         }
                         //url: "/sisalbm/autocomplete?action=test",
+                        //alert(sdata);
                         $.ajax({
+                            //Procesamiento de la petición mediante un servlet
                             url: "/sisalbm/admin/configuration.controller?action=addGroup",
                             type: "POST",
                             data: sdata,
-                            success: function(response) {
+                            beforeSend: function() {
+                                //Mostrar mensaje de aviso de procesamiento
+                                jQuery.noticeAdd({
+                                    text: "Procesando petición <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                    stay: true,
+                                    type: 'info'
+                                });
+                            }, success: function(response) {
+                                //Si la solicitud se completa mostrar un mensaje de aviso correspondiente a la respuesta obtenida
                                 var content = '';
                                 if (response === 'OK') {
                                     $("#dialog-message").attr("title", "Grupo Agregado");
@@ -299,6 +362,7 @@
                                             }
                                         }
                                     });
+                                    //Si se procesa correctamente la petición reiniciar las variables utilizadas
                                     ikeys = [];
                                     $("#addGroupSW")[0].reset();
                                     $("#listElements").html("");
@@ -307,6 +371,7 @@
                                     $("#cat-existente").hide();
                                     $("#cat-nueva").hide();
                                 } else if (response === 'ERROR') {
+                                    //Mensaje de error
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar registrar el grupo.</p>");
@@ -319,6 +384,7 @@
                                         }
                                     });
                                 } else if (response === 'NOMBRE_INVALIDO') {
+                                    //Mensaje de notificación de nombre invalido
                                     $("#dialog-message").attr("title", "Nombre de Grupo Existente");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>");
@@ -332,6 +398,7 @@
                                         }
                                     });
                                 } else {
+                                    //Mensaje de error al agregar un grupo
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                             "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>");
@@ -345,6 +412,7 @@
                                     });
                                 }
                             }, error: function() {
+                                //Mostrar el mensaje de petición incompleta cuando ocurre un error al realizarla
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                         "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
@@ -356,6 +424,11 @@
                                         }
                                     }
                                 });
+                            }, complete: function(data) {
+                                //Cuando la petición esta completa, desaparecer la notificación desplegada
+                                setInterval(function() {
+                                    jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+                                }, 5000);
                             }
                         });
                         return false;

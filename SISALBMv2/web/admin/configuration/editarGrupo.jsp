@@ -9,7 +9,7 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" /> 
-        <link href="../../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
+        <link href="/sisalbm/resources/css/jquery.notice.css" type="text/css" rel="stylesheet"/>
         <link href="../../resources/css/simplegrid.css" type="text/css" rel="stylesheet" />
         <style type="text/css">
             .listaSeleccionados {
@@ -58,6 +58,8 @@
                             <input type="hidden" name="idoculto" value="<%= g.getIdGrupo()%>" id="idoculto" />
                             <input type="hidden" name="nombreoculto" value="<%= g.getNombre()%>" id="nombreoculto" />
                             <input type="hidden" name="categoculto" value="<%= g.getCategoria()%>" id="categoculto" />
+                            <input type="hidden" name="reportaoculto" value="<%= g.getReporta() %>" id="reportaoculto" />
+                            <input type="hidden" name="correooculto" value="<%= g.getCorreo() %>" id="correooculto" />
                             <form class="form" id="editarGrupo" name="editarGrupo">
                                 <fieldset>
                                     <legend>Información del Grupo</legend>
@@ -88,6 +90,35 @@
                                                     <label for="categoria" class="error"></label>
                                                 </td>
                                             </tr>
+                                            <!-- TEST -->
+                                            <tr>
+                                                <td>
+                                                    <label>Se reporta:</label>
+                                                </td>
+                                                <td>
+                                                    <select id="reportable" name="reportable" style="width: 185px">
+                                                        <option value="-">Seleccionar opción</option>
+                                                        <option value="0">No</option>
+                                                        <option value="1">Sí</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <label for="reportable" class="error"></label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Correo del grupo</label>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="correogrupo" id="correogrupo" style="width: 185px"
+                                                           value="<%= g.getCorreo() %>"/>
+                                                </td>
+                                                <td>
+                                                    <label for="correogrupo" class="error"></label>
+                                                </td>
+                                            </tr>
+                                            <!-- TEST -->
                                         </tbody>
                                     </table>
                                 </fieldset>
@@ -129,10 +160,11 @@
                 </div>
             </div>
             <div id="dialog-message"></div>
+            <div id="dialog-nomodificado"></div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script type="text/javascript" src="../../resources/js/jquery.notice.js" ></script>
+        <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script>
             $(document).ready(function() {
                 //$("#categoria").load("/sisalbm/autocomplete?action=getcats");
@@ -140,6 +172,10 @@
                 $idoculto = $("#idoculto").val();
                 $nombreoculto = $("#nombreoculto").val();
                 $categoculto = $("#categoculto").val();
+                var reportaoculto = $("#reportaoculto").val();
+                var correooculto = $("#correooculto").val();
+                //alert(reportaoculto);
+                $("#reportable").val(reportaoculto);
                 var array = [];
                 var group_modified = false;
                 $.ajax({
@@ -248,11 +284,19 @@
                 });
 
                 $("#addButton").on("click", function() {
+                    var valSel = $("#reportable").val();
+                    var correogrupo = $("#correogrupo").val();
+                    if(valSel !== reportaoculto || correogrupo !== correooculto) {
+                        group_modified = true;
+                    }
                     if (group_modified) {
                         var $nuevonombre = $("#nombre").val();
                         var $nuevacat = $("#categoria").val();
+                        var reportable = $("#reportable").val();
+                        var correogrupo = $("#correogrupo").val();
                         var jkeys = JSON.stringify(array);
-                        var sdata = "id=" + $idoculto + "&nombre=" + $nuevonombre + "&categoria=" + $nuevacat + "&productos=";
+                        var sdata = "id=" + $idoculto + "&nombre=" + $nuevonombre + "&categoria=" + $nuevacat 
+                                + "&reportable=" + reportable + "&correogrupo=" + correogrupo + "&productos=";
                         //alert(sdata + jkeys);
                         $.ajax({
                             type: "POST",
@@ -329,12 +373,26 @@
                                         }
                                     }
                                 });
+                            }, complete: function(data) {
+                                setInterval(function() {
+                                    jQuery.noticeRemove($('.notice-item-wrapper'), 400);
+                                }, 4000);
                             }
                         });
                         //Procesar formulario
                         //enviar datos del grupo y arreglo de llaves
                     } else {
-                        alert("El grupo no fue modificado, no se guardaran cambios");
+                        $("#dialog-nomodificado").attr("title", "Grupo no modificado");
+                        $("#dialog-nomodificado").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                        "El grupo no fue modificado, no se guardaran los cambios.</p>");
+                        $("#dialog-nomodificado").dialog({
+                            modal: true,
+                            buttons: {
+                                Aceptar: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
                     }
                     return false;
                 });

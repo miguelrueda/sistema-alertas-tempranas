@@ -184,6 +184,8 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             } else if (tipo.equalsIgnoreCase("nueva")) {
                 categoria = request.getParameter("nuevacat");
             }
+            String reportable = request.getParameter("reportable");
+            String correogrupo = request.getParameter("correogrupo");
             String keys = request.getParameter("producto");
             StringTokenizer st = new StringTokenizer(keys, "[,]");
             int ntokens = st.countTokens();
@@ -197,7 +199,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             boolean valid = false;
             try {
                 if (!valid) {
-                    created = gdao.crearGrupo(nombre, categoria, llaves);
+                    created = gdao.crearGrupo(nombre, categoria, Integer.parseInt(reportable), correogrupo, llaves);
                     if (created) {
                         //LOG.log(Level.INFO, "ConfigurationController#AddGroup - Imprimiendo: OK");
                         out.print("OK");
@@ -219,6 +221,8 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             String idgrupo = request.getParameter("id");
             String nombre = request.getParameter("nombre");
             String categoria = request.getParameter("categoria");
+            String reportable = request.getParameter("reportable");
+            String correogrupo = request.getParameter("correogrupo");
             String keys = request.getParameter("productos");
             StringTokenizer st = new StringTokenizer(keys, "[,]");
             int ntokens = st.countTokens();
@@ -232,7 +236,7 @@ public class ConfigurationServlet extends HttpServlet implements java.io.Seriali
             boolean valid = false;
             try {
                 if (!valid) {
-                    created = gdao.editarGrupo(Integer.parseInt(idgrupo), nombre, categoria, llaves);
+                    created = gdao.editarGrupo(Integer.parseInt(idgrupo), nombre, categoria, Integer.parseInt(reportable), correogrupo, llaves);
                     if (created) {
                         out.print("OK");
                     } else if (!created) {

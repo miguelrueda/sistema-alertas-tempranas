@@ -1,3 +1,6 @@
+<%-- 
+    JSP para indicar los posibles errores que se generan en los servlet
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true"%>
 <!DOCTYPE html>
 <html>

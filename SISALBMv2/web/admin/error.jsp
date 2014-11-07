@@ -1,3 +1,6 @@
+<%-- 
+    JSP para indicar los posibles errores que se generan en los servlet
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" isErrorPage="true"%>
 <!DOCTYPE html>
 <html>
@@ -26,14 +29,6 @@
                                 <li><a href="/admin/scanner/scan.jsp">Inicio</a></li>
                             </ul>
                         </nav>
-                        <!--
-                        <table>
-                            <tr>
-                                <td align="center" valign="top" width="15%"><a href="admin/Index.html">Página Administrativa</a></td>
-                                <td align="center" valign="top" width="15%"><a href="consulta/Index.html">Página de Consulta</a></td>
-                            </tr>
-                        </table>
-                        -->
                     </div>
                     <div id="content_wrap">
                         <div id="content">

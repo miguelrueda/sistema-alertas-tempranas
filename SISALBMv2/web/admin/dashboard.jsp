@@ -1,3 +1,6 @@
+<%-- 
+    JSP para desplegar el dashboard con los resultados de las vulnerabilidades encontradas mas recientes
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -129,40 +132,23 @@
                     <div id="content_wrap">
                         <div id="content">
                             <div id="tabs">
+                                <!--
                                 <ul>
                                     <li><a href="#tabs-1">Ultimas Vulnerabilidades</a></li>
-                                    <!--
-                                    <li><a href="#tabs-2">Estadisticas</a></li>
-                                    <li><a href="#tabs-3">TAB3</a></li>
-                                    -->
                                 </ul>
-                                    <div id="tabs-1">
+                                -->
+                                <!--
+                                    Se define un div{recientes} donde se carga el contenido dinamico de un servlet 
+                                -->
+                                <div id="tabs-1">
                                     <p class="tabtitle">
-                                        Vulnerabilidades Encontradas
+                                        Últimas Vulnerabilidades Encontradas
                                     </p>
-                                    <center><h5>Se incluyen vulnerabilidades de un periodo no mayor a 8 días.</h5></center>
+                                    <center>
+                                        <h5>Se incluyen vulnerabilidades encontradas dentro de un periodo no mayor a 8 días.</h5>
+                                    </center>
                                     <div id="recientes" class="grid scrollable"></div>
                                 </div>
-                                <!--
-                                <div id="tabs-2">
-                                    <p class="tabtitle">Top Fabricantes con mas Vulnerabilidades en 2014</p>
-                                    <div id="chartdiv" style="margin: 0px auto 0px auto;">
-                                        <canvas id="canvas" width="800" height="400"></canvas> 
-                                    </div>
-                                    <p class="tabtitle">Gravedad de Vulnerabilidades</p>
-                                    <div id="severitydiv">
-                                        <canvas id="piecanvas" height="400" width="800"></canvas>
-                                        <div id="pielegend"></div>
-                                    </div>
-                                </div>
-                                <div id="tabs-3">
-                                    <p class="tabtitle">
-                                        Vulnerabilidades por Fabricante
-                                    </p>
-                                    <h5>Algo extra</h5>
-                                    <div id="vulnsPfab"></div>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>
@@ -176,7 +162,52 @@
         <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js" ></script>
         <script src="/sisalbm/resources/js/Chart.min.js"></script>
         <script src="/sisalbm/resources/js/legend.js"></script>
+        
         <script>
+            //$(function() {
+                //$("#tabs").tabs();
+            //});
+            /**
+             * Función que se encarga de traer el contenido de las vulenrabilidades recientes desde un servlet
+             */
+            $(function() {
+                $("#recientes").load("/sisalbm/dash?action=recientes");
+            });
+            /**
+             * Funcion que se encarga de desplegar el detalle de una vulnerabilidad dentro de un div a partir del id
+             * de la vulnerabilidad, se hace una petición al servlet quien trae el contenido preparado para su despliegue
+             */
+            function verDetalle(nombre) {
+                var content = "";
+                $.ajax({
+                    url: '/sisalbm/dash?action=retrieveby',
+                    type: 'GET',
+                    data: 'nombre=' + nombre,
+                    success: function(result) {
+                        content = result;
+                        $("#dialogdiv").html(content);
+                        $("#dialogdiv").dialog({
+                            width: 800,
+                            height: 800,
+                            resizable: false,
+                            draggable: false,
+                            buttons: {
+                                Aceptar: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
+        <script>
+            /**
+             * SCRIPT Para grafiar elementos JSON obtenidos de un servlet
+             */
+            //$(function() {
+                //$("#vulnsPfab").load("/sisalbm/admin/dash?action=cuentaFabs");
+            //});
             $(document).ready(function() {
                 /*
                  ctx.fillStyle = "#000";
@@ -246,40 +277,6 @@
                     }
                 });
             });
-        </script>
-        <script>
-            $(function() {
-                $("#tabs").tabs();
-            });
-            $(function() {
-                $("#vulnsPfab").load("/sisalbm/admin/dash?action=cuentaFabs");
-            });
-            $(function() {
-                $("#recientes").load("/sisalbm/dash?action=recientes");
-            });
-            function verDetalle(nombre) {
-                var content = "";
-                $.ajax({
-                    url: '/sisalbm/dash?action=retrieveby',
-                    type: 'GET',
-                    data: 'nombre=' + nombre,
-                    success: function(result) {
-                        content = result;
-                        $("#dialogdiv").html(content);
-                        $("#dialogdiv").dialog({
-                            width: 800,
-                            height: 800,
-                            resizable: false,
-                            draggable: false,
-                            buttons: {
-                                Aceptar: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    }
-                });
-            }
         </script>
     </body>
 </html>
