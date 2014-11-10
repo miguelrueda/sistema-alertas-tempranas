@@ -48,7 +48,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                             <th>Fabricante</th>
                                             <th>Software</th>
                                             <th>Versión</th>
-                                            <th>Fin de Vida</th>
+                                            <th>Opciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="resultbody">
@@ -142,9 +142,11 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                 </div>
             </div><!--page content-->
             <div id="dialog-message"></div>
+            <div id="dialog-eliminar"></div>
         </div><!--page container -->
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="../resources/js/jquery.notice.js"></script>
         <script>
             /**
              * Función jQuery que se encarga del manejjo de la funcionalidad de la pagina
@@ -152,7 +154,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
             $(document).ready(function() {
                 var dialog = $("#dialog-form");
                 $("#dialog-form").hide();
-                //$("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                                //$("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
                     /* Dialogo
                      $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
                      buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
@@ -174,7 +176,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                         beforeSend: function() {
                             //Mostrar mensaje de aviso de procesamiento
                             jQuery.noticeAdd({
-                                text: "Procesando petición <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                text: "Realizando búsqueda <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
                                 stay: false,
                                 type: 'info'
                             });
@@ -303,7 +305,6 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                     }, error: function() {
                                         //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
                                         $("#dialog-message").attr("title", "Petición Incompleta");
-                                        var content = ;
                                         $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
                                                 "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                                         $("#dialog-message").dialog({
@@ -329,6 +330,91 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                  * Fin de codigo para eliminar
                  */
             });
+            function eliminarSoftware(id, nombre) {
+                $("#dialog-eliminar").attr("title", "Confirmar eliminación");;
+                $("#dialog-eliminar").html("<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
+                            "¿Desea eliminar el software:<br /> '" + nombre + "'?</p>");
+                $("#dialog-eliminar").dialog({
+                    modal: true,
+                    buttons: {
+                        Eliminar: function() {
+                            $(this).dialog("close");
+                            $.ajax({
+                                url: '/sisalbm/admin/configuration.controller?action=deleteSW',
+                                    type: 'POST',
+                                    data: 'swid=' + id,
+                                    beforeSend: function() {
+                                        jQuery.noticeAdd({
+                                            text: "Eliminando software:" + 
+                                                    "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                            stay: false,
+                                            type: 'info'
+                                        });
+                                    }, success: function(result) {
+                                        result = result.trim();
+                                        var content = "";
+                                        if (result === 'OK') {
+                                            //Si el resultado es correcto mostrar esta alerta
+                                            $("#dialog-message").attr("title", "Software Eliminado");
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "El software '" + nombre + "' ha sido eliminado exitosamente.</p>");
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                        location.reload();
+                                                    }
+                                                }
+                                            });
+                                        } else if (result === 'ERROR') {
+                                            //Si ocurre un error mostrar esta alerta
+                                            $("#dialog-message").attr("title", "Software No Eliminado");
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            //En otro caso mostrar est aalerta
+                                            $("#dialog-message").attr("title", "Software No Eliminado");
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>");
+                                            $("#dialog-message").dialog({
+                                                modal: true,
+                                                buttons: {
+                                                    Aceptar: function() {
+                                                        $(this).dialog("close");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }, error: function() {
+                                        //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
+                                        $("#dialog-message").attr("title", "Petición Incompleta");
+                                        $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        });
+                                    }
+                            });
+                        }, Cancelar: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
         </script>
 
     </body>

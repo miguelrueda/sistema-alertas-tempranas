@@ -42,7 +42,7 @@
                     <%@include file="../incfiles/menu.jsp" %>
                     <br />
                     <div id="content_wrap">
-                        <c:choose><!-- encabezado de los resultados -->
+                        <c:choose>
                             <c:when test="${noOfResults > 0}">
                                 <div id="page_title">Se encontraron: ${noOfResults} posibles amenazas.</div>
                             </c:when>
@@ -52,7 +52,7 @@
                         </c:choose>
                         <div id="content">
                             <c:choose>
-                                <c:when test="${noOfResults > 0}"><!-- se muestra en caso de que existan resultados -->
+                                <c:when test="${noOfResults > 0}">
                                     <div class="datagrid">
                                         <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                             <thead>

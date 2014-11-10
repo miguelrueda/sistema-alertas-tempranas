@@ -28,13 +28,13 @@
                 <li class="last"><a href="/sisalbm/JobServlet"><span>Tareas Programadas</span></a></li>
             </ul>
         </li>
-        <li><a href="#"><span>Vulnerabilidades</span></a>
+        <li><a href="#"><span>Información de Vulnerabilidades</span></a>
             <ul>
                 <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=1"><span>Más Recientes</span></a></li>
                 <li><a href="/sisalbm/admin/vulnerability.controller?action=view&tipo=2"><span>Archivo</span></a></li>
             </ul>
         </li>
-        <li><a href="/sisalbm/admin/scanner/scan.jsp"><span>Escaneo</span></a></li>
+        <li><a href="/sisalbm/admin/scanner/scan.jsp"><span>Búsqueda de Vulnerabilidades</span></a></li>
         <li><a href="/sisalbm/admin/help.jsp"><span>Ayuda</span></a></li>
     </ul>
 </div>
