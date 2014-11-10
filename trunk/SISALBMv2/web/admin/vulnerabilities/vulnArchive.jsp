@@ -14,6 +14,7 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         <div id="page_container">
@@ -50,8 +51,7 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                                             <th>Gravedad</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="resultbody">
-                                    </tbody>
+                                    <tbody id="resultbody"></tbody>
                                 </table>
                                 <br />
                                 <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
@@ -164,6 +164,7 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="../resources/js/jquery.notice.js"></script>
         <script>
             /**
              * Función jQuery que maneja la funcionalidad de la aplicación

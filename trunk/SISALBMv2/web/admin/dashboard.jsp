@@ -208,14 +208,14 @@
             //$(function() {
                 //$("#vulnsPfab").load("/sisalbm/admin/dash?action=cuentaFabs");
             //});
+            /*
             $(document).ready(function() {
-                /*
-                 ctx.fillStyle = "#000";
-                 ctx.fillRect(0, 0, 600, 400);
-                 ctx.fillStyle = "#fff";
-                 ctx.font = "bold 20px sans-serif";
-                 ctx.fillText('Example', 20, 20);
-                 */
+                >>
+                 >>ctx.fillStyle = "#000";
+                 >>ctx.fillRect(0, 0, 600, 400);
+                 >>ctx.fillStyle = "#fff";
+                 >>ctx.font = "bold 20px sans-serif";
+                 >>ctx.fillText('Example', 20, 20);
                 //GRAFICA DE BARRAS
                 var njson = [];
                 var mjson = [];
@@ -277,6 +277,7 @@
                     }
                 });
             });
+     */
         </script>
     </body>
 </html>
