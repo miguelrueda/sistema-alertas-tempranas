@@ -1,3 +1,8 @@
+<%-- 
+    JSP que muestra la información relacionada con un grupo como software asociado, 
+    si el grupo reporta y el correo del grupo, recibe el identificador del jsp grupos
+     y el tipo de vulnerabilidad ya sea reciente o de archivo
+--%>
 <%@page import="org.banxico.ds.sisal.dao.GruposDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

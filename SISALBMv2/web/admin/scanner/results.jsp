@@ -1,11 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 
+    JSP que incluye el contenido del menu al que todos los JSP hacen referencia
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Resultados</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="resources/css/menu.css" type="text/css" rel="stylesheet" />
@@ -35,12 +38,11 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include file="../incfiles/menu.jsp" %>
                     <br />
                     <div id="content_wrap">
-                        <c:choose>
+                        <c:choose><!-- encabezado de los resultados -->
                             <c:when test="${noOfResults > 0}">
                                 <div id="page_title">Se encontraron: ${noOfResults} posibles amenazas.</div>
                             </c:when>
@@ -50,7 +52,7 @@
                         </c:choose>
                         <div id="content">
                             <c:choose>
-                                <c:when test="${noOfResults > 0}">
+                                <c:when test="${noOfResults > 0}"><!-- se muestra en caso de que existan resultados -->
                                     <div class="datagrid">
                                         <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
                                             <thead>
@@ -111,7 +113,7 @@
                                         <input type="submit" class="exportButton boton" id="exportButton" value="Versión Texto"/><br/>
                                         <input type="submit" class="exportButton" id="okButton" value="Cerrar" />
                                     </div>
-                                    
+
                                     <div id="export" style="max-width: 800px; display: block; margin-left: auto; margin-right: auto;">
                                         <div id="export-content">
                                         </div>    
@@ -124,17 +126,21 @@
                             </div>
                             <div id="mensaje-correo"></div>
                             <br />
-                        </div>
+                        </div><!-- content -->
                     </div>
                 </div>
-            </div>
+            </div><!-- page content -->
         </div>
         <br />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script>
+            /**
+             * Función jQuery que se encarga de manejar la funcionalidad de la aplicación
+             */
             $(document).ready(function() {
+                //Ocultar algunos elementos de la vista
                 $("#dialog-message").hide();
                 $("#mensaje-correo").hide();
                 $("#export").hide();
@@ -143,6 +149,10 @@
                     $("#okButton").hide();
                     $("#export").hide();
                 });
+                /*
+                 * Función que se muestra cuando se visualiza la versión texto
+                 * de las vulnerabilidades
+                 */
                 $("#exportButton").click(function(e) {
                     $("#dialog-message").attr("title", "Resultados");
                     $("#dialog-message").dialog({
@@ -158,20 +168,26 @@
                         }
                     });
                 });
-                $("#mailButton").on("click", function(){
+                /**
+                 * Función que se ejecuta cuando se solicita enviar los resultados por correo
+                 */
+                $("#mailButton").on("click", function() {
                     $.ajax({
                         url: '/sisalbm/scanner?action=sendResults',
                         type: 'POST',
                         beforeSend: function() {
+                            //Notificación de envio
                             jQuery.noticeAdd({
                                 text: "Preparando correo <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
                                 stay: true,
                                 type: 'info'
                             });
                         }, success: function(respuesta) {
-                            if(respuesta.trim() === "ENVIADO") {
+                            respuesta = respuesta.trim();
+                            if (respuesta.trim() === "ENVIADO") {
+                                //Mensaje que se muestra cuando se envia de forma correcta el correo
                                 $("#mensaje-correo").attr("title", "Correo Enviado");
-                                $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-check' style='float:left; margin:0 7px 50px 0;'>" + 
+                                $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-check' style='float:left; margin:0 7px 50px 0;'>" +
                                         "</span>El correo fue enviado exitosamente.<br /> Los resultados fueron enviados al administrador.</p>");
                                 $("#mensaje-correo").dialog({
                                     modal: true,
@@ -181,7 +197,8 @@
                                         }
                                     }
                                 });
-                            } else if(respuesta.trim() === 'NOENVIADO') {
+                            } else if (respuesta.trim() === 'NOENVIADO') {
+                                //Mensaje que se muestra cuando no se puede enviar de forma correcta el correo
                                 $("#mensaje-correo").attr("title", "Correo No Enviado");
                                 $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                         + "El correo no pudo ser enviado, favor de intentarlo nuevamente.</p>");
@@ -193,7 +210,8 @@
                                         }
                                     }
                                 });
-                            } else if(respuesta.trim() === "ERROR") {
+                            } else if (respuesta.trim() === "ERROR") {
+                                //Mensaje cque se muestra cuando el servidor retorna un error
                                 $("#mensaje-correo").attr("title", "Error del Sistema");
                                 $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                         + "Ocurrio un error en la aplicación, favor de intentarlo nuevamente.</p>");
@@ -207,6 +225,7 @@
                                 });
                             }
                         }, error: function() {
+                            //Mensaje que se muestra cuando ocurre un error al realizar la petición al servidor
                             $("#mensaje-correo").attr("title", "Petición Incompleta");
                             $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
                                     + "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
@@ -219,6 +238,7 @@
                                 }
                             });
                         }, complete: function(data) {
+                            //Cuando se completa la petición se  cierra la notificación
                             setInterval(function() {
                                 jQuery.noticeRemove($('.notice-item-wrapper'), 400);
                             }, 5000);

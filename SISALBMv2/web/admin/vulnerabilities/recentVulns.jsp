@@ -1,3 +1,7 @@
+<%-- 
+JSP que se encarga de mostrar la información de las vulnerabilidades más recientes
+de una forma tabular
+--%>
 <%@page import="java.text.DateFormat"%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -8,7 +12,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Vulnerabilidades Más Recientes</title>
-        <title>Admin Index</title>
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
@@ -23,7 +26,6 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -92,8 +94,7 @@
                                         </c:forEach>
                                     </tbody>
                                 </table>
-                            </div>
-                            <!-- PAGINADOR -->
+                            </div><!-- data grid -->
                             <div class="pagination">
                                 <table style="width: 100%; text-align: center">
                                     <tr>
@@ -156,8 +157,7 @@
                                         </c:choose>
                                     </tr>
                                 </table>
-                            </div>
-                            <!-- PAGINADOR -->
+                            </div><!-- PAGINADOR -->
                             <br />
                             <p style="text-align: center">
                                 Existen: ${totalr} vulnerabilidades en ${noOfPages} páginas.
@@ -165,17 +165,19 @@
                             <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none">
                                 <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
-                        </div>
+                        </div><!-- content -->
                     </div>
                 </div>
-            </div>
+            </div><!-- page content -->
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>        
         <script>
+            /**
+             * Función jQuery que maneja la funcionalidad de la aplicación
+             */
             $(document).ready(function() {
                 $(".view").click(function() {
-                    //var tmp = $(this).attr("href");
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
                         width: 800,
@@ -185,8 +187,7 @@
                         draggable: false,
                         open: function() {
                             $('.ui-widget-overlay').addClass('custom-overlay');
-                        },
-                        close: function() {
+                        }, close: function() {
                             $("#thedialog").attr("src", "about:blank");
                         }
                     });

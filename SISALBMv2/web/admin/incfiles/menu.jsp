@@ -1,3 +1,6 @@
+<%-- 
+    JSP que incluye el contenido del menu al que todos los JSP hacen referencia
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <div id="cssmenu">
     <ul>

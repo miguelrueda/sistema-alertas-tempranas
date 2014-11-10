@@ -1,3 +1,8 @@
+<%-- 
+    Éste JSP no se utiliza, pero tiene la funcionalidad de editar un software de los
+    que se encuentran registrados en la base de datos, en caso de que se utilize, se
+    tendría que ajustar con los campos de la base de datos
+--%>
 <%@page import="org.banxico.ds.sisal.dao.SoftwareDAO"%>
 <%@page import="org.banxico.ds.sisal.entities.Software"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

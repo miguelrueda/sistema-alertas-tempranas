@@ -101,9 +101,9 @@
                             beforeSend: function() {
                                 //Función que muestra una notificación para indicazr que la solicitud esta siendo procesada
                                 jQuery.noticeAdd({
-                                    text: "Procesando Solicitud: " +
+                                    text: "Procesando petición " +
                                             "<br /><center><img src='../../resources/images/ajax-loader.gif' alt='loading' /></center>",
-                                    stay: true,
+                                    stay: false,
                                     type: 'info'
                                 });
                             }, success: function(response) {

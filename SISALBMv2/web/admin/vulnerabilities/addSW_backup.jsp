@@ -1,3 +1,6 @@
+<%-- 
+Respaldo de la 1a versión de agregar softwrae
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <!DOCTYPE html>
 <html>
