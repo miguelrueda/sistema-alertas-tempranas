@@ -1,13 +1,16 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 
+JSP que se encarga de mostrar  la información del archivo de vulnerabilidades que se va almacenando
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Archivo de Vulnerabilidades</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
@@ -22,7 +25,6 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -35,10 +37,7 @@
                                 <input id="searchkey" class="searchinput" type="text" placeholder="CVE-2014-XXXX" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
-                        </div>
-                        <br />
-                        <br />
-                        <br />
+                        </div><!-- div de busqueda --> <br /><br /><br />
                         <div id="resultsdiv">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
@@ -58,7 +57,7 @@
                                 <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
                                 <br />
                             </div>
-                        </div>
+                        </div><!-- div de resultados -->
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
@@ -149,7 +148,7 @@
                                         </c:if>
                                     </tr>
                                 </table>
-                            </div>
+                            </div><!-- paginador -->
                             <br />
                             <p style="text-align: center">
                                 Existen: ${total} vulnerabilidades en ${arnoOfPages} páginas.
@@ -157,19 +156,24 @@
                             <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none; z-index: 999;">
                                 <iframe id="thedialog" width="750" height="700"></iframe>
                             </div>
-                        </div>
+                        </div><!-- content -->
                     </div>
                 </div>
-            </div>
-            <div id="dialog-message">
-            </div>
+            </div><!-- page content -->
+            <div id="dialog-message"></div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
+            /**
+             * Función jQuery que maneja la funcionalidad de la aplicación
+             */
             $(document).ready(function() {
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");
+                /**
+                 * Función que se ejecuta cuando se hace clic sobre un elemento con clase view
+                 */
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
@@ -180,8 +184,7 @@
                         draggable: false,
                         open: function() {
                             $('.ui-widget-overlay').addClass('custom-overlay');
-                        },
-                        close: function() {
+                        }, close: function() {
                             $("#thedialog").attr("src", "about:blank");
                         }
                     });
@@ -191,22 +194,32 @@
                  $("#searchkey").autocomplete({ source: function(request, response) {
                  $.ajax({ url: '/sisalbm/admin/vulnerability.controller?action=search', type: 'GET', data: { term: request.term },
                  dataType: "json", success: function(data) { response(data); } }); }});*/
+                 /**
+                  * Función que ejecuta la busqueda al realizar clic sobre el botón
+                  */
                 $("#searchbutton").on("click", function() {
                     var val = $("#searchkey").val();
                     $.ajax({
                         url: '/sisalbm/admin/vulnerability.controller?action=search&type=vulnsearch',
                         type: 'GET',
                         data: "key=" + val,
-                        success: function(result) {
+                        beforeSend: function() {
+                            //Mostrar mensaje de aviso de procesamiento
+                            jQuery.noticeAdd({
+                                text: "Realizando búsqueda <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                stay: false,
+                                type: 'info'
+                            });
+                        }, success: function(result) {
+                            result = result.trim();
                             $("#content").hide();
                             $("#resultsdiv").show();
                             if (result === 'notfound') {
-                                var notResult = "<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
-                                $("#resultbody").html(notResult);
+                                //Si no se encuentra la vulnerabilidad mostrar un mensaje
+                                $("#resultbody").html("<tr><td colspan='5' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>");
                                 $("#dialog-message").attr("title", "Vulnerabilidad No Encontrada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "No se encontro la vulnerabilidad.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro la vulnerabilidad.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -216,13 +229,14 @@
                                     }
                                 });
                             } else {
+                                //En otro caso hacer un append con el resultado obtenido
                                 $("#resultbody").html(result);
                             }
                         }, error: function() {
+                            //Ejecutar este codigo cuando la petición no se completa por problemas del servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
-                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                            $("#dialog-message").html(content);
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -234,6 +248,9 @@
                         }
                     });
                 });
+                /**
+                 * Función que se ejecuta cuando se finaliza la busqueda
+                 */
                 $("#closesearch").on("click", function() {
                     $("#content").show();
                     $("#resultsdiv").hide();

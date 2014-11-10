@@ -1,10 +1,13 @@
+<%-- 
+JSP que se encarga de mostrar  la información del software que esta soportado por la aplicación
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Software Soportado</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
@@ -20,13 +23,13 @@
                 </table>
             </div><!-- page header-->
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Software Registrado</div>
                         <br />
+                        <!-- formulario de busqueda -->
                         <div class="searchdiv">
                             <form class="searchform">
                                 <!--<button type="submit" id="addButton" class="addbutton">Agregar Software</button>
@@ -35,10 +38,8 @@
                                 <input id="searchkey" class="searchinput right" type="text" placeholder="Nombre del SW" />
                                 <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
                             </form>
-                        </div>
-                        <br />
-                        <br />
-                        <br />
+                        </div><!-- busqueda --> <br /> <br /> <br />
+                        <!-- div para mostrar los resultados -->
                         <div id="resultsdiv">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
@@ -57,7 +58,7 @@
                                 <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
                                 <br />
                             </div>
-                        </div>
+                        </div><!-- resultados -->
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" id="tablestyle">
@@ -92,13 +93,10 @@
                                                         <td style="width: 80px; text-align: center">ND</td>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <!--
-                                        <td>
-                                            <a href="configuration/editarSW.jsp?id=$ {supSW.idSoftware}">
+                                                <!-- codigo para la edición del software
+                                        <td><a href="configuration/editarSW.jsp?id=$ {supSW.idSoftware}">
                                                 <img src="../resources/images/edit.png" alt="editar" id="tableicon" />
-                                            </a>
-                                        </td>
-                                                -->
+                                            </a></td>-->
                                                 <td>
                                                     <a href="id=${supSW.idSoftware}&nombre=${supSW.nombre}" class="view">
                                                         <img src="../resources/images/trash.png" alt="id=${supSW.idSoftware}" id="tableicon" class="delbtn" />
@@ -138,10 +136,9 @@
                                         </c:if>
                                     </tr>
                                 </table>
-                            </div>
-                        </div>
+                            </div><!-- paginador -->
+                        </div><!-- content -->
                     </div>
-
                 </div>
             </div><!--page content-->
             <div id="dialog-message"></div>
@@ -149,35 +146,48 @@
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script>
+            /**
+             * Función jQuery que se encarga del manejjo de la funcionalidad de la pagina
+             */
             $(document).ready(function() {
                 var dialog = $("#dialog-form");
                 $("#dialog-form").hide();
-                $("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                //$("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
                     /* Dialogo
                      $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
                      buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
-                });
+                //});
                 /**
                  *  Código para la busqueda de SW
                  */
                 $("#resultsdiv").hide();
                 $("#searchkey").val("");
+                /**
+                 * Función que implementa la busqueda de software
+                 */
                 $("#searchbutton").on("click", function() {
                     var val = $("#searchkey").val();
                     $.ajax({
                         url: '/sisalbm/admin/vulnerability.controller?action=search&type=swsearch',
                         type: 'GET',
                         data: "key=" + val,
-                        success: function(result) {
+                        beforeSend: function() {
+                            //Mostrar mensaje de aviso de procesamiento
+                            jQuery.noticeAdd({
+                                text: "Procesando petición <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                stay: false,
+                                type: 'info'
+                            });
+                        }, success: function(result) {
+                            result = result.trim();
                             $("#content").hide();
                             $("#resultsdiv").show();
+                            //Si la respuesta es nula establecer un mensaje de notificación
                             if (result === '') {
-                                var notResult = "<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>";
-                                $("#resultbody").html(notResult);
+                                $("#resultbody").html("<tr><td colspan='4' style='text-align:center'>No se encontraron resultados para el criterio: " + val + "</td></tr>");
                                 $("#dialog-message").attr("title", "Software No Encontrado");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "No se encontro el software.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "No se encontro el software.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -187,14 +197,15 @@
                                     }
                                 });
                             } else {
+                                //Si la respuesta no es nula establecer el contenido
                                 $("#resultbody").html(result);
                             }
 
                         }, error: function() {
+                            //Mostrar mensaje cuando ocurre un error para completar la petición hacia el servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
-                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                            $("#dialog-message").html(content);
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -206,40 +217,53 @@
                         }
                     });
                 });
+                /**
+                 * Función que termina la busqueda
+                 */
                 $("#closesearch").on("click", function() {
                     $("#content").show();
                     $("#resultsdiv").hide();
                     $("#searchkey").val("");
                 });
                 /**
-                 * Código para elimiinar un SW
+                 * Código para eliminar un SW
                  */
                 $(".view").on("click", function() {
+                    //Obtener la referencia del software a eliminar
                     var id_name = $(this).attr("href");
                     var res = id_name.split("&");
                     var res0 = res[0].split("=");
                     var swid = res0[1];
                     var res1 = res[1].split("=");
-                    var content = "<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
-                            "¿Desea eliminar el software:<br /> '" + res1[1] + "'?</p>";
+                    //Mostrar una ventana de confirmacin
                     $("#dialog-message").attr("title", "Confirmar Eliminación");
-                    $("#dialog-message").html(content);
+                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
+                            "¿Desea eliminar el software:<br /> '" + res1[1] + "'?</p>");
                     $("#dialog-message").dialog({
                         modal: true,
                         buttons: {
                             Eliminar: function() {
                                 $(this).dialog("close");
+                                //Si se hace clic sobre la opción eliminar, iniciar el procesamiento ajax
                                 $.ajax({
                                     url: '/sisalbm/admin/configuration.controller?action=deleteSW',
                                     type: 'POST',
                                     data: 'swid=' + swid,
-                                    success: function(result) {
+                                    beforeSend: function() {
+                                        jQuery.noticeAdd({
+                                            text: "Procesando la petición:" + //+ tk[1] + + 
+                                                    "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                            stay: false,
+                                            type: 'info'
+                                        });
+                                    }, success: function(result) {
                                         var content = "";
+                                        result = result.trim();
                                         if (result === 'OK') {
+                                            //Si el resultado es correcto mostrar esta alerta
                                             $("#dialog-message").attr("title", "Software Eliminado");
-                                            content = "<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "El software '" + res1[1] + "' ha sido eliminado exitosamente.</p>";
-                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "El software '" + res1[1] + "' ha sido eliminado exitosamente.</p>");
                                             $("#dialog-message").dialog({
                                                 modal: true,
                                                 buttons: {
@@ -250,10 +274,10 @@
                                                 }
                                             });
                                         } else if (result === 'ERROR') {
+                                            //Si ocurre un error mostrar esta alerta
                                             $("#dialog-message").attr("title", "Software No Eliminado");
-                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>";
-                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
                                             $("#dialog-message").dialog({
                                                 modal: true,
                                                 buttons: {
@@ -263,10 +287,10 @@
                                                 }
                                             });
                                         } else {
+                                            //En otro caso mostrar est aalerta
                                             $("#dialog-message").attr("title", "Software No Eliminado");
-                                            content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
-                                            $("#dialog-message").html(content);
+                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>");
                                             $("#dialog-message").dialog({
                                                 modal: true,
                                                 buttons: {
@@ -277,10 +301,11 @@
                                             });
                                         }
                                     }, error: function() {
+                                        //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
                                         $("#dialog-message").attr("title", "Petición Incompleta");
-                                        var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                                        $("#dialog-message").html(content);
+                                        var content = ;
+                                        $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                                         $("#dialog-message").dialog({
                                             modal: true,
                                             buttons: {
@@ -293,6 +318,7 @@
                                 });
                             },
                             Cancelar: function() {
+                                //Si la opción es cancelar solamente cerrar el dialogo
                                 $(this).dialog("close");
                             }
                         }

@@ -315,7 +315,7 @@ input[type=button] {//}, input[type=submit] {
     color: #FFF;*/
 }
 
-#actualizar, #customButton, #fullButton, #closesearch, #addButton { 
+#actualizar, #customButton, #fullButton, #closesearch, #addButton, #editButton { 
     margin-top: 5px;
     display: block;
     margin-left: auto;

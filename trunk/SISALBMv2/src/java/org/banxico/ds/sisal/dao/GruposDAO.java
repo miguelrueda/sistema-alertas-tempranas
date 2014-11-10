@@ -17,7 +17,7 @@ import org.banxico.ds.sisal.entities.Software;
 /**
  * Clase que se encarga de manejar el acceso a datos relacionados con la entidad
  * Grupos
- * 
+ *
  * @author t41507
  * @version 13.08.2014
  */
@@ -59,7 +59,7 @@ public class GruposDAO {
     private static final String sqlEditarGrupoPorId = "UPDATE Grupo SET nombre = ?, categoria = ?, se_reporta = ?, correo = ? WHERE idGrupo = ?";
     private static final String sqlEliminarInfoGrupoSoftware = "DELETE FROM Grupo_Software WHERE idGrupo = ?";
     private static final String sqlBuscarGrupoPorNombre = "SELECT g.idGrupo, g.nombre, g.categoria FROM Grupo g WHERE g.nombre LIKE ?";
-    
+
     /**
      * Constructor
      */
@@ -67,10 +67,10 @@ public class GruposDAO {
         //Inicializar la lista de grupos
         cargarGruposEnLista();
     }
-    
+
     /**
-     * Método que se encarga de establecer conexión a BD, y obtener la lista de todos
-     * los grupos
+     * Método que se encarga de establecer conexión a BD, y obtener la lista de
+     * todos los grupos
      */
     private void cargarGruposEnLista() {
         //Inicializar la lista e instanciar un grupo
@@ -109,10 +109,10 @@ public class GruposDAO {
             }
         }
     }
-    
+
     /**
      * Método que obtiene una instancia de la conexión a BD
-     * 
+     *
      * @return objeto de tipo Connection con la conexión
      */
     private Connection getConnection() {
@@ -127,7 +127,7 @@ public class GruposDAO {
     public List<Grupo> getListaGrupos() {
         return listaGrupos;
     }
-    
+
     /**
      * Getter
      *
@@ -138,8 +138,8 @@ public class GruposDAO {
     }
 
     /**
-     * Obtener grupos de la lista, con un parametro de inicio y cantidad de registros
-     * *Es como una función LIMIT de mysql
+     * Obtener grupos de la lista, con un parametro de inicio y cantidad de
+     * registros *Es como una función LIMIT de mysql
      *
      * @param offset entero que indica el registro de inicio
      * @param noreg entero que indica la cantidad de registros a obtener
@@ -182,23 +182,24 @@ public class GruposDAO {
         }
         return grupos;
     }
-    
+
     /**
-     * Método que se encarga de devolver el código HTML que contiene la descripción
-     * de un grupo solicitado
+     * Método que se encarga de devolver el código HTML que contiene la
+     * descripción de un grupo solicitado
      *
      * @param id identificador del grupo a describir
-     * @return Buffer representado como cadena devolviendo la descripción del grupo
+     * @return Buffer representado como cadena devolviendo la descripción del
+     * grupo
      */
     public String describirGrupo(int id) {
         //Buscar el grupo por su ID
-        Grupo temp = obtenerGrupoPorId(id);
+        Grupo grupo = obtenerGrupoPorId(id);
         //Iniciar el buffer y agregar plantilla HTML
         StringBuilder sb = new StringBuilder();
         sb.append("<table border='1'>");
         sb.append("<thead>");
         sb.append("<th colspan='2'>");
-        sb.append(temp.getNombre());
+        sb.append(grupo.getNombre());
         sb.append("</th>");
         sb.append("</thead>");
         sb.append("<tbody>");
@@ -207,7 +208,7 @@ public class GruposDAO {
                 .append("Categoría")
                 .append("</td>");
         sb.append("<td>")
-                .append(temp.getCategoria())
+                .append(grupo.getCategoria())
                 .append("</td>");
         sb.append("</tr>");
         sb.append("<tr>");
@@ -216,7 +217,7 @@ public class GruposDAO {
                 .append("</td>");
         sb.append("<td>");
         //Obtener el software asociado al grupo seleccionado
-        List<Software> productos = obtenerSoftwaredeGrupo(temp.getIdGrupo());
+        List<Software> productos = obtenerSoftwaredeGrupo(grupo.getIdGrupo());
         sb.append("<table style=\"border:0\">");
         sb.append("<tbody>");
         sb.append("<tr>")
@@ -263,6 +264,27 @@ public class GruposDAO {
         sb.append("</table>");
         sb.append("</td>");
         sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<td>");
+        sb.append("Reporta");
+        sb.append("</td>");
+        sb.append("<td>");
+        int reportable = grupo.getReporta();
+        if (reportable == 0) {
+            sb.append("El grupo no se reporta");
+        } else if (reportable == 1) {
+            sb.append("El grupo se reporta");
+        }
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<td>");
+        sb.append("Correo del Grupo");
+        sb.append("</td>");
+        sb.append("<td>");
+        sb.append(grupo.getCorreo());
+        sb.append("</td>");
+        sb.append("</tr>");
         sb.append("</tbody>");
         sb.append("</table>");
         return sb.toString();
@@ -270,7 +292,7 @@ public class GruposDAO {
 
     /**
      * Obtener la referencia a un grupo a partir de su identificador
-     * 
+     *
      * @param id identificador del grupo a buscar
      * @return referencia del objeto grupo
      */
@@ -312,7 +334,7 @@ public class GruposDAO {
 
     /**
      * Obtener todos los productos de software relacionados con un grupo
-     * 
+     *
      * @param idGrupo identificador del grupo a buscar
      * @return lista de software con los elementos asociados a ese grupo
      */
@@ -392,17 +414,20 @@ public class GruposDAO {
         }
         return cats;
     }
-    
+
     /**
-     * Método que registra un grupo en la bd a partir de los parametros recibidos
-     * 
+     * Método que registra un grupo en la bd a partir de los parametros
+     * recibidos
+     *
      * @param nombre_grupo cadena con el nombre del grupo a crear
      * @param categoria_grupo cadena con la categoria para registrar el grupo
-     * @param llaves arreglo de enteros con las llaves del software a registrar en el grupo
+     * @param llaves arreglo de enteros con las llaves del software a registrar
+     * en el grupo
      * @return bandera con el valor de la creación del grupo
-     * @throws java.sql.SQLException cuando no se puede ejecutar de forma correcta la transacción
+     * @throws java.sql.SQLException cuando no se puede ejecutar de forma
+     * correcta la transacción
      */
-    public boolean crearGrupo(String nombre_grupo, String categoria_grupo, int reportable, String correo, Integer [] llaves) throws SQLException {
+    public boolean crearGrupo(String nombre_grupo, String categoria_grupo, int reportable, String correo, Integer[] llaves) throws SQLException {
         //Banderas de resultado
         boolean group_created = false;
         int generated_key = 0;
@@ -462,7 +487,7 @@ public class GruposDAO {
         }
         return group_created;
     }
-    
+
     /**
      * Métod que se encarga de buscar la información de un grupo a partir de su
      * llave
@@ -502,17 +527,18 @@ public class GruposDAO {
         }
         return found;
     }
-    
+
     /**
      * Método que se encarga de eliminar un grupo en base a su identifiacador
      *
      * @param id identificador del grupo
-     * @return bandar con el resultado de la opreación true para eliminado, false para error
+     * @return bandar con el resultado de la opreación true para eliminado,
+     * false para error
      */
     public boolean eliminarGrupo(int id) {
         boolean res = false;
         try {
-            
+
             connection = getConnection();
             pstmt = connection.prepareStatement(sqlDeleteGroupWithId);
             pstmt.setInt(1, id);
@@ -535,9 +561,7 @@ public class GruposDAO {
         }
         return res;
     }
-    
-    
-    
+
     public boolean editarGrupo(int idgrupo, String nombre, String categoria, int reportable, String correo, Integer[] llaves) throws SQLException {
         boolean res = false;
         try {
@@ -579,8 +603,6 @@ public class GruposDAO {
         }
         return res;
     }
-    
-    
 
     public Grupo obtenerGrupoPorNombre(String nombre) {
         Grupo encontrado = null;

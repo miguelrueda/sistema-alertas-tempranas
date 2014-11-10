@@ -344,7 +344,7 @@
                                 //Mostrar mensaje de aviso de procesamiento
                                 jQuery.noticeAdd({
                                     text: "Procesando petición <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
-                                    stay: true,
+                                    stay: false,
                                     type: 'info'
                                 });
                             }, success: function(response) {

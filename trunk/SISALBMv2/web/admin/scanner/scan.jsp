@@ -1,3 +1,7 @@
+<%-- 
+    JSP que contiene el formulario para realizar la búsqueda de vulnerabilidades bajo 
+    diversos parametros
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -19,13 +23,13 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Nuevo Escaneo</div>-->
                 <div id="workarea">
                     <%@include file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
                         <div id="page_title">Realizar Escaneo</div>
                         <div id="content">
+                            <!-- parametros iniciales del formulario -->
                             <form class="form" id="scanForm" >
                                 <label for="tipo">Tipo de Escaneo:</label>
                                 <input type="radio" name="tipo" value="completo" id="tipo" class="required" 
@@ -36,7 +40,7 @@
                                 <br />
                                 <br />
                             </form>
-                            <div id="full">
+                            <div id="full"><!-- div que contiene las opciones para hacer una búsqueda completa de vulnerabilidades -->
                                 <form class="form" id="fullForm" method="post" action="/sisalbm/scanner?action=scan&tipo=completo">
                                     <p style="text-align: center">
                                         Esté escaneo analizará (todos los grupos/todas las UA) con el archivo completo de Vulnerabilidades.
@@ -89,8 +93,8 @@
                                     <input type="submit" class="inputsubmit" value="Buscar Vulnerabilidades" id="fullButton" />
                                     <br />
                                 </form>
-                            </div>
-                            <div id="custom">
+                            </div><!-- div full -->
+                            <div id="custom"><!-- div que se muestra cuando se quiere una busqueda más específica -->
                                 <form class="form" id="customForm" method="post" action="/sisalbm/scanner?action=scan&tipo=custom">
                                     <fieldset>
                                         <legend>Seleccionar parámetros para el escaneo</legend>
@@ -145,19 +149,6 @@
                                                         <label for="vendor" class="error" ></label>
                                                     </td>
                                                 </tr>
-                                                <!--
-                                                <tr id="productrow">
-                                                    <td>
-                                                        <label>Seleccionar Producto:</label>
-                                                    </td>
-                                                    <td>
-                                                        <select name="product" id="product"></select>
-                                                    </td>
-                                                    <td>
-                                                        <label for="product" class="error"></label>
-                                                    </td>
-                                                </tr>
-                                                -->
                                                 <tr id="sevDiv">
                                                     <td>
                                                         <label>Gravedad</label>
@@ -230,32 +221,40 @@
                                     </fieldset>
                                     <input type="submit" value="Buscar Vulnerabilidades" id="customButton" />
                                 </form>
-                            </div>
-                        </div>
+                            </div><!-- div custom -->
+                        </div><!-- content -->
                     </div>
                 </div>
-            </div>
+            </div><!-- page content -->
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.ui.datepicker-es.js" ></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
         <script type="text/javascript">
-            $(function() {
-                $(document).tooltip();
-            });
+            /**
+             * Función que inicializa el tooltip
+             */
+            $(function() { $(document).tooltip();});
+            /**
+             * Función jQuery que maneja la funcionalidad de la página
+             */
             $(document).ready(function() {
+                //Inicializar el calendario a español
                 $(function() {
                     $.datepicker.setDefaults($.datepicker.regional['es']);
                 });
                 $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                 $("#full").hide();
                 $("#custom").hide();
+                //Se solicita el campo de tipo de busqueda y a partir de ese parametro se carga 
+                //el formulario correspondiente
                 $($("input[name=tipo]")).on("click", function() {
                     var tipo = $("input:radio[name=tipo]:checked").val();
                     mostrarFormulario(tipo);
 
                 });
+                //validación del formulario completo
                 $("#fullForm").validate({
                     rules: {
                         fechaF: "required",
@@ -268,6 +267,7 @@
                         edateF: 'Seleccionar una fecha de termino'
                     }
                 });
+                //validación para el formulario custom
                 $.validator.addMethod("valueNotEquals", function(value) {
                     return (value !== '0');
                 }, "Seleccionar un fabricante");
@@ -291,13 +291,19 @@
                     }
                 });
             });
+            /**
+             * Funcióno que se encarga de mostrar el formulario de acuerdo
+             * al tipo de formulario que se seleccione del formulario principal
+             */
             function mostrarFormulario(tipo) {
                 if (tipo === 'completo') {
                     $("#full").show();
                     $("#custom").hide();
                     $(".fechaFull").hide();
+                    //Mostrar los campos de fecha a partir del tipo de fecha seleccionado
                     $("input:radio[name=fechaF]").on("click", function() {
                         var fechaF = $("input:radio[name=fechaF]:checked").val();
+                        //Si la fecha es parcial mostrar los calendarios de jQuery
                         if (fechaF === 'partial') {
                             $(".fechaFull").show();
                             $("#sdateF").datepicker({
@@ -318,6 +324,7 @@
                                 }
                             });
                         } else if (fechaF === 'full') {
+                            //Si la fecha es completa establecer los valores date a vacio
                             $(".fechaFull").hide();
                             $("#sdateF").val("");
                             $("#edateF").val("");
@@ -329,6 +336,7 @@
                     $("#vendordiv").hide();
                     //$("#productrow").hide();
                     $(".fechaCustom").hide();
+                    //Cargar los grupos en el formulario, y para el grupo 1 cargar sus fabricantes
                     $("#UA").load("/sisalbm/scanner?action=retrieve&val=ua");
                     $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {vendor: 0});
                     /*
@@ -343,6 +351,7 @@
                      */
                     $("input:radio[name=fab]").on("click", function() {
                         var fab = $("input:radio[name=fab]:checked").val();
+                        //A partir del tipo de fabricante selecionado mostrar el div para seleccionar uno especifico
                         if (fab === 'single') {
                             $("#vendordiv").show();
                             //$("#productrow").show();
@@ -353,6 +362,7 @@
                         }
                     });
                     $("input:radio[name=fechaC]").on("click", function() {
+                        //Script que muestra los calendarios en caso de que se solicite una fecha especifica
                         var fechaC = $("input:radio[name=fechaC]:checked").val();
                         if (fechaC === 'partial') {
                             $(".fechaCustom").show();
@@ -380,21 +390,28 @@
                     });
                 }
             }
+            /**
+             * Función que se encarga de cargar los fabricantes en el campo select
+             * a partir de los fabricantes existenes en un grupo
+             */
             function cargarFabricantes() {
                 var ua = $("#UA").val();
                 $("#vendor").load("/sisalbm/scanner?action=retrieve&val=vendor", {
                     vendor: ua
                 });
             }
-
+            /**
+             * Función que se encarga de cargar los productos de un fabricante
+             */
             function cargarProductos() {
                 var fab = $("#vendor").val();
-                //alert("/sisalbm/scanner?action=retrieve&val=product&vendor=" + fab);
                 $("#product").load("/sisalbm/scanner?action=retrieve&val=product", {
                     vendor: fab
                 });
             }
-
+            /**
+             * Función no utilizada
+             */
             function showProducts() {
                 //obtiene los objetos productCode, 
                 var code = $("#productCode").val(); //.. y se obtiene el valor
@@ -406,4 +423,3 @@
         </script>
     </body>
 </html>
-

@@ -1,3 +1,7 @@
+<%-- 
+    JSP que se encarga de mostrar los detalles de una vulnerabilidad, la información
+    se carga a partir del identificador de la vulnerabilidad obtenido de la petición
+--%>
 <%@page import="org.banxico.ds.sisal.dao.VulnerabilityDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -6,7 +10,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
-        <!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
     </head>
     <%
         String name = request.getParameter("name");
@@ -24,6 +27,10 @@
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jspdf.min.js"></script>
         <script>
+            /**
+             * Función que se encarga de exportar la información de la vulnerabilidad
+             * a un PDF
+             */
             function toPDF(title) {
                 var ndesc = $("#desc").html();
                 var doc = new jsPDF('p', 'in', 'letter')
@@ -122,13 +129,6 @@
                         }
                     }
                 }
-                //doc.text(0.5, 1.5, res);
-
-                //doc.text(20, 20, title);
-                //doc.text(20, 20, 'Hello World!');
-                //doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-                //doc.addPage();
-                //doc.text(20, 20, 'Do you like that');
                 doc.save(title + '.pdf');
             }
         </script>

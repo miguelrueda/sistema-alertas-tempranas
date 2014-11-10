@@ -1,8 +1,12 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%-- 
+    JSP que muestra un formulario para editar la información de la fuente de vulnerabilidades,
+    en este caso se utiliza una url de las que provee el nist, es el único campo editable
+--%>
 <%@page import="java.util.Date"%>
 <%@page import="org.banxico.ds.sisal.entities.FuenteApp"%>
 <%@page import="org.banxico.ds.sisal.dao.SourcesDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
@@ -12,6 +16,7 @@
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="/sisalbm/resources/css/jquery.notice.css" type="text/css" rel="stylesheet"/>
     </head>
     <%
         String srcId = request.getParameter("id");
@@ -27,7 +32,6 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -90,53 +94,42 @@
                     </div>
                 </div>
             </div>
-            <div id="dialog-message">
-            </div>
+            <div id="dialog-message"></div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script>
             $(document).ready(function() {
                 $("#dialog-message").hide();
                 /*
-                 $("#namef").on("input", function() {
-                 var input = $(this); var isname = input.val();
-                 if (isname) {
-                 $("#namevalidation").hide();
-                 $("#actualizar").attr("disabled", false);
-                 } else {
-                 $("#namevalidation").addClass("error");
-                 $("#namevalidation").html("El nombre ingresado no es válido");
-                 $("#namevalidation").show();
-                 $("#actualizar").attr("disabled", true);
-                 }
-                 });
-                 $("#urlf").on("input", function() {
-                 var input = $(this);
-                 if (input.length < 1) {
-                 $("#actualizar").attr("disabled", false);
-                 } else {
-                 $("#actualizar").attr("disabled", true);
-                 }
-                 });
+                 * Función que se ejecuta una vez que se hace clic sobre el boton
+                 * de actualizar fuente
                  */
                 $("#actualizar").click(function(e) {
                     var name = $("#namef").val();
                     var url = $("#urlf").val();
-                    var a = $("#form").serialize();
+                    //Se obtiene una referencia al formulario serializado y al id de la fuente que se va a editar
+                    var formser = $("#form").serialize();
                     var idf = $("#idf").val();
-                    //alert("idf=" + idf + "&" + a);
                     $.ajax({
                         type: 'get',
                         url: '/sisalbm/admin/configuration.controller?action=edit&tipo=1',
-                        data: "idf=" + idf + "&" + a,
-                        success: function(result) {
+                        data: "idf=" + idf + "&" + formser,
+                        beforeSend: function() {
+                            //Mostrar mensaje de aviso de procesamiento
+                            jQuery.noticeAdd({
+                                text: "Procesando petición <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                stay: false,
+                                type: 'info'
+                            });
+                        }, success: function(result) {
+                            result = result.trim();
+                            //A partir del resultado obtenido del servidor mostrar una alerta
                             if (result === "true") {
-                                //alert("Edición Completa");
                                 $("#dialog-message").attr("title", "Edición Completa");
-                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "La Fuente ha sido actualizada de forma exitosa.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La Fuente ha sido actualizada de forma exitosa.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -145,14 +138,15 @@
                                         }
                                     }
                                 });
-                                $("#namef").attr("disabled", true);
-                                $("#urlf").attr("disabled", true);
-                                $("#actualizar").attr("disabled", true);
+                                //Deshabilitar los campos para evitar 
+                                //$("#namef").attr("disabled", true);
+                                //$("#urlf").attr("disabled", true);
+                                //$("#actualizar").attr("disabled", true);
                             } else if (result === "nombre") {
+                                //Se muestra este mensaje cuando el nombre ingresado no es válido
                                 $("#dialog-message").attr("title", "Error de entrada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "El nombre ingresado no es válido</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "El nombre ingresado no es válido</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -162,10 +156,10 @@
                                     }
                                 });
                             } else if (result === 'url') {
+                                //Se muestre éste mensaje cuando la url ingresada no es válida
                                 $("#dialog-message").attr("title", "Error de entrada");
-                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "La URL ingresada no es válida.<br />La URL debe cumplir con el prefijo: ([http|https]://)</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La URL ingresada no es válida.<br />La URL debe cumplir con el prefijo: ([http|https]://)</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -176,11 +170,10 @@
                                 });
                             }
                             else {
-                                //alert("Edición Incompleta");
+                                //Se muestre este mensaje cuando el servidor no retorna una respuesta favorable
                                 $("#dialog-message").attr("title", "Edición Incompleta");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la actualización. Favor de intentarlo nuevamente.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la actualización. Favor de intentarlo nuevamente.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -191,10 +184,10 @@
                                 });
                             }
                         }, error: function() {
+                            //Mensaje que se muestra cuando existe un error al ejecutar la petición
                             $("#dialog-message").attr("title", "Edición Incompleta");
-                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                            $("#dialog-message").html(content);
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {

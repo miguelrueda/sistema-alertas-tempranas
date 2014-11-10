@@ -1,11 +1,15 @@
+<%-- 
+    JSP que muestra listado con todas las fuentes registradas en el sistema, se da la opcón de editar
+    o realizar la descarga de la actualización de las mismas
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8" language="java"%>
 <%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Administración de Fuentes</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
@@ -21,7 +25,6 @@
                 </table>
             </div>
             <div id="page_content">
-                <!--<div id="title">&nbsp;Versión Adminstrativa</div>-->
                 <div id="workarea">
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
@@ -69,21 +72,26 @@
                                         </c:choose>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
+                            </div><!-- data grid -->
+                        </div><!-- content -->
                         <br />
                     </div>
                 </div>
-            </div>
-            <div id="dialog-message">
-            </div>
+            </div><!-- page content -->
+            <div id="dialog-message"></div>
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../resources/js/jquery.notice.js" ></script>
         <script>
+            /**
+             * Función de jQuery que maneja la funcionalidad de la página
+             */
             $(document).ready(function() {
                 $("#dialog-message").hide();
+                /*
+                 * Función que se ejecuta cuando se realiza clic sobre la opción ver detalle de una fuente
+                 */
                 $(".view").click(function() {
                     $("#thedialog").attr('src', $(this).attr("href"));
                     $("#dialogdiv").dialog({
@@ -101,34 +109,34 @@
                     });
                     return false;
                 });
+                /**
+                 * Función que se ejecuta cuando se hace clic sobre la opción de descarga de alguna de las 
+                 * fuentes registradas
+                 */
                 $(".dwnldBtn").click(function(e) {
+                    //Se obtienen los parametros del enlace del boton
                     var param = $(this).attr("alt");
-                    //$.growl.notice({title: "Info", message: "Descargando el archivo: " + url});
                     var tokens = param.split("&");
                     var tk = tokens[1].split("=");
-                    //alert(tk[1]);
-                    //alert("/sisalbm/admin/configuration.controller?action=download&" + param);
-                    //data: param,
+                    //Se inicia la petición al servidor
                     $.ajax({
                         type: 'GET',
                         url: '/sisalbm/admin/configuration.controller?action=download&' + param,
                         beforeSend: function() {
+                            //Se muestra una nnotificación de la descarga
                             jQuery.noticeAdd({
                                 text: "Procesando Descarga:" + //+ tk[1] + + 
                                         "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
                                 stay: true,
                                 type: 'info'
                             });
-                        },
-                        success: function(result) {
-                            //alert(result);
-                            var title = "";
+                        }, success: function(result) {
+                            result = result.trim();
                             if (result === 'UPDATED') {
+                                //Si la fuente esta actualizada se muestra un mensaje
                                 $("#dialog-message").attr("title", "Referencia Actualizada");
-                                title = "Referencia Actualizada";
-                                var content = "<p><span class='ui-icon ui-icon-circle-minus' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "La referencia está actualizada, no se requiere actualizar.</p>";
-                                $("#dialog-message").html(content);
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-minus' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La referencia está actualizada, no se requiere actualizar.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -138,12 +146,10 @@
                                     }
                                 });
                             } else if (result === 'OK') {
-                                title = "Descarga Exitosa";
+                                //Se muestra ésta ventana cuando la petición se completa satisfactoriamente
                                 $("#dialog-message").attr("title", "Actualización Exitosa");
-                                var content = "<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "La descarga ha sido completada de forma exitosa.</p>";
-                                $("#dialog-message").html(content);
-                                /*jQuery.noticeAdd({text: 'La descarga se realizo exitosamente',stay: true,type: 'success'});*/
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-check' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "La descarga ha sido completada de forma exitosa.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -153,17 +159,10 @@
                                     }
                                 });
                             } else if (result === 'ERROR') {
-                                title = "Error de Descarga";
+                                //Se muestra ésta ventana cuando ocurre un error al realizar la descarga
                                 $("#dialog-message").attr("title", "Error de Descarga");
-                                var content = "<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la descarga.</p>";
-                                $("#dialog-message").html(content);
-                                /*
-                                 jQuery.noticeAdd({
-                                 text: 'Ocurrio un error al realizar la descarga',
-                                 stay: true,
-                                 type: 'error'
-                                 });*/
+                                $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
+                                        "Ocurrio un error al realizar la descarga.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -173,12 +172,11 @@
                                     }
                                 });
                             }
-                            //$("#dialog-message").attr("title", title);
                         }, error: function() {
+                            //Se muestra ésta ventana cuando ocurre un error al realizar la petición hacia el servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
-                            var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
-                            $("#dialog-message").html(content);
+                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -187,12 +185,11 @@
                                     }
                                 }
                             });
-                        },
-                        complete: function(data) {
+                        }, complete: function(data) {
+                            //Cuando se completa la petición eliminar la notificación
                             setInterval(function() {
                                 jQuery.noticeRemove($('.notice-item-wrapper'), 400);
                             }, 5000);
-
                         }
                     });
                 });
