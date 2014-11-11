@@ -43,7 +43,7 @@ public class GruposDAO {
      */
     private static final String sqlObtenerTodoslosGrupos = "SELECT * FROM Grupo g ORDER BY g.nombre";
     private static final String retrieveGroupsFromLimit = "SELECT * FROM ( "
-            + "SELECT g.idGrupo, g.nombre, g.categoria, ROW_NUMBER() OVER(ORDER BY g.idGrupo) as row "
+            + "SELECT g.idGrupo, g.nombre, g.categoria, ROW_NUMBER() OVER(ORDER BY g.nombre) as row "
             + "FROM Grupo g ) z "
             + "WHERE z.row > ? and z.row <= ?";
     private static final String retrieveAllSoftwareFromGroup = "SELECT s.idSoftware, s.fabricante, s.nombre, s.version, s.end_of_life, g.idGrupo, "

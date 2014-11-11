@@ -126,21 +126,44 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                                             <td><a href="vulnerability.controller?action=view&tipo=2&page=1" class="page">Inicio</a></td>
                                             <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage - 1}" class="page">Anterior</a></td>
                                         </c:if>
-                                        <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
-                                            <c:choose>
-                                                <c:when test="${currentPage lt arnoOfPages}">
-                                                    <c:choose>
-                                                        <c:when test="${currentPage eq i}">
-                                                            <td class="page active">${i}</td>
-                                                        </c:when>
-                                                        <c:when test="${currentpage lt arnoOfPages}">
-                                                            <td><a href="vulnerability.controller?action=view&tipo=2&page=${i}" class="page">${i}</a></td>
-                                                            </c:when>
-                                                        </c:choose>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${currentPage eq 1}">
+                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                            <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                            <c:forEach var="i" begin="1" end="4">
+                                                                <option value="${currentPage + i}">Página ${currentPage + i}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </c:when>
+                                                    <c:when test="${(currentPage gt 1) and (currentPage lt arnoOfPages)}">
+                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                            <c:forEach var="i" begin="1" end="4">
+                                                                <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                                <c:if test="${currentPage - j > 0}">
+                                                                    <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                            <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                            <c:forEach var="i" begin="1" end="4">
+                                                                <c:if test="${currentPage + i <= arnoOfPages}">
+                                                                    <option value="${currentPage + i}">Página ${currentPage + i}</option>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </c:when>
+                                                    <c:when test="${currentPage eq arnoOfPages}">
+                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                            <c:forEach var="i" begin="1" end="4">
+                                                            <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                            <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                        </c:forEach>
+                                                        <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                        </select>
                                                     </c:when>
                                                 </c:choose>
-                                            </c:forEach>
-                                            <c:if test="${currentPage lt arnoOfPages}">
+                                            </td>
+                                        <c:if test="${currentPage lt arnoOfPages}">
                                             <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage + 1}" class="page">Siguiente</a></td>
                                         </c:if>
                                         <c:if test="${currentPage ne arnoOfPages}">
@@ -165,6 +188,15 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="../resources/js/jquery.notice.js"></script>
+        <script>
+            function cambiarPagina() {
+                var valor = $("#cambiador").val();
+                if (valor === null || valor === 0) {
+                    window.location = "vulnerability.controller?action=view&tipo=2&page=1";
+                }
+                window.location = "vulnerability.controller?action=view&tipo=2&page=" + valor;
+            }
+        </script>
         <script>
             /**
              * Función jQuery que maneja la funcionalidad de la aplicación

@@ -64,6 +64,7 @@ public class CPEParser implements java.io.Serializable {
             while (rs.next()) {
                 flujoxml = rs.getBytes("contenido_xml");
             }
+            rs.close();
             InputStream flujo = new ByteArrayInputStream(flujoxml);
             saxParserFactory = SAXParserFactory.newInstance();
             List<Software> softwares = new ArrayList<Software>();
@@ -81,6 +82,7 @@ public class CPEParser implements java.io.Serializable {
                 softwares = cpeHandler.getSoftwares();
                 return softwares;
             }
+            flujo = null;
         } catch (IOException e) {
             LOG.log(Level.INFO, "CPEParser#getList() - Ocurrio un problema con los flujos de entrada/salida: {0}", e.getMessage());
         } catch (ParserConfigurationException e) {
