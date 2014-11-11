@@ -11,7 +11,7 @@ nuevo software para ser monitoreado
         <link href="../../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../../resources/css/jquery-ui-1.10.4.custom.css" type="text/css" rel="stylesheet" />
         <link href="../../resources/css/menu.css" type="text/css" rel="stylesheet" />
-        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />        
+        <link href="/sisalbm/resources/css/jquery.notice.css" type="text/css" rel="stylesheet"/>
         <style type="text/css">
             .modal {
                 display: none;
@@ -164,6 +164,7 @@ nuevo software para ser monitoreado
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script type="text/javascript" src="../../resources/js/jquery.validate.js" ></script>
+        <script src="/sisalbm/resources/js/jquery.notice.js"></script>
         <script type="text/javascript">
             /**
              * Función jQuery que se encarga de manejar la funcionalidad de la aplicación
@@ -273,7 +274,14 @@ nuevo software para ser monitoreado
                         type: 'POST',
                         url: '/sisalbm/admin/vulnerability.controller?action=add&tipo=2',
                         data: formser,
-                        success: function(response) {
+                        beforeSend: function() {
+                            //Mostrar mensaje de aviso de procesamiento
+                            jQuery.noticeAdd({
+                                text: "Registrando software <br /><center><img src='/sisalbm/resources/images/ajax-loader.gif' alt='Cargando...' /></center>",
+                                stay: false,
+                                type: 'info'
+                            });
+                        }, success: function(response) {
                             response = response.trim();
                             if (response === 'EXISTENTE') {
                                 //Mostrar mensaje cuando el software a registrar ya existe

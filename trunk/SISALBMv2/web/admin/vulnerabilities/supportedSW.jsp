@@ -114,26 +114,49 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                             <td><a href="vulnerability.controller?action=view&tipo=3&page=1" class="page">Inicio</a></td>
                                             <td><a href="vulnerability.controller?action=view&tipo=3&page=${currentPage - 1}" class="page">Anterior</a></td>
                                         </c:if>
-                                        <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
+                                        <td>
                                             <c:choose>
-                                                <c:when test="${currentPage lt swnoOfPages}">
-                                                    <c:choose>
-                                                        <c:when test="${currentPage eq i}">
-                                                            <td class="page active">${i}</td>
-                                                        </c:when>
-                                                        <c:when test="${currentpage lt swnoOfPages}">
-                                                            <td><a href="vulnerability.controller?action=view&tipo=3&page=${i}" class="page">${i}</a></td>
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </c:when>
-                                                </c:choose>
-                                            </c:forEach>
-                                            <c:if test="${currentPage lt swnoOfPages}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=3&page=${currentPage + 1}" class="page">Siguiente</a></td>
-                                        </c:if>
-                                        <c:if test="${currentPage ne swnoOfPages}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=3&page=${swnoOfPages}" class="page">Fin</a></td>
-                                        </c:if>
+                                                <c:when test="${currentPage eq 1}">
+                                                    <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                        <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                        <c:forEach var="i" begin="1" end="4">
+                                                            <option value="${currentPage + i}">Página ${currentPage + i}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </c:when>
+                                                <c:when test="${(currentPage gt 1) and (currentPage lt swnoOfPages)}">
+                                                    <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                        <c:forEach var="i" begin="1" end="4">
+                                                            <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                            <c:if test="${currentPage - j > 0}">
+                                                                <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                        <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                        <c:forEach var="i" begin="1" end="4">
+                                                            <c:if test="${currentPage + i <= swnoOfPages}">
+                                                                <option value="${currentPage + i}">Página ${currentPage + i}</option>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </select>
+                                                </c:when>
+                                                <c:when test="${currentPage eq swnoOfPages}">
+                                                    <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                        <c:forEach var="i" begin="1" end="4">
+                                                            <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                            <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                        </c:forEach>
+                                                        <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                    </select>
+                                                </c:when>
+                                        </c:choose>
+                                    </td>
+                                    <c:if test="${currentPage lt swnoOfPages}">
+                                        <td><a href="vulnerability.controller?action=view&tipo=3&page=${currentPage + 1}" class="page">Siguiente</a></td>
+                                    </c:if>
+                                    <c:if test="${currentPage ne swnoOfPages}">
+                                        <td><a href="vulnerability.controller?action=view&tipo=3&page=${swnoOfPages}" class="page">Fin</a></td>
+                                    </c:if>
                                     </tr>
                                 </table>
                             </div><!-- paginador -->
@@ -148,16 +171,25 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="../resources/js/jquery.notice.js"></script>
         <script>
+            function cambiarPagina() {
+                var valor = $("#cambiador").val();
+                if (valor === null || valor === 0) {
+                    window.location = "vulnerability.controller?action=view&tipo=3&page=1";
+                }
+                window.location = "vulnerability.controller?action=view&tipo=3&page=" + valor;
+            }
+        </script>
+        <script>
             /**
              * Función jQuery que se encarga del manejjo de la funcionalidad de la pagina
              */
             $(document).ready(function() {
                 var dialog = $("#dialog-form");
                 $("#dialog-form").hide();
-                                //$("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
-                    /* Dialogo
-                     $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
-                     buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
+                //$("#add").button({icons: {primary: 'ui-icon-circle-plus'}}).click(function(e) {
+                /* Dialogo
+                 $("#dialog-form").dialog({ resizable: false, height: 440,width: 500, modal: true,
+                 buttons: { 'Agregar': addSoftware, Cancelar: function() { $(this).dialog("close"); } } }); DIALOGO*/
                 //});
                 /**
                  *  Código para la busqueda de SW
@@ -331,9 +363,10 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                  */
             });
             function eliminarSoftware(id, nombre) {
-                $("#dialog-eliminar").attr("title", "Confirmar eliminación");;
+                $("#dialog-eliminar").attr("title", "Confirmar eliminación");
+                ;
                 $("#dialog-eliminar").html("<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 50px 0;'></span>" +
-                            "¿Desea eliminar el software:<br /> '" + nombre + "'?</p>");
+                        "¿Desea eliminar el software:<br /> '" + nombre + "'?</p>");
                 $("#dialog-eliminar").dialog({
                     modal: true,
                     buttons: {
@@ -341,64 +374,50 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                             $(this).dialog("close");
                             $.ajax({
                                 url: '/sisalbm/admin/configuration.controller?action=deleteSW',
-                                    type: 'POST',
-                                    data: 'swid=' + id,
-                                    beforeSend: function() {
-                                        jQuery.noticeAdd({
-                                            text: "Eliminando software:" + 
-                                                    "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
-                                            stay: false,
-                                            type: 'info'
+                                type: 'POST',
+                                data: 'swid=' + id,
+                                beforeSend: function() {
+                                    jQuery.noticeAdd({
+                                        text: "Eliminando software:" +
+                                                "<br /><center><img src='../resources/images/ajax-loader.gif' alt='Imagen' /></center>",
+                                        stay: false,
+                                        type: 'info'
+                                    });
+                                }, success: function(result) {
+                                    result = result.trim();
+                                    var content = "";
+                                    if (result === 'OK') {
+                                        //Si el resultado es correcto mostrar esta alerta
+                                        $("#dialog-message").attr("title", "Software Eliminado");
+                                        $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "El software '" + nombre + "' ha sido eliminado exitosamente.</p>");
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                    location.reload();
+                                                }
+                                            }
                                         });
-                                    }, success: function(result) {
-                                        result = result.trim();
-                                        var content = "";
-                                        if (result === 'OK') {
-                                            //Si el resultado es correcto mostrar esta alerta
-                                            $("#dialog-message").attr("title", "Software Eliminado");
-                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-check' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "El software '" + nombre + "' ha sido eliminado exitosamente.</p>");
-                                            $("#dialog-message").dialog({
-                                                modal: true,
-                                                buttons: {
-                                                    Aceptar: function() {
-                                                        $(this).dialog("close");
-                                                        location.reload();
-                                                    }
-                                                }
-                                            });
-                                        } else if (result === 'ERROR') {
-                                            //Si ocurre un error mostrar esta alerta
-                                            $("#dialog-message").attr("title", "Software No Eliminado");
-                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
-                                            $("#dialog-message").dialog({
-                                                modal: true,
-                                                buttons: {
-                                                    Aceptar: function() {
-                                                        $(this).dialog("close");
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            //En otro caso mostrar est aalerta
-                                            $("#dialog-message").attr("title", "Software No Eliminado");
-                                            $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>");
-                                            $("#dialog-message").dialog({
-                                                modal: true,
-                                                buttons: {
-                                                    Aceptar: function() {
-                                                        $(this).dialog("close");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }, error: function() {
-                                        //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
-                                        $("#dialog-message").attr("title", "Petición Incompleta");
+                                    } else if (result === 'ERROR') {
+                                        //Si ocurre un error mostrar esta alerta
+                                        $("#dialog-message").attr("title", "Software No Eliminado");
                                         $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                                "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
+                                        $("#dialog-message").dialog({
+                                            modal: true,
+                                            buttons: {
+                                                Aceptar: function() {
+                                                    $(this).dialog("close");
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        //En otro caso mostrar est aalerta
+                                        $("#dialog-message").attr("title", "Software No Eliminado");
+                                        $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                                "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>");
                                         $("#dialog-message").dialog({
                                             modal: true,
                                             buttons: {
@@ -408,6 +427,20 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                             }
                                         });
                                     }
+                                }, error: function() {
+                                    //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
+                                    $("#dialog-message").attr("title", "Petición Incompleta");
+                                    $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
+                                            "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    $("#dialog-message").dialog({
+                                        modal: true,
+                                        buttons: {
+                                            Aceptar: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                    });
+                                }
                             });
                         }, Cancelar: function() {
                             $(this).dialog("close");

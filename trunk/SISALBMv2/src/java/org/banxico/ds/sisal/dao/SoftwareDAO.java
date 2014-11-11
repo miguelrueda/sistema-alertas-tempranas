@@ -61,11 +61,11 @@ public class SoftwareDAO {
             + "WHERE s.idSoftware = x.idSoftware AND g.idGrupo = x.idGrupo AND g.nombre LIKE ? ORDER BY s.fabricante ";
     private static final String sqlObtenerSoftwareconLimite = "SELECT * FROM ( SELECT s.idSoftware, s.fabricante, s.nombre, "
             + "s.version, s.tipo, s.end_of_life, g.nombre as gnombre, g.categoria as gcategoria, "
-            + "ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s, "
+            + "ROW_NUMBER() OVER(ORDER BY s.nombre) as row FROM Software s, "
             + "Grupo_Software x, Grupo g WHERE s.idSoftware = x.idSoftware AND x.idGrupo = g.idGrupo) z "
             + "WHERE z.row > ? and z.row <= ?";
     private static final String sqlObtenerSoloSoftwareconLimite = "SELECT * FROM (SELECT s.idSoftware, s.fabricante, s.nombre, "
-            + "s.version, s.tipo, s.end_of_life, ROW_NUMBER() OVER(ORDER BY s.idSoftware) as row FROM Software s) z "
+            + "s.version, s.tipo, s.end_of_life, ROW_NUMBER() OVER(ORDER BY s.nombre) as row FROM Software s) z "
             + "WHERE z.row > ? and z.row <= ?";
     private static final String sqlActualizarSoftware = "UPDATE Software "
             + "SET fabricante = ?, nombre = ?, version = ?, tipo = ?, end_of_life = ?, UAResponsable = ?, AnalistaResponsable = ? "
