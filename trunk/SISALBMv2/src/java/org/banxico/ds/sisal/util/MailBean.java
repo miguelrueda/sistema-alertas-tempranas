@@ -33,7 +33,7 @@ public class MailBean implements java.io.Serializable {
     /**
      * Recipientes del correo
      */
-    //private static final String analistaOSI = "martha.pio@banxico.org.mx";
+    private static final String analistaOSI = "martha.pio@banxico.org.mx";
     private static final String administrador = "jamaya@banxico.org.mx";
     private static final String serviciosocial = "T41507@correobm.org.mx";
     private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "martha.pio@banxico.org.mx"};
@@ -81,8 +81,8 @@ public class MailBean implements java.io.Serializable {
             Session session = Session.getInstance(props, null);
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from));
-            //msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(analistaOSI));
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(serviciosocial));
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(analistaOSI));
+            msg.setRecipients(Message.RecipientType.CC, InternetAddress.parse(serviciosocial));
             msg.setSubject("+ " + asunto);
             StringBuilder cuerpo = new StringBuilder();
             cuerpo.append("<h3>")
