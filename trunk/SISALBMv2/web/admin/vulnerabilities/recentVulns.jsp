@@ -32,140 +32,150 @@ de una forma tabular
                         <br />
                         <div id="page_title">Vulnerabilidades Más Recientes</div>
                         <center><h5>Se incluyen vulnerabilidades de un periodo no mayor a 8 días.</h5></center>
-                        <div id="content">
-                            <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
-                                    <thead>
-                                        <tr>
-                                            <th>Identificador</th>
-                                            <th>Posible Software Afectado</th>
-                                            <th>Fecha de Publicación</th>
-                                            <!--<th>Calificación**</th>-->
-                                            <th>Gravedad</th>
-                                            <th>Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="vuln" items="${cveList}">
-                                            <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
-                                            <tr style="text-align: center">
-                                                <td>${vuln.name}</td>
-                                                <c:if test="${fn:length(vuln.vuln_soft) > 0}">
-                                                    <td>
-                                                        <table style="border: 0; max-width: 150px">
-                                                            <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
-                                                                <tr>
-                                                                    <td>
-                                                                        ${vulnsw.vendor} ${vulnsw.name}
-                                                                    </td>
-                                                                </tr>
-                                                            </c:forEach>
-                                                        </table>
-                                                    </td>
-                                                </c:if>
-                                                <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
-                                                    <td style="text-align:left">
-                                                        No definido
-                                                    </td>
-                                                </c:if>
-                                                </td>
-                                                <td>${parsedDate}</td>
-                                                <!--<td>$ {vuln.CVSS.score}</td> -->
-                                                <c:choose>
-                                                    <c:when test="${vuln.severity eq 'High'}">
-                                                        <td style="text-align:center">Alta</td>
-                                                    </c:when>
-                                                    <c:when test="${vuln.severity eq 'Medium'}">
-                                                        <td style="text-align:center">Media</td>
-                                                    </c:when>
-                                                    <c:when test="${vuln.severity eq 'Low'}">
-                                                        <td  style="text-align:center">Baja</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td  style="text-align:center">${vuln.severity}</td>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <td>
-                                                    <a href="vulnerabilities/vulnDetail.jsp?action=view&tipo=1&name=${vuln.name}" class="view">
-                                                        <img src="../resources/images/search.png" alt="magni" id="tableicon" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div><!-- data grid -->
-                            <div class="pagination">
-                                <table style="width: 100%; text-align: center">
-                                    <tr>
-                                        <c:choose>
-                                            <c:when test="${noOfPages <= 10}"><!--Caso 1 existen menos 10 o menos paginas-->
-                                                <c:if test="${currentPage != 1}">
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
-                                                    </td>
-                                                </c:if>
-                                                <c:forEach begin="1" end="${noOfPages}" var="i">
-                                                    <c:choose>
-                                                        <c:when test="${currentPage eq i}">
-                                                            <td class="page active">${i}</td>
-                                                        </c:when>
-                                                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${cveList.isEmpty() eq true}">
+                                <center>
+                                    <h3>No se encontro el contenido o no se encuentra disponible</h3>
+                                </center>
+                            </c:when>
+                            <c:when test="${cveList.isEmpty() eq false}">
+                                <div id="content">
+                                    <div class="datagrid">
+                                        <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Identificador</th>
+                                                    <th>Posible Software Afectado</th>
+                                                    <th>Fecha de Publicación</th>
+                                                    <!--<th>Calificación**</th>-->
+                                                    <th>Gravedad</th>
+                                                    <th>Detalles</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="vuln" items="${cveList}">
+                                                    <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
+                                                    <tr style="text-align: center">
+                                                        <td>${vuln.name}</td>
+                                                        <c:if test="${fn:length(vuln.vuln_soft) > 0}">
                                                             <td>
-                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${i}" class="page">${i}</a>
+                                                                <table style="border: 0; max-width: 150px">
+                                                                    <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
+                                                                        <tr>
+                                                                            <td>
+                                                                                ${vulnsw.vendor} ${vulnsw.name}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </c:forEach>
+                                                                </table>
                                                             </td>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                        </c:if>
+                                                        <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
+                                                            <td style="text-align:left">
+                                                                No definido
+                                                            </td>
+                                                        </c:if>
+                                                        </td>
+                                                        <td>${parsedDate}</td>
+                                                        <!--<td>$ {vuln.CVSS.score}</td> -->
+                                                        <c:choose>
+                                                            <c:when test="${vuln.severity eq 'High'}">
+                                                                <td style="text-align:center">Alta</td>
+                                                            </c:when>
+                                                            <c:when test="${vuln.severity eq 'Medium'}">
+                                                                <td style="text-align:center">Media</td>
+                                                            </c:when>
+                                                            <c:when test="${vuln.severity eq 'Low'}">
+                                                                <td  style="text-align:center">Baja</td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td  style="text-align:center">${vuln.severity}</td>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <td>
+                                                            <a href="vulnerabilities/vulnDetail.jsp?action=view&tipo=1&name=${vuln.name}" class="view">
+                                                                <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                            </a>
+                                                        </td>
+                                                    </tr>
                                                 </c:forEach>
-                                                <c:if test="${currentPage lt noOfPages}">
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
-                                                    </td>
-                                                </c:if>
-                                            </c:when>
-                                            <c:when test="${noOfPages > 10}"><!--Caso 2 existen mas de 10 paginas-->
-                                                <c:if test="${currentPage != 1}">
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=1" class="page">Inicio</a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
-                                                    </td>
-                                                </c:if>
-                                                <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
-                                                    <c:choose>
-                                                        <c:when test="${currentPage lt noOfPages}">
+                                            </tbody>
+                                        </table>
+                                    </div><!-- data grid -->
+                                    <div class="pagination">
+                                        <table style="width: 100%; text-align: center">
+                                            <tr>
+                                                <c:choose>
+                                                    <c:when test="${noOfPages <= 10}"><!--Caso 1 existen menos 10 o menos paginas-->
+                                                        <c:if test="${currentPage != 1}">
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
+                                                            </td>
+                                                        </c:if>
+                                                        <c:forEach begin="1" end="${noOfPages}" var="i">
                                                             <c:choose>
                                                                 <c:when test="${currentPage eq i}">
                                                                     <td class="page active">${i}</td>
                                                                 </c:when>
+                                                                <c:otherwise>
+                                                                    <td>
+                                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${i}" class="page">${i}</a>
+                                                                    </td>
+                                                                </c:otherwise>
                                                             </c:choose>
-                                                        </c:when>
-                                                    </c:choose>
-                                                </c:forEach>
-                                                <c:if test="${currentPage lt noOfPages}">
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
-                                                    </td>
-                                                </c:if>
-                                                <c:if test="${currentPage ne noOfPages}">                                                
-                                                    <td>
-                                                        <a href="vulnerability.controller?action=view&tipo=1&page=${noOfPages}" class="page">Fin</a>
-                                                    </td>
-                                                </c:if>
-                                            </c:when>
-                                        </c:choose>
-                                    </tr>
-                                </table>
-                            </div><!-- PAGINADOR -->
-                            <br />
-                            <p style="text-align: center">
-                                Existen: ${totalr} vulnerabilidades en ${noOfPages} páginas.
-                            </p>
-                            <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none">
-                                <iframe id="thedialog" width="750" height="700"></iframe>
-                            </div>
-                        </div><!-- content -->
+                                                        </c:forEach>
+                                                        <c:if test="${currentPage lt noOfPages}">
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
+                                                            </td>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:when test="${noOfPages > 10}"><!--Caso 2 existen mas de 10 paginas-->
+                                                        <c:if test="${currentPage != 1}">
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=1" class="page">Inicio</a>
+                                                            </td>
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage - 1}" class="page">Anterior</a>
+                                                            </td>
+                                                        </c:if>
+                                                        <c:forEach begin="${currentPage}" end="${currentPage + 9}" var="i">
+                                                            <c:choose>
+                                                                <c:when test="${currentPage lt noOfPages}">
+                                                                    <c:choose>
+                                                                        <c:when test="${currentPage eq i}">
+                                                                            <td class="page active">${i}</td>
+                                                                        </c:when>
+                                                                    </c:choose>
+                                                                </c:when>
+                                                            </c:choose>
+                                                        </c:forEach>
+                                                        <c:if test="${currentPage lt noOfPages}">
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${currentPage + 1}" class="page">Siguiente</a>
+                                                            </td>
+                                                        </c:if>
+                                                        <c:if test="${currentPage ne noOfPages}">                                                
+                                                            <td>
+                                                                <a href="vulnerability.controller?action=view&tipo=1&page=${noOfPages}" class="page">Fin</a>
+                                                            </td>
+                                                        </c:if>
+                                                    </c:when>
+                                                </c:choose>
+                                            </tr>
+                                        </table>
+                                    </div><!-- PAGINADOR -->
+                                    <br />
+                                    <p style="text-align: center">
+                                        Existen: ${totalr} vulnerabilidades en ${noOfPages} páginas.
+                                    </p>
+                                    <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none">
+                                        <iframe id="thedialog" width="750" height="700"></iframe>
+                                    </div>
+                                </div><!-- content -->
+                            </c:when>
+                        </c:choose>
+
                     </div>
                 </div>
             </div><!-- page content -->
