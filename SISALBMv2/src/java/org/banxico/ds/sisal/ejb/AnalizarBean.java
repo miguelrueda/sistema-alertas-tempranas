@@ -61,6 +61,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String port = "25";
     private static final String from = "termometro_OSI@correobm.org.mx";
     private static final String to = "jamaya@banxico.org.mx";
+    private static final String analistaOSI = "martha.pio@banxico.org.mx";
     private static final String CCss = "T41507@correobm.org.mx";
     private static final String to1 = "";
     private static final String asunto = "Resultados ";

@@ -32,154 +32,163 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                         <br />
                         <div id="page_title">Archivo de Vulnerabilidades</div>
                         <center><h5>Vulnerabilidades disponibles desde 1 de Enero de 2013 hasta la fecha actual.</h5></center>
-                        <div class="searchdiv">
-                            <form class="searchform">
-                                <span style="padding-left: 440px"></span>
-                                <input id="searchkey" class="searchinput" type="text" placeholder="CVE-2014-XXXX" />
-                                <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
-                            </form>
-                        </div><!-- div de busqueda --> <br /><br /><br />
-                        <div id="resultsdiv">
-                            <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 130px">Identificador</th>
-                                            <th>Fecha de Publicación</th>
-                                            <th>Ultima Modificación</th>
-                                            <th>Calificación</th>>
-                                            <th>Gravedad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="resultbody"></tbody>
-                                </table>
-                                <br />
-                                <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
-                                <br />
-                            </div>
-                        </div><!-- div de resultados -->
-                        <div id="content">
-                            <div class="datagrid">
-                                <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
-                                    <thead>
-                                        <tr>
-                                            <th>Identificador</th>
-                                            <th>Posible Software Afectado</th>
-                                            <th>Fecha de Publicación</th>
-                                            <th>Gravedad</th>
-                                            <th>Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="vuln" items="${arcveList}">
-                                            <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
-                                            <tr style="text-align: center">
-                                                <td>${vuln.name}</td>
-                                                <c:if test="${fn:length(vuln.vuln_soft) > 0}">
-                                                    <td>
-                                                        <table style="border: 0; max-width: 150px">
-                                                            <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
-                                                                <tr>
-                                                                    <td>
-                                                                        ${vulnsw.vendor} ${vulnsw.name}
-                                                                    </td>
-                                                                </tr>
-                                                            </c:forEach>
-                                                        </table>
-                                                    </td>
+                            <c:choose>
+                                <c:when test="${arcveList.isEmpty() eq true}">
+                                <center>
+                                    <h3>No se encontro el contenido o no se encuentra disponible</h3>
+                                </center>
+                            </c:when>
+                            <c:when test="${arcveList.isEmpty() eq false}">
+                                <div class="searchdiv">
+                                    <form class="searchform">
+                                        <span style="padding-left: 440px"></span>
+                                        <input id="searchkey" class="searchinput" type="text" placeholder="CVE-2014-XXXX" />
+                                        <input id="searchbutton" class="searchbutton" type="button" value="Buscar" />
+                                    </form>
+                                </div><!-- div de busqueda --> <br /><br /><br />
+                                <div id="resultsdiv">
+                                    <div class="datagrid">
+                                        <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 130px">Identificador</th>
+                                                    <th>Fecha de Publicación</th>
+                                                    <th>Ultima Modificación</th>
+                                                    <th>Calificación</th>>
+                                                    <th>Gravedad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resultbody"></tbody>
+                                        </table>
+                                        <br />
+                                        <input id="closesearch" class="" type="button" value="Terminar Búsqueda" />
+                                        <br />
+                                    </div>
+                                </div><!-- div de resultados -->
+                                <div id="content">
+                                    <div class="datagrid">
+                                        <table border="1" cellpadding="5" cellspacing="5" id="tablestyle" >
+                                            <thead>
+                                                <tr>
+                                                    <th>Identificador</th>
+                                                    <th>Posible Software Afectado</th>
+                                                    <th>Fecha de Publicación</th>
+                                                    <th>Gravedad</th>
+                                                    <th>Detalles</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:forEach var="vuln" items="${arcveList}">
+                                                    <fmt:formatDate value="${vuln.published}"  var="parsedDate" dateStyle="long"/>
+                                                    <tr style="text-align: center">
+                                                        <td>${vuln.name}</td>
+                                                        <c:if test="${fn:length(vuln.vuln_soft) > 0}">
+                                                            <td>
+                                                                <table style="border: 0; max-width: 150px">
+                                                                    <c:forEach var="vulnsw" items="${vuln.vuln_soft}">
+                                                                        <tr>
+                                                                            <td>
+                                                                                ${vulnsw.vendor} ${vulnsw.name}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </c:forEach>
+                                                                </table>
+                                                            </td>
+                                                        </c:if>
+                                                        <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
+                                                            <td style="text-align: left">
+                                                                No definido
+                                                            </td>
+                                                        </c:if>
+                                                        <td>${parsedDate}</td>
+                                                        <!--<td>$ {vuln.CVSS.score}</td>-->
+                                                        <c:choose>
+                                                            <c:when test="${vuln.severity eq 'High'}">
+                                                                <td>Alta</td>
+                                                            </c:when>
+                                                            <c:when test="${vuln.severity eq 'Medium'}">
+                                                                <td>Media</td>
+                                                            </c:when>
+                                                            <c:when test="${vuln.severity eq 'Low'}">
+                                                                <td>Baja</td>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <td>${vuln.severity}</td>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <td>
+                                                            <a href="vulnerabilities/vulnDetail.jsp?tipo=2&name=${vuln.name}" class="view">
+                                                                <img src="../resources/images/search.png" alt="magni" id="tableicon" />
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="pagination">
+                                        <table style="width: 100%; text-align: center">
+                                            <tr>
+                                                <c:if test="${currentPage != 1}">
+                                                    <td><a href="vulnerability.controller?action=view&tipo=2&page=1" class="page">Inicio</a></td>
+                                                    <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage - 1}" class="page">Anterior</a></td>
                                                 </c:if>
-                                                <c:if test="${fn:length(vuln.vuln_soft) eq 0}">
-                                                    <td style="text-align: left">
-                                                        No definido
-                                                    </td>
-                                                </c:if>
-                                                <td>${parsedDate}</td>
-                                                <!--<td>$ {vuln.CVSS.score}</td>-->
-                                                <c:choose>
-                                                    <c:when test="${vuln.severity eq 'High'}">
-                                                        <td>Alta</td>
-                                                    </c:when>
-                                                    <c:when test="${vuln.severity eq 'Medium'}">
-                                                        <td>Media</td>
-                                                    </c:when>
-                                                    <c:when test="${vuln.severity eq 'Low'}">
-                                                        <td>Baja</td>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <td>${vuln.severity}</td>
-                                                    </c:otherwise>
-                                                </c:choose>
                                                 <td>
-                                                    <a href="vulnerabilities/vulnDetail.jsp?tipo=2&name=${vuln.name}" class="view">
-                                                        <img src="../resources/images/search.png" alt="magni" id="tableicon" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="pagination">
-                                <table style="width: 100%; text-align: center">
-                                    <tr>
-                                        <c:if test="${currentPage != 1}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=2&page=1" class="page">Inicio</a></td>
-                                            <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage - 1}" class="page">Anterior</a></td>
-                                        </c:if>
-                                            <td>
-                                                <c:choose>
-                                                    <c:when test="${currentPage eq 1}">
-                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
-                                                            <option selected="true" value="${currentPage}">Página ${currentPage}</option>
-                                                            <c:forEach var="i" begin="1" end="4">
-                                                                <option value="${currentPage + i}">Página ${currentPage + i}</option>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </c:when>
-                                                    <c:when test="${(currentPage gt 1) and (currentPage lt arnoOfPages)}">
-                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
-                                                            <c:forEach var="i" begin="1" end="4">
-                                                                <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
-                                                                <c:if test="${currentPage - j > 0}">
-                                                                    <option value="${currentPage - j}">Página ${currentPage - j}</option>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                            <option selected="true" value="${currentPage}">Página ${currentPage}</option>
-                                                            <c:forEach var="i" begin="1" end="4">
-                                                                <c:if test="${currentPage + i <= arnoOfPages}">
+                                                    <c:choose>
+                                                        <c:when test="${currentPage eq 1}">
+                                                            <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                                <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                                <c:forEach var="i" begin="1" end="4">
                                                                     <option value="${currentPage + i}">Página ${currentPage + i}</option>
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </select>
-                                                    </c:when>
-                                                    <c:when test="${currentPage eq arnoOfPages}">
-                                                        <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
-                                                            <c:forEach var="i" begin="1" end="4">
-                                                            <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
-                                                            <option value="${currentPage - j}">Página ${currentPage - j}</option>
-                                                        </c:forEach>
-                                                        <option selected="true" value="${currentPage}">Página ${currentPage}</option>
-                                                        </select>
-                                                    </c:when>
-                                                </c:choose>
-                                            </td>
-                                        <c:if test="${currentPage lt arnoOfPages}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage + 1}" class="page">Siguiente</a></td>
-                                        </c:if>
-                                        <c:if test="${currentPage ne arnoOfPages}">
-                                            <td><a href="vulnerability.controller?action=view&tipo=2&page=${arnoOfPages}" class="page">Fin</a></td>
-                                        </c:if>
-                                    </tr>
-                                </table>
-                            </div><!-- paginador -->
-                            <br />
-                            <p style="text-align: center">
-                                Existen: ${total} vulnerabilidades en ${arnoOfPages} páginas.
-                            </p>
-                            <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none; z-index: 999;">
-                                <iframe id="thedialog" width="750" height="700"></iframe>
-                            </div>
-                        </div><!-- content -->
+                                                                </c:forEach>
+                                                            </select>
+                                                        </c:when>
+                                                        <c:when test="${(currentPage gt 1) and (currentPage lt arnoOfPages)}">
+                                                            <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                                <c:forEach var="i" begin="1" end="4">
+                                                                    <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                                    <c:if test="${currentPage - j > 0}">
+                                                                        <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                                <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                                <c:forEach var="i" begin="1" end="4">
+                                                                    <c:if test="${currentPage + i <= arnoOfPages}">
+                                                                        <option value="${currentPage + i}">Página ${currentPage + i}</option>
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </select>
+                                                        </c:when>
+                                                        <c:when test="${currentPage eq arnoOfPages}">
+                                                            <select name="cambiador" id="cambiador" onchange="cambiarPagina()" class="page active" style="width: 120px">
+                                                                <c:forEach var="i" begin="1" end="4">
+                                                                    <c:set var="j" value="${4 - i + 1}" scope="page"></c:set>
+                                                                    <option value="${currentPage - j}">Página ${currentPage - j}</option>
+                                                                </c:forEach>
+                                                                <option selected="true" value="${currentPage}">Página ${currentPage}</option>
+                                                            </select>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </td>
+                                                <c:if test="${currentPage lt arnoOfPages}">
+                                                    <td><a href="vulnerability.controller?action=view&tipo=2&page=${currentPage + 1}" class="page">Siguiente</a></td>
+                                                </c:if>
+                                                <c:if test="${currentPage ne arnoOfPages}">
+                                                    <td><a href="vulnerability.controller?action=view&tipo=2&page=${arnoOfPages}" class="page">Fin</a></td>
+                                                </c:if>
+                                            </tr>
+                                        </table>
+                                    </div><!-- paginador -->
+                                    <br />
+                                    <p style="text-align: center">
+                                        Existen: ${total} vulnerabilidades en ${arnoOfPages} páginas.
+                                    </p>
+                                    <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style=" display: none; z-index: 999;">
+                                        <iframe id="thedialog" width="750" height="700"></iframe>
+                                    </div>
+                                </div><!-- content -->
+                            </c:when>
+                        </c:choose>
                     </div>
                 </div>
             </div><!-- page content -->
@@ -189,13 +198,13 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="../resources/js/jquery.notice.js"></script>
         <script>
-            function cambiarPagina() {
-                var valor = $("#cambiador").val();
-                if (valor === null || valor === 0) {
-                    window.location = "vulnerability.controller?action=view&tipo=2&page=1";
-                }
-                window.location = "vulnerability.controller?action=view&tipo=2&page=" + valor;
-            }
+                                                        function cambiarPagina() {
+                                                            var valor = $("#cambiador").val();
+                                                            if (valor === null || valor === 0) {
+                                                                window.location = "vulnerability.controller?action=view&tipo=2&page=1";
+                                                            }
+                                                            window.location = "vulnerability.controller?action=view&tipo=2&page=" + valor;
+                                                        }
         </script>
         <script>
             /**
@@ -227,9 +236,9 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                  $("#searchkey").autocomplete({ source: function(request, response) {
                  $.ajax({ url: '/sisalbm/admin/vulnerability.controller?action=search', type: 'GET', data: { term: request.term },
                  dataType: "json", success: function(data) { response(data); } }); }});*/
-                 /**
-                  * Función que ejecuta la busqueda al realizar clic sobre el botón
-                  */
+                /**
+                 * Función que ejecuta la busqueda al realizar clic sobre el botón
+                 */
                 $("#searchbutton").on("click", function() {
                     var val = $("#searchkey").val();
                     $.ajax({

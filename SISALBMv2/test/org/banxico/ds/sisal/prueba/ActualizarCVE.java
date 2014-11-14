@@ -6,7 +6,7 @@ public class ActualizarCVE {
     
     public static void main(String[] args) {
         SourcesDAO sourcesDAO = new SourcesDAO();
-        boolean flag = sourcesDAO.descargarFuente("2", "http://nvd.nist.gov/download/nvdcve-2014.xml");
+        boolean flag = sourcesDAO.descargarFuente("4", "https://nvd.nist.gov/download/nvdcve-2013.xml");
         if (flag) {
             System.out.println("Fuente actualizada");
         } else {
