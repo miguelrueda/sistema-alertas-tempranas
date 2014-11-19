@@ -51,6 +51,8 @@ public class MailBean implements java.io.Serializable {
         this.receptores = receptores;
     }
 
+    /*
+    Código para enviar un correo de prueba
     public boolean enviarCorreodePrueba(String asunto) {
         boolean enviado = false;
         Properties props = new Properties();
@@ -72,6 +74,7 @@ public class MailBean implements java.io.Serializable {
         }
         return enviado;
     }
+    */
 
     public boolean enviarCorreodeResultados(String asunto, Set<Result> resultados) {
         boolean enviado = false;

@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import javax.ejb.EJB;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.banxico.ds.sisal.ejb.ActualizarCPE;
 import org.banxico.ds.sisal.ejb.ActualizarCPELocal;
 import org.banxico.ds.sisal.ejb.AnalizarBeanLocal;
 import org.banxico.ds.sisal.ejb.UpdateBeanLocal;
@@ -37,7 +36,7 @@ public class JobServlet extends HttpServlet {
      * Atributo LOGGER
      */
     private static final Logger LOG = Logger.getLogger(JobServlet.class.getName());
-    
+
     /**
      * Método de inicialización del servlet, se inicia cuando en el descriptor
      * se tiene como iniciador el valor 1
@@ -51,7 +50,7 @@ public class JobServlet extends HttpServlet {
             updateBean.setTimer();
             analizarBean.setTimer();
             actualizarCpe.setTimer();
-            
+
         } catch (Exception e) {
             LOG.log(Level.INFO, "JobServlet#init() - Ocurrio un error al establecer los timers: {0}", e.getMessage());
         }
@@ -70,187 +69,7 @@ public class JobServlet extends HttpServlet {
             throws ServletException, IOException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        //Codigo HTML
-        out.println("<!DOCTYPE html>");
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Tareas Programadas</title>");
-        out.println("<link href=\"resources/css/general.css\" type=\"text/css\" rel=\"stylesheet\" />");
-        out.println("<link href=\"resources/css/menu.css\" type=\"text/css\" rel=\"stylesheet\"/>");
-        out.println("</head>");
-        out.println("<body>");
-        out.println("<div id=\"page_container\">");
-        out.println("<div id=\"page_header\">");
-        out.println("<table id=\"header\">");
-        out.println("<tr>");
-        out.println("<td><img src=\"resources/images/app_header.png\" alt=\"BMLogo\" /></td>");
-        out.println("</tr>");
-        out.println("</table>");
-        out.println("</div>");
-        out.println("<div id=\"page_content\">");
-        //out.println("<div id=\"title\">&nbsp;App Index</div>");
-        out.println("<div id=\"workarea\">");
-        out.println("<div id=\"cssmenu\">");
-        out.println("<ul>");
-        out.println("<li class=\"has-sub\"><a href=\"#\"><span>Configuración</span></a>");
-        out.println("<ul style=\"z-index: 999\">");
-        out.println("<li class=\"has-sub\"><a href=\"#\"><span>Fuentes</span></a>");
-        out.println("<ul>");
-        out.println("<li><a href='/sisalbm/admin/configuration/agregarFuente.jsp'><span>Agregar Fuente</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=1\"><span>Fuentes Registradas</span></a></li>");
-        out.println("</ul>");
-        out.println("</li>");
-        out.println("<li class=\"has-sub\"><a href=\"#\"><span>Grupos</span></a>");
-        out.println("<ul>");
-        out.println("<li><a href=\"/sisalbm/admin/configuration/agregarGrupo.jsp\"><span>Agregar Grupo</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=2\"><span>Grupos Registrados</span></a></li>");
-        out.println("</ul>");
-        out.println("</li>");
-        out.println("<li class=\"has-sub\"><a href=\"#\"><span>Software</span></a>");
-        out.println("<ul>");
-        out.println("<li><a href=\"/sisalbm/admin/vulnerabilities/addSW.jsp\"><span>Agregar Software</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=3\"><span>Software Registrado</span></a></li>");
-        out.println("</ul>");
-        out.println("</li>");
-        out.println("<li class=\"last\"><a href=\"/sisalbm/JobScheduleServlet\"><span>Tareas Programadas</span></a></li>");
-        out.println("</ul>");
-        out.println("</li>");
-        out.println("<li><a href=\"#\"><span>Vulnerabilidades</span></a>");
-        out.println("<ul>");
-        out.println("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=1\"><span>Más Recientes</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=2\"><span>Archivo</span></a></li>");
-        out.println("</ul>");
-        out.println("</li>");
-        out.println("<li><a href=\"/sisalbm/admin/scanner/scan.jsp\"><span>Escaneo</span></a></li>");
-        out.println("<li><a href=\"/sisalbm/admin/help.jsp\"><span>Ayuda</span></a></li>");
-        out.println("</ul>");
-        out.println("</div>");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<div id=\"content_wrap\">");
-        out.println("<div id=\"content\">");
-        out.println("");
-        SimpleDateFormat formater = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss");
-        out.println("<div class='datagrid'>");
-        out.println("<table border=\"1\" cellpadding=\"5\" cellspacing=\"5\" id='tablestyle' style='text-align:center'>");
-        out.println("<thead>");
-        out.println("<tr>");
-        out.println("<th>");
-        out.println("Tarea");
-        out.println("</th>");
-        out.println("<th>");
-        out.println("Descripción");
-        out.println("</th>");
-        out.println("<th>");
-        out.println("Periodo De Ejecución");
-        out.println("</th>");
-        out.println("<th>");
-        out.println("Ultima Ejecución");
-        out.println("</th>");
-        out.println("<th>");
-        out.println("Siguiente Ejecución");
-        out.println("</th>");
-        out.println("</tr>");
-        out.println("</thead>");
-        //Cuerpo de la tabla
-        out.println("<tbody>");
-        out.println("<tr>");
-        out.println("<td>");
-        //Descripción de la tarea
-        out.println(updateBean.getDescripcion());
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Se descargan de actualizaciones de vulnerabilidades a partir de las fuentes de información registradas.");
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Ejecución Diaria");
-        out.println("</td>");
-        out.println("<td>");
-        if (updateBean.getUltimaEjecucion() != null) {
-            out.println(formater.format(updateBean.getUltimaEjecucion()));
-        } else {
-            out.println("No ejecutada");
-        }
-        out.println("</td>");
-        out.println("<td>");
-        //Siguiente ejecución
-        if (updateBean.getNextFireTime() != null) {
-            out.println(formater.format(updateBean.getNextFireTime()));
-        } else {
-            out.println("No disponible");
-        }
-        out.println("</td>");
-        out.println("</tr>");
-        out.println("<tr>");
-        out.println("<td>");
-        //Descripción de la tarea
-        out.println(analizarBean.getDescripcion());
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Se ejecuta una búsqueda de vulnerabilidades sobre los grupos registrados en el sistema.");
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Ejecución Diaria");
-        out.println("</td>");
-        out.println("<td>");
-        if (analizarBean.getUltimaEjecucion() != null) {
-            out.println(formater.format(analizarBean.getUltimaEjecucion()));
-        } else {
-            out.println("No ejecutada");
-        }
-        out.println("</td>");
-        out.println("<td>");
-        //Siguiente ejecución
-        
-        if (analizarBean.getNextFireTime() != null) {
-            out.println(formater.format(analizarBean.getNextFireTime()));
-        } else {
-            out.println("No disponible");
-        }
-        out.println("</td>");
-        out.println("</tr>");
-        
-        out.println("<tr>");
-        out.println("<td>");
-        //Descripción de la tarea
-        out.println(actualizarCpe.getDescripcion());
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Se actualiza el catalogo de productos que se pueden registrar en el sistema.");
-        out.println("</td>");
-        out.println("<td>");
-        out.println("Ejecución Quincenal");
-        out.println("</td>");
-        out.println("<td>");
-        if (actualizarCpe.getUltimaEjecucion() != null) {
-            out.println(formater.format(actualizarCpe.getUltimaEjecucion()));
-        } else {
-            out.println("No ejecutada");
-        }
-        out.println("</td>");
-        out.println("<td>");
-        //Siguiente ejecución
-        
-        if (actualizarCpe.getNextFireTime() != null) {
-            out.println(formater.format(actualizarCpe.getNextFireTime()));
-        } else {
-            out.println("No disponible");
-        }
-        out.println("</td>");
-        out.println("</tr>");
-        
-        out.println("</tbody>");
-        out.println("</table>");
-        out.println("</div>");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("</div>");
-        out.println("</div>");
-        out.println("</div>");
-        out.println("</div>");
-        out.println("</div>");
-        out.println("</body>");
-        out.println("</html>");
+        out.print(generarHTML());
     }
 
     /**
@@ -287,6 +106,191 @@ public class JobServlet extends HttpServlet {
         } catch (ParseException ex) {
             LOG.log(Level.SEVERE, "ocurrio un error al parsear la fecha de ejecuci\u00f3n: {0}", ex.getMessage());
         }
+    }
+
+    /**
+     * Método que genera el código HTML de la vista de tareas programadas
+     *
+     * @return cadena con el contenido generado
+     */
+    private String generarHTML() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>")
+                .append("<html>")
+                .append("<head>")
+                .append("<title>Tareas Programadas</title>")
+                .append("<link href=\"resources/css/general.css\" type=\"text/css\" rel=\"stylesheet\" />")
+                .append("<link href=\"resources/css/menu.css\" type=\"text/css\" rel=\"stylesheet\"/>")
+                .append("</head>")
+                .append("<body>")
+                .append("<div id=\"page_container\">")
+                .append("<div id=\"page_header\">")
+                .append("<table id=\"header\">")
+                .append("<tr>")
+                .append("<td><img src=\"resources/images/app_header.png\" alt=\"BMLogo\" /></td>")
+                .append("</tr>")
+                .append("</table>")
+                .append("</div>")
+                .append("<div id=\"page_content\">")
+                .append("<div id=\"workarea\">")
+                .append("<div id=\"cssmenu\">")
+                .append("<ul>")
+                .append("<li class=\"has-sub\"><a href=\"#\"><span>Configuración</span></a>")
+                .append("<ul style=\"z-index: 999\">")
+                .append("<li class=\"has-sub\"><a href=\"#\"><span>Fuentes de Información</span></a>")
+                .append("<ul>")
+                .append("<li><a href='/sisalbm/admin/configuration/agregarFuente.jsp'><span>Agregar Fuente</span></a></li>")
+                .append("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=1\"><span>Fuentes Registradas</span></a></li>")
+                .append("</ul>")
+                .append("</li>")
+                .append("<li class=\"has-sub\"><a href=\"#\"><span>Grupos de Software</span></a>")
+                .append("<ul>")
+                .append("<li><a href=\"/sisalbm/admin/configuration/agregarGrupo.jsp\"><span>Agregar Nuevo Grupo</span></a></li>")
+                .append("<li><a href=\"/sisalbm/admin/configuration.controller?action=view&tipo=2\"><span>Grupos Registrados</span></a></li>")
+                .append("</ul>")
+                .append("</li>")
+                .append("<li class=\"has-sub\"><a href=\"#\"><span>Software Disponible</span></a>")
+                .append("<ul>")
+                .append("<li><a href=\"/sisalbm/admin/vulnerabilities/addSW.jsp\"><span>Agregar Nuevo Software</span></a></li>")
+                .append("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=3\"><span>Software Registrado</span></a></li>")
+                .append("</ul>")
+                .append("</li>")
+                .append("<li class=\"last\"><a href=\"/sisalbm/JobScheduleServlet\"><span>Tareas Programadas</span></a></li>")
+                .append("</ul>")
+                .append("</li>")
+                .append("<li><a href=\"#\"><span>Información de Vulnerabilidades</span></a>")
+                .append("<ul>")
+                .append("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=1\"><span>Más Recientes</span></a></li>")
+                .append("<li><a href=\"/sisalbm/admin/vulnerability.controller?action=view&tipo=2\"><span>Archivo</span></a></li>")
+                .append("</ul>")
+                .append("</li>")
+                .append("<li><a href=\"/sisalbm/admin/scanner/scan.jsp\"><span>Búsqueda de Vulnerabilidades</span></a></li>")
+                .append("<li><a href=\"/sisalbm/admin/help.jsp\"><span>Ayuda</span></a></li>")
+                .append("</ul>")
+                .append("</div>")
+                .append("<br />")
+                .append("<br />")
+                .append("<div id=\"content_wrap\">")
+                .append("<div id=\"content\">")
+                .append("");
+        SimpleDateFormat formater = new SimpleDateFormat("dd-MMMM-yyyy HH:mm:ss");
+        sb.append("<div class='datagrid'>")
+                .append("<table border=\"1\" cellpadding=\"5\" cellspacing=\"5\" id='tablestyle' style='text-align:center'>")
+                .append("<thead>")
+                .append("<tr>")
+                .append("<th>")
+                .append("Tarea")
+                .append("</th>")
+                .append("<th>")
+                .append("Descripción")
+                .append("</th>")
+                .append("<th>")
+                .append("Periodo De Ejecución")
+                .append("</th>")
+                .append("<th>")
+                .append("Ultima Ejecución")
+                .append("</th>")
+                .append("<th>")
+                .append("Siguiente Ejecución")
+                .append("</th>")
+                .append("</tr>")
+                .append("</thead>")
+                //Cuerpo de la tabla
+                .append("<tbody>")
+                .append("<tr>")
+                .append("<td>")
+                //Descripción de la tarea
+                .append(updateBean.getDescripcion())
+                .append("</td>")
+                .append("<td>")
+                .append("Se descargan de actualizaciones de vulnerabilidades a partir de las fuentes de información registradas.")
+                .append("</td>")
+                .append("<td>")
+                .append("Ejecución Diaria")
+                .append("</td>")
+                .append("<td>");
+        if (updateBean.getUltimaEjecucion() != null) {
+            sb.append(formater.format(updateBean.getUltimaEjecucion()));
+        } else {
+            sb.append("No ejecutada");
+        }
+        sb.append("</td>");
+        sb.append("<td>");
+        //Siguiente ejecución
+        if (updateBean.getNextFireTime() != null) {
+            sb.append(formater.format(updateBean.getNextFireTime()));
+        } else {
+            sb.append("No disponible");
+        }
+        sb.append("</td>")
+                .append("</tr>")
+                .append("<tr>")
+                .append("<td>")
+                //Descripción de la tarea
+                .append(analizarBean.getDescripcion())
+                .append("</td>")
+                .append("<td>")
+                .append("Se ejecuta una búsqueda de vulnerabilidades sobre los grupos registrados en el sistema.")
+                .append("</td>")
+                .append("<td>")
+                .append("Ejecución Diaria")
+                .append("</td>")
+                .append("<td>");
+        if (analizarBean.getUltimaEjecucion() != null) {
+            sb.append(formater.format(analizarBean.getUltimaEjecucion()));
+        } else {
+            sb.append("No ejecutada");
+        }
+        sb.append("</td>");
+        sb.append("<td>");
+        //Siguiente ejecución
+        if (analizarBean.getNextFireTime() != null) {
+            sb.append(formater.format(analizarBean.getNextFireTime()));
+        } else {
+            sb.append("No disponible");
+        }
+        sb.append("</td>")
+                .append("</tr>")
+                .append("<tr>")
+                .append("<td>")
+                //Descripción de la tarea
+                .append(actualizarCpe.getDescripcion())
+                .append("</td>")
+                .append("<td>")
+                .append("Se actualiza el catalogo de productos que se pueden registrar en el sistema.")
+                .append("</td>")
+                .append("<td>")
+                .append("Ejecución Quincenal")
+                .append("</td>")
+                .append("<td>");
+        if (actualizarCpe.getUltimaEjecucion() != null) {
+            sb.append(formater.format(actualizarCpe.getUltimaEjecucion()));
+        } else {
+            sb.append("No ejecutada");
+        }
+        sb.append("</td>");
+        sb.append("<td>");
+        //Siguiente ejecución
+        if (actualizarCpe.getNextFireTime() != null) {
+            sb.append(formater.format(actualizarCpe.getNextFireTime()));
+        } else {
+            sb.append("No disponible");
+        }
+        sb.append("</td>")
+                .append("</tr>")
+                .append("</tbody>")
+                .append("</table>")
+                .append("</div>")
+                .append("<br />")
+                .append("<br />")
+                .append("</div>")
+                .append("</div>")
+                .append("</div>")
+                .append("</div>")
+                .append("</div>")
+                .append("</body>")
+                .append("</html>");
+        return sb.toString();
     }
 
 }

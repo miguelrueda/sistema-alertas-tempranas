@@ -198,13 +198,13 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="../resources/js/jquery.notice.js"></script>
         <script>
-                                                        function cambiarPagina() {
-                                                            var valor = $("#cambiador").val();
-                                                            if (valor === null || valor === 0) {
-                                                                window.location = "vulnerability.controller?action=view&tipo=2&page=1";
-                                                            }
-                                                            window.location = "vulnerability.controller?action=view&tipo=2&page=" + valor;
-                                                        }
+            function cambiarPagina() {
+                var valor = $("#cambiador").val();
+                if (valor === null || valor === 0) {
+                    window.location = "vulnerability.controller?action=view&tipo=2&page=1";
+                }
+                window.location = "vulnerability.controller?action=view&tipo=2&page=" + valor;
+            }
         </script>
         <script>
             /**

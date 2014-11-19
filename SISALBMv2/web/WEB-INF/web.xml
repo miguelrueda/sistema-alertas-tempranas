@@ -61,7 +61,7 @@
     </servlet>
     <servlet>
         <servlet-name>DashboardServlet</servlet-name>
-        <servlet-class>org.banxico.ds.sisal.test.DashboardServlet</servlet-class>
+        <servlet-class>org.banxico.ds.sisal.servlets.DashboardServlet</servlet-class>
     </servlet>
     <!-- Mapeo de URL para realizar las peticiones a los Servlets -->
     <servlet-mapping>

@@ -109,11 +109,10 @@
                                     <br />
                                     <div class="botonesjuntos">
                                         <input type="button" class="mailButton boton" id="mailButton" value="Enviar Resultados por Correo"
-                                               title="Los resultados serán enviados al administrador."/>
-                                        <input type="submit" class="exportButton boton" id="exportButton" value="Versión Texto"/><br/>
-                                        <input type="submit" class="exportButton" id="okButton" value="Cerrar" />
+                                           title="Los resultados serán enviados al administrador." />
                                     </div>
-
+                                    <!--<input type="submit" class="exportButton boton" id="exportButton" value="Versión Texto"/><br/>-->
+                                        <!--<input type="submit" class="exportButton" id="okButton" value="Cerrar" />-->
                                     <div id="export" style="max-width: 800px; display: block; margin-left: auto; margin-right: auto;">
                                         <div id="export-content">
                                         </div>    
@@ -122,7 +121,6 @@
                             </c:choose>
                             <br />
                             <div id="dialog-message">
-                                ${exportBuffer}
                             </div>
                             <div id="mensaje-correo"></div>
                             <br />

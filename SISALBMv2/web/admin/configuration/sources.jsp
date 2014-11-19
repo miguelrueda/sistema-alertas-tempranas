@@ -29,7 +29,7 @@
                     <%@include  file="../incfiles/menu.jsp" %>
                     <div id="content_wrap">
                         <br />
-                        <div id="page_title">Fuentes de la aplicación</div>
+                        <div id="page_title">Fuentes de Información</div>
                         <div id="content">
                             <div class="datagrid">
                                 <table border="1" cellpadding="5" cellspacing="5" id="tablestyle">
