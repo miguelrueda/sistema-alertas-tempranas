@@ -13,6 +13,7 @@
         <link href="../resources/css/general.css" type="text/css" rel="stylesheet" /> 
         <link href="../resources/css/menu.css" type="text/css" rel="stylesheet" />
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+        <link href="../resources/css/jquery.notice.css" type="text/css" rel="stylesheet" />
         <style type="text/css">
             .ui-tabs .ui-tabs-nav li a {
                 font-size: 9pt !important;
@@ -156,16 +157,17 @@
                 <!-- Frame para desplegar los detalles -->
                 <div id="dialogdiv" title="Detalle de la Vulnerabilidad" style="display: none">
                 </div>
+                <div id="dialog-message"></div>
             </div><!-- Contenido de la pagina -->
         </div>
         <script src="//code.jquery.com/jquery-1.10.2.js" ></script>
         <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js" ></script>
         <script src="/sisalbm/resources/js/Chart.min.js"></script>
         <script src="/sisalbm/resources/js/legend.js"></script>
-        
+        <script src="../resources/js/jquery.notice.js"></script>
         <script>
             //$(function() {
-                //$("#tabs").tabs();
+            //$("#tabs").tabs();
             //});
             /**
              * Función que se encarga de traer el contenido de las vulenrabilidades recientes desde un servlet
@@ -206,78 +208,78 @@
              * SCRIPT Para grafiar elementos JSON obtenidos de un servlet
              */
             //$(function() {
-                //$("#vulnsPfab").load("/sisalbm/admin/dash?action=cuentaFabs");
+            //$("#vulnsPfab").load("/sisalbm/admin/dash?action=cuentaFabs");
             //});
             /*
-            $(document).ready(function() {
-                >>
-                 >>ctx.fillStyle = "#000";
-                 >>ctx.fillRect(0, 0, 600, 400);
-                 >>ctx.fillStyle = "#fff";
-                 >>ctx.font = "bold 20px sans-serif";
-                 >>ctx.fillText('Example', 20, 20);
-                //GRAFICA DE BARRAS
-                var njson = [];
-                var mjson = [];
-                var ntags = [];
-                var i;
-                $.ajax({
-                    type: 'GET',
-                    url: '/sisalbm/dash?action=getchart&type=bar',
-                    cache: false,
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(response) {
-                        //alert(JSON.stringify(data));
-                        //njson = JSON.stringify(data);
-                        //alert(njson);
-                        //mjson = JSON.parse(njson);
-                        //for (i = 0; i < mjson.length; i++) {
-                        //tags.push("" + mjson[i].fabricante + "");
-                        //values.push(mjson[i].cuenta);
-                        //}
-                        var responseBAR = jQuery.parseJSON(response);
-                        var tags = [];
-                        var values = [];
-                        for (i = 0; i < responseBAR.length; i++) {
-                            tags.push("" + responseBAR[i].fabricante + "");
-                            values.push(responseBAR[i].cuenta);
-                        }
-                        var data = {
-                            labels: tags,
-                            datasets: [{
-                                    fillColor: "rgba(0, 135, 190, 1)",
-                                    strokeColor: "rgba(0, 135, 190, 1)",
-                                    data: values
-                                }]
-                        };
-                        var cvs = document.getElementById('canvas');
-                        var ctx = cvs.getContext('2d');
-                        var chart = new Chart(ctx).Bar(data);
-                    }
-                });
-
-                //["apr", "may", "jun", "jul", "aug", "sep"]
-                //[456, 479, 324, 569, 202, 600]
-                //GRAFICA DE PIE
-                var pieOptions = {
-                    segmentShowStroke: false,
-                    animateScale: true
-                };
-                $.ajax({
-                    type: 'GET',
-                    url: '/sisalbm/dash?action=getchart&type=pie',
-                    cache: false,
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(response) {
-                        var responsePIE = jQuery.parseJSON(response);
-                        var myPieChart = new Chart(document.getElementById('piecanvas').getContext("2d")).Pie(responsePIE, pieOptions);
-                        legend(document.getElementById('pielegend'), responsePIE);
-                    }, error: function(response) {
-                        alert("Error al procesar la solicitud . . .");
-                    }
-                });
-            });
-     */
+             $(document).ready(function() {
+             >>
+             >>ctx.fillStyle = "#000";
+             >>ctx.fillRect(0, 0, 600, 400);
+             >>ctx.fillStyle = "#fff";
+             >>ctx.font = "bold 20px sans-serif";
+             >>ctx.fillText('Example', 20, 20);
+             //GRAFICA DE BARRAS
+             var njson = [];
+             var mjson = [];
+             var ntags = [];
+             var i;
+             $.ajax({
+             type: 'GET',
+             url: '/sisalbm/dash?action=getchart&type=bar',
+             cache: false,
+             contentType: 'application/json; charset=utf-8',
+             success: function(response) {
+             //alert(JSON.stringify(data));
+             //njson = JSON.stringify(data);
+             //alert(njson);
+             //mjson = JSON.parse(njson);
+             //for (i = 0; i < mjson.length; i++) {
+             //tags.push("" + mjson[i].fabricante + "");
+             //values.push(mjson[i].cuenta);
+             //}
+             var responseBAR = jQuery.parseJSON(response);
+             var tags = [];
+             var values = [];
+             for (i = 0; i < responseBAR.length; i++) {
+             tags.push("" + responseBAR[i].fabricante + "");
+             values.push(responseBAR[i].cuenta);
+             }
+             var data = {
+             labels: tags,
+             datasets: [{
+             fillColor: "rgba(0, 135, 190, 1)",
+             strokeColor: "rgba(0, 135, 190, 1)",
+             data: values
+             }]
+             };
+             var cvs = document.getElementById('canvas');
+             var ctx = cvs.getContext('2d');
+             var chart = new Chart(ctx).Bar(data);
+             }
+             });
+             
+             //["apr", "may", "jun", "jul", "aug", "sep"]
+             //[456, 479, 324, 569, 202, 600]
+             //GRAFICA DE PIE
+             var pieOptions = {
+             segmentShowStroke: false,
+             animateScale: true
+             };
+             $.ajax({
+             type: 'GET',
+             url: '/sisalbm/dash?action=getchart&type=pie',
+             cache: false,
+             contentType: 'application/json; charset=utf-8',
+             success: function(response) {
+             var responsePIE = jQuery.parseJSON(response);
+             var myPieChart = new Chart(document.getElementById('piecanvas').getContext("2d")).Pie(responsePIE, pieOptions);
+             legend(document.getElementById('pielegend'), responsePIE);
+             }, error: function(response) {
+             alert("Error al procesar la solicitud . . .");
+             }
+             });
+             });
+             */
         </script>
     </body>
 </html>

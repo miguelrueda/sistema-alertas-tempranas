@@ -7,7 +7,7 @@
         <li><a href="/sisalbm/admin/dashboard.jsp"><span>Inicio</span></a></li>
         <li class="has-sub"><a href="#"><span>Configuración</span></a>
             <ul>
-                <li class="has-sub"><a href="#"><span>Fuentes de Vulnerabilidades</span></a>
+                <li class="has-sub"><a href="#"><span>Fuentes de Información</span></a>
                     <ul>
                         <li><a href="/sisalbm/admin/configuration/agregarFuente.jsp"><span>Agregar Nueva Fuente</span></a></li>
                         <li><a href="/sisalbm/admin/configuration.controller?action=view&tipo=1"><span>Fuentes Registradas</span></a></li>

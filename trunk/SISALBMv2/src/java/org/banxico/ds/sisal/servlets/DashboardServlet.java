@@ -1,4 +1,4 @@
-package org.banxico.ds.sisal.test;
+package org.banxico.ds.sisal.servlets;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
