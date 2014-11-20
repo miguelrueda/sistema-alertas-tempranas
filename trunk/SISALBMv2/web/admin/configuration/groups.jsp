@@ -63,6 +63,7 @@
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Categoría</th>
+                                            <th>Se Reporta</th>
                                             <th colspan='3'>Opciones</th>
                                         </tr>
                                     </thead>
@@ -71,6 +72,19 @@
                                             <tr>
                                                 <td style="width: 300px">${grupo.nombre}</td>
                                                 <td style="width: 300px">${grupo.categoria}</td>
+                                                <c:choose>
+                                                    <c:when test="${grupo.reporta > 0}">
+                                                        <td style="width: 180px">
+                                                            <img src="../resources/images/check.png" alt="Si" id="tableicon" />
+                                                        </td>
+                                                        
+                                                    </c:when>
+                                                    <c:when test="${grupo.reporta eq 0}">
+                                                        <td style="width: 180px">
+                                                            <img src="../resources/images/wrong.png" alt="No" id="tableicon" />
+                                                        </td>
+                                                    </c:when>
+                                                </c:choose>
                                                 <td>
                                                     <a href="configuration/detalleGrupo.jsp?action=view&tipo=grupo&id=${grupo.idGrupo}" class="view">
                                                         <img src="../resources/images/search.png" alt="magni" id="tableicon" />
