@@ -92,7 +92,14 @@ public class CPEHandler extends DefaultHandler implements java.io.Serializable {
         }
         //A partir del numero de tokens generar el objeto de Software
         if (ntokens == 5 || ntokens == 6 || ntokens == 7 || ntokens == 8) {
-            return new Software(id, tokens[2].replace("_", " "), tokens[3].replace("_", " "), tokens[4], -1, -1, "ND", "ND");
+            return new Software(id,             //id
+                    tokens[2].replace("_", " "),    //fabricante
+                    tokens[3].replace("_", " ").replaceAll("%23", "#").replaceAll("%2B|%2b", "+"),    //nombre
+                    tokens[4],                      //version
+                    -1, 
+                    -1, 
+                    "ND", 
+                    "ND");
         }
         return new Software();
     }
