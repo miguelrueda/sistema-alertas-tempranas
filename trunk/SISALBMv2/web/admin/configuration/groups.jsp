@@ -214,7 +214,7 @@
                             //Mensaje que se muestra cuando ocurre un error al oprocesar la petición al servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -283,7 +283,7 @@
                                             //Codigo que se ejecuta cuando existe un error al eliminar el grupo
                                             $("#dialog-message").attr("title", "Error de Eliminación");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error al eliminar el grupo. Por favor, intentarlo nuevamente.</p>";
+                                                    "Ocurrió un error al eliminar el grupo. Por favor, intentarlo nuevamente.</p>";
                                             $("#dialog-message").html(content);
                                             $("#dialog-message").dialog({
                                                 modal: true,
@@ -297,7 +297,7 @@
                                             //Codigo que se ejecuta cuando ocurre un error del servidor
                                             $("#dialog-message").attr("title", "Error del Servidor");
                                             content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>";
+                                                    "Ocurrió un error inesperado! Por favor, intentarlo nuevamente.</p>";
                                             $("#dialog-message").html(content);
                                             $("#dialog-message").dialog({
                                                 modal: true,
@@ -313,7 +313,7 @@
                                         //Codigo que se ejecuta cuando no se puede procesar le petición al servidor
                                         $("#dialog-message").attr("title", "Petición Incompleta");
                                         var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                                "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>";
                                         $("#dialog-message").html(content);
                                         $("#dialog-message").dialog({
                                             modal: true,

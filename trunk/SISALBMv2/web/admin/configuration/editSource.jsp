@@ -173,7 +173,7 @@
                                 //Se muestre este mensaje cuando el servidor no retorna una respuesta favorable
                                 $("#dialog-message").attr("title", "Edición Incompleta");
                                 $("#dialog-message").html("<p><span class='ui-icon ui-icon-circle-close' style='float:left; margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la actualización. Favor de intentarlo nuevamente.</p>");
+                                        "Ocurrió un error al realizar la actualización. Favor de intentarlo nuevamente.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {
@@ -187,7 +187,7 @@
                             //Mensaje que se muestra cuando existe un error al ejecutar la petición
                             $("#dialog-message").attr("title", "Edición Incompleta");
                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {

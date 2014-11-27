@@ -142,7 +142,7 @@
                                     //Se muestra este mensaje cuando ocurre un error al procesar la petición
                                     $("#dialog-message").attr("title", "Error al crear fuente");
                                     content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error al intentar agregar la fuente. Intentalo Nuevamente.</p>";
+                                            "Ocurrió un error al intentar agregar la fuente. Inténtalo Nuevamente.</p>";
                                     $("#dialog-message").html(content);
                                     $("#dialog-message").dialog({
                                         modal: true,
@@ -157,7 +157,7 @@
                                 //Se ejecuta este codigo cuando la petición no se completa por algun error del servidor
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,

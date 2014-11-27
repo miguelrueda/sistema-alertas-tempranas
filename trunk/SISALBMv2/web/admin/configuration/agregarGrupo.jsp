@@ -374,7 +374,7 @@
                                     //Mensaje de error
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error al intentar registrar el grupo.</p>");
+                                            "Ocurrió un error al intentar registrar el grupo.</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -387,7 +387,7 @@
                                     //Mensaje de notificación de nombre invalido
                                     $("#dialog-message").attr("title", "Nombre de Grupo Existente");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>");
+                                            "Ocurrió un error al intentar registrar el grupo. Ya existe un grupo con el nombre seleccionado</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -401,7 +401,7 @@
                                     //Mensaje de error al agregar un grupo
                                     $("#dialog-message").attr("title", "Error al agregar el grupo");
                                     $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                            "Ocurrio un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>");
+                                            "Ocurrió un error desconocido al intentar registrar el grupo. Intentarlo nuevamente.</p>");
                                     $("#dialog-message").dialog({
                                         modal: true,
                                         buttons: {
@@ -415,7 +415,7 @@
                                 //Mostrar el mensaje de petición incompleta cuando ocurre un error al realizarla
                                 $("#dialog-message").attr("title", "Petición Incompleta");
                                 $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                        "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                                 $("#dialog-message").dialog({
                                     modal: true,
                                     buttons: {

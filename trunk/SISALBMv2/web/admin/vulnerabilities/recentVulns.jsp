@@ -35,7 +35,7 @@ de una forma tabular
                             <c:choose>
                                 <c:when test="${cveList.isEmpty() eq true}">
                                 <center>
-                                    <h3>No se encontro el contenido o no se encuentra disponible</h3>
+                                    <h3>No se encontró el contenido o no se encuentra disponible</h3>
                                 </center>
                             </c:when>
                             <c:when test="${cveList.isEmpty() eq false}">

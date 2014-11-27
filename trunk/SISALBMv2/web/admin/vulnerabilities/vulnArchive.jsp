@@ -35,7 +35,7 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                             <c:choose>
                                 <c:when test="${arcveList.isEmpty() eq true}">
                                 <center>
-                                    <h3>No se encontro el contenido o no se encuentra disponible</h3>
+                                    <h3>No se encontró el contenido o no se encuentra disponible</h3>
                                 </center>
                             </c:when>
                             <c:when test="${arcveList.isEmpty() eq false}">
@@ -278,7 +278,7 @@ JSP que se encarga de mostrar  la información del archivo de vulnerabilidades q
                             //Ejecutar este codigo cuando la petición no se completa por problemas del servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {

@@ -348,7 +348,7 @@ nuevo software para ser monitoreado
                             //Mostrar mensaje cuando la petición al servidor no se procesa debido a un error 
                             $("#dialog-message").attr("title", "Petición Incompleta");
                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
-                                    + "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    + "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
