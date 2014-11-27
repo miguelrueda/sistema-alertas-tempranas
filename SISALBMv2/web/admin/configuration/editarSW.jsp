@@ -174,7 +174,7 @@
                             }, error: function() {
                                 $("#dialog-message").attr("title", "Software No Editado");
                                 var content = "<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                        "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>";
+                                        "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>";
                                 $("#dialog-message").html(content);
                                 $("#dialog-message").dialog({
                                     modal: true,

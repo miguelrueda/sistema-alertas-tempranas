@@ -239,7 +239,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                             //Mostrar mensaje cuando ocurre un error para completar la petición hacia el servidor
                             $("#dialog-message").attr("title", "Petición Incompleta");
                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                    "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#dialog-message").dialog({
                                 modal: true,
                                 buttons: {
@@ -311,7 +311,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                             //Si ocurre un error mostrar esta alerta
                                             $("#dialog-message").attr("title", "Software No Eliminado");
                                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
+                                                    "Ocurrió un error al eliminar el software. Por favor, intentarlo nuevamente.</p>");
                                             $("#dialog-message").dialog({
                                                 modal: true,
                                                 buttons: {
@@ -324,7 +324,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                             //En otro caso mostrar est aalerta
                                             $("#dialog-message").attr("title", "Software No Eliminado");
                                             $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                    "Ocurrio un error inesperado! Por favor, intentarlo nuevamente.</p>");
+                                                    "Ocurrió un error inesperado! Por favor, intentarlo nuevamente.</p>");
                                             $("#dialog-message").dialog({
                                                 modal: true,
                                                 buttons: {
@@ -338,7 +338,7 @@ JSP que se encarga de mostrar  la información del software que esta soportado p
                                         //Esta alerta se muestra cuando ocurre un error para terminar la petición hacia el servidor
                                         $("#dialog-message").attr("title", "Petición Incompleta");
                                         $("#dialog-message").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>" +
-                                                "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                                "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                                         $("#dialog-message").dialog({
                                             modal: true,
                                             buttons: {

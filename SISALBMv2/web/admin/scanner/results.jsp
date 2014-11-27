@@ -212,7 +212,7 @@
                                 //Mensaje cque se muestra cuando el servidor retorna un error
                                 $("#mensaje-correo").attr("title", "Error del Sistema");
                                 $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
-                                        + "Ocurrio un error en la aplicación, favor de intentarlo nuevamente.</p>");
+                                        + "Ocurrió un error en la aplicación, favor de intentarlo nuevamente.</p>");
                                 $("#mensaje-correo").dialog({
                                     modal: true,
                                     buttons: {
@@ -226,7 +226,7 @@
                             //Mensaje que se muestra cuando ocurre un error al realizar la petición al servidor
                             $("#mensaje-correo").attr("title", "Petición Incompleta");
                             $("#mensaje-correo").html("<p><span class='ui-icon ui-icon-alert' style='float:left;margin:0 7px 50px 0;'></span>"
-                                    + "Ocurrio un error al realizar la petición al servidor. Intentelo nuevamente.</p>");
+                                    + "Ocurrió un error al realizar la petición al servidor. Inténtelo nuevamente.</p>");
                             $("#mensaje-correo").dialog({
                                 modal: true,
                                 buttons: {
