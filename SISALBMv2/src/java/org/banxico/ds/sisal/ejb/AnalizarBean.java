@@ -43,7 +43,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     /**
      * Atributos que definen la hora de la actualización
      */
-    private static final int START_HOUR = 14;
+    private static final int START_HOUR = 16;
     private static final int START_MINUTES = 0;
     private static final int START_SECONDS = 0;
     private static final int INTERVAL_IN_MINUTES = 1440;
@@ -65,7 +65,7 @@ public class AnalizarBean implements AnalizarBeanLocal {
     private static final String CCss = "T41507@correobm.org.mx";
     private static final String to1 = "";
     private static final String asunto = "Resultados ";
-    private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "XX@XX.com"};
+    private static final String[] recipientsArray = {"jamaya@banxico.org.mx", "martha.pio@banxico.org.mx"};
 
     /**
      * Método que se encarga de establecer el tiempo para el analisis

@@ -898,6 +898,13 @@ public class SoftwareDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @param sw
+     * @param llavegrupos
+     * @return
+     * @throws SQLException
+     */
     public boolean agregarSoftware_enGrupos(Software sw, int[] llavegrupos) throws SQLException {
         boolean sw_agregado = false;
         int llavesw_generada = 0;
@@ -954,6 +961,11 @@ public class SoftwareDAO {
     private static final String sqlBuscarExistencia = "SELECT * FROM Software s "
             + "WHERE s.fabricante LIKE ? AND s.nombre LIKE ? AND s.version LIKE ?";
 
+    /**
+     *
+     * @param sw
+     * @return
+     */
     public boolean validarExistencia(Software sw) {
         boolean existencia = false;
         try {

@@ -423,6 +423,8 @@ public class GruposDAO {
      *
      * @param nombre_grupo cadena con el nombre del grupo a crear
      * @param categoria_grupo cadena con la categoria para registrar el grupo
+     * @param reportable
+     * @param correo
      * @param llaves arreglo de enteros con las llaves del software a registrar
      * en el grupo
      * @return bandera con el valor de la creación del grupo
@@ -564,6 +566,18 @@ public class GruposDAO {
         return res;
     }
 
+    /**
+     * Método que se encarga de editar la información de un grupo
+     *
+     * @param idgrupo
+     * @param nombre
+     * @param categoria
+     * @param reportable
+     * @param correo
+     * @param llaves
+     * @return
+     * @throws SQLException
+     */
     public boolean editarGrupo(int idgrupo, String nombre, String categoria, int reportable, String correo, Integer[] llaves) throws SQLException {
         boolean res = false;
         try {
@@ -606,6 +620,12 @@ public class GruposDAO {
         return res;
     }
 
+    /**
+     * Método que se encarga de obtener un grupo por la referencia de su nombre
+     *
+     * @param nombre
+     * @return
+     */
     public Grupo obtenerGrupoPorNombre(String nombre) {
         Grupo encontrado = null;
         try {

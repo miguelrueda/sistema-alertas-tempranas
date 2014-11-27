@@ -11,15 +11,32 @@ import java.util.logging.Logger;
 import org.banxico.ds.sisal.db.ConnectionFactory;
 import org.banxico.ds.sisal.entities.GrupoVulnerabilidad;
 
+/**
+ * Clase que permite manejar los objetos en la realción Grupo Vulnerabilidad
+ *
+ * @author t41507
+ */
 public class GrupoVulnerabilidadDAO {
 
+    /**
+     * Logger
+     */
     private static final Logger LOG = Logger.getLogger(GrupoVulnerabilidadDAO.class.getName());
+    /**
+     * Atributos de la clase
+     */
     private Connection conexion;
     private PreparedStatement pstmt;
     private ResultSet rs;
+    /**
+     * Servicios utilizados por la clase
+     */
     private GruposDAO gdao = new GruposDAO();
     private VulnerabilityDAO vdao = new VulnerabilityDAO();
     
+    /**
+     *Querys utilizados por la clase
+     */
     public static final String ObtenerTodoGrupoVulnerabilidad = "SELECT * FROM Grupo_Vulnerabilidad";
     public static final String ObtenerGrupoVulnerabilidadPorIDGrupo = "SELECT x.idGrupo, x.idVulnerabilidad, x.afecta, x.resuelto, x.fechaSolucion, x.avance "
             + "FROM Grupo g, Grupo_Vulnerabilidad x, Vulnerabilidad v "
@@ -28,6 +45,11 @@ public class GrupoVulnerabilidadDAO {
             + "(idGrupo, idVulnerabilidad, afecta, resuelto, fechaSolucion, avance) "
             + "VALUES(?, ?, ?, ?, ?, ?);";
 
+    /**
+     * Método que se encarga de obtener todos los objetos en la relación Grupo Vulnerabilidad
+     *
+     * @return Lista de objetos de tipo Grupo Vulnerabilidad
+     */
     public List<GrupoVulnerabilidad> obtenerTodos() {
         List<GrupoVulnerabilidad> lista = null;
         try {
@@ -56,6 +78,12 @@ public class GrupoVulnerabilidadDAO {
         return lista;
     }
 
+    /**
+     * Método que se encarga de obtener todas la vulnerabildades asociadas a un grupo
+     *
+     * @param id Identificador del grupo
+     * @return Lista de objetos de tipo Grupo Vulnerabilidad
+     */
     public List<GrupoVulnerabilidad> obtenerPorGrupo(int id) {
         List<GrupoVulnerabilidad> lista = null;
         try {
@@ -86,6 +114,13 @@ public class GrupoVulnerabilidadDAO {
         return lista;
     }
     
+    /**
+     * Método que se encarga de registrar las vulnerabilidades en un grupo
+     *
+     * @param idGrupo Identificador del grupo
+     * @param idVulnerabilidad identificador de la vulnerabilidad a registrar
+     * @return
+     */
     public boolean registrarVulnerabilidadesEnGrupo(int idGrupo, String idVulnerabilidad) {
         boolean res = false;
         try {
@@ -121,6 +156,11 @@ public class GrupoVulnerabilidadDAO {
         return res;
     }
 
+    /**
+     * Método para obtener la conexión a BD
+     * 
+     * @return Objeto de tipo conexión
+     */
     private Connection obtenerConexion() {
         return ConnectionFactory.getInstance().getConnection();
     }
